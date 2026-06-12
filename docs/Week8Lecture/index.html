@@ -1,0 +1,1828 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Professor Philip Baxter, Intelligence Analysis Program, James Madison University">
+<meta name="dcterms.date" content="2026-01-01">
+
+<title>Geospatial and Multi-Layer Networks – IA 480: Applied Network Analysis: Systems, Connections, and Influence</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-d6fbb5bfb24a4f1906c428146fc3bdde.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0d48ad8d89774e5362b72c75c2c9e679.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">IA 480: Applied Network Analysis: Systems, Connections, and Influence</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-weekly-materials" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Weekly Materials</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-weekly-materials">    
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week2Lecture/index.qmd">
+ <span class="dropdown-text">Week 2 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week3Lecture/index.qmd">
+ <span class="dropdown-text">Week 3 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week4Lecture/index.qmd">
+ <span class="dropdown-text">Week 4 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week5Lecture/index.qmd">
+ <span class="dropdown-text">Week 5 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week6Lecture/index.qmd">
+ <span class="dropdown-text">Week 6 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week7Lecture/index.qmd">
+ <span class="dropdown-text">Week 7 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week8Lecture/index.qmd">
+ <span class="dropdown-text">Week 8 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week9Lecture/index.qmd">
+ <span class="dropdown-text">Week 9 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week10Lecture/index.qmd">
+ <span class="dropdown-text">Week 10 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week11Lecture/index.qmd">
+ <span class="dropdown-text">Week 11 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week12Lecture/index.qmd">
+ <span class="dropdown-text"></span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#lecture-roadmap" id="toc-lecture-roadmap" class="nav-link active" data-scroll-target="#lecture-roadmap">Lecture Roadmap</a></li>
+  <li><a href="#part-i-spatial-networks" id="toc-part-i-spatial-networks" class="nav-link" data-scroll-target="#part-i-spatial-networks">Part I: Spatial Networks</a>
+  <ul class="collapse">
+  <li><a href="#what-makes-a-network-geospatial" id="toc-what-makes-a-network-geospatial" class="nav-link" data-scroll-target="#what-makes-a-network-geospatial">What Makes a Network Geospatial?</a></li>
+  <li><a href="#planar-graphs-and-geographic-constraints" id="toc-planar-graphs-and-geographic-constraints" class="nav-link" data-scroll-target="#planar-graphs-and-geographic-constraints">Planar Graphs and Geographic Constraints</a></li>
+  <li><a href="#key-spatial-network-metrics" id="toc-key-spatial-network-metrics" class="nav-link" data-scroll-target="#key-spatial-network-metrics">Key Spatial Network Metrics</a></li>
+  </ul></li>
+  <li><a href="#part-ii-multi-layer-and-multiplex-networks" id="toc-part-ii-multi-layer-and-multiplex-networks" class="nav-link" data-scroll-target="#part-ii-multi-layer-and-multiplex-networks">Part II: Multi-Layer and Multiplex Networks</a>
+  <ul class="collapse">
+  <li><a href="#limitations-of-single-layer-analysis" id="toc-limitations-of-single-layer-analysis" class="nav-link" data-scroll-target="#limitations-of-single-layer-analysis">Limitations of Single-Layer Analysis</a></li>
+  <li><a href="#formal-multilayer-network-framework" id="toc-formal-multilayer-network-framework" class="nav-link" data-scroll-target="#formal-multilayer-network-framework">Formal Multilayer Network Framework</a></li>
+  <li><a href="#supra-adjacency-matrix-and-multilayer-centrality" id="toc-supra-adjacency-matrix-and-multilayer-centrality" class="nav-link" data-scroll-target="#supra-adjacency-matrix-and-multilayer-centrality">Supra-Adjacency Matrix and Multilayer Centrality</a></li>
+  <li><a href="#multiplex-structural-measures" id="toc-multiplex-structural-measures" class="nav-link" data-scroll-target="#multiplex-structural-measures">Multiplex Structural Measures</a></li>
+  </ul></li>
+  <li><a href="#part-iii-tools-and-workflows" id="toc-part-iii-tools-and-workflows" class="nav-link" data-scroll-target="#part-iii-tools-and-workflows">Part III: Tools and Workflows</a>
+  <ul class="collapse">
+  <li><a href="#arcgis-network-analyst-capabilities-and-workflow" id="toc-arcgis-network-analyst-capabilities-and-workflow" class="nav-link" data-scroll-target="#arcgis-network-analyst-capabilities-and-workflow">ArcGIS Network Analyst: Capabilities and Workflow</a></li>
+  <li><a href="#osmnx-and-geopandas" id="toc-osmnx-and-geopandas" class="nav-link" data-scroll-target="#osmnx-and-geopandas">OSMnx and GeoPandas</a>
+  <ul class="collapse">
+  <li><a href="#osmnx-street-network-analysis-in-python" id="toc-osmnx-street-network-analysis-in-python" class="nav-link" data-scroll-target="#osmnx-street-network-analysis-in-python">OSMnx: Street Network Analysis in Python</a></li>
+  <li><a href="#geopandas-proximity-network-construction" id="toc-geopandas-proximity-network-construction" class="nav-link" data-scroll-target="#geopandas-proximity-network-construction">GeoPandas: Proximity Network Construction</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#part-iv-intelligence-applications" id="toc-part-iv-intelligence-applications" class="nav-link" data-scroll-target="#part-iv-intelligence-applications">Part IV: Intelligence Applications</a>
+  <ul class="collapse">
+  <li><a href="#smuggling-and-trafficking-route-analysis" id="toc-smuggling-and-trafficking-route-analysis" class="nav-link" data-scroll-target="#smuggling-and-trafficking-route-analysis">Smuggling and Trafficking Route Analysis</a>
+  <ul class="collapse">
+  <li><a href="#network-model" id="toc-network-model" class="nav-link" data-scroll-target="#network-model">Network Model</a></li>
+  </ul></li>
+  <li><a href="#critical-infrastructure-interdependency" id="toc-critical-infrastructure-interdependency" class="nav-link" data-scroll-target="#critical-infrastructure-interdependency">Critical Infrastructure Interdependency</a></li>
+  <li><a href="#multi-layer-analysis-of-state-actor-networks" id="toc-multi-layer-analysis-of-state-actor-networks" class="nav-link" data-scroll-target="#multi-layer-analysis-of-state-actor-networks">Multi-Layer Analysis of State Actor Networks</a></li>
+  <li><a href="#integrating-geoint-and-network-data" id="toc-integrating-geoint-and-network-data" class="nav-link" data-scroll-target="#integrating-geoint-and-network-data">Integrating GEOINT and Network Data</a></li>
+  </ul></li>
+  <li><a href="#lecture-summary" id="toc-lecture-summary" class="nav-link" data-scroll-target="#lecture-summary">Lecture Summary</a>
+  <ul class="collapse">
+  <li><a href="#key-formulas" id="toc-key-formulas" class="nav-link" data-scroll-target="#key-formulas">Key Formulas</a></li>
+  <li><a href="#key-analytical-takeaways" id="toc-key-analytical-takeaways" class="nav-link" data-scroll-target="#key-analytical-takeaways">Key Analytical Takeaways</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Geospatial and Multi-Layer Networks</h1>
+<p class="subtitle lead">IA 480: Applied Network Analysis: Systems, Connections, and Influence</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Professor Philip Baxter, Intelligence Analysis Program, James Madison University </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 1, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="course-meta">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Course</td>
+<td style="text-align: left;">IA 480: Applied Network Analysis</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Instructor</td>
+<td style="text-align: left;">Professor Philip Baxter</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Term</td>
+<td style="text-align: left;">Fall 2026</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of this lecture, students should be able to:</p>
+<ol type="1">
+<li>Distinguish spatial from non-spatial networks and explain how geographic constraints alter structural analysis.</li>
+<li>Compute and interpret circuity, network efficiency, and spatial betweenness for a spatial network.</li>
+<li>Formalize a multiplex network using the Kivelä et al.&nbsp;framework and construct its supra-adjacency matrix.</li>
+<li>Compute edge overlap and explain its intelligence significance.</li>
+<li>Describe ArcGIS Network Analyst and OSMnx capabilities and apply each to an intelligence routing or proximity problem.</li>
+<li>Apply multilayer analysis to critical infrastructure interdependency and state actor network problems.</li>
+</ol>
+</div>
+</div>
+<section id="lecture-roadmap" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-roadmap">Lecture Roadmap</h2>
+<div class="roadmap-grid" style="grid-template-columns: repeat(2,1fr)">
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part I — Spatial Networks</div>
+    <ul>
+      <li>What makes a network geospatial?</li>
+      <li>Planar graphs and geographic constraints</li>
+      <li>Key spatial metrics: circuity, efficiency, spatial betweenness</li>
+      <li>Maritime and infrastructure chokepoints</li>
+      <li>Waxman spatial random graph model</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part II — Multi-Layer and Multiplex Networks</div>
+    <ul>
+      <li>Limitations of single-layer analysis</li>
+      <li>Formal multilayer network framework (Kivelä et al.)</li>
+      <li>Supra-adjacency matrix and coupling weights</li>
+      <li>Multilayer centrality and edge overlap</li>
+      <li>Multi-strand ties and resilience</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part III — Tools and Workflows</div>
+    <ul>
+      <li>ArcGIS Network Analyst: routing, service areas, OD matrices</li>
+      <li>OSMnx: street network analysis in Python</li>
+      <li>GeoPandas: spatial network data manipulation</li>
+      <li>Integrating GEOINT and relational network data</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part IV — Intelligence Applications</div>
+    <ul>
+      <li>Smuggling and trafficking route analysis</li>
+      <li>Critical infrastructure interdependency</li>
+      <li>Maritime domain awareness networks</li>
+      <li>Multi-layer analysis of state actor networks</li>
+      <li>GEOINT and SNA integration</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section id="part-i-spatial-networks" class="level1">
+<h1>Part I: Spatial Networks</h1>
+<section id="what-makes-a-network-geospatial" class="level2">
+<h2 class="anchored" data-anchor-id="what-makes-a-network-geospatial">What Makes a Network Geospatial?</h2>
+<p>A <strong>spatial network</strong> is a graph in which nodes are associated with positions in a metric space — typically geographic coordinates — and where edge formation, capacity, or cost is constrained by spatial distance or physical infrastructure.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> The critical distinction from abstract networks: the network is <em>embedded in</em>, not <em>independent of</em>, the physical world.</p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="what-geography-adds-to-network-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="what-geography-adds-to-network-analysis">What Geography Adds to Network Analysis</h3>
+<ul>
+<li><strong>Edge cost grounded in reality:</strong> travel time, distance, and logistics cost become edge weights with physical meaning — two nodes 10 km apart via direct road versus across a mountain range have very different effective edge weights</li>
+<li><strong>Physical constraints on edge existence:</strong> borders, terrain, coastlines, rivers, and built infrastructure determine which edges can physically exist; the feasible edge set is geographically bounded, not combinatorially complete</li>
+<li><strong>Spatial autocorrelation:</strong> nodes that are geographically proximate tend to be connected — the probability of a tie decays with distance (Tobler’s First Law)</li>
+<li><strong>Infrastructure interdependency:</strong> physical systems share geographic footprints; a flood, earthquake, or kinetic strike at one location simultaneously affects all co-located networks</li>
+<li><strong>GEOINT integration:</strong> satellite imagery, elevation models, and remote sensing data become node and edge attributes, enabling continuous network update from observed physical activity</li>
+</ul>
+</section>
+<section id="types-of-spatial-networks" class="level3">
+<h3 class="anchored" data-anchor-id="types-of-spatial-networks">Types of Spatial Networks</h3>
+<ul>
+<li><strong>Transportation:</strong> road, rail, air, maritime; nodes are intersections or hubs, edges are routes</li>
+<li><strong>Utility infrastructure:</strong> power grids (substations and transmission lines), water (treatment plants and mains), telecommunications (exchanges and fiber routes)</li>
+<li><strong>Geographic flow networks:</strong> migration, trade, and remittance flows between countries or cities</li>
+<li><strong>Proximity networks:</strong> edges connect actors within a specified geographic distance threshold — a common intelligence construction from co-location data</li>
+<li><strong>Terrain-constrained networks:</strong> routes that must traverse specific geographic features — mountain passes, river crossings, maritime straits</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Why Geography Matters for Intelligence">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Why Geography Matters for Intelligence
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Physical geography determines the <strong>feasible space of covert network operations</strong>. Smugglers, insurgents, and proliferators are all constrained by geography — they cannot route through mountains, cross bodies of water without infrastructure, or traverse hostile territorial jurisdictions without risk.</p>
+<p>Understanding spatial network structure predicts behavioral patterns:</p>
+<ul>
+<li>Which border crossings <em>must</em> high-volume trafficking use given production origin and destination market?</li>
+<li>Which geographic nodes are unavoidable chokepoints even for actors who try to avoid them?</li>
+<li>Where do terrain constraints create predictable convergence of routes from diverse origins?</li>
+</ul>
+<p>These questions are answerable through spatial betweenness analysis in ways that purely social network analysis cannot address.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Geographic Chokepoint in a Spatial Network
+  </p>
+  <svg viewbox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:400px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <rect x="175" y="0" width="70" height="240" fill="rgba(89,89,89,0.08)" stroke="none"></rect>
+    <text x="210" y="125" text-anchor="middle" font-size="9" fill="#B2B2B2" font-style="italic" transform="rotate(-90,210,125)">TERRAIN BARRIER</text>
+    <text x="85" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">REGION A</text>
+    <text x="330" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">REGION B</text>
+    <line x1="40" y1="60" x2="90" y2="60" stroke="#450084" stroke-width="2"></line>
+    <line x1="40" y1="60" x2="55" y2="140" stroke="#450084" stroke-width="2"></line>
+    <line x1="90" y1="60" x2="120" y2="110" stroke="#450084" stroke-width="2"></line>
+    <line x1="55" y1="140" x2="120" y2="110" stroke="#450084" stroke-width="2"></line>
+    <line x1="55" y1="140" x2="90" y2="190" stroke="#450084" stroke-width="2"></line>
+    <line x1="120" y1="110" x2="90" y2="190" stroke="#450084" stroke-width="2"></line>
+    <line x1="120" y1="110" x2="210" y2="120" stroke="#450084" stroke-width="2.5"></line>
+    <circle cx="210" cy="120" r="20" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"></circle>
+    <text x="210" y="124" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">PASS</text>
+    <line x1="210" y1="120" x2="300" y2="90" stroke="#AD9C65" stroke-width="2.5"></line>
+    <line x1="300" y1="90" x2="370" y2="60" stroke="#450084" stroke-width="2"></line>
+    <line x1="300" y1="90" x2="380" y2="130" stroke="#450084" stroke-width="2"></line>
+    <line x1="300" y1="90" x2="320" y2="175" stroke="#450084" stroke-width="2"></line>
+    <line x1="370" y1="60" x2="380" y2="130" stroke="#450084" stroke-width="2"></line>
+    <line x1="380" y1="130" x2="320" y2="175" stroke="#450084" stroke-width="2"></line>
+    <line x1="85" y1="60" x2="370" y2="60" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="7,5"></line>
+    <text x="227" y="50" text-anchor="middle" font-size="8" fill="#B2B2B2">straight-line d_E</text>
+    <circle cx="40" cy="60" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="90" cy="60" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="55" cy="140" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="120" cy="110" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="90" cy="190" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="370" cy="60" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="380" cy="130" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="320" cy="175" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="300" cy="90" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="210" y="152" text-anchor="middle" font-size="8" fill="#AD9C65" font-weight="600">max betweenness</text>
+    <text x="210" y="163" text-anchor="middle" font-size="7.5" fill="#595959">all inter-region paths cross here</text>
+  </svg>
+  <figcaption>
+    Every path between Regions A and B must cross the mountain pass (gold).<br>
+    Maximum betweenness by geographic necessity, not organizational design.
+  </figcaption>
+</div>
+</section>
+<section id="planar-graphs-and-geographic-constraints" class="level2">
+<h2 class="anchored" data-anchor-id="planar-graphs-and-geographic-constraints">Planar Graphs and Geographic Constraints</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="planar-graphs" class="level3">
+<h3 class="anchored" data-anchor-id="planar-graphs">Planar Graphs</h3>
+<p>A graph is <strong>planar</strong> if it can be drawn in a plane with no edges crossing. Road networks, pipelines, and most physical infrastructure networks are approximately planar — physical links cannot pass through each other in two-dimensional geographic space.</p>
+<p><strong>Euler’s Formula for connected planar graphs:</strong></p>
+<p><span class="math display">\[V - E + F = 2\]</span></p>
+<p>where <span class="math inline">\(V\)</span> = vertices, <span class="math inline">\(E\)</span> = edges, <span class="math inline">\(F\)</span> = faces (bounded regions, plus the outer unbounded face). From Euler’s formula, for any simple connected planar graph:</p>
+<p><span class="math display">\[E \leq 3V - 6\]</span></p>
+<p><strong>Structural consequences of planarity:</strong></p>
+<ul>
+<li><strong>Bounded average degree:</strong> from <span class="math inline">\(E \leq 3V - 6\)</span>, average degree <span class="math inline">\(\langle k \rangle &lt; 6\)</span> for any planar graph. Hub nodes with degree <span class="math inline">\(&gt; 6\)</span> are topologically impossible in a strictly planar network — scale-free degree distributions cannot arise in road or infrastructure networks.</li>
+<li><strong>No hubs in road networks:</strong> a road intersection physically cannot have more than a handful of connecting roads. The preferential attachment mechanisms that produce hubs in social networks are structurally excluded.</li>
+<li><strong>Betweenness behaves differently:</strong> geographic chokepoints — bridges, tunnels, mountain passes, port entrances — acquire high betweenness by physical necessity. Removing them requires physical engineering, not social disruption.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></li>
+</ul>
+</section>
+<section id="waxman-spatial-random-graph-model" class="level3">
+<h3 class="anchored" data-anchor-id="waxman-spatial-random-graph-model">Waxman Spatial Random Graph Model</h3>
+<p>The Waxman model provides a null model for spatial networks where edge probability decays exponentially with distance:</p>
+<p><span class="math display">\[P(\{u,v\}) = \beta \exp\!\left(-\frac{d(u,v)}{\alpha L}\right)\]</span></p>
+<p>where <span class="math inline">\(d(u,v)\)</span> is Euclidean distance, <span class="math inline">\(L\)</span> is the maximum distance in the study area, <span class="math inline">\(\alpha\)</span> controls distance decay, and <span class="math inline">\(\beta\)</span> is a scaling factor.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<ul>
+<li><strong>Low <span class="math inline">\(\alpha\)</span>:</strong> connections are strongly localized — road networks, criminal territorial networks</li>
+<li><strong>High <span class="math inline">\(\alpha\)</span>:</strong> long-range connections more probable — trade networks, diaspora networks, transnational terrorist networks</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Waxman as Intelligence Null Model">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Waxman as Intelligence Null Model
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The Waxman model is most powerful as a <strong>null model for anomaly detection</strong>:</p>
+<ol type="1">
+<li>Fit a Waxman model to the observed network’s geographic node distribution</li>
+<li>Generate 1,000 Waxman null graphs with the same <span class="math inline">\(n\)</span>, <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\alpha\)</span></li>
+<li>Compare the observed network’s long-range connection frequency against the null distribution</li>
+</ol>
+<p><strong>If significantly more long-range connections than Waxman predicts:</strong> the network has deliberate transnational reach — a signal of organizational sophistication, external state support, or deliberate capability investment.</p>
+<p><strong>If fewer long-range connections:</strong> the network is more spatially constrained than geographic proximity would predict — suggesting strong compartmentalization or high operational security discipline.</p>
+<p>Al-Qaeda’s network structure showed significantly more long-range connections than a Waxman null model fitted to Muslim-majority population geography would predict — consistent with deliberate cultivation of transnational coordination that exceeded what organic proximity-driven network formation could explain.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Five Eyes as Waxman Anomaly">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Five Eyes as Waxman Anomaly
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The Five Eyes intelligence-sharing arrangement (US, UK, Canada, Australia, New Zealand) represents a positive anomaly in international intelligence cooperation. Geographic distance and linguistic proximity predict some connections, but the strength and institutional breadth of Five Eyes significantly exceeds Waxman null model predictions — evidence of deliberate institutional design overriding pure spatial constraints.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="key-spatial-network-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="key-spatial-network-metrics">Key Spatial Network Metrics</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="circuity-detour-factor" class="level3">
+<h3 class="anchored" data-anchor-id="circuity-detour-factor">Circuity (Detour Factor)</h3>
+<p><span class="math display">\[\eta(u,v) = \frac{d_G(u,v)}{d_E(u,v)}\]</span></p>
+<p>where <span class="math inline">\(d_G\)</span> is shortest path length weighted by geographic distance, and <span class="math inline">\(d_E\)</span> is straight-line Euclidean distance.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<ul>
+<li><span class="math inline">\(\eta = 1.0\)</span>: perfectly straight routing (great-circle maritime routes in open ocean)</li>
+<li><span class="math inline">\(\eta \approx 1.2\)</span>–<span class="math inline">\(1.4\)</span>: typical well-developed road network</li>
+<li><span class="math inline">\(\eta &gt; 1.5\)</span>: significant geographic detour — terrain barriers, poor infrastructure, or deliberate routing around monitored areas</li>
+</ul>
+<p>High circuity on a known trafficking route implies actors are accepting significant logistical cost — suggesting lower-circuity alternatives are perceived as higher-risk due to enforcement or territorial control.</p>
+</section>
+<section id="network-efficiency" class="level3">
+<h3 class="anchored" data-anchor-id="network-efficiency">Network Efficiency</h3>
+<p><span class="math display">\[E = \frac{1}{n(n-1)} \sum_{u \neq v} \frac{1}{d_G(u,v)}\]</span></p>
+<p>with convention <span class="math inline">\(1/\infty = 0\)</span> for disconnected pairs.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> Infrastructure attack effectiveness: <span class="math inline">\(\Delta E = E_{\text{before}} - E_{\text{after}}\)</span>.</p>
+</section>
+<section id="spatial-betweenness" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-betweenness">Spatial Betweenness</h3>
+<p>Standard betweenness weighted by geographic path length rather than hop count. Identifies nodes that are both topologically central <em>and</em> geographically unavoidable — the most actionable interdiction targets.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<p><strong>Key Spatial Metrics Summary</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 26%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Metric</th>
+<th style="text-align: left;">Formula</th>
+<th style="text-align: left;">Intelligence Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Circuity <span class="math inline">\(\eta\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(d_G/d_E\)</span></td>
+<td style="text-align: left;">Route efficiency; detour cost</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Network efficiency <span class="math inline">\(E\)</span></td>
+<td style="text-align: left;">Harmonic mean <span class="math inline">\(1/d_G\)</span></td>
+<td style="text-align: left;">Infrastructure robustness</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Spatial betweenness</td>
+<td style="text-align: left;"><span class="math inline">\(C_B\)</span> weighted <span class="math inline">\(d_G\)</span></td>
+<td style="text-align: left;">Geographic chokepoints</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Service area</td>
+<td style="text-align: left;">Travel-time polygon</td>
+<td style="text-align: left;">Operational reach of a node</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OD matrix</td>
+<td style="text-align: left;">All-pairs <span class="math inline">\(d_G\)</span></td>
+<td style="text-align: left;">Full routing cost surface</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Maritime Chokepoints: Betweenness by Geography">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Maritime Chokepoints: Betweenness by Geography
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The world’s major maritime chokepoints have extreme betweenness centrality by geographic necessity:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Chokepoint</th>
+<th style="text-align: center;">~% Global Trade</th>
+<th style="text-align: left;">Constraint</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Strait of Malacca</td>
+<td style="text-align: center;">25%</td>
+<td style="text-align: left;">SE Asian land masses</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Strait of Hormuz</td>
+<td style="text-align: center;">20% (oil)</td>
+<td style="text-align: left;">Iran/Oman peninsula</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Suez Canal</td>
+<td style="text-align: center;">12%</td>
+<td style="text-align: left;">Sinai/North Africa</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bab el-Mandeb</td>
+<td style="text-align: center;">10%</td>
+<td style="text-align: left;">Yemen/Djibouti</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Panama Canal</td>
+<td style="text-align: center;">5%</td>
+<td style="text-align: left;">Central American isthmus</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Turkish Straits</td>
+<td style="text-align: center;">3% (Black Sea)</td>
+<td style="text-align: left;">Istanbul/Turkey</td>
+</tr>
+</tbody>
+</table>
+<p>Each is a <strong>single point of failure</strong> in global maritime logistics. Their betweenness is not a statistical artifact — it is a consequence of ocean geography that organizational adaptation cannot eliminate.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-ii-multi-layer-and-multiplex-networks" class="level1">
+<h1>Part II: Multi-Layer and Multiplex Networks</h1>
+<section id="limitations-of-single-layer-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="limitations-of-single-layer-analysis">Limitations of Single-Layer Analysis</h2>
+<p>Real-world actors maintain multiple, qualitatively different relationship types simultaneously: kinship, financial transactions, encrypted communication, organizational co-membership, and geographic proximity. Collapsing all of these into a single layer — or analyzing each in isolation — systematically loses critical structural information.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="analytical-failures-of-single-layer-approaches" class="level3">
+<h3 class="anchored" data-anchor-id="analytical-failures-of-single-layer-approaches">Analytical Failures of Single-Layer Approaches</h3>
+<p><strong>Aggregation makes edges incommensurable:</strong> merging a kinship tie (strong, persistent) with a single financial transaction (weak, possibly operational security noise) into one weighted edge produces a meaningless composite with no clear interpretation.</p>
+<p><strong>Layer-by-layer analysis misses correlations:</strong> a node peripheral in every individual layer may be central when layers are considered jointly. An actor with 5 unique contacts in communication, 3 different unique contacts in finance, and 2 more in kinship has access to 10 unique actors — far more than any single-layer view reveals.</p>
+<p><strong>Centrality is layer-specific:</strong> the key financial coordinator may have low centrality in the communication network. Single-layer targeting based on one relationship type systematically misses actors whose importance is distributed across types.</p>
+<p><strong>Cascade effects are invisible:</strong> a failure in one infrastructure layer propagates to dependent layers in ways structurally invisible to any single-layer analysis.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="A Multi-Layer Illustration">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>A Multi-Layer Illustration
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Three actors A, B, C:</p>
+<ul>
+<li><strong>Layer 1 (Communication):</strong> A–B, B–C (B is the hub)</li>
+<li><strong>Layer 2 (Financial):</strong> A–C only (B is absent; A and C transact directly)</li>
+<li><strong>Layer 3 (Kinship):</strong> A–C (family relationship)</li>
+</ul>
+<p><strong>Single-layer:</strong> B is central in communication; appears peripheral in finance and kinship.</p>
+<p><strong>Multi-layer:</strong> A is most broadly connected across all three layers. B is a <em>communication specialist</em>. The A–C dyad carries a <strong>multi-strand tie</strong> (financial + kinship) far more resilient than any single-strand tie.</p>
+<p><strong>Targeting implication:</strong> disrupting B leaves A–C coordination fully intact across financial and kinship channels — making the B-targeting strategy operationally ineffective despite its communication-layer prominence.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="formal-multilayer-network-framework" class="level2">
+<h2 class="anchored" data-anchor-id="formal-multilayer-network-framework">Formal Multilayer Network Framework</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="kivelä-et-al.-2014-formalization" class="level3">
+<h3 class="anchored" data-anchor-id="kivelä-et-al.-2014-formalization">Kivelä et al.&nbsp;(2014) Formalization</h3>
+<p>A <strong>multilayer network:</strong></p>
+<p><span class="math display">\[\mathcal{M} = (G, C, \mathbf{X}_A, \mathbf{X}_L, \mathbf{X}_V, \mathbf{X}_E)\]</span></p>
+<p>where <span class="math inline">\(G\)</span> = set of layer graphs; <span class="math inline">\(C\)</span> = interlayer couplings; <span class="math inline">\(\mathbf{X}\)</span> = attribute functions on aspects, layers, vertices, and edges.</p>
+<p><strong>Key terminology:</strong></p>
+<ul>
+<li><strong>Layer <span class="math inline">\(\alpha\)</span>:</strong> a single graph <span class="math inline">\(G^\alpha = (V^\alpha, E^\alpha)\)</span> — one relationship type</li>
+<li><strong>Node-layer pair <span class="math inline">\((v, \alpha)\)</span>:</strong> node <span class="math inline">\(v\)</span>’s presence in layer <span class="math inline">\(\alpha\)</span></li>
+<li><strong>Intra-layer edge:</strong> tie between two nodes <em>within</em> the same layer</li>
+<li><strong>Inter-layer edge:</strong> coupling of node <span class="math inline">\(v\)</span> across layers <span class="math inline">\((v,\alpha) \to (v,\beta)\)</span></li>
+<li><strong>Aspect:</strong> the dimension along which layers differ (type, time, scale)</li>
+</ul>
+</section>
+<section id="special-cases" class="level3">
+<h3 class="anchored" data-anchor-id="special-cases">Special Cases</h3>
+<ul>
+<li><strong>Multiplex network:</strong> same node set <span class="math inline">\(V\)</span> across all layers; only edge types differ. <em>Most common in intelligence applications.</em></li>
+<li><strong>Interconnected network:</strong> different node sets per layer with inter-layer edges between different nodes</li>
+<li><strong>Temporal network:</strong> layers = time slices; inter-layer edges connect node at <span class="math inline">\(t\)</span> to same node at <span class="math inline">\(t+1\)</span></li>
+<li><strong>Spatial-temporal network:</strong> layers indexed by both space and time</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Three-Layer Multiplex Network (4 Nodes)
+  </p>
+  <svg viewbox="0 0 430 310" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:410px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <polygon points="20,265 340,265 340,218 20,218" fill="rgba(69,0,132,0.06)" stroke="#450084" stroke-width="1.2" stroke-dasharray="5,3"></polygon>
+    <polygon points="55,182 375,182 375,135 55,135" fill="rgba(203,182,119,0.08)" stroke="#AD9C65" stroke-width="1.2" stroke-dasharray="5,3"></polygon>
+    <polygon points="90,100 410,100 410,53 90,53" fill="rgba(89,89,89,0.06)" stroke="#595959" stroke-width="1.2" stroke-dasharray="5,3"></polygon>
+    <text x="22" y="213" font-size="8.5" font-weight="700" fill="#450084">L1: KINSHIP</text>
+    <text x="57" y="130" font-size="8.5" font-weight="700" fill="#AD9C65">L2: FINANCIAL</text>
+    <text x="92" y="48" font-size="8.5" font-weight="700" fill="#595959">L3: COMMUNICATION</text>
+    <line x1="60" y1="228" x2="95" y2="168" stroke="#B2B2B2" stroke-width="1.2" stroke-dasharray="4,3"></line>
+    <line x1="95" y1="142" x2="130" y2="83" stroke="#B2B2B2" stroke-width="1.2" stroke-dasharray="4,3"></line>
+    <line x1="145" y1="228" x2="180" y2="168" stroke="#B2B2B2" stroke-width="1.2" stroke-dasharray="4,3"></line>
+    <line x1="180" y1="142" x2="215" y2="83" stroke="#B2B2B2" stroke-width="1.2" stroke-dasharray="4,3"></line>
+    <line x1="235" y1="228" x2="270" y2="168" stroke="#B2B2B2" stroke-width="1.2" stroke-dasharray="4,3"></line>
+    <line x1="270" y1="142" x2="305" y2="83" stroke="#B2B2B2" stroke-width="1.2" stroke-dasharray="4,3"></line>
+    <line x1="315" y1="228" x2="350" y2="168" stroke="#B2B2B2" stroke-width="1.2" stroke-dasharray="4,3"></line>
+    <line x1="350" y1="142" x2="385" y2="83" stroke="#B2B2B2" stroke-width="1.2" stroke-dasharray="4,3"></line>
+    <line x1="60" y1="242" x2="235" y2="242" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="145" y1="242" x2="315" y2="242" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="95" y1="158" x2="180" y2="158" stroke="#AD9C65" stroke-width="2.5"></line>
+    <line x1="95" y1="158" x2="270" y2="158" stroke="#AD9C65" stroke-width="2.5"></line>
+    <line x1="180" y1="158" x2="350" y2="158" stroke="#AD9C65" stroke-width="2.5"></line>
+    <line x1="130" y1="73" x2="215" y2="73" stroke="#595959" stroke-width="2.5"></line>
+    <line x1="215" y1="73" x2="305" y2="73" stroke="#595959" stroke-width="2.5"></line>
+    <line x1="215" y1="73" x2="385" y2="73" stroke="#595959" stroke-width="2.5"></line>
+    <line x1="130" y1="73" x2="305" y2="73" stroke="#595959" stroke-width="2.5"></line>
+    <circle cx="60" cy="242" r="16" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="60" y="246" text-anchor="middle" font-size="11" font-weight="bold" fill="#450084">A</text>
+    <circle cx="145" cy="242" r="16" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="145" y="246" text-anchor="middle" font-size="11" font-weight="bold" fill="#450084">B</text>
+    <circle cx="235" cy="242" r="16" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="235" y="246" text-anchor="middle" font-size="11" font-weight="bold" fill="#450084">C</text>
+    <circle cx="315" cy="242" r="16" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="315" y="246" text-anchor="middle" font-size="11" font-weight="bold" fill="#450084">D</text>
+    <circle cx="95" cy="158" r="16" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="95" y="162" text-anchor="middle" font-size="11" font-weight="bold" fill="#AD9C65">A</text>
+    <circle cx="180" cy="158" r="16" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="180" y="162" text-anchor="middle" font-size="11" font-weight="bold" fill="#AD9C65">B</text>
+    <circle cx="270" cy="158" r="16" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="270" y="162" text-anchor="middle" font-size="11" font-weight="bold" fill="#AD9C65">C</text>
+    <circle cx="350" cy="158" r="16" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="350" y="162" text-anchor="middle" font-size="11" font-weight="bold" fill="#AD9C65">D</text>
+    <circle cx="130" cy="73" r="16" fill="#D6D6D6" stroke="#595959" stroke-width="2"></circle>
+    <text x="130" y="77" text-anchor="middle" font-size="11" font-weight="bold" fill="#595959">A</text>
+    <circle cx="215" cy="73" r="16" fill="#D6D6D6" stroke="#595959" stroke-width="2"></circle>
+    <text x="215" y="77" text-anchor="middle" font-size="11" font-weight="bold" fill="#595959">B</text>
+    <circle cx="305" cy="73" r="16" fill="#D6D6D6" stroke="#595959" stroke-width="2"></circle>
+    <text x="305" y="77" text-anchor="middle" font-size="11" font-weight="bold" fill="#595959">C</text>
+    <circle cx="385" cy="73" r="16" fill="#D6D6D6" stroke="#595959" stroke-width="2"></circle>
+    <text x="385" y="77" text-anchor="middle" font-size="11" font-weight="bold" fill="#595959">D</text>
+    <text x="215" y="298" text-anchor="middle" font-size="7.5" fill="#595959">Dashed verticals = interlayer coupling (same node across layers)</text>
+  </svg>
+  <figcaption>
+    A–C: kinship (L1) + financial (L2) = multi-strand tie; resilient to single-layer disruption.<br>
+    B: active in all three layers with different partners in each.
+  </figcaption>
+</div>
+</div>
+</div>
+</section>
+<section id="supra-adjacency-matrix-and-multilayer-centrality" class="level2">
+<h2 class="anchored" data-anchor-id="supra-adjacency-matrix-and-multilayer-centrality">Supra-Adjacency Matrix and Multilayer Centrality</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="supra-adjacency-matrix" class="level3">
+<h3 class="anchored" data-anchor-id="supra-adjacency-matrix">Supra-Adjacency Matrix</h3>
+<p>For a multiplex network with <span class="math inline">\(n\)</span> nodes and <span class="math inline">\(L\)</span> layers, the <strong>supra-adjacency matrix</strong> <span class="math inline">\(\mathbf{A}\)</span> is an <span class="math inline">\(nL \times nL\)</span> block matrix:<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></p>
+<p><span class="math display">\[\mathbf{A} = \begin{pmatrix} A^{(1)} &amp; I\omega_{12} &amp; \cdots &amp; I\omega_{1L} \\ I\omega_{21} &amp; A^{(2)} &amp; \cdots &amp; I\omega_{2L} \\ \vdots &amp; &amp; \ddots &amp; \vdots \\ I\omega_{L1} &amp; \cdots &amp; \cdots &amp; A^{(L)} \end{pmatrix}\]</span></p>
+<p>where <span class="math inline">\(A^{(\alpha)}\)</span> is the <span class="math inline">\(n \times n\)</span> adjacency matrix of layer <span class="math inline">\(\alpha\)</span>; <span class="math inline">\(I\)</span> is the identity matrix; and <span class="math inline">\(\omega_{\alpha\beta}\)</span> is the coupling weight between layers <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>.</p>
+<p><strong>Interpretation:</strong> each node-layer pair <span class="math inline">\((v, \alpha)\)</span> connects to its within-layer neighbors via <span class="math inline">\(A^{(\alpha)}\)</span> and to its own counterpart in all other layers via <span class="math inline">\(I\omega\)</span>.</p>
+</section>
+<section id="coupling-weight-omega" class="level3">
+<h3 class="anchored" data-anchor-id="coupling-weight-omega">Coupling Weight <span class="math inline">\(\omega\)</span></h3>
+<p>The coupling weight determines how strongly node identity links across layers — a modeling choice:</p>
+<ul>
+<li><strong>High <span class="math inline">\(\omega\)</span>:</strong> position in one layer strongly influences others — appropriate when the same relationship type spans layers</li>
+<li><strong>Low <span class="math inline">\(\omega\)</span>:</strong> layers operate nearly independently — appropriate when relationship types are qualitatively distinct</li>
+<li><strong>Sensitivity analysis over <span class="math inline">\(\omega\)</span> values is mandatory</strong> before any multilayer finding appears in a finished intelligence product</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="multilayer-centrality-measures" class="level3">
+<h3 class="anchored" data-anchor-id="multilayer-centrality-measures">Multilayer Centrality Measures</h3>
+<ul>
+<li><strong>Degree versatility</strong> <span class="math inline">\(o_v\)</span>: how uniformly node <span class="math inline">\(v\)</span> participates across layers; <span class="math inline">\(o_v = 1\)</span> means equal participation; low versatility = layer-specific specialist</li>
+<li><strong>Multilayer betweenness:</strong> summed betweenness across all layers, or computed on the full supra-adjacency graph</li>
+<li><strong>Eigenvector centrality on supra-adjacency:</strong> identifies nodes important across all layers simultaneously</li>
+<li><strong>PageRank on the supra-graph:</strong> random walker moves within and between layers according to coupling weights</li>
+</ul>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Coupling Weight Choices">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Coupling Weight Choices
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There is no universal coupling weight <span class="math inline">\(\omega\)</span> applicable to all intelligence problems. For a proliferation network, coupling the technical and financial layers with equal weight assumes that technical relationships translate equally to financial influence — an assumption that requires explicit analytical justification.</p>
+<p>Standard practice: run analyses at <span class="math inline">\(\omega = 0.1, 0.5, 1.0, 2.0\)</span>. Report findings stable across all values as high-confidence; findings sensitive to <span class="math inline">\(\omega\)</span> as model-dependent and requiring additional validation.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+<section id="multiplex-structural-measures" class="level2">
+<h2 class="anchored" data-anchor-id="multiplex-structural-measures">Multiplex Structural Measures</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<section id="edge-overlap" class="level3">
+<h3 class="anchored" data-anchor-id="edge-overlap">Edge Overlap</h3>
+<p>The fraction of layers in which a node pair is simultaneously connected:</p>
+<p><span class="math display">\[o_{ij} = \frac{\sum_\alpha A_{ij}^\alpha - 1}{L - 1} \in [0, 1]\]</span></p>
+<ul>
+<li><span class="math inline">\(o_{ij} = 0\)</span>: connected in exactly one layer — <strong>single-strand tie</strong>; fragile; layer-specific disruption severs it entirely</li>
+<li><span class="math inline">\(o_{ij} = 1\)</span>: connected in every layer — <strong>fully redundant multi-strand tie</strong>; persists as long as any one layer remains intact</li>
+</ul>
+</section>
+<section id="layer-correlation" class="level3">
+<h3 class="anchored" data-anchor-id="layer-correlation">Layer Correlation</h3>
+<p>Pearson correlation of degree vectors across layers <span class="math inline">\(\rho_{\alpha\beta} = \text{Pearson}(\mathbf{k}^\alpha, \mathbf{k}^\beta)\)</span>:</p>
+<ul>
+<li><strong>High positive <span class="math inline">\(\rho\)</span>:</strong> the same actors are central across relationship types — generalist hubs; robust, consistent importance</li>
+<li><strong>Low or negative <span class="math inline">\(\rho\)</span>:</strong> different actors dominate in different layers — specialists; layer-specific importance, potentially disruption-sensitive</li>
+</ul>
+</section>
+</div><div class="column" style="width:50%;">
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Multi-Strand Ties in Counterproliferation">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Multi-Strand Ties in Counterproliferation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In counterproliferation network analysis, a relationship appearing simultaneously in the financial transaction network, the communication network, the physical co-location network, and the procurement network has edge overlap <span class="math inline">\(o_{ij} \approx 1.0\)</span> — fully multi-strand and extraordinarily resilient to single-layer disruption.</p>
+<p>The A.Q. Khan proliferation network featured exactly this pattern between Khan and his key technical partners: simultaneous commercial, technical, financial, and political protection relationships ensured that sanctioning one party (disrupting the commercial layer) left the technical and financial layers fully intact.</p>
+<p><strong>Analytical recommendation:</strong> rank all node pairs by edge overlap. Highest-overlap dyads represent the most durable partnerships — the structural backbone of persistent adversary relationships.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-iii-tools-and-workflows" class="level1">
+<h1>Part III: Tools and Workflows</h1>
+<section id="arcgis-network-analyst-capabilities-and-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="arcgis-network-analyst-capabilities-and-workflow">ArcGIS Network Analyst: Capabilities and Workflow</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="core-capabilities" class="level3">
+<h3 class="anchored" data-anchor-id="core-capabilities">Core Capabilities</h3>
+<p>Esri’s Network Analyst extension enables spatial network analysis embedded in ArcGIS Pro, with direct integration of basemaps, satellite imagery, and GEOINT data layers.</p>
+<p><strong>Route analysis:</strong> Shortest path between origin and destination, respecting time-of-day travel speeds, restricted turns, one-way constraints, and turn impedance. Configurable impedance: travel time, distance, cost, or composite risk-weighted cost.</p>
+<p><strong>Service area analysis:</strong> Polygons of all areas reachable from a facility within specified travel time or distance. Reveals operational reach: which population centers, border crossings, or infrastructure nodes lie within two-hour driving distance of a suspected command location?</p>
+<p><strong>Origin-Destination (OD) matrix:</strong> Pairwise shortest-path distances and times between all origins and destinations. Output is a weighted directed edge list — the bridge between ArcGIS spatial analysis and NetworkX/Gephi SNA.</p>
+<p><strong>Closest facility:</strong> For each demand point, identifies the nearest facility. Intelligence application: given known cache locations, which cache is closest to each potential demand point for weapons, material, or personnel?</p>
+<p><strong>Location-allocation:</strong> Optimally selects facility locations to minimize aggregate travel cost. Applicable to: optimal base placement for patrol coverage, optimal interdiction point selection to cover the most trafficking routes.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Intelligence Workflow: Arms Cache Service Areas">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Intelligence Workflow: Arms Cache Service Areas
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Scenario:</strong> from 12 confirmed and suspected arms cache locations in a conflict zone, determine which road network nodes are within 2-hour and 6-hour driving distances.</p>
+<p><strong>ArcGIS workflow:</strong></p>
+<ol type="1">
+<li>Import cache locations as point features; connect to road network dataset</li>
+<li>Run Service Area analysis: 2- and 6-hour drive-time polygons from each cache</li>
+<li>Compute polygon union/intersection: identify overlap zones where multiple caches can reach the same destination within the same time window</li>
+<li>Overlay with critical infrastructure, population centers, and known target sites</li>
+<li>Rank infrastructure nodes by number of caches within their 2-hour service area</li>
+<li>Export ranked node list as OD matrix input for further network analysis</li>
+</ol>
+<p>The convergence zone map identifies areas simultaneously accessible from multiple independently positioned caches — the highest-threat convergence points as collection and watch priorities.</p>
+</div>
+</div>
+<section id="network-dataset-construction" class="level3">
+<h3 class="anchored" data-anchor-id="network-dataset-construction">Network Dataset Construction</h3>
+<p>Built from polyline features (roads from OSM, HERE, NGA VMAP) split at intersections. Impedance attributes: travel time, distance, cost, or analyst-assigned risk rating. Turn and edge restrictions model border closures, restricted zones, and terrain impassability.</p>
+</section>
+</div>
+</div>
+</section>
+<section id="osmnx-and-geopandas" class="level2">
+<h2 class="anchored" data-anchor-id="osmnx-and-geopandas">OSMnx and GeoPandas</h2>
+<section id="osmnx-street-network-analysis-in-python" class="level3">
+<h3 class="anchored" data-anchor-id="osmnx-street-network-analysis-in-python">OSMnx: Street Network Analysis in Python</h3>
+<p>OSMnx (Boeing 2017) acquires, models, analyzes, and visualizes street networks from OpenStreetMap data as NetworkX <code>MultiDiGraph</code> objects.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> osmnx <span class="im">as</span> ox</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Download drive network for an area of interest</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> ox.graph_from_place(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Kandahar, Afghanistan'</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    network_type<span class="op">=</span><span class="st">'drive'</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Network statistics (circuity, intersection density)</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>stats <span class="op">=</span> ox.basic_stats(G)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Circuity: </span><span class="sc">{</span>stats[<span class="st">'circuity_avg'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Betweenness centrality = geographic chokepoints</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>btw <span class="op">=</span> nx.betweenness_centrality(</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    G, weight<span class="op">=</span><span class="st">'travel_time'</span>, normalized<span class="op">=</span><span class="va">True</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>top_nodes <span class="op">=</span> <span class="bu">sorted</span>(btw, key<span class="op">=</span>btw.get, reverse<span class="op">=</span><span class="va">True</span>)[:<span class="dv">5</span>]</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Shortest path (geolocated points)</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>orig <span class="op">=</span> ox.nearest_nodes(G, X<span class="op">=</span><span class="fl">65.707</span>, Y<span class="op">=</span><span class="fl">31.613</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>dest <span class="op">=</span> ox.nearest_nodes(G, X<span class="op">=</span><span class="fl">65.720</span>, Y<span class="op">=</span><span class="fl">31.625</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>route <span class="op">=</span> ox.shortest_path(</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    G, orig, dest, weight<span class="op">=</span><span class="st">'travel_time'</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Export to GeoDataFrame for ArcGIS</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>nodes_gdf, edges_gdf <span class="op">=</span> ox.graph_to_gdfs(G)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>nodes_gdf[<span class="st">'betweenness'</span>] <span class="op">=</span> nodes_gdf.index.<span class="bu">map</span>(btw)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>nodes_gdf.to_file(<span class="st">'network_centrality.gpkg'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="geopandas-proximity-network-construction" class="level3">
+<h3 class="anchored" data-anchor-id="geopandas-proximity-network-construction">GeoPandas: Proximity Network Construction</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.neighbors <span class="im">import</span> BallTree</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create GeoDataFrame from actor coordinates</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>gdf <span class="op">=</span> gpd.GeoDataFrame(</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    actors,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    geometry<span class="op">=</span>gpd.points_from_xy(</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        actors.lon, actors.lat),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    crs<span class="op">=</span><span class="st">'EPSG:4326'</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># BallTree haversine for spherical distances</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>coords_rad <span class="op">=</span> np.radians(</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    gdf[[<span class="st">'lat'</span>, <span class="st">'lon'</span>]].values</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>tree <span class="op">=</span> BallTree(coords_rad, metric<span class="op">=</span><span class="st">'haversine'</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Connect actors within 50 km threshold</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>r_rad <span class="op">=</span> <span class="dv">50</span> <span class="op">/</span> <span class="dv">6371</span>  <span class="co"># 50 km in radians</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>indices <span class="op">=</span> tree.query_radius(coords_rad, r<span class="op">=</span>r_rad)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Build edge list (undirected, no self-loops)</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>edges <span class="op">=</span> [</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    (actors.iloc[i][<span class="st">'id'</span>], actors.iloc[j][<span class="st">'id'</span>])</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, nbrs <span class="kw">in</span> <span class="bu">enumerate</span>(indices)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> nbrs <span class="cf">if</span> i <span class="op">&lt;</span> j</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.Graph()</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, row <span class="kw">in</span> gdf.iterrows():</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    G.add_node(row[<span class="st">'id'</span>],</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>               pos<span class="op">=</span>(row.lon, row.lat))</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>G.add_edges_from(edges)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The resulting proximity graph connects actors by geographic co-location — a baseline for distinguishing geographically-driven from organizationally-driven clustering.</p>
+</section>
+</section>
+</section>
+<section id="part-iv-intelligence-applications" class="level1">
+<h1>Part IV: Intelligence Applications</h1>
+<section id="smuggling-and-trafficking-route-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="smuggling-and-trafficking-route-analysis">Smuggling and Trafficking Route Analysis</h2>
+<section id="network-model" class="level3">
+<h3 class="anchored" data-anchor-id="network-model">Network Model</h3>
+<ul>
+<li><strong>Nodes:</strong> origin production zones, transit points (border crossings, ports, intermediary cities, distribution hubs), destination markets</li>
+<li><strong>Edges:</strong> directed, weighted by estimated volume or frequency; multiple commodities (narcotics, weapons, human beings, wildlife) may traverse the same physical network with different route optimizations</li>
+<li><strong>Structural logic:</strong> smuggling networks exploit structural holes in enforcement coverage and follow the path of least enforcement resistance — not necessarily the geographically shortest path</li>
+</ul>
+<p><strong>Key analytical questions:</strong></p>
+<ul>
+<li>Which transit nodes have highest betweenness? → Priority interdiction targets</li>
+<li>What alternative routes exist if the highest-betweenness node is interdicted? → Circuity cost of rerouting; resilience assessment</li>
+<li>Are there spatial communities in the route network corresponding to distinct trafficking organizations?</li>
+<li>How do routes respond to enforcement pressure? → Temporal analysis (Week 8)</li>
+</ul>
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Andean Cocaine Trafficking Route Network
+  </p>
+  <svg viewbox="0 0 320 360" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <text x="160" y="15" text-anchor="middle" font-size="9" fill="#595959" font-weight="700">DESTINATION (US)</text>
+    <text x="160" y="135" text-anchor="middle" font-size="9" fill="#595959" font-weight="700">MEXICO TRANSIT</text>
+    <text x="160" y="235" text-anchor="middle" font-size="9" fill="#595959" font-weight="700">CENTRAL AMERICA</text>
+    <text x="160" y="320" text-anchor="middle" font-size="9" fill="#595959" font-weight="700">PRODUCTION</text>
+    <line x1="20" y1="25" x2="300" y2="25" stroke="#D6D6D6" stroke-width="1"></line>
+    <line x1="20" y1="145" x2="300" y2="145" stroke="#D6D6D6" stroke-width="1"></line>
+    <line x1="20" y1="245" x2="300" y2="245" stroke="#D6D6D6" stroke-width="1"></line>
+    <circle cx="90" cy="295" r="14" fill="#e8f5e9" stroke="#388e3c" stroke-width="1.8"></circle>
+    <text x="90" y="299" text-anchor="middle" font-size="9" fill="#388e3c" font-weight="600">COL</text>
+    <circle cx="180" cy="308" r="14" fill="#e8f5e9" stroke="#388e3c" stroke-width="1.8"></circle>
+    <text x="180" y="312" text-anchor="middle" font-size="9" fill="#388e3c" font-weight="600">PER</text>
+    <circle cx="250" cy="295" r="14" fill="#e8f5e9" stroke="#388e3c" stroke-width="1.8"></circle>
+    <text x="250" y="299" text-anchor="middle" font-size="9" fill="#388e3c" font-weight="600">BOL</text>
+    <circle cx="120" cy="205" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <text x="120" y="209" text-anchor="middle" font-size="8.5" fill="#450084">GUA</text>
+    <circle cx="200" cy="210" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <text x="200" y="214" text-anchor="middle" font-size="8.5" fill="#450084">HON</text>
+    <circle cx="160" cy="170" r="20" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"></circle>
+    <text x="160" y="167" text-anchor="middle" font-size="8" fill="#333" font-weight="700">GTM-</text>
+    <text x="160" y="179" text-anchor="middle" font-size="8" fill="#333" font-weight="700">MEX</text>
+    <text x="160" y="198" text-anchor="middle" font-size="8" fill="#AD9C65" font-style="italic">max C_B</text>
+    <circle cx="160" cy="110" r="16" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="160" y="114" text-anchor="middle" font-size="9" fill="#450084" font-weight="600">MEX</text>
+    <circle cx="90" cy="55" r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"></circle>
+    <text x="90" y="59" text-anchor="middle" font-size="9" fill="#AD9C65" font-weight="600">LA</text>
+    <circle cx="160" cy="45" r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"></circle>
+    <text x="160" y="49" text-anchor="middle" font-size="9" fill="#AD9C65" font-weight="600">CHI</text>
+    <circle cx="240" cy="55" r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"></circle>
+    <text x="240" y="59" text-anchor="middle" font-size="9" fill="#AD9C65" font-weight="600">NYC</text>
+    <line x1="90" y1="281" x2="120" y2="217" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="180" y1="294" x2="120" y2="217" stroke="#450084" stroke-width="2"></line>
+    <line x1="250" y1="281" x2="200" y2="222" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="120" y1="193" x2="160" y2="190" stroke="#450084" stroke-width="3"></line>
+    <line x1="200" y1="198" x2="160" y2="190" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="160" y1="150" x2="160" y2="126" stroke="#CBB677" stroke-width="4"></line>
+    <line x1="148" y1="95" x2="100" y2="66" stroke="#CBB677" stroke-width="3"></line>
+    <line x1="160" y1="94" x2="160" y2="59" stroke="#CBB677" stroke-width="2.5"></line>
+    <line x1="172" y1="95" x2="228" y2="66" stroke="#CBB677" stroke-width="2"></line>
+    <path d="M 90 281 Q 30 200 90 55" fill="none" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="6,4"></path>
+    <text x="25" y="195" font-size="7.5" fill="#B2B2B2" transform="rotate(-70,25,195)">maritime alt.</text>
+  </svg>
+  <figcaption>
+    Edge thickness proportional to estimated volume. GTM-MEX crossing = max betweenness.<br>
+    Dashed: maritime alternative route if overland chokepoint is interdicted.
+  </figcaption>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Data Challenge: Enforcement Selection Bias">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Data Challenge: Enforcement Selection Bias
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Observed seizure data is biased toward enforcement-heavy routes. Routes showing the most seizures are precisely those with the heaviest interdiction coverage — not necessarily the highest-volume routes. True high-volume routes may produce fewer seizures because enforcement resources are directed elsewhere.</p>
+<p>The Afghanistan heroin trafficking network demonstrates this: the highest-volume routes through Iran produced relatively few seizures compared to the Balkans route that received more interdictions per kilogram shipped — a direct consequence of differential enforcement investment, not differential volume.</p>
+<p><strong>Analytical mitigation:</strong> combine seizure data with satellite imagery vehicle counts, financial intelligence on cartel revenue and market consumption estimates, HUMINT on route prices (higher prices = scarcer, better-protected; lower prices = high-volume, low-risk), and court record reconstructions from prosecuted trafficking cases.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="critical-infrastructure-interdependency" class="level2">
+<h2 class="anchored" data-anchor-id="critical-infrastructure-interdependency">Critical Infrastructure Interdependency</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="the-interdependency-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-interdependency-problem">The Interdependency Problem</h3>
+<p>Modern critical infrastructure systems are deeply interdependent: power grids require telecommunications for operational control; telecom requires power; water treatment requires power and chemical supply; financial systems require telecom and power.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> This creates <strong>cascading failure</strong> risk invisible to single-layer analysis.</p>
+<p><strong>Four-layer interdependency model:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Layer</th>
+<th style="text-align: left;">Nodes</th>
+<th style="text-align: left;">Depends on</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1: Power grid</td>
+<td style="text-align: left;">Substations, generators</td>
+<td style="text-align: left;">(primary)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2: Telecom</td>
+<td style="text-align: left;">Exchanges, towers</td>
+<td style="text-align: left;">Layer 1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3: Water</td>
+<td style="text-align: left;">Treatment plants, pumps</td>
+<td style="text-align: left;">Layers 1 + 2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4: Transportation</td>
+<td style="text-align: left;">Road/rail nodes</td>
+<td style="text-align: left;">Layer 1 (signals)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Cascading failure sequence:</strong></p>
+<ol type="1">
+<li>Target a specific substation in Layer 1</li>
+<li>Remove it; identify Layer 1 nodes that disconnect from generators</li>
+<li>Identify Layer 2 nodes powered by failed Layer 1 nodes — they fail</li>
+<li>Identify Layer 3 nodes dependent on failed Layer 2 nodes — they fail</li>
+<li>Compute total fraction of each layer that fails from the initial single-node attack</li>
+</ol>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Cascading Infrastructure Failure
+  </p>
+  <svg viewbox="0 0 460 215" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <defs>
+      <marker id="dep2" markerwidth="6" markerheight="6" refx="4" refy="3" orient="auto">
+        <path d="M0,0 L0,6 L6,3 z" fill="#B2B2B2"></path>
+      </marker>
+      <marker id="fail2" markerwidth="6" markerheight="6" refx="4" refy="3" orient="auto">
+        <path d="M0,0 L0,6 L6,3 z" fill="#cc0000"></path>
+      </marker>
+    </defs>
+    <line x1="228" y1="5" x2="228" y2="210" stroke="#D6D6D6" stroke-width="1.5"></line>
+    <text x="114" y="16" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">INTACT</text>
+    <text x="342" y="16" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">AFTER CASCADE</text>
+    <text x="15" y="47" font-size="8" fill="#450084" font-weight="700">POWER</text>
+    <text x="15" y="92" font-size="8" fill="#AD9C65" font-weight="700">TELECOM</text>
+    <text x="15" y="137" font-size="8" fill="#595959" font-weight="700">WATER</text>
+    <circle cx="80" cy="43" r="10" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"></circle>
+    <text x="80" y="47" text-anchor="middle" font-size="8" fill="#333">T</text>
+    <circle cx="120" cy="43" r="10" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="160" cy="43" r="10" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <line x1="90" y1="43" x2="110" y2="43" stroke="#450084" stroke-width="2"></line>
+    <line x1="130" y1="43" x2="150" y2="43" stroke="#450084" stroke-width="2"></line>
+    <line x1="120" y1="53" x2="100" y2="82" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#dep2)"></line>
+    <line x1="160" y1="53" x2="160" y2="82" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#dep2)"></line>
+    <line x1="100" y1="102" x2="100" y2="127" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#dep2)"></line>
+    <line x1="160" y1="102" x2="160" y2="127" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#dep2)"></line>
+    <circle cx="100" cy="88" r="10" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <circle cx="160" cy="88" r="10" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <line x1="110" y1="88" x2="150" y2="88" stroke="#AD9C65" stroke-width="2"></line>
+    <circle cx="100" cy="133" r="10" fill="#D6D6D6" stroke="#595959" stroke-width="2"></circle>
+    <circle cx="160" cy="133" r="10" fill="#D6D6D6" stroke="#595959" stroke-width="2"></circle>
+    <line x1="110" y1="133" x2="150" y2="133" stroke="#595959" stroke-width="2"></line>
+    <circle cx="300" cy="43" r="10" fill="#fdd" stroke="#cc0000" stroke-width="2" stroke-dasharray="4,2"></circle>
+    <text x="300" y="47" text-anchor="middle" font-size="9" fill="#cc0000">X</text>
+    <circle cx="340" cy="43" r="10" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="380" cy="43" r="10" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <line x1="350" y1="43" x2="370" y2="43" stroke="#450084" stroke-width="2"></line>
+    <line x1="300" y1="53" x2="318" y2="82" stroke="#cc0000" stroke-width="1.5" marker-end="url(#fail2)"></line>
+    <circle cx="320" cy="88" r="10" fill="#fdd" stroke="#cc0000" stroke-width="2" stroke-dasharray="4,2"></circle>
+    <text x="320" y="92" text-anchor="middle" font-size="9" fill="#cc0000">X</text>
+    <circle cx="380" cy="88" r="10" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <line x1="320" y1="98" x2="320" y2="127" stroke="#cc0000" stroke-width="1.5" marker-end="url(#fail2)"></line>
+    <circle cx="320" cy="133" r="10" fill="#fdd" stroke="#cc0000" stroke-width="2" stroke-dasharray="4,2"></circle>
+    <text x="320" y="137" text-anchor="middle" font-size="9" fill="#cc0000">X</text>
+    <circle cx="380" cy="133" r="10" fill="#D6D6D6" stroke="#595959" stroke-width="2"></circle>
+    <text x="114" y="180" text-anchor="middle" font-size="8" fill="#595959">All layers intact</text>
+    <text x="342" y="180" text-anchor="middle" font-size="8" fill="#cc0000">1 power attack → 3 total failures</text>
+    <text x="342" y="193" text-anchor="middle" font-size="7.5" fill="#cc0000">Power → Telecom → Water cascade</text>
+  </svg>
+  <figcaption>
+    T = targeted substation. Cascade propagates through dependent telecom and water nodes.<br>
+    Single physical attack produces threefold infrastructure damage.
+  </figcaption>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Buldyrev et al. (2010): The Phase Transition">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Buldyrev et al.&nbsp;(2010): The Phase Transition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Interdependent networks exhibit a <strong>first-order phase transition</strong> at a critical failure threshold — not the gradual degradation of single-layer networks. A random failure rate of 40% in a single-layer network produces modest damage. The same failure rate in two interdependent layers can trigger total network collapse.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a></p>
+<p>The 2015 and 2016 Ukrainian power grid attacks (Sandworm/GRU) demonstrated this empirically: remote substation attacks combined with SCADA disruption to deny restoration — the first documented cyberattacks to trigger deliberate infrastructure cascade. The 2003 Northeast blackout (50 million people across US and Canada) showed the same dynamics from a software fault, propagating through interconnected power systems far beyond the initial triggering event.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="multi-layer-analysis-of-state-actor-networks" class="level2">
+<h2 class="anchored" data-anchor-id="multi-layer-analysis-of-state-actor-networks">Multi-Layer Analysis of State Actor Networks</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="state-actor-networks-as-multiplex-structures" class="level3">
+<h3 class="anchored" data-anchor-id="state-actor-networks-as-multiplex-structures">State Actor Networks as Multiplex Structures</h3>
+<p>State and quasi-state actors operate simultaneously across multiple relationship layers. Multiplex analysis enables:</p>
+<ul>
+<li>Identifying <strong>multi-strand partnerships</strong> present across diplomatic, military, economic, and intelligence layers simultaneously — the most durable and strategically significant bilateral ties</li>
+<li>Predicting <strong>which relationships survive disruption</strong> to one layer (sanctions, diplomatic rupture, regime change)</li>
+<li>Distinguishing <strong>formal from informal</strong> relationships: treaty-based cooperation vs.&nbsp;intelligence-to-intelligence arrangements operating without formal diplomatic acknowledgment</li>
+<li>Locating <strong>structural holes</strong> in expected relationship networks: bilateral relationships that should exist given shared threat environments or economic complementarity but do not</li>
+</ul>
+<p><strong>Illustrative layer set for state actor multiplex analysis:</strong></p>
+<ol type="1">
+<li>Diplomatic recognition and treaty network</li>
+<li>Arms transfer network (SIPRI arms transfer database — open source)</li>
+<li>Trade and investment flows (IMF DOTS, World Bank bilateral trade)</li>
+<li>Intelligence cooperation (Five Eyes, bilateral liaison arrangements)</li>
+<li>Military basing and access agreements (SOFA registrations)</li>
+<li>UN General Assembly voting similarity (broad political alignment proxy)</li>
+</ol>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="A.Q. Khan Network: Four-Layer Multiplex">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>A.Q. Khan Network: Four-Layer Multiplex
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The A.Q. Khan proliferation network (1987–2004) operated simultaneously across four qualitatively distinct layers:<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
+<p><strong>Layer 1 — Commercial:</strong> front companies (SMB Group, Gulf Technical Industries), export licenses through European and Gulf intermediaries, legitimate manufacturing relationships for dual-use components.</p>
+<p><strong>Layer 2 — Technical:</strong> nuclear weapons design and centrifuge technology transfer between Pakistani, Libyan, Iranian, and North Korean engineers.</p>
+<p><strong>Layer 3 — Financial:</strong> shell company transactions across Swiss, Dubai, South African, and Malaysian financial systems with multi-hop wire transfers to obscure origin.</p>
+<p><strong>Layer 4 — Political protection:</strong> Pakistani ISI cover, diplomatic interference with IAEA inspections, deliberate compartmentalization from Pakistani foreign ministry.</p>
+<p><strong>The multilayer finding:</strong> disrupting the commercial layer (export controls, sanctions on front companies) did not sever technical or financial layers, which continued through alternative channels. Multi-strand architecture provided structural resilience that single-layer interdiction could not overcome.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Data Availability Warning">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Data Availability Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Classified layers (intelligence cooperation, political protection) are rarely available in open-source analysis. Analysts must clearly distinguish data-rich layers from speculative layers, and present findings accordingly.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="integrating-geoint-and-network-data" class="level2">
+<h2 class="anchored" data-anchor-id="integrating-geoint-and-network-data">Integrating GEOINT and Network Data</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="geoint-as-network-input" class="level3">
+<h3 class="anchored" data-anchor-id="geoint-as-network-input">GEOINT as Network Input</h3>
+<ul>
+<li><strong>Facility detection:</strong> satellite imagery identifies physical nodes — warehouses, refineries, military installations, border crossings. GEOINT provides node locations, physical dimensions, and activity status as node attributes.</li>
+<li><strong>Activity monitoring:</strong> change detection over time reveals when nodes become operationally active; vehicle/vessel presence indicates operational status; this drives temporal network updates (Week 8).</li>
+<li><strong>Route corroboration:</strong> observed vehicle tracks, vessel AIS trails, and flight data provide ground-truth validation for proposed spatial network edges.</li>
+<li><strong>Infrastructure mapping:</strong> pipeline routes, power line corridors, and road networks extracted from imagery constitute the physical edge layer of infrastructure multiplex networks.</li>
+<li><strong>Geographic context:</strong> terrain, urban density, and border architecture define the spatial constraints within which network edges are physically possible.</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="network-analysis-as-geoint-enhancement" class="level3">
+<h3 class="anchored" data-anchor-id="network-analysis-as-geoint-enhancement">Network Analysis as GEOINT Enhancement</h3>
+<ul>
+<li><strong>Collection prioritization:</strong> high-betweenness nodes identified by network analysis become priority imagery collection targets; structural importance directs sensor tasking.</li>
+<li><strong>Unknown node inference:</strong> if actors A and C are both network-connected to an unobserved node B (inferred from traffic patterns or financial flows), network analysis predicts B’s existence and constrains its geographic location within the spatial network.</li>
+<li><strong>Route prediction:</strong> spatial betweenness identifies which geographic corridors illicit actors <em>must</em> use given their origin-destination pairs and terrain constraints — enabling anticipatory ISR positioning.</li>
+<li><strong>Activity baseline:</strong> expected traffic volume at a high-betweenness geographic node; anomaly detection when observed imagery traffic deviates from structural prediction.</li>
+</ul>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="The GEOINT-SNA Synergy">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The GEOINT-SNA Synergy
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>SNA identifies <em>which</em> locations are structurally important; GEOINT characterizes <em>what</em> is happening at those locations.</strong></p>
+<p>In practice: run network analysis first to generate a priority target list ranked by structural metrics; direct GEOINT collection against that list; use collection findings to update the network model; iterate. The combination is more powerful than either approach alone.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+</section>
+<section id="lecture-summary" class="level1">
+<h1>Lecture Summary</h1>
+<section id="key-formulas" class="level2">
+<h2 class="anchored" data-anchor-id="key-formulas">Key Formulas</h2>
+<div class="key-terms">
+<dl>
+<dt><strong>Euler’s formula (planar graphs)</strong></dt>
+<dd>
+<span class="math inline">\(V - E + F = 2\)</span>; implies <span class="math inline">\(E \leq 3V - 6\)</span> and <span class="math inline">\(\langle k \rangle &lt; 6\)</span> for any planar network
+</dd>
+<dt><strong>Waxman edge probability</strong></dt>
+<dd>
+<span class="math inline">\(P(\{u,v\}) = \beta\exp(-d(u,v)/\alpha L)\)</span>; low <span class="math inline">\(\alpha\)</span> = localized; high <span class="math inline">\(\alpha\)</span> = long-range
+</dd>
+<dt><strong>Circuity (detour factor)</strong></dt>
+<dd>
+<span class="math inline">\(\eta(u,v) = d_G(u,v)/d_E(u,v)\)</span>; <span class="math inline">\(\eta = 1\)</span> is optimal; <span class="math inline">\(&gt; 1.5\)</span> indicates significant geographic detour
+</dd>
+<dt><strong>Network efficiency</strong></dt>
+<dd>
+<span class="math inline">\(E = \dfrac{1}{n(n-1)}\sum_{u \neq v}\dfrac{1}{d_G(u,v)}\)</span>; convention <span class="math inline">\(1/\infty = 0\)</span>; attack effect = <span class="math inline">\(\Delta E\)</span>
+</dd>
+<dt><strong>Multilayer network</strong></dt>
+<dd>
+<span class="math inline">\(\mathcal{M} = (G, C, \mathbf{X}_A, \mathbf{X}_L, \mathbf{X}_V, \mathbf{X}_E)\)</span> (Kivelä et al.&nbsp;2014)
+</dd>
+<dt><strong>Supra-adjacency matrix</strong></dt>
+<dd>
+Block <span class="math inline">\(nL \times nL\)</span> matrix; diagonal blocks <span class="math inline">\(A^{(\alpha)}\)</span> (intra-layer); off-diagonals <span class="math inline">\(I\omega_{\alpha\beta}\)</span> (coupling)
+</dd>
+<dt><strong>Edge overlap</strong></dt>
+<dd>
+<span class="math inline">\(o_{ij} = (\sum_\alpha A_{ij}^\alpha - 1)/(L-1) \in [0,1]\)</span>; <span class="math inline">\(o_{ij}=1\)</span> = fully multi-strand tie
+</dd>
+</dl>
+</div>
+</section>
+<section id="key-analytical-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-analytical-takeaways">Key Analytical Takeaways</h2>
+<ol type="1">
+<li><p>Geographic chokepoints in spatial networks are identified by betweenness centrality but are <em>physically constrained</em> — they cannot be bypassed without significant circuity cost. This is analytically distinct from social network chokepoints, which can be circumvented through organizational adaptation.</p></li>
+<li><p>Multiplex analysis reveals multi-strand ties (high edge overlap) completely invisible to single-layer analysis. These are the most durable and analytically significant relationships in any target network.</p></li>
+<li><p>Infrastructure interdependency creates catastrophic cascade failure risk far exceeding what single-layer analysis predicts. A single physical attack on a high-betweenness power node can produce threefold or greater infrastructure damage through cascade.</p></li>
+<li><p>GEOINT and SNA are mutually reinforcing: SNA directs imagery collection toward structurally important nodes; imagery grounds the network model and reveals physical activity at predicted chokepoints.</p></li>
+<li><p>Coupling weight <span class="math inline">\(\omega\)</span> between multilayer layers is always a modeling choice; sensitivity analysis over a range of <span class="math inline">\(\omega\)</span> values is required before multilayer findings appear in finished intelligence products.</p></li>
+</ol>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Next Lecture">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Next Lecture
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Temporal and Dynamic Networks</strong> — how networks change over time; dynamic centrality measures; tracking organizational adaptation after disruption; event-driven network change; temporal betweenness and temporal shortest paths; NetworkX temporal analysis; applications to monitoring network evolution in intelligence targets.</p>
+</div>
+</div>
+<div style="margin-top:2rem">
+  <ul class="course-sequence">
+    <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> What is Network Analysis?</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Graph Theory Basics</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Centrality and Influence</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Social Network Analysis in Intelligence</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Community Detection and Clustering</li>
+    <li class="seq-active"><span class="seq-icon">►</span> <strong>Geospatial and Multi-Layer Networks</strong> (this lecture)</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Temporal / Dynamic Networks</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Global Security Networks</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Financial Networks</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Information / Influence Networks</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Infrastructure Networks</li>
+  </ul>
+</div>
+<div class="page-footer-custom">
+Intelligence Analysis Program &nbsp;|&nbsp; School of Intergrated Science &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
+
+
+
+</div></section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Marc Barthélemy, “Spatial Networks,” <em>Physics Reports</em> 499, no. 1–3 (2011): 1–101.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Barthélemy, “Spatial Networks,” 20–35.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Bernard M. Waxman, “Routing of Multipoint Connections,” <em>IEEE Journal on Selected Areas in Communications</em> 6, no. 9 (1988): 1617–1622.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Boeing, “OSMnx,” 126–139.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Vito Latora and Massimo Marchiori, “Efficient Behavior of Small-World Networks,” <em>Physical Review Letters</em> 87, no. 19 (2001): 198701.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Mikko Kivelä et al., “Multilayer Networks,” <em>Journal of Complex Networks</em> 2, no. 3 (2014): 203–271.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Stefano Boccaletti et al., “The Structure and Dynamics of Multilayer Networks,” <em>Physics Reports</em> 544, no. 1 (2014): 1–122.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>Boeing, “OSMnx,” 126–129.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>Boccaletti et al., “Structure and Dynamics of Multilayer Networks,” 45–60.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>Sergey V. Buldyrev et al., “Catastrophic Cascade of Failures in Interdependent Networks,” <em>Nature</em> 464 (2010): 1025–1028.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>Gordon Corera, <em>Shopping for Bombs</em> (Oxford: Oxford University Press, 2006), 88–115.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

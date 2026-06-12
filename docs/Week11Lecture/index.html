@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="School of Intelligence Analysis, James Madison University">
+<meta name="dcterms.date" content="2026-01-01">
+
+<title>Financial and Transaction Networks – IA 480: Applied Network Analysis: Systems, Connections, and Influence</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-d6fbb5bfb24a4f1906c428146fc3bdde.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0d48ad8d89774e5362b72c75c2c9e679.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">IA 480: Applied Network Analysis: Systems, Connections, and Influence</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-weekly-materials" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Weekly Materials</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-weekly-materials">    
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week2Lecture/index.qmd">
+ <span class="dropdown-text">Week 2 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week3Lecture/index.qmd">
+ <span class="dropdown-text">Week 3 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week4Lecture/index.qmd">
+ <span class="dropdown-text">Week 4 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week5Lecture/index.qmd">
+ <span class="dropdown-text">Week 5 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week6Lecture/index.qmd">
+ <span class="dropdown-text">Week 6 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week7Lecture/index.qmd">
+ <span class="dropdown-text">Week 7 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week8Lecture/index.qmd">
+ <span class="dropdown-text">Week 8 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week9Lecture/index.qmd">
+ <span class="dropdown-text">Week 9 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week10Lecture/index.qmd">
+ <span class="dropdown-text">Week 10 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week11Lecture/index.qmd">
+ <span class="dropdown-text">Week 11 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week12Lecture/index.qmd">
+ <span class="dropdown-text"></span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#lecture-roadmap" id="toc-lecture-roadmap" class="nav-link active" data-scroll-target="#lecture-roadmap">Lecture Roadmap</a></li>
+  <li><a href="#part-i-financial-networks-as-analytical-objects" id="toc-part-i-financial-networks-as-analytical-objects" class="nav-link" data-scroll-target="#part-i-financial-networks-as-analytical-objects">Part I: Financial Networks as Analytical Objects</a>
+  <ul class="collapse">
+  <li><a href="#types-of-financial-networks" id="toc-types-of-financial-networks" class="nav-link" data-scroll-target="#types-of-financial-networks">Types of Financial Networks</a></li>
+  <li><a href="#money-laundering-network-structure-of-the-three-stages" id="toc-money-laundering-network-structure-of-the-three-stages" class="nav-link" data-scroll-target="#money-laundering-network-structure-of-the-three-stages">Money Laundering: Network Structure of the Three Stages</a></li>
+  <li><a href="#bipartite-person-account-networks-and-flow-centrality" id="toc-bipartite-person-account-networks-and-flow-centrality" class="nav-link" data-scroll-target="#bipartite-person-account-networks-and-flow-centrality">Bipartite Person-Account Networks and Flow Centrality</a></li>
+  </ul></li>
+  <li><a href="#part-ii-informal-and-covert-value-transfer" id="toc-part-ii-informal-and-covert-value-transfer" class="nav-link" data-scroll-target="#part-ii-informal-and-covert-value-transfer">Part II: Informal and Covert Value Transfer</a>
+  <ul class="collapse">
+  <li><a href="#hawala-and-informal-value-transfer-systems" id="toc-hawala-and-informal-value-transfer-systems" class="nav-link" data-scroll-target="#hawala-and-informal-value-transfer-systems">Hawala and Informal Value Transfer Systems</a></li>
+  <li><a href="#shell-company-and-beneficial-ownership-networks" id="toc-shell-company-and-beneficial-ownership-networks" class="nav-link" data-scroll-target="#shell-company-and-beneficial-ownership-networks">Shell Company and Beneficial Ownership Networks</a></li>
+  <li><a href="#trade-based-money-laundering" id="toc-trade-based-money-laundering" class="nav-link" data-scroll-target="#trade-based-money-laundering">Trade-Based Money Laundering</a></li>
+  </ul></li>
+  <li><a href="#part-iii-cryptocurrency-transaction-networks" id="toc-part-iii-cryptocurrency-transaction-networks" class="nav-link" data-scroll-target="#part-iii-cryptocurrency-transaction-networks">Part III: Cryptocurrency Transaction Networks</a>
+  <ul class="collapse">
+  <li><a href="#bitcoin-utxo-graph-structure" id="toc-bitcoin-utxo-graph-structure" class="nav-link" data-scroll-target="#bitcoin-utxo-graph-structure">Bitcoin UTXO Graph Structure</a></li>
+  <li><a href="#address-clustering-and-de-anonymization" id="toc-address-clustering-and-de-anonymization" class="nav-link" data-scroll-target="#address-clustering-and-de-anonymization">Address Clustering and De-Anonymization</a></li>
+  <li><a href="#mixing-services-and-privacy-coins" id="toc-mixing-services-and-privacy-coins" class="nav-link" data-scroll-target="#mixing-services-and-privacy-coins">Mixing Services and Privacy Coins</a></li>
+  </ul></li>
+  <li><a href="#part-iv-financial-intelligence-analysis" id="toc-part-iv-financial-intelligence-analysis" class="nav-link" data-scroll-target="#part-iv-financial-intelligence-analysis">Part IV: Financial Intelligence Analysis</a>
+  <ul class="collapse">
+  <li><a href="#fincen-data-sars-ctrs-and-network-construction" id="toc-fincen-data-sars-ctrs-and-network-construction" class="nav-link" data-scroll-target="#fincen-data-sars-ctrs-and-network-construction">FinCEN Data: SARs, CTRs, and Network Construction</a></li>
+  <li><a href="#fatf-terrorist-financing-typologies-as-network-patterns" id="toc-fatf-terrorist-financing-typologies-as-network-patterns" class="nav-link" data-scroll-target="#fatf-terrorist-financing-typologies-as-network-patterns">FATF Terrorist Financing Typologies as Network Patterns</a></li>
+  <li><a href="#financial-intelligence-integration" id="toc-financial-intelligence-integration" class="nav-link" data-scroll-target="#financial-intelligence-integration">Financial Intelligence Integration</a></li>
+  </ul></li>
+  <li><a href="#lecture-summary" id="toc-lecture-summary" class="nav-link" data-scroll-target="#lecture-summary">Lecture Summary</a>
+  <ul class="collapse">
+  <li><a href="#key-formulas-and-structures" id="toc-key-formulas-and-structures" class="nav-link" data-scroll-target="#key-formulas-and-structures">Key Formulas and Structures</a></li>
+  <li><a href="#key-analytical-takeaways" id="toc-key-analytical-takeaways" class="nav-link" data-scroll-target="#key-analytical-takeaways">Key Analytical Takeaways</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Financial and Transaction Networks</h1>
+<p class="subtitle lead">IA 480: Applied Network Analysis: Systems, Connections, and Influence</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>School of Intelligence Analysis, James Madison University </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 1, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="uc-banner column-screen">
+UNCLASSIFIED // FOR EDUCATIONAL USE ONLY
+</div>
+<div class="course-meta">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Course</td>
+<td style="text-align: left;">IA 480: Applied Network Analysis</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Week</td>
+<td style="text-align: left;">11 of 12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Instructor</td>
+<td style="text-align: left;">School of Intelligence Analysis</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Term</td>
+<td style="text-align: left;">Fall 2026</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of this lecture, students should be able to:</p>
+<ol type="1">
+<li>Formally represent a financial network as a bipartite person-account graph or directed transaction network and identify the correct centrality measure for each.</li>
+<li>Identify the structural network signature of each money laundering stage (placement, layering, integration).</li>
+<li>Describe the Bitcoin UTXO graph, apply the co-input clustering heuristic, and explain why Monero defeats standard clustering methods.</li>
+<li>Interpret FinCEN SAR and CTR data as financial network edges and construct a transaction network from raw filings.</li>
+<li>Match FATF terrorist financing typologies to their network signatures and apply appropriate collection and analysis strategies.</li>
+</ol>
+</div>
+</div>
+<section id="lecture-roadmap" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-roadmap">Lecture Roadmap</h2>
+<div class="roadmap-grid" style="grid-template-columns: repeat(2,1fr)">
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part I — Financial Networks as Analytical Objects</div>
+    <ul>
+      <li>Types of financial networks</li>
+      <li>Money laundering: placement, layering, integration</li>
+      <li>Bipartite person-account networks</li>
+      <li>Flow centrality and cycle detection</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part II — Informal and Covert Value Transfer</div>
+    <ul>
+      <li>Hawala and informal value transfer systems</li>
+      <li>Shell company and beneficial ownership networks</li>
+      <li>The Panama and Pandora Papers as network data</li>
+      <li>Trade-based money laundering (TBML)</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part III — Cryptocurrency Transaction Networks</div>
+    <ul>
+      <li>Bitcoin UTXO graph structure</li>
+      <li>Address clustering heuristics</li>
+      <li>Mixing, CoinJoin, and the Lightning Network</li>
+      <li>Monero and privacy-enhanced architectures</li>
+      <li>Blockchain analytics tools</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part IV — Financial Intelligence Analysis</div>
+    <ul>
+      <li>FinCEN data: SARs, CTRs, and network construction</li>
+      <li>Structuring detection as anomaly detection</li>
+      <li>FATF terrorist financing typologies</li>
+      <li>Financial intelligence integration</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section id="part-i-financial-networks-as-analytical-objects" class="level1">
+<h1>Part I: Financial Networks as Analytical Objects</h1>
+<section id="types-of-financial-networks" class="level2">
+<h2 class="anchored" data-anchor-id="types-of-financial-networks">Types of Financial Networks</h2>
+<p>Financial systems generate multiple overlapping network structures, each analytically distinct. Intelligence analysts must select the appropriate representation before applying network methods.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="four-network-types" class="level3">
+<h3 class="anchored" data-anchor-id="four-network-types">Four Network Types</h3>
+<p><strong>Interbank networks:</strong> Nodes are financial institutions; edges are overnight lending, correspondent banking relationships, or net settlement obligations. These are critical infrastructure networks exhibiting heavy-tailed degree distributions — a small number of major correspondent banks process transactions for thousands of smaller institutions, creating extreme betweenness centrality and systemic risk from hub failure.</p>
+<p><strong>Transaction networks:</strong> Nodes are persons or entities; directed edges are individual transactions; edge weight is transaction value; timestamps are essential. The analytically critical constraint: money flows have <em>direction</em> and <em>timing</em> that must be preserved. Aggregating or ignoring direction loses the core analytical signal.</p>
+<p><strong>Ownership networks:</strong> Nodes are legal entities and natural persons; directed edges are shareholding or control relationships (<span class="math inline">\(A\)</span> owns <span class="math inline">\(B\)</span>: <span class="math inline">\(A \to B\)</span>). Used for beneficial ownership analysis, sanctions evasion detection, and UBO identification. Path length from terminal asset to ultimate natural person correlates with opacity.</p>
+<p><strong>Account networks (bipartite):</strong> Persons on one side, financial accounts on the other; an edge <span class="math inline">\((p, a)\)</span> indicates <span class="math inline">\(p\)</span> has signatory authority or control over account <span class="math inline">\(a\)</span>. This is the foundational structure for detecting co-controllers, front accounts, and smurfing networks.</p>
+</section>
+<section id="key-directed-graph-properties" class="level3">
+<h3 class="anchored" data-anchor-id="key-directed-graph-properties">Key Directed Graph Properties</h3>
+<ul>
+<li>Transaction networks <strong>must</strong> be analyzed as directed weighted graphs; following money requires respecting flow direction at every step</li>
+<li>In-degree = liquidity reception (money arriving); out-degree = distribution (money departing)</li>
+<li>High out-degree relative to in-degree: potential money distributor or layering node</li>
+<li>A correspondent bank with extreme betweenness: its OFAC designation under Section 311 of the USA PATRIOT Act triggers cascading withdrawal by banks fearing secondary sanctions exposure — the most powerful single financial disruption tool available to U.S. authorities</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Intelligence vs. Regulatory Framing">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Intelligence vs.&nbsp;Regulatory Framing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Regulators use financial network analysis for <strong>systemic risk monitoring</strong>: which institutions are too interconnected to fail? Which network structures propagate contagion?</p>
+<p>Intelligence analysts use the same structural methods for entirely different goals:</p>
+<ul>
+<li>Identifying illicit actors and their account clusters</li>
+<li>Tracing fund flows from criminal enterprise to operational use</li>
+<li>Attributing financing to specific organizations</li>
+<li>Locating network chokepoints for targeted disruption</li>
+</ul>
+<p>The graph is the same; the analytical questions differ. A high-betweenness correspondent bank is a systemic risk concern for regulators — and an optimal designation target for intelligence-driven financial disruption.</p>
+<p><strong>The Section 311 mechanism:</strong> the U.S. Treasury designates a foreign bank as a “primary money laundering concern” under Section 311 of the USA PATRIOT Act. All U.S. financial institutions are then prohibited from maintaining correspondent relationships with the designated bank. The network effect: non-U.S. banks that maintain U.S. dollar access through U.S. correspondents simultaneously withdraw from the designated bank to avoid secondary sanctions risk — producing cascading exclusion from the global dollar-clearing system from a single designation action.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Temporal Dimension is Non-Negotiable">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Temporal Dimension is Non-Negotiable
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Financial networks are fundamentally temporal. An edge that existed in 2019 is analytically irrelevant to a 2024 operation. Account relationships that were open for three months and then closed are structurally distinct from decade-long correspondent relationships.</p>
+<p>Static aggregation of financial network data — treating all historical edges as simultaneously active — is the most common and most consequential error in financial intelligence analysis.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="money-laundering-network-structure-of-the-three-stages" class="level2">
+<h2 class="anchored" data-anchor-id="money-laundering-network-structure-of-the-three-stages">Money Laundering: Network Structure of the Three Stages</h2>
+<p>Money laundering converts criminal proceeds into apparently legitimate assets through three structurally distinct network operations, each with a characteristic network signature.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.5rem">
+    Money Laundering: Three Stages and Network Signatures
+  </p>
+  <svg viewbox="0 0 580 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <defs>
+      <marker id="ml" markerwidth="8" markerheight="8" refx="6" refy="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#450084"></path>
+      </marker>
+    </defs>
+
+    <!-- Stage boxes -->
+    <rect x="10" y="48" width="110" height="50" rx="5" fill="#F4EFE1" stroke="#CBB677" stroke-width="2"></rect>
+    <text x="65" y="68" text-anchor="middle" font-size="10" font-weight="700" fill="#AD9C65">Criminal</text>
+    <text x="65" y="82" text-anchor="middle" font-size="10" font-weight="700" fill="#AD9C65">Proceeds</text>
+
+    <rect x="155" y="48" width="110" height="50" rx="5" fill="#DACCE6" stroke="#450084" stroke-width="2"></rect>
+    <text x="210" y="65" text-anchor="middle" font-size="10" font-weight="700" fill="#450084">PLACEMENT</text>
+    <text x="210" y="80" text-anchor="middle" font-size="9" fill="#595959">Cash enters system</text>
+
+    <rect x="300" y="48" width="110" height="50" rx="5" fill="#B599CE" stroke="#450084" stroke-width="2"></rect>
+    <text x="355" y="65" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">LAYERING</text>
+    <text x="355" y="80" text-anchor="middle" font-size="9" fill="#DACCE6">Audit trail broken</text>
+
+    <rect x="445" y="48" width="120" height="50" rx="5" fill="#450084" stroke="#450084" stroke-width="2"></rect>
+    <text x="505" y="65" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">INTEGRATION</text>
+    <text x="505" y="80" text-anchor="middle" font-size="9" fill="#DACCE6">Funds legitimized</text>
+
+    <!-- Arrows between stages -->
+    <line x1="120" y1="73" x2="153" y2="73" stroke="#450084" stroke-width="2.5" marker-end="url(#ml)"></line>
+    <line x1="265" y1="73" x2="298" y2="73" stroke="#450084" stroke-width="2.5" marker-end="url(#ml)"></line>
+    <line x1="410" y1="73" x2="443" y2="73" stroke="#450084" stroke-width="2.5" marker-end="url(#ml)"></line>
+
+    <!-- Stage labels -->
+    <text x="65" y="40" text-anchor="middle" font-size="8.5" font-weight="700" fill="#595959">ORIGIN</text>
+    <text x="210" y="40" text-anchor="middle" font-size="8.5" font-weight="700" fill="#450084">STAGE 1</text>
+    <text x="355" y="40" text-anchor="middle" font-size="8.5" font-weight="700" fill="#450084">STAGE 2</text>
+    <text x="505" y="40" text-anchor="middle" font-size="8.5" font-weight="700" fill="#450084">STAGE 3</text>
+
+    <!-- Network signature boxes below -->
+    <rect x="155" y="115" width="110" height="70" rx="3" fill="#F4EFE1" stroke="#CBB677" stroke-width="1"></rect>
+    <text x="210" y="128" text-anchor="middle" font-size="8" font-weight="700" fill="#AD9C65">Network Signature</text>
+    <text x="210" y="140" text-anchor="middle" font-size="7.5" fill="#333">High-degree source;</text>
+    <text x="210" y="151" text-anchor="middle" font-size="7.5" fill="#333">many low-weight edges;</text>
+    <text x="210" y="162" text-anchor="middle" font-size="7.5" fill="#333">smurfing = bipartite</text>
+    <text x="210" y="173" text-anchor="middle" font-size="7.5" fill="#333">smurf-account star</text>
+
+    <rect x="300" y="115" width="110" height="70" rx="3" fill="#F4EFE1" stroke="#CBB677" stroke-width="1"></rect>
+    <text x="355" y="128" text-anchor="middle" font-size="8" font-weight="700" fill="#AD9C65">Network Signature</text>
+    <text x="355" y="140" text-anchor="middle" font-size="7.5" fill="#333">Long paths; multi-hop;</text>
+    <text x="355" y="151" text-anchor="middle" font-size="7.5" fill="#333">jurisdictional hops;</text>
+    <text x="355" y="162" text-anchor="middle" font-size="7.5" fill="#333">shell company nodes;</text>
+    <text x="355" y="173" text-anchor="middle" font-size="7.5" fill="#333">CYCLES = key signal</text>
+
+    <rect x="445" y="115" width="120" height="70" rx="3" fill="#F4EFE1" stroke="#CBB677" stroke-width="1"></rect>
+    <text x="505" y="128" text-anchor="middle" font-size="8" font-weight="700" fill="#AD9C65">Network Signature</text>
+    <text x="505" y="140" text-anchor="middle" font-size="7.5" fill="#333">Terminal nodes are</text>
+    <text x="505" y="151" text-anchor="middle" font-size="7.5" fill="#333">legitimate commercial</text>
+    <text x="505" y="162" text-anchor="middle" font-size="7.5" fill="#333">entities; shell→real</text>
+    <text x="505" y="173" text-anchor="middle" font-size="7.5" fill="#333">estate / equity edges</text>
+
+    <!-- Detection difficulty bar -->
+    <text x="65" y="200" text-anchor="middle" font-size="8.5" font-weight="700" fill="#595959">Detection</text>
+    <text x="210" y="200" text-anchor="middle" font-size="8.5" fill="#388e3c" font-weight="600">Easiest to detect</text>
+    <text x="355" y="200" text-anchor="middle" font-size="8.5" fill="#450084" font-weight="600">Most network-analyzable</text>
+    <text x="505" y="200" text-anchor="middle" font-size="8.5" fill="#cc0000" font-weight="600">Hardest to reverse</text>
+
+    <text x="210" y="215" text-anchor="middle" font-size="7.5" fill="#595959">(cash is conspicuous)</text>
+    <text x="355" y="215" text-anchor="middle" font-size="7.5" fill="#595959">(transactions leave data traces)</text>
+    <text x="505" y="215" text-anchor="middle" font-size="7.5" fill="#595959">(assets in legitimate hands)</text>
+  </svg>
+  <figcaption>
+    Cycles in the transaction graph (money returning to origin account) are the strongest<br>
+    indicator of Stage 2 layering — no legitimate business purpose generates circular fund flows.
+  </figcaption>
+</div>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="stage-1-placement" class="level3">
+<h3 class="anchored" data-anchor-id="stage-1-placement">Stage 1: Placement</h3>
+<p>Cash generated by criminal activity enters the formal financial system. This is the most dangerous stage for the launderer — cash is conspicuous, bank staff are required to report suspicious deposits, and large transactions trigger automatic Currency Transaction Reports (CTRs).</p>
+<p><strong>Network mechanisms:</strong></p>
+<ul>
+<li><strong>Structuring (“smurfing”):</strong> breaking a large cash deposit into multiple transactions each below the CTR threshold ($10,000 in the US). Creates a high-degree source node with many low-weight edges — statistically anomalous compared to organic account behavior.</li>
+<li><strong>Smurf networks:</strong> multiple agents each deposit small amounts at different institutions on the controller’s behalf. Analytically: a bipartite network of smurfs (agents) × accounts, with a hidden common controller not directly visible in the transaction data. Community detection on the smurf-account network recovers the coordinated group.</li>
+<li><strong>Cash-intensive business commingling:</strong> criminal proceeds mixed with legitimate revenues from cash-heavy businesses (restaurants, laundromats, car washes). Commingling produces anomalous revenue-per-customer ratios detectable through financial statement analysis combined with sector benchmarks.</li>
+</ul>
+</section>
+<section id="stage-2-layering" class="level3">
+<h3 class="anchored" data-anchor-id="stage-2-layering">Stage 2: Layering</h3>
+<p>A series of transactions designed to break the audit trail connecting placement to the ultimate destination.</p>
+<p><strong>Network mechanisms:</strong></p>
+<ul>
+<li>Long chains of transactions across multiple accounts and entities; high average path length from criminal source to final destination</li>
+<li>Shell company interposition at each hop — each company is a legitimate legal node with no operational business</li>
+<li><strong>Jurisdictional hops</strong> — routing through multiple jurisdictions with different reporting requirements, information sharing arrangements, and enforcement priorities</li>
+<li><strong>Cycle detection:</strong> closed cycles (money returning to an account it previously passed through) are the definitive structural indicator of layering — no legitimate business generates circular fund flows</li>
+</ul>
+</section>
+<section id="stage-3-integration" class="level3">
+<h3 class="anchored" data-anchor-id="stage-3-integration">Stage 3: Integration</h3>
+<p>Laundered funds re-enter the legitimate economy as apparently clean assets.</p>
+<p><strong>Network mechanisms:</strong> Terminal nodes in the transaction chain are legitimate commercial entities — real estate companies, law firms, equity investment platforms, luxury goods dealers. Edges from shell accounts to real asset purchases leave records in property registries and corporate filings.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Case Study: 1Malaysia Development Berhad (1MDB)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Case Study: 1Malaysia Development Berhad (1MDB)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>1MDB is the most extensively documented money laundering case of the 21st century. Approximately $4.5 billion was systematically embezzled from a Malaysian sovereign development fund (2009–2013) by Jho Low and associates, including officials at Goldman Sachs.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<p><strong>Placement:</strong> Three Goldman Sachs bond issuances (2012–2013) raised $6.5B for 1MDB. Instead of being invested in development projects, funds were transferred from 1MDB accounts through Goldman’s account at Coutts Bank to secretly controlled accounts in the British Virgin Islands and Singapore.</p>
+<p><strong>Layering:</strong> Funds routed through 7+ layers of shell companies across BVI, Cayman Islands, Singapore, Luxembourg, and Switzerland. Transaction path lengths of 8–12 hops between the 1MDB origin account and the final beneficial owners. Jurisdictional hops deliberately selected to exploit gaps in information-sharing agreements between countries.</p>
+<p><strong>Integration:</strong> Funds emerged as: - Luxury real estate (Park Lane hotel NY, Lana’i resort Hawaii, Beverly Hills mansions) - Film production (The Wolf of Wall Street, Dumb and Dumber To) - Luxury superyachts and private jets - High-value art (Picasso, Basquiat) - A $250M stake in EMI Music</p>
+<p>Network analysis of the 1MDB transaction data (reconstructed from DOJ civil forfeiture filings) shows: extreme path length from 1MDB source accounts; high betweenness nodes in Singapore (BSI Bank) and BVI (Brazen Sky Limited); common beneficial ownership of apparently independent shell companies tracing to Jho Low.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="bipartite-person-account-networks-and-flow-centrality" class="level2">
+<h2 class="anchored" data-anchor-id="bipartite-person-account-networks-and-flow-centrality">Bipartite Person-Account Networks and Flow Centrality</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="the-bipartite-structure" class="level3">
+<h3 class="anchored" data-anchor-id="the-bipartite-structure">The Bipartite Structure</h3>
+<p>The fundamental formal representation for financial intelligence is the <strong>bipartite person-account network:</strong></p>
+<p><span class="math display">\[G = (P, A, E)\]</span></p>
+<p>where <span class="math inline">\(P\)</span> is the set of persons/entities, <span class="math inline">\(A\)</span> is the set of financial accounts, and <span class="math inline">\(E \subseteq P \times A\)</span> are control or signatory relationships.</p>
+<p><strong>Analytical operations:</strong></p>
+<ul>
+<li>A person controlling many accounts → high degree in <span class="math inline">\(P\)</span>: possible structuring controller or money mule coordinator</li>
+<li>An account with many controllers → high degree in <span class="math inline">\(A\)</span>: possible front account or coordinated access point</li>
+<li><strong>Projection to <span class="math inline">\(P\)</span>:</strong> two persons connected if they share a common account. Reveals co-controllers — two individuals whose shared account access is not explained by their declared relationship. The co-controller projection is the primary tool for identifying smurf network coordinators.</li>
+<li><strong>Projection to <span class="math inline">\(A\)</span>:</strong> two accounts connected if they share a common controller. Reveals account clusters under common direction — groups of accounts coordinated by the same person that should appear independently in raw transaction data.</li>
+</ul>
+</section>
+<section id="transaction-layer-overlay" class="level3">
+<h3 class="anchored" data-anchor-id="transaction-layer-overlay">Transaction Layer Overlay</h3>
+<p>The bipartite account-control structure is overlaid with a directed <strong>transaction network:</strong> directed edges between accounts, weighted by transaction value and timestamped. Together, the two layers form a multiplex: the account-control layer reveals who controls what; the transaction-flow layer reveals how money moves between accounts.</p>
+</section>
+<section id="flow-betweenness" class="level3">
+<h3 class="anchored" data-anchor-id="flow-betweenness">Flow Betweenness</h3>
+<p>In a financial flow network, the correct centrality measure is <strong>flow betweenness</strong>, not shortest-path betweenness:</p>
+<p><span class="math display">\[C_F(v) = \sum_{s \neq v \neq t} \frac{f_{st}(v)}{f_{st}}\]</span></p>
+<p>where <span class="math inline">\(f_{st}\)</span> is the maximum flow from <span class="math inline">\(s\)</span> to <span class="math inline">\(t\)</span> and <span class="math inline">\(f_{st}(v)\)</span> is the portion of that maximum flow passing through <span class="math inline">\(v\)</span>.</p>
+<p>Money does not travel along a single shortest path — it may be split across multiple paths simultaneously in complex layering schemes. Flow betweenness correctly models the financial network as a capacity-constrained flow system rather than an information transmission system.</p>
+<p><strong>Cycle detection:</strong> closed cycles in the transaction directed graph (money returning to an origin account, even via multiple intermediaries) are a strong structural indicator of layering. NetworkX: <code>nx.find_cycle(G)</code> on the directed transaction graph flags cycles for follow-up analysis.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Bipartite Person-Account Network and Co-Controller Projection
+  </p>
+  <svg viewbox="0 0 400 270" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:380px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <!-- Column labels -->
+    <text x="80" y="18" text-anchor="middle" font-size="9.5" font-weight="700" fill="#450084">PERSONS</text>
+    <text x="285" y="18" text-anchor="middle" font-size="9.5" font-weight="700" fill="#AD9C65">ACCOUNTS</text>
+    <line x1="185" y1="22" x2="185" y2="250" stroke="#D6D6D6" stroke-width="1" stroke-dasharray="4,3"></line>
+
+    <!-- Person nodes -->
+    <circle cx="80" cy="60" r="20" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="80" y="65" text-anchor="middle" font-size="11" font-weight="bold" fill="#450084">P1</text>
+    <circle cx="80" cy="120" r="20" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="80" y="125" text-anchor="middle" font-size="11" font-weight="bold" fill="#450084">P2</text>
+    <circle cx="80" cy="180" r="20" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="80" y="185" text-anchor="middle" font-size="11" font-weight="bold" fill="#450084">P3</text>
+    <circle cx="80" cy="235" r="20" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="80" y="240" text-anchor="middle" font-size="11" font-weight="bold" fill="#450084">P4</text>
+
+    <!-- Account nodes -->
+    <rect x="262" y="42" width="44" height="32" rx="4" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></rect>
+    <text x="284" y="62" text-anchor="middle" font-size="10" font-weight="bold" fill="#AD9C65">A1</text>
+    <rect x="262" y="95" width="44" height="32" rx="4" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"></rect>
+    <text x="284" y="115" text-anchor="middle" font-size="10" font-weight="bold" fill="#333">A2</text>
+    <text x="335" y="112" text-anchor="middle" font-size="7.5" fill="#cc0000" font-weight="700">← shared!</text>
+    <rect x="262" y="148" width="44" height="32" rx="4" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></rect>
+    <text x="284" y="168" text-anchor="middle" font-size="10" font-weight="bold" fill="#AD9C65">A3</text>
+    <rect x="262" y="202" width="44" height="32" rx="4" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"></rect>
+    <text x="284" y="222" text-anchor="middle" font-size="10" font-weight="bold" fill="#333">A4</text>
+    <text x="335" y="219" text-anchor="middle" font-size="7.5" fill="#cc0000" font-weight="700">← shared!</text>
+
+    <!-- Edges -->
+    <line x1="100" y1="55" x2="262" y2="60" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="100" y1="65" x2="262" y2="104" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="100" y1="115" x2="262" y2="108" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="100" y1="125" x2="262" y2="160" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="100" y1="178" x2="262" y2="215" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="100" y1="230" x2="262" y2="215" stroke="#450084" stroke-width="2.5"></line>
+
+    <!-- Projection annotation -->
+    <rect x="20" y="255" width="355" height="18" rx="3" fill="#DACCE6" stroke="#450084" stroke-width="1"></rect>
+    <text x="197" y="267" text-anchor="middle" font-size="8.5" fill="#450084" font-weight="700">
+      Projection to P: P1–P2 connected (share A2) · P3–P4 connected (share A4)
+    </text>
+  </svg>
+  <figcaption>
+    Gold accounts (A2, A4) are shared by multiple persons — co-controller signal.<br>
+    Projection creates P1–P2 and P3–P4 co-controller edges for SNA.
+  </figcaption>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-ii-informal-and-covert-value-transfer" class="level1">
+<h1>Part II: Informal and Covert Value Transfer</h1>
+<section id="hawala-and-informal-value-transfer-systems" class="level2">
+<h2 class="anchored" data-anchor-id="hawala-and-informal-value-transfer-systems">Hawala and Informal Value Transfer Systems</h2>
+<p>Hawala (known variously as hundi, fei-ch’ien, and padala depending on region) is an informal value transfer system based on a network of brokers (<em>hawaladars</em>) who settle obligations through trust rather than physical currency movement.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="operational-structure" class="level3">
+<h3 class="anchored" data-anchor-id="operational-structure">Operational Structure</h3>
+<ol type="1">
+<li><strong>Sender</strong> deposits funds with hawaladar <span class="math inline">\(H_1\)</span> in jurisdiction A; provides a code to the recipient</li>
+<li><span class="math inline">\(H_1\)</span> contacts hawaladar <span class="math inline">\(H_2\)</span> in jurisdiction B; instructs payment to recipient on presentation of code</li>
+<li><span class="math inline">\(H_2\)</span> pays recipient; <span class="math inline">\(H_1\)</span> owes <span class="math inline">\(H_2\)</span> an obligation — settled later through reverse transactions, trade goods, gold transfers, or periodic physical currency settlement</li>
+</ol>
+<p>No money physically crosses the border. The “transfer” is a change in accounting obligations within the hawala network, settled in aggregate over time.</p>
+</section>
+<section id="network-properties" class="level3">
+<h3 class="anchored" data-anchor-id="network-properties">Network Properties</h3>
+<ul>
+<li><strong>Nodes:</strong> hawaladars; dense within-region clusters (community structure corresponds to ethnic diaspora networks — South Asian, Middle Eastern, East African, Chinese); sparser inter-regional edges</li>
+<li><strong>Edges:</strong> trust relationships and outstanding settlement obligations; typically undirected within the broker network because obligations flow in both directions over time</li>
+<li><strong>Scale-free structure:</strong> a few major hawaladars with very many clients; most handle small, local volumes</li>
+<li><strong>Inter-regional edges are the analytically significant ones:</strong> the high-betweenness hawaladars who bridge otherwise disconnected regional clusters are the primary intelligence and interdiction targets</li>
+</ul>
+</section>
+<section id="intelligence-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="intelligence-analysis">Intelligence Analysis</h3>
+<ul>
+<li><strong>Hub hawaladar identification:</strong> high betweenness hawaladars serve as clearinghouses between regional subnetworks. Their removal fragments the network’s ability to transfer value across geographic communities.</li>
+<li><strong>Settlement pattern analysis:</strong> periodic settlement events create observable signals in trade records and bulk cash movements — alternative value transfers (gold, luxury goods, commodity shipments) that represent settlement of accumulated hawala obligations</li>
+<li><strong>Community structure:</strong> inter-community edges bridge otherwise separate diaspora networks; the brokers spanning these structural holes are the highest-value collection targets</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Hawala Broker Network: Regional Clusters and Inter-Regional Bridge
+  </p>
+  <svg viewbox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:380px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <!-- Region backgrounds -->
+    <ellipse cx="110" cy="125" rx="92" ry="90" fill="rgba(69,0,132,0.07)" stroke="#450084" stroke-width="1.2" stroke-dasharray="5,3"></ellipse>
+    <ellipse cx="290" cy="125" rx="92" ry="90" fill="rgba(203,182,119,0.09)" stroke="#AD9C65" stroke-width="1.2" stroke-dasharray="5,3"></ellipse>
+    <text x="110" y="22" text-anchor="middle" font-size="9" font-weight="700" fill="#450084">REGION A</text>
+    <text x="290" y="22" text-anchor="middle" font-size="9" font-weight="700" fill="#AD9C65">REGION B</text>
+
+    <!-- Region A hawaladar network (dense) -->
+    <line x1="78" y1="80" x2="138" y2="80" stroke="#450084" stroke-width="2"></line>
+    <line x1="78" y1="80" x2="90" y2="145" stroke="#450084" stroke-width="2"></line>
+    <line x1="78" y1="80" x2="58" y2="155" stroke="#450084" stroke-width="2"></line>
+    <line x1="138" y1="80" x2="90" y2="145" stroke="#450084" stroke-width="2"></line>
+    <line x1="138" y1="80" x2="145" y2="160" stroke="#450084" stroke-width="2"></line>
+    <line x1="90" y1="145" x2="58" y2="155" stroke="#450084" stroke-width="2"></line>
+    <line x1="90" y1="145" x2="145" y2="160" stroke="#450084" stroke-width="2"></line>
+    <line x1="58" y1="155" x2="90" y2="200" stroke="#450084" stroke-width="2"></line>
+    <line x1="145" y1="160" x2="90" y2="200" stroke="#450084" stroke-width="2"></line>
+
+    <circle cx="78" cy="80" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="78" y="84" text-anchor="middle" font-size="9" font-weight="bold" fill="#450084">H1</text>
+    <circle cx="138" cy="80" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="138" y="84" text-anchor="middle" font-size="9" font-weight="bold" fill="#450084">H2</text>
+    <circle cx="58" cy="155" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="58" y="159" text-anchor="middle" font-size="9" font-weight="bold" fill="#450084">H3</text>
+    <circle cx="145" cy="160" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="145" y="164" text-anchor="middle" font-size="9" font-weight="bold" fill="#450084">H4</text>
+    <circle cx="90" cy="200" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="90" y="204" text-anchor="middle" font-size="9" font-weight="bold" fill="#450084">H5</text>
+
+    <!-- Region B hawaladar network (dense) -->
+    <line x1="255" y1="80" x2="322" y2="80" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="255" y1="80" x2="267" y2="145" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="322" y1="80" x2="267" y2="145" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="267" y1="145" x2="240" y2="200" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="267" y1="145" x2="320" y2="190" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="240" y1="200" x2="320" y2="190" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="322" y1="80" x2="355" y2="140" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="355" y1="140" x2="320" y2="190" stroke="#AD9C65" stroke-width="2"></line>
+
+    <circle cx="255" cy="80" r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="255" y="84" text-anchor="middle" font-size="9" font-weight="bold" fill="#AD9C65">H6</text>
+    <circle cx="322" cy="80" r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="322" y="84" text-anchor="middle" font-size="9" font-weight="bold" fill="#AD9C65">H7</text>
+    <circle cx="267" cy="145" r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="267" y="149" text-anchor="middle" font-size="9" font-weight="bold" fill="#AD9C65">H8</text>
+    <circle cx="240" cy="200" r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="240" y="204" text-anchor="middle" font-size="9" font-weight="bold" fill="#AD9C65">H9</text>
+    <circle cx="320" cy="190" r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="320" y="194" text-anchor="middle" font-size="9" font-weight="bold" fill="#AD9C65">H10</text>
+    <circle cx="355" cy="140" r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="355" y="144" text-anchor="middle" font-size="9" font-weight="bold" fill="#AD9C65">H11</text>
+
+    <!-- High-betweenness inter-regional bridge H2 → H8 (gold, thick) -->
+    <line x1="138" y1="80" x2="90" y2="145" stroke="#450084" stroke-width="0"></line>
+    <line x1="152" y1="80" x2="254" y2="80" stroke="#CBB677" stroke-width="3" stroke-dasharray="8,5"></line>
+    <text x="200" y="68" text-anchor="middle" font-size="8.5" fill="#AD9C65" font-weight="700">inter-regional bridge</text>
+    <text x="200" y="55" text-anchor="middle" font-size="8.5" fill="#595959">H2 ↔ H6: max betweenness</text>
+
+    <!-- Sender/recipient peripheral nodes -->
+    <circle cx="30" cy="50" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <text x="30" y="43" text-anchor="middle" font-size="7.5" fill="#595959">Sender</text>
+    <line x1="39" y1="52" x2="64" y2="72" stroke="#B2B2B2" stroke-width="1.2" stroke-dasharray="4,3"></line>
+    <circle cx="375" cy="50" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <text x="375" y="43" text-anchor="middle" font-size="7.5" fill="#595959">Recipient</text>
+    <line x1="366" y1="52" x2="340" y2="72" stroke="#B2B2B2" stroke-width="1.2" stroke-dasharray="4,3"></line>
+  </svg>
+  <figcaption>
+    Dashed gold line = inter-regional bridge between H2 and H6 (max betweenness).<br>
+    No physical money crosses; only settlement obligations are transferred.
+  </figcaption>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Legitimate vs. Illicit Use">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Legitimate vs.&nbsp;Illicit Use
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <strong>overwhelming majority</strong> of hawala volume is legitimate remittances from diaspora workers to home countries — essential financial services for communities underserved by formal banking. Terrorist financing represents a small fraction.</p>
+<p>Disrupting hawala networks has significant <strong>humanitarian costs</strong> for diaspora communities that rely on them for family remittances. Interdiction must be surgically targeted at specific high-betweenness brokers with demonstrated illicit activity — not wholesale disruption of the broker network.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="shell-company-and-beneficial-ownership-networks" class="level2">
+<h2 class="anchored" data-anchor-id="shell-company-and-beneficial-ownership-networks">Shell Company and Beneficial Ownership Networks</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<p>A <strong>shell company</strong> is a legal entity with no genuine business activity — existing solely to hold assets, open accounts, or execute transactions while obscuring the natural person who ultimately controls and benefits (the <strong>ultimate beneficial owner</strong>, UBO).</p>
+<section id="directed-ownership-graph" class="level3">
+<h3 class="anchored" data-anchor-id="directed-ownership-graph">Directed Ownership Graph</h3>
+<ul>
+<li><strong>Nodes:</strong> legal entities (companies, trusts, foundations) and natural persons</li>
+<li><strong>Directed edges:</strong> ownership (<span class="math inline">\(A\)</span> owns <span class="math inline">\(B\)</span>: <span class="math inline">\(A \to B\)</span>) and control (<span class="math inline">\(A\)</span> directs <span class="math inline">\(B\)</span>: <span class="math inline">\(A \to B\)</span>, possibly separate from ownership)</li>
+<li>A shell company chain: directed path <span class="math inline">\(UBO \to C_1 \to C_2 \to \cdots \to C_n \to \text{Asset}\)</span></li>
+<li><strong>Path length correlates with opacity:</strong> longer chains require more investigative steps; each hop is a jurisdictional barrier, a subpoena, and a potential dead end if the intermediate jurisdiction doesn’t cooperate</li>
+</ul>
+</section>
+<section id="analytical-methods" class="level3">
+<h3 class="anchored" data-anchor-id="analytical-methods">Analytical Methods</h3>
+<ul>
+<li><strong>UBO identification:</strong> traverse directed ownership edges to find source nodes (natural persons with in-degree = 0 in the ownership graph). The root of each directed component is the UBO.</li>
+<li><strong>Nominee networks:</strong> professional nominee directors appear as extreme high-degree nodes — they nominally direct hundreds of companies. Their degree alone flags them as nominees; their neighbors are the actual clients.</li>
+<li><strong>Registered agent clustering:</strong> shell companies sharing the same registered agent form a bipartite agent-company network. Community detection groups shell portfolios by service provider — each community is a coordinated evasion infrastructure serving a common client base.</li>
+<li><strong>Jurisdiction routing pattern:</strong> a chain routing through BVI → Cayman → Delaware LLC → US-held asset is a structurally consistent sanctions evasion pattern. Each jurisdiction was selected for a specific legal or disclosure barrier.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Shell Company Chain: UBO to Asset with Jurisdictional Opacity
+  </p>
+  <svg viewbox="0 0 300 330" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:280px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <defs>
+      <marker id="own" markerwidth="8" markerheight="8" refx="6" refy="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#450084"></path>
+      </marker>
+    </defs>
+
+    <!-- Chain: UBO → Shell1 → Shell2 → Shell3 → Asset -->
+    <!-- UBO (natural person) -->
+    <circle cx="150" cy="30" r="24" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"></circle>
+    <text x="150" y="27" text-anchor="middle" font-size="9" font-weight="700" fill="#333">UBO</text>
+    <text x="150" y="40" text-anchor="middle" font-size="8" fill="#333">(natural person)</text>
+    <text x="255" y="32" text-anchor="middle" font-size="8" fill="#595959" font-style="italic">PATH LENGTH = 0</text>
+    <text x="255" y="43" text-anchor="middle" font-size="7.5" fill="#595959" font-style="italic">Transparent</text>
+
+    <line x1="150" y1="54" x2="150" y2="88" stroke="#450084" stroke-width="2" marker-end="url(#own)"></line>
+    <text x="172" y="75" font-size="7.5" fill="#595959">owns</text>
+
+    <!-- Shell 1 (BVI) -->
+    <rect x="100" y="90" width="100" height="40" rx="4" fill="#DACCE6" stroke="#450084" stroke-width="2"></rect>
+    <text x="150" y="108" text-anchor="middle" font-size="9" font-weight="700" fill="#450084">Shell Co. 1</text>
+    <text x="150" y="122" text-anchor="middle" font-size="8" fill="#595959">British Virgin Islands</text>
+    <text x="255" y="108" text-anchor="middle" font-size="8" fill="#cc0000" font-style="italic">PATH LENGTH = 1</text>
+    <text x="255" y="119" text-anchor="middle" font-size="7.5" fill="#595959">Requires BVI subpoena</text>
+
+    <line x1="150" y1="130" x2="150" y2="164" stroke="#450084" stroke-width="2" marker-end="url(#own)"></line>
+    <text x="172" y="150" font-size="7.5" fill="#595959">owns</text>
+
+    <!-- Shell 2 (Cayman) -->
+    <rect x="100" y="166" width="100" height="40" rx="4" fill="#B599CE" stroke="#450084" stroke-width="2"></rect>
+    <text x="150" y="184" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">Shell Co. 2</text>
+    <text x="150" y="198" text-anchor="middle" font-size="8" fill="#DACCE6">Cayman Islands</text>
+    <text x="255" y="184" text-anchor="middle" font-size="8" fill="#cc0000" font-style="italic">PATH LENGTH = 2</text>
+    <text x="255" y="195" text-anchor="middle" font-size="7.5" fill="#595959">Nominee directors;</text>
+    <text x="255" y="205" text-anchor="middle" font-size="7.5" fill="#595959">no public registry</text>
+
+    <line x1="150" y1="206" x2="150" y2="240" stroke="#450084" stroke-width="2" marker-end="url(#own)"></line>
+    <text x="172" y="226" font-size="7.5" fill="#595959">owns</text>
+
+    <!-- Shell 3 (Delaware LLC) -->
+    <rect x="100" y="242" width="100" height="40" rx="4" fill="#450084" stroke="#450084" stroke-width="2"></rect>
+    <text x="150" y="260" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">Shell Co. 3</text>
+    <text x="150" y="274" text-anchor="middle" font-size="8" fill="#DACCE6">Delaware LLC</text>
+    <text x="255" y="260" text-anchor="middle" font-size="8" fill="#cc0000" font-style="italic">PATH LENGTH = 3</text>
+    <text x="255" y="271" text-anchor="middle" font-size="7.5" fill="#595959">No beneficial owner</text>
+    <text x="255" y="281" text-anchor="middle" font-size="7.5" fill="#595959">disclosure required</text>
+
+    <line x1="150" y1="282" x2="150" y2="308" stroke="#450084" stroke-width="2" marker-end="url(#own)"></line>
+    <text x="172" y="298" font-size="7.5" fill="#595959">holds</text>
+
+    <!-- Asset -->
+    <rect x="90" y="310" width="120" height="22" rx="3" fill="#F4EFE1" stroke="#CBB677" stroke-width="2"></rect>
+    <text x="150" y="325" text-anchor="middle" font-size="8.5" font-weight="700" fill="#AD9C65">US Real Estate Asset</text>
+  </svg>
+  <figcaption>
+    Each hop adds a jurisdictional barrier and an investigative subpoena requirement.<br>
+    Path length 3 from UBO to asset typically defeats routine financial investigation.
+  </figcaption>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="ICIJ Offshore Leaks Database">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>ICIJ Offshore Leaks Database
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The ICIJ maintains the Offshore Leaks Database — publicly searchable at offshoreleaks.icij.org — incorporating Panama Papers (2016), Pandora Papers (2021), Bahamas Leaks, and others. Node and edge files are downloadable. The beneficial ownership network encoded in the Panama Papers alone contains: 319,421 offshore entities, 339,015 officers, and 750,000+ relationships across 21 offshore jurisdictions.</p>
+<p>Analysts have used this data to identify beneficial ownership chains connecting known sanctioned entities to apparently clean intermediaries — converting leaked corporate registry data into actionable designation intelligence.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="trade-based-money-laundering" class="level2">
+<h2 class="anchored" data-anchor-id="trade-based-money-laundering">Trade-Based Money Laundering</h2>
+<p><strong>Trade-based money laundering (TBML)</strong> exploits international trade to move value across borders without using the formal financial system, making it resistant to financial monitoring tools.</p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="tbml-mechanisms" class="level3">
+<h3 class="anchored" data-anchor-id="tbml-mechanisms">TBML Mechanisms</h3>
+<ul>
+<li><strong>Over-invoicing:</strong> exporter invoices importer for more than the actual good’s value; importer pays the excess; the difference represents value transferred from importer to exporter jurisdiction — no currency crosses the border</li>
+<li><strong>Under-invoicing:</strong> exporter charges less than actual value; importer pays less; difference represents value transferred from exporter to importer jurisdiction</li>
+<li><strong>Multiple invoicing:</strong> the same shipment is invoiced multiple times to different buyers, multiplying apparent revenue</li>
+<li><strong>Falsely described goods:</strong> misclassification of goods (e.g., high-value items declared as low-value) to manipulate effective transfer value</li>
+</ul>
+</section>
+<section id="bipartite-network-model" class="level3">
+<h3 class="anchored" data-anchor-id="bipartite-network-model">Bipartite Network Model</h3>
+<p><span class="math display">\[G = (X, M, E)\]</span></p>
+<p>where <span class="math inline">\(X\)</span> = exporters, <span class="math inline">\(M\)</span> = importers, <span class="math inline">\(E\)</span> = trade flows with declared value and actual value as edge attributes.</p>
+<p><strong>Anomaly signal:</strong> the gap between declared trade value and estimated actual value (based on comparable trade flows, pricing databases, commodity benchmarks) is the key analytical indicator. Systematic over/under-invoicing between specific exporter-importer pairs that exceeds any plausible commercial explanation is a TBML signal.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<p><strong>Data sources for TBML analysis:</strong></p>
+<ul>
+<li><strong>UN Comtrade</strong> — bilateral trade statistics reported by both importing and exporting countries; discrepancies between exporter-reported and importer-reported values for the same shipment (mirror trade analysis) are a TBML indicator</li>
+<li><strong>Global Financial Integrity (GFI)</strong> — publishes annual illicit financial flows estimates using mirror trade discrepancy analysis</li>
+<li><strong>World Customs Organization</strong> — commodity valuation databases provide benchmarks for detecting over/under-invoicing</li>
+</ul>
+<p><strong>Mirror trade analysis (network application):</strong> Construct two directed networks — one from exporter-reported trade flows, one from importer-reported. For the same bilateral trade pair, edges with value discrepancies exceeding 2σ of the commodity-level baseline are flagged as TBML candidates. Deutsche Bank’s “Russian mirror trading” scheme (2011–2015, ~$10B) used paired buy/sell equity transactions in Russian and London offices to move value — detectable by the unusual pattern of simultaneous long/short positions in the transaction network.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="part-iii-cryptocurrency-transaction-networks" class="level1">
+<h1>Part III: Cryptocurrency Transaction Networks</h1>
+<section id="bitcoin-utxo-graph-structure" class="level2">
+<h2 class="anchored" data-anchor-id="bitcoin-utxo-graph-structure">Bitcoin UTXO Graph Structure</h2>
+<p>Bitcoin’s blockchain is a public, append-only, immutable ledger of all transactions since genesis (2009). Unlike conventional financial data, it requires no legal process to access and provides complete transaction history for network analysis.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="the-utxo-unspent-transaction-output-model" class="level3">
+<h3 class="anchored" data-anchor-id="the-utxo-unspent-transaction-output-model">The UTXO (Unspent Transaction Output) Model</h3>
+<p>Each Bitcoin transaction consumes previous unspent outputs (<strong>inputs</strong>) and creates new outputs; unspent outputs are UTXOs. The full transaction history is a <strong>directed acyclic graph (DAG):</strong></p>
+<ul>
+<li><strong>Transaction nodes:</strong> each transaction is a node</li>
+<li><strong>UTXO edges:</strong> directed edge from transaction <span class="math inline">\(A\)</span> to transaction <span class="math inline">\(B\)</span> if <span class="math inline">\(B\)</span> spends an output of <span class="math inline">\(A\)</span></li>
+<li>The DAG is public, complete, and immutable; no transaction can be hidden or retroactively altered</li>
+</ul>
+<p><strong>Address-level network (layered on the UTXO DAG):</strong></p>
+<ul>
+<li><strong>Nodes:</strong> Bitcoin addresses (public keys)</li>
+<li><strong>Directed edges:</strong> payment from address <span class="math inline">\(A\)</span> to address <span class="math inline">\(B\)</span>; edge weight = value in satoshis</li>
+<li>A single transaction can have multiple input addresses (co-spending) and multiple output addresses (payment + change)</li>
+<li>The address graph has millions of nodes; most are leaf nodes (used once); a small number of exchanges and services have very high degree</li>
+</ul>
+</section>
+<section id="pseudonymity-vs.-anonymity" class="level3">
+<h3 class="anchored" data-anchor-id="pseudonymity-vs.-anonymity">Pseudonymity vs.&nbsp;Anonymity</h3>
+<p>Bitcoin addresses are not inherently linked to identities, but they are <strong>permanently and publicly associated with all their transaction history</strong>. Once a single address is linked to an identity — through an exchange’s KYC records, a publicly announced donation, or law enforcement investigation — all transactions to and from that address, and potentially many others through address clustering, become traceable.</p>
+<p>The implication: Bitcoin provides <em>pseudonymity</em>, not <em>anonymity</em>. The pseudonymity degrades as the number of known address-identity links increases through normal use.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Bitcoin UTXO DAG and Address Layer
+  </p>
+  <svg viewbox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:400px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <defs>
+      <marker id="utxo" markerwidth="7" markerheight="7" refx="5" refy="3" orient="auto">
+        <path d="M0,0 L0,6 L7,3 z" fill="#595959"></path>
+      </marker>
+      <marker id="utxog" markerwidth="7" markerheight="7" refx="5" refy="3" orient="auto">
+        <path d="M0,0 L0,6 L7,3 z" fill="#450084"></path>
+      </marker>
+    </defs>
+
+    <!-- Layer label -->
+    <text x="210" y="16" text-anchor="middle" font-size="9" font-weight="700" fill="#595959" letter-spacing="0.05em">TRANSACTION DAG LAYER</text>
+
+    <!-- Transaction nodes (rectangles) -->
+    <rect x="30" y="28" width="75" height="38" rx="4" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"></rect>
+    <text x="68" y="44" text-anchor="middle" font-size="8.5" font-weight="700" fill="#595959">Tx A</text>
+    <text x="68" y="57" text-anchor="middle" font-size="7.5" fill="#595959">0.8 BTC</text>
+
+    <rect x="170" y="28" width="75" height="38" rx="4" fill="#DACCE6" stroke="#450084" stroke-width="2"></rect>
+    <text x="207" y="44" text-anchor="middle" font-size="8.5" font-weight="700" fill="#450084">Tx B</text>
+    <text x="207" y="57" text-anchor="middle" font-size="7.5" fill="#450084">multi-input</text>
+
+    <rect x="320" y="15" width="75" height="38" rx="4" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"></rect>
+    <text x="357" y="31" text-anchor="middle" font-size="8.5" font-weight="700" fill="#595959">Tx C</text>
+    <text x="357" y="44" text-anchor="middle" font-size="7.5" fill="#595959">payment</text>
+
+    <rect x="320" y="68" width="75" height="38" rx="4" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"></rect>
+    <text x="357" y="84" text-anchor="middle" font-size="8.5" font-weight="700" fill="#595959">Tx D</text>
+    <text x="357" y="97" text-anchor="middle" font-size="7.5" fill="#595959">change</text>
+
+    <!-- UTXO edges (DAG) -->
+    <line x1="105" y1="47" x2="170" y2="47" stroke="#595959" stroke-width="1.8" marker-end="url(#utxo)"></line>
+    <line x1="207" y1="28" x2="337" y2="50" stroke="#450084" stroke-width="2" marker-end="url(#utxog)"></line>
+    <line x1="207" y1="66" x2="337" y2="85" stroke="#450084" stroke-width="2" marker-end="url(#utxog)"></line>
+
+    <!-- Second input to Tx B -->
+    <rect x="30" y="60" width="75" height="38" rx="4" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"></rect>
+    <text x="68" y="76" text-anchor="middle" font-size="8.5" font-weight="700" fill="#595959">Tx X</text>
+    <text x="68" y="89" text-anchor="middle" font-size="7.5" fill="#595959">0.3 BTC</text>
+    <line x1="105" y1="79" x2="170" y2="55" stroke="#595959" stroke-width="1.8" marker-end="url(#utxo)"></line>
+
+    <!-- Co-input indicator -->
+    <rect x="30" y="110" width="150" height="22" rx="3" fill="#fdd" stroke="#cc0000" stroke-width="1.5"></rect>
+    <text x="105" y="125" text-anchor="middle" font-size="8.5" fill="#cc0000" font-weight="700">↑ Both inputs to Tx B</text>
+    <text x="105" y="136" text-anchor="middle" font-size="7.5" fill="#cc0000">= same entity (co-input heuristic)</text>
+
+    <!-- Address layer below -->
+    <line x1="20" y1="148" x2="400" y2="148" stroke="#D6D6D6" stroke-width="1" stroke-dasharray="5,3"></line>
+    <text x="210" y="162" text-anchor="middle" font-size="9" font-weight="700" fill="#595959" letter-spacing="0.05em">ADDRESS LAYER</text>
+
+    <!-- Address nodes (circles) -->
+    <circle cx="65" cy="205" r="15" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="65" y="209" text-anchor="middle" font-size="8.5" fill="#450084" font-weight="bold">Addr1</text>
+    <circle cx="120" cy="205" r="15" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="120" y="209" text-anchor="middle" font-size="8.5" fill="#450084" font-weight="bold">Addr2</text>
+    <text x="92" y="230" text-anchor="middle" font-size="7.5" fill="#450084" font-style="italic">clustered together</text>
+
+    <circle cx="220" cy="195" r="15" fill="#D6D6D6" stroke="#595959" stroke-width="2"></circle>
+    <text x="220" y="199" text-anchor="middle" font-size="8.5" fill="#595959" font-weight="bold">Addr3</text>
+    <text x="220" y="215" text-anchor="middle" font-size="7.5" fill="#595959">payment</text>
+
+    <circle cx="320" cy="205" r="15" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="320" y="209" text-anchor="middle" font-size="8.5" fill="#450084" font-weight="bold">Addr4</text>
+    <text x="320" y="225" text-anchor="middle" font-size="7.5" fill="#450084" font-style="italic">change → same cluster</text>
+    <text x="320" y="235" text-anchor="middle" font-size="7.5" fill="#450084" font-style="italic">as Addr1 + Addr2</text>
+
+    <!-- Address edges -->
+    <line x1="80" y1="193" x2="205" y2="193" stroke="#595959" stroke-width="1.5" marker-end="url(#utxo)"></line>
+    <line x1="135" y1="198" x2="305" y2="205" stroke="#450084" stroke-width="1.5" marker-end="url(#utxog)"></line>
+  </svg>
+  <figcaption>
+    Tx B has two input addresses (Addr1, Addr2) = same entity by co-input heuristic.<br>
+    Change address (Addr4) joins the same cluster. Addr3 = payment recipient.
+  </figcaption>
+</div>
+</div>
+</div>
+</section>
+<section id="address-clustering-and-de-anonymization" class="level2">
+<h2 class="anchored" data-anchor-id="address-clustering-and-de-anonymization">Address Clustering and De-Anonymization</h2>
+<p>A single user typically controls many Bitcoin addresses, using different addresses for different transactions as a privacy measure. Clustering heuristics group addresses controlled by the same entity.<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="three-clustering-heuristics" class="level3">
+<h3 class="anchored" data-anchor-id="three-clustering-heuristics">Three Clustering Heuristics</h3>
+<p><strong>1. Co-input (common ownership) heuristic — most reliable:</strong> If a transaction spends outputs from multiple input addresses simultaneously, those addresses must be controlled by the same entity. Only the owner of all private keys can sign a transaction consuming multiple inputs. The heuristic produces a <strong>transitive closure</strong>: all co-input addresses across all transactions controlled by an entity are assigned to the same cluster.</p>
+<p><em>Limitation:</em> CoinJoin transactions deliberately pool inputs from multiple users; co-input clustering fails on CoinJoin outputs and produces false merges.</p>
+<p><strong>2. Change address heuristic:</strong> When a transaction has two outputs (payment + change), the change address is typically a new, previously unseen address belonging to the sender. Heuristic: the output address appearing for the first time in the blockchain is the change address; assign it to the same cluster as the input addresses.</p>
+<p><strong>3. Behavioral heuristics:</strong> - Address reuse across time → persistent wallet address → links otherwise disconnected transactions - Round-number outputs (0.5 BTC, 1.0 BTC) → the payment; non-round output → the change - Timing and IP correlation where metadata is available</p>
+<p><strong>Meiklejohn et al.&nbsp;(2013) results:</strong> applying co-input clustering to the full Bitcoin blockchain at the time reduced approximately 12 million raw addresses to 5.5 million clusters. By making small test transactions to major services and identifying the resulting clusters, they labeled clusters corresponding to Mt. Gox, Silk Road, and other major exchanges — demonstrating that Bitcoin blockchain pseudonymity is practically weak against systematic clustering analysis.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Address Clustering: Before and After Co-Input Heuristic
+  </p>
+  <svg viewbox="0 0 440 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:420px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <line x1="218" y1="5" x2="218" y2="205" stroke="#D6D6D6" stroke-width="1.5"></line>
+    <text x="109" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">BEFORE CLUSTERING</text>
+    <text x="329" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">AFTER CLUSTERING</text>
+    <text x="109" y="30" text-anchor="middle" font-size="8" fill="#595959" font-style="italic">10 individual addresses</text>
+    <text x="329" y="30" text-anchor="middle" font-size="8" fill="#595959" font-style="italic">3 entity clusters</text>
+
+    <!-- BEFORE: 10 scattered gray address nodes -->
+    <circle cx="35" cy="80" r="12" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <text x="35" y="83" text-anchor="middle" font-size="7" fill="#595959">a1</text>
+    <circle cx="75" cy="55" r="12" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <text x="75" y="58" text-anchor="middle" font-size="7" fill="#595959">a2</text>
+    <circle cx="55" cy="125" r="12" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <text x="55" y="128" text-anchor="middle" font-size="7" fill="#595959">a3</text>
+    <circle cx="120" cy="70" r="12" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <text x="120" y="73" text-anchor="middle" font-size="7" fill="#595959">a4</text>
+    <circle cx="100" cy="115" r="12" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <text x="100" y="118" text-anchor="middle" font-size="7" fill="#595959">a5</text>
+    <circle cx="155" cy="95" r="12" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <text x="155" y="98" text-anchor="middle" font-size="7" fill="#595959">a6</text>
+    <circle cx="55" cy="165" r="12" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <text x="55" y="168" text-anchor="middle" font-size="7" fill="#595959">a7</text>
+    <circle cx="140" cy="155" r="12" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <text x="140" y="158" text-anchor="middle" font-size="7" fill="#595959">a8</text>
+    <circle cx="170" cy="140" r="12" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <text x="170" y="143" text-anchor="middle" font-size="7" fill="#595959">a9</text>
+    <circle cx="190" cy="65" r="12" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <text x="190" y="68" text-anchor="middle" font-size="7" fill="#595959">a10</text>
+
+    <!-- AFTER: 3 colored clusters -->
+    <!-- Cluster 1 (purple, entity A): a1,a2,a4,a10 -->
+    <ellipse cx="310" cy="72" rx="52" ry="48" fill="rgba(69,0,132,0.12)" stroke="#450084" stroke-width="1.8" stroke-dasharray="5,3"></ellipse>
+    <text x="310" y="28" text-anchor="middle" font-size="8" font-weight="700" fill="#450084">Entity A</text>
+    <circle cx="283" cy="58" r="12" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="283" y="62" text-anchor="middle" font-size="7" fill="#450084" font-weight="bold">a1</text>
+    <circle cx="315" cy="48" r="12" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="315" y="52" text-anchor="middle" font-size="7" fill="#450084" font-weight="bold">a2</text>
+    <circle cx="335" cy="82" r="12" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="335" y="86" text-anchor="middle" font-size="7" fill="#450084" font-weight="bold">a4</text>
+    <circle cx="295" cy="88" r="12" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="295" y="92" text-anchor="middle" font-size="7" fill="#450084" font-weight="bold">a10</text>
+
+    <!-- Cluster 2 (gold, entity B): a3,a5,a6 -->
+    <ellipse cx="330" cy="148" rx="45" ry="38" fill="rgba(203,182,119,0.15)" stroke="#AD9C65" stroke-width="1.8" stroke-dasharray="5,3"></ellipse>
+    <text x="330" y="115" text-anchor="middle" font-size="8" font-weight="700" fill="#AD9C65">Entity B</text>
+    <circle cx="298" cy="148" r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="298" y="152" text-anchor="middle" font-size="7" fill="#AD9C65" font-weight="bold">a3</text>
+    <circle cx="330" cy="138" r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="330" y="142" text-anchor="middle" font-size="7" fill="#AD9C65" font-weight="bold">a5</text>
+    <circle cx="358" cy="158" r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="358" y="162" text-anchor="middle" font-size="7" fill="#AD9C65" font-weight="bold">a6</text>
+
+    <!-- Cluster 3 (gray, entity C): a7,a8,a9 -->
+    <ellipse cx="402" cy="92" rx="30" ry="42" fill="rgba(89,89,89,0.08)" stroke="#595959" stroke-width="1.5" stroke-dasharray="5,3"></ellipse>
+    <text x="402" y="55" text-anchor="middle" font-size="8" font-weight="700" fill="#595959">Entity C</text>
+    <circle cx="398" cy="72" r="12" fill="#D6D6D6" stroke="#595959" stroke-width="2"></circle>
+    <text x="398" y="76" text-anchor="middle" font-size="7" fill="#595959" font-weight="bold">a7</text>
+    <circle cx="408" cy="98" r="12" fill="#D6D6D6" stroke="#595959" stroke-width="2"></circle>
+    <text x="408" y="102" text-anchor="middle" font-size="7" fill="#595959" font-weight="bold">a8</text>
+    <circle cx="395" cy="122" r="12" fill="#D6D6D6" stroke="#595959" stroke-width="2"></circle>
+    <text x="395" y="126" text-anchor="middle" font-size="7" fill="#595959" font-weight="bold">a9</text>
+  </svg>
+  <figcaption>
+    Co-input heuristic groups addresses appearing together as transaction inputs.<br>
+    10 raw addresses collapse to 3 entity clusters — each representing one real-world actor.
+  </figcaption>
+</div>
+</div>
+</div>
+</section>
+<section id="mixing-services-and-privacy-coins" class="level2">
+<h2 class="anchored" data-anchor-id="mixing-services-and-privacy-coins">Mixing Services and Privacy Coins</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="bitcoin-mixing-and-tumbling" class="level3">
+<h3 class="anchored" data-anchor-id="bitcoin-mixing-and-tumbling">Bitcoin Mixing and Tumbling</h3>
+<p>Illicit actors use mixing services to break the blockchain address graph’s traceability:</p>
+<ul>
+<li><strong>Centralized mixers:</strong> a service receives Bitcoin from multiple senders and returns different coins of equivalent value. Operates as a high-betweenness node that severs the path between input and output addresses. If seized, law enforcement may recover input-output mappings. Notable takedowns: <strong>BTC-e</strong> (2017, $4B in illicit flows, seized by DOJ), <strong>BitcoinFog</strong> (2021, 1.2M BTC mixed, operator arrested), <strong>ChipMixer</strong> (2023, 152,000 BTC mixed, DOJ/Europol joint operation).</li>
+<li><strong>CoinJoin:</strong> multiple users cooperatively sign a single transaction with many inputs and outputs of equal value; the output is ambiguous about which input corresponds to which output. Decentralized; no single party holds the input-output mapping.</li>
+<li><strong>Lightning Network:</strong> off-chain payment channels that do not appear on the main blockchain. Payments routed through multi-hop channels are difficult to trace without access to channel state — which requires subpoena of the channel operators.</li>
+<li><strong>Cross-chain swaps:</strong> converting Bitcoin to Monero and back severs the blockchain address trail entirely, exploiting Monero’s cryptographic privacy design.</li>
+</ul>
+<p><strong>Case: Colonial Pipeline ransomware (2021):</strong> DarkSide group received $4.4M ransom in Bitcoin. DOJ subsequently recovered 63.7 BTC ($2.3M) by seizing the operator’s hot wallet private key — demonstrating that even post-mixing cryptocurrency can be recovered when the operator makes operational security errors (leaving funds in a hot wallet accessible to law enforcement).</p>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="monero-privacy-by-design" class="level3">
+<h3 class="anchored" data-anchor-id="monero-privacy-by-design">Monero: Privacy by Design</h3>
+<p>Monero uses three cryptographic mechanisms that defeat standard address clustering:<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
+<ul>
+<li><strong>Ring signatures:</strong> each input is signed as one of a ring of possible signers drawn from the blockchain. The true sender is indistinguishable from decoy signers. Ring size 11 (current default) provides 1-of-11 ambiguity per transaction input.</li>
+<li><strong>Stealth addresses:</strong> the recipient’s public address is never directly recorded on-chain. A unique one-time address is generated for each transaction using Diffie-Hellman key exchange between sender and recipient — only the recipient can identify their incoming transactions.</li>
+<li><strong>RingCT (Confidential Transactions):</strong> transaction amounts are hidden using Pedersen commitments. Only the parties to a transaction know the amount transferred. This defeats flow analysis based on amount matching.</li>
+</ul>
+<p>Möser et al.&nbsp;(2018) found that early Monero transactions (pre-2017, when ring size was often 1) had traceable inputs. Post-2017 transactions with ring size ≥ 7 are <strong>practically untraceable</strong> with current methods.</p>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Intelligence Implication">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Intelligence Implication
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Monero and post-CoinJoin Bitcoin break graph-theoretic traceability. Collection strategy must shift <strong>upstream</strong> (exchange KYC records at on-ramp/off-ramp points) or to <strong>off-chain indicators</strong> (IP addresses, communications metadata, hardware device identifiers, timing correlation). The blockchain analysis that is so effective for Bitcoin becomes ineffective for Monero — an analytical capability gap with real operational consequences.</p>
+</div>
+</div>
+</section>
+<section id="blockchain-analytics-tools" class="level3">
+<h3 class="anchored" data-anchor-id="blockchain-analytics-tools">Blockchain Analytics Tools</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 46%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Tool</th>
+<th style="text-align: left;">Primary Users</th>
+<th style="text-align: left;">Strength</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Chainalysis Reactor</td>
+<td style="text-align: left;">DEA, IRS-CI, FBI, DOJ</td>
+<td style="text-align: left;">Widest address labeling database</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Elliptic Navigator</td>
+<td style="text-align: left;">Compliance teams</td>
+<td style="text-align: left;">Transaction monitoring</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TRM Labs</td>
+<td style="text-align: left;">OFAC, FinCEN, DOJ</td>
+<td style="text-align: left;">Sanctions and sanctions-adjacent flagging</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CipherTrace (Mastercard)</td>
+<td style="text-align: left;">FIs and exchanges</td>
+<td style="text-align: left;">AML compliance integration</td>
+</tr>
+</tbody>
+</table>
+<p>All implement variants of the co-input clustering and behavioral heuristics described in this section.</p>
+</section>
+</div>
+</div>
+</section>
+</section>
+<section id="part-iv-financial-intelligence-analysis" class="level1">
+<h1>Part IV: Financial Intelligence Analysis</h1>
+<section id="fincen-data-sars-ctrs-and-network-construction" class="level2">
+<h2 class="anchored" data-anchor-id="fincen-data-sars-ctrs-and-network-construction">FinCEN Data: SARs, CTRs, and Network Construction</h2>
+<p>The Bank Secrecy Act (1970) requires financial institutions to file reports with the Financial Crimes Enforcement Network (FinCEN) that become source data for financial network construction.</p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="suspicious-activity-reports-sars" class="level3">
+<h3 class="anchored" data-anchor-id="suspicious-activity-reports-sars">Suspicious Activity Reports (SARs)</h3>
+<ul>
+<li>Filed by banks, money service businesses (MSBs), casinos, and other institutions when they observe potentially suspicious activity</li>
+<li><strong>Contents:</strong> account numbers, transaction amounts and dates, narrative description, named individuals, suspected activity type</li>
+<li><strong>Access:</strong> classified as law enforcement sensitive; not publicly available; accessible to authorized investigators via the BSA E-Filing system</li>
+<li><strong>FinCEN Files (2020 ICIJ leak):</strong> BuzzFeed News and ICIJ obtained approximately 2,100 SARs covering $2 trillion in suspicious transactions (2000–2017). Showed that Deutsche Bank, HSBC, Standard Chartered, and JPMorgan Chase filed SARs on transactions while continuing to process them — demonstrating that filing is not equivalent to stopping. The network of relationships documented in leaked SARs shows how major correspondent banks served as unwitting (and sometimes knowing) high-betweenness nodes in global illicit finance flows.</li>
+</ul>
+</section>
+<section id="currency-transaction-reports-ctrs" class="level3">
+<h3 class="anchored" data-anchor-id="currency-transaction-reports-ctrs">Currency Transaction Reports (CTRs)</h3>
+<ul>
+<li>Filed <strong>automatically</strong> for all cash transactions ≥ $10,000 — no judgment required</li>
+<li><strong>Contents:</strong> account information, transaction amount, person conducting the transaction</li>
+<li>Provides a systematic edge list for all large cash transactions — the most complete open-source edge data for placement-stage network analysis</li>
+<li><strong>Structuring detection:</strong> patterns of transactions just below the $10,000 CTR threshold from the same account are detectable as anomalous edge-weight distributions relative to the account’s own baseline</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="building-a-financial-network-from-fincen-data" class="level3">
+<h3 class="anchored" data-anchor-id="building-a-financial-network-from-fincen-data">Building a Financial Network from FinCEN Data</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load SAR/CTR data (authorized access required)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>sars <span class="op">=</span> pd.read_csv(<span class="st">'sar_data.csv'</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Columns: filer_id, subject_name, account_num,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#          transaction_amount, transaction_date,</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#          counterparty_name, counterparty_account</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Node construction: entity resolution</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># (merge duplicates by name+SSN/EIN)</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>entities <span class="op">=</span> pd.concat([</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    sars[[<span class="st">'subject_name'</span>,<span class="st">'subject_account'</span>]],</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    sars[[<span class="st">'counterparty_name'</span>,<span class="st">'counterparty_account'</span>]]</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    .rename(columns<span class="op">=</span>{...})</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>]).drop_duplicates()</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Build directed transaction network</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.DiGraph()</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, row <span class="kw">in</span> sars.iterrows():</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    G.add_edge(</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        row[<span class="st">'subject_account'</span>],</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        row[<span class="st">'counterparty_account'</span>],</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        weight<span class="op">=</span>row[<span class="st">'transaction_amount'</span>],</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        date<span class="op">=</span>row[<span class="st">'transaction_date'</span>],</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        sar_id<span class="op">=</span>row[<span class="st">'sar_id'</span>]</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Temporal snapshot for structuring detection</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>ctrs <span class="op">=</span> pd.read_csv(<span class="st">'ctr_data.csv'</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Flag accounts with many transactions 9000-9999</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>structuring <span class="op">=</span> ctrs[</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    (ctrs.amount <span class="op">&gt;=</span> <span class="dv">9000</span>) <span class="op">&amp;</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    (ctrs.amount <span class="op">&lt;</span> <span class="dv">10000</span>)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>].groupby(<span class="st">'account'</span>).agg(</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    count<span class="op">=</span>(<span class="st">'amount'</span>,<span class="st">'count'</span>),</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    total<span class="op">=</span>(<span class="st">'amount'</span>,<span class="st">'sum'</span>)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>).query(<span class="st">'count &gt;= 3'</span>)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Enrich with OFAC SDN list</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co"># join on entity name and account</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Structuring Detection as Anomaly Detection">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Structuring Detection as Anomaly Detection
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Structuring creates a statistically distinctive anomaly: a node with many transaction edges in the weight range <span class="math inline">\([9{,}000, 9{,}999]\)</span> within a short temporal window — anomalous relative to the account’s historical distribution and relative to peer accounts of similar size and type.</p>
+<p>Standard threshold: ≥ 3 transactions in the <span class="math inline">\([9{,}000, 9{,}999]\)</span> range within 30 days from the same account. Combining with directionality: all outflows in this range (structuring) vs.&nbsp;all inflows (possible smurf receiving).</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+<section id="fatf-terrorist-financing-typologies-as-network-patterns" class="level2">
+<h2 class="anchored" data-anchor-id="fatf-terrorist-financing-typologies-as-network-patterns">FATF Terrorist Financing Typologies as Network Patterns</h2>
+<p>The Financial Action Task Force (FATF) publishes typologies of terrorist financing methods with corresponding network signatures.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="five-financing-typologies" class="level3">
+<h3 class="anchored" data-anchor-id="five-financing-typologies">Five Financing Typologies</h3>
+<p><strong>1. State Sponsorship:</strong> Directed edges from a state-controlled entity (central bank, sovereign wealth fund, state company, or IRGC-QF front) through multiple intermediary layers to operational group accounts. Network signature: long paths from state entity to operational recipient; jurisdictional hops through non-sanctioning countries; often detectable through SWIFT correspondent banking records and trade finance analysis.</p>
+<p><strong>2. Charitable Organization Abuse:</strong> Bipartite donor-charity network with high in-degree charity nodes; unusual ratio of domestic vs.&nbsp;foreign disbursement; disbursements concentrated in conflict zones without proportionate charitable activity. Network signature: high in-flow from many donors; single high-weight outflow to a region of concern.</p>
+<p><strong>3. Self-Financing (Low-Cost Attacks):</strong> Individual actors using personal accounts and consumer credit. <strong>No inter-account network visible.</strong> Standard financial monitoring misses this pattern — the 2016 Nice truck attack (€100K in consumer loans), 2015 Paris attacks (self-financed through micro-loans and savings), and 2017 Manchester Arena bombing (student loans). Network analysis is inapplicable; behavioral monitoring and radicalization indicators are required.</p>
+<p><strong>4. Crime-Terror Nexus:</strong> A multiplex where nodes appear in both the criminal transaction network (drug proceeds, extortion payments) and the terrorist financing network. Overlap nodes are the crime-terror bridging entities. Examples: FARC narcoterrorism, Hezbollah criminal enterprises in West Africa (diamond trade, ivory, consumer goods fraud) and Latin America (cocaine proceeds to Hezbollah via Lebanese diaspora).</p>
+<p><strong>5. Hawala-Based Financing:</strong> No formal transaction records visible in financial monitoring systems. Collection must rely on HUMINT from cooperating jurisdictions, financial intelligence from expenditure pattern analysis (weapons purchases, travel, housing payments) rather than income flows.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Case Study: 9/11 Financing Network">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Case Study: 9/11 Financing Network
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The 9/11 hijackers received approximately $300,000–500,000 in operational funds through a combination of:</p>
+<ul>
+<li>Wire transfers from UAE-based accounts (controlled by Mustafa Ahmed al-Hawsawi and Omar al-Bayoumi) to hijacker accounts in Florida and California</li>
+<li>Cash deposits by associates acting as financial facilitators</li>
+<li>Use of U.S. student visa accounts held in the hijackers’ own names</li>
+</ul>
+<p><strong>Network analysis findings (post-hoc):</strong> analysis of the account co-usage graph revealed clustering of hijacker financial accounts that was not identified pre-attack due to collection siloes between FBI, CIA, and NSA.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a></p>
+<p>Specifically: - The bipartite account-controller network showed al-Bayoumi and al-Hawsawi as high-degree controller nodes with connections to multiple hijacker accounts — a pattern consistent with financial facilitation rather than personal transaction - Multiple hijacker accounts at the same banks showing simultaneous deposits from the same source constituted a co-controller signal detectable in retrospect</p>
+<p>The 9/11 Commission found that FinCEN data <em>was</em> available that would have flagged these patterns — but the analytical infrastructure to systematically mine it for network patterns did not exist at the time.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Ransomware as Emerging Typology">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Ransomware as Emerging Typology
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Modern ransomware groups operate with sophisticated financial networks:</p>
+<ol type="1">
+<li>Victim pays ransom in Bitcoin to attacker wallet</li>
+<li>Funds mixed through CoinJoin or centralized mixer</li>
+<li>Converted to Monero via cross-chain swap (severing blockchain trail)</li>
+<li>Converted to fiat through non-KYC exchange or P2P platform</li>
+<li>Affiliate “partners” paid in Bitcoin for conducting the attack</li>
+</ol>
+<p>This produces a hub-and-spoke wallet structure around the ransomware group, with radial transactions to affiliate payment addresses — detectable through blockchain analytics when the group makes operational security errors (address reuse, exchange KYC at offramp points).</p>
+<p>Known ransomware groups with documented financial network analysis: DarkSide (Colonial Pipeline), REvil/Sodinokibi (JBS Foods, Kaseya), Lazarus Group (DPRK state-linked, cryptocurrency theft and mixing for sanctions evasion).</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="financial-intelligence-integration" class="level2">
+<h2 class="anchored" data-anchor-id="financial-intelligence-integration">Financial Intelligence Integration</h2>
+<p>Financial network analysis is most powerful when integrated with other intelligence streams rather than used in isolation.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="all-source-financial-intelligence" class="level3">
+<h3 class="anchored" data-anchor-id="all-source-financial-intelligence">All-Source Financial Intelligence</h3>
+<p><strong>SIGINT integration:</strong> Correlate financial transaction timestamps with communication events. A wire transfer that immediately precedes or follows a specific phone call strengthens attribution of both to the same operational activity. Temporal proximity between a transaction event and a SIGINT intercept is a powerful corroborating signal.</p>
+<p><strong>HUMINT validation:</strong> Source-reported organizational structure should be compared against the financially derived network. Discrepancies may indicate: collection error, intentional deception by the source, or a financial layer deliberately designed to obscure real organizational structure.</p>
+<p><strong>GEOINT correlation:</strong> Map financial transaction destinations to geographic areas. Identify regions receiving unusual financial inflows consistent with operational staging, recruitment payments, or weapons acquisition — the financial network reveals geographic operational footprint.</p>
+<p><strong>Travel record integration:</strong> Co-location of financial transfers with travel records strengthens operational attribution. Wire transfer from Dubai followed by departure from Dubai and arrival of the account holder in a third country suggests the funds and the person are moving together operationally.</p>
+<p><strong>Open corporate registry data:</strong> Cross-reference transaction network entities against ICIJ Offshore Leaks, national corporate registries, OFAC SDN list, and FinCEN beneficial ownership database (CorpSec Act 2021) to identify ownership chains and sanction adjacency.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="treasurys-war-financial-power-as-disruption-tool" class="level3">
+<h3 class="anchored" data-anchor-id="treasurys-war-financial-power-as-disruption-tool">Treasury’s War: Financial Power as Disruption Tool</h3>
+<p><strong>Correspondent banking leverage (Section 311 mechanism):</strong></p>
+<ol type="1">
+<li>Treasury designates a foreign bank as a “primary money laundering concern”</li>
+<li>All U.S. financial institutions are immediately prohibited from maintaining correspondent relationships with the designated bank</li>
+<li>Non-U.S. banks — fearing secondary sanctions exposure from their own U.S. correspondent relationships — independently withdraw from the designated bank</li>
+<li>Result: cascading exclusion from dollar-clearing and de facto exclusion from the global financial system</li>
+</ol>
+<p>The designated bank loses access to ~90% of global trade finance (denominated in USD) from a <strong>single designation action</strong> — a network disruption effect amplified by the structural centrality of the U.S. in the global correspondent banking network.</p>
+<p><strong>Minimum cut for financial isolation:</strong></p>
+<p>Identifying the minimum vertex cut in the financial network between a targeted organization and its access to the financial system gives the optimal designation target set — the smallest number of entity designations that achieves complete financial isolation. This is directly the minimum cut problem applied to the corporate ownership and correspondent banking graph.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Key Takeaway">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Key Takeaway
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Financial network analysis serves <strong>two distinct functions</strong>: an <em>intelligence function</em> (understanding illicit flows, mapping organizational financing structure, identifying actors) and a <em>policy function</em> (designing targeted financial measures that achieve maximum disruption with minimum collateral impact through minimum cut analysis). Both require the same structural methods; the outputs are used for different purposes.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+</section>
+<section id="lecture-summary" class="level1 page-columns page-full">
+<h1>Lecture Summary</h1>
+<section id="key-formulas-and-structures" class="level2">
+<h2 class="anchored" data-anchor-id="key-formulas-and-structures">Key Formulas and Structures</h2>
+<div class="key-terms">
+<dl>
+<dt><strong>Bipartite person-account network</strong></dt>
+<dd>
+<span class="math inline">\(G = (P, A, E)\)</span>; project to <span class="math inline">\(P\)</span> for co-controller analysis; project to <span class="math inline">\(A\)</span> for account cluster analysis
+</dd>
+<dt><strong>Flow betweenness centrality</strong></dt>
+<dd>
+<span class="math inline">\(C_F(v) = \sum_{s\neq v\neq t} f_{st}(v)/f_{st}\)</span>; correct for financial networks where money splits across multiple paths
+</dd>
+<dt><strong>Cycle detection</strong></dt>
+<dd>
+Closed cycles in the directed transaction graph = strong layering indicator; <code>nx.find_cycle(G)</code> in NetworkX
+</dd>
+<dt><strong>Shell company chain length</strong></dt>
+<dd>
+<span class="math inline">\(UBO \to C_1 \to \cdots \to C_n \to \text{Asset}\)</span>; path length <span class="math inline">\(n\)</span> correlates with investigative difficulty and opacity
+</dd>
+<dt><strong>Co-input clustering heuristic</strong></dt>
+<dd>
+Addresses co-spending in a Bitcoin transaction are controlled by the same entity; transitive closure produces entity clusters
+</dd>
+<dt><strong>Structuring anomaly detection</strong></dt>
+<dd>
+Node with many transaction edges in <span class="math inline">\([9{,}000, 9{,}999]\)</span> weight range in a short window; anomalous relative to account baseline
+</dd>
+<dt><strong>Minimum cut for financial isolation</strong></dt>
+<dd>
+Minimum vertex cut between sanctioned entity and financial system = optimal simultaneous designation set
+</dd>
+</dl>
+</div>
+</section>
+<section id="key-analytical-takeaways" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="key-analytical-takeaways">Key Analytical Takeaways</h2>
+<ol type="1">
+<li><p>Financial networks are directed, weighted, and temporal — all three properties are analytically essential. Ignoring direction loses flow attribution; ignoring weights loses magnitude; ignoring timestamps loses causal sequence.</p></li>
+<li><p>Money laundering has three structurally distinct stages with different network signatures. Placement: high-degree source with low-weight edges. Layering: long paths, cycles, shell company nodes. Integration: terminal legitimate commercial nodes. Detection difficulty and network analyzability differ across stages.</p></li>
+<li><p>Hawala operates on trust rather than paper trails. Network analysis must focus on community structure, high-betweenness broker identification, and settlement pattern detection rather than transaction records.</p></li>
+<li><p>Bitcoin pseudonymity is weak against co-input clustering — Meiklejohn et al.&nbsp;reduced 12M addresses to 5.5M entity clusters. Monero’s ring signatures, stealth addresses, and RingCT practically defeat current clustering methods.</p></li>
+<li><p>FinCEN data (SARs, CTRs) provides structured edge data for financial network construction. Structuring is detectable as an anomalous edge-weight distribution below the CTR threshold. Access requires legal authorization; FinCEN Files provide a partial open-source substitute.</p></li>
+<li><p>Financial intelligence is most powerful as all-source intelligence: FININT + SIGINT temporal correlation + HUMINT structural validation + GEOINT geographic mapping + travel record co-location produces attribution confidence levels unavailable to any single stream alone.</p></li>
+</ol>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Next Lecture">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Next Lecture
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Information and Influence Networks</strong> — social media network analysis, disinformation attribution, coordinated inauthentic behavior detection, narrative mapping, the HITS framework applied to influence operations, and the NLP-network analysis integration for content-aware network modeling.</p>
+</div>
+</div>
+<div style="margin-top:2rem">
+  <ul class="course-sequence">
+    <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> What is Network Analysis?</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Graph Theory Basics</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Centrality and Influence</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Social Network Analysis in Intelligence</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Community Detection and Clustering</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Geospatial and Multi-Layer Networks</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> [Week 8]</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Temporal and Dynamic Networks</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Global Security and Network Analysis</li>
+    <li class="seq-active"><span class="seq-icon">▶</span> <strong>Financial and Transaction Networks</strong> (this lecture)</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Information / Influence Networks</li>
+  </ul>
+</div>
+
+<div class="page-footer-custom">
+School of Intelligence Analysis &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
+</div>
+<div class="uc-banner column-screen uc-banner-bottom">
+UNCLASSIFIED // FOR EDUCATIONAL USE ONLY
+</div>
+
+
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Franklin Allen and Douglas Gale, “Financial Contagion,” <em>Journal of Political Economy</em> 108, no. 1 (2000): 1–33.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Brigitte Unger, <em>The Scale and Impacts of Money Laundering</em> (Cheltenham: Edward Elgar, 2007), 14–40.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Bradley Hope and Tom Wright, <em>Billion Dollar Whale: The Man Who Fooled Wall Street, Hollywood, and the World</em> (New York: Hachette, 2018), 72–145.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Patrick M. Jost and Harjit Singh Sandhu, “The Hawala Alternative Remittance System and Its Role in Money Laundering,” Interpol General Secretariat (2000), 6–18.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Jason C. Sharman, <em>The Money Laundry: Regulating Criminal Finance in the Global Economy</em> (Ithaca: Cornell University Press, 2011), 60–95.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Satoshi Nakamoto, “Bitcoin: A Peer-to-Peer Electronic Cash System,” unpublished manuscript (2008), 1–9.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Sarah Meiklejohn et al., “A Fistful of Bitcoins: Characterizing Payments Among Men with No Names,” <em>Proceedings of the 2013 Internet Measurement Conference</em> (2013): 127–140.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>Malte Möser et al., “An Empirical Analysis of Traceability in the Monero Blockchain,” <em>Proceedings on Privacy Enhancing Technologies</em> 2018, no. 3 (2018): 143–163.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>Financial Action Task Force, “Terrorist Financing,” FATF Report (Paris: FATF/OECD, 2008), 14–38.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>Peter Reuter and Edwin M. Truman, <em>Chasing Dirty Money: The Fight Against Money Laundering</em> (Washington: Institute for International Economics, 2004), 24–29.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>Juan C. Zarate, <em>Treasury’s War: The Unleashing of a New Era of Financial Warfare</em> (New York: PublicAffairs, 2013), 24–55.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,2194 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="School of Intelligence Analysis, James Madison University">
+<meta name="dcterms.date" content="2026-01-01">
+
+<title>Community Detection and Clustering – IA 480: Applied Network Analysis: Systems, Connections, and Influence</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-d6fbb5bfb24a4f1906c428146fc3bdde.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0d48ad8d89774e5362b72c75c2c9e679.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">IA 480: Applied Network Analysis: Systems, Connections, and Influence</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-weekly-materials" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Weekly Materials</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-weekly-materials">    
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week2Lecture/index.qmd">
+ <span class="dropdown-text">Week 2 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week3Lecture/index.qmd">
+ <span class="dropdown-text">Week 3 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week4Lecture/index.qmd">
+ <span class="dropdown-text">Week 4 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week5Lecture/index.qmd">
+ <span class="dropdown-text">Week 5 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week6Lecture/index.qmd">
+ <span class="dropdown-text">Week 6 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week7Lecture/index.qmd">
+ <span class="dropdown-text">Week 7 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week8Lecture/index.qmd">
+ <span class="dropdown-text">Week 8 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week9Lecture/index.qmd">
+ <span class="dropdown-text">Week 9 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week10Lecture/index.qmd">
+ <span class="dropdown-text">Week 10 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week11Lecture/index.qmd">
+ <span class="dropdown-text">Week 11 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../IA480-NA/Week12Lecture/index.qmd">
+ <span class="dropdown-text"></span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#lecture-roadmap" id="toc-lecture-roadmap" class="nav-link active" data-scroll-target="#lecture-roadmap">Lecture Roadmap</a></li>
+  <li><a href="#part-i-what-is-a-community" id="toc-part-i-what-is-a-community" class="nav-link" data-scroll-target="#part-i-what-is-a-community">Part I: What Is a Community?</a>
+  <ul class="collapse">
+  <li><a href="#defining-network-communities" id="toc-defining-network-communities" class="nav-link" data-scroll-target="#defining-network-communities">Defining Network Communities</a></li>
+  <li><a href="#modularity-the-core-objective-function" id="toc-modularity-the-core-objective-function" class="nav-link" data-scroll-target="#modularity-the-core-objective-function">Modularity: The Core Objective Function</a></li>
+  <li><a href="#the-resolution-limit-problem" id="toc-the-resolution-limit-problem" class="nav-link" data-scroll-target="#the-resolution-limit-problem">The Resolution Limit Problem</a></li>
+  </ul></li>
+  <li><a href="#part-ii-community-detection-algorithms" id="toc-part-ii-community-detection-algorithms" class="nav-link" data-scroll-target="#part-ii-community-detection-algorithms">Part II: Community Detection Algorithms</a>
+  <ul class="collapse">
+  <li><a href="#girvan-newman-edge-betweenness-removal" id="toc-girvan-newman-edge-betweenness-removal" class="nav-link" data-scroll-target="#girvan-newman-edge-betweenness-removal">Girvan-Newman: Edge Betweenness Removal</a></li>
+  <li><a href="#louvain-algorithm" id="toc-louvain-algorithm" class="nav-link" data-scroll-target="#louvain-algorithm">Louvain Algorithm</a></li>
+  <li><a href="#spectral-clustering" id="toc-spectral-clustering" class="nav-link" data-scroll-target="#spectral-clustering">Spectral Clustering</a></li>
+  <li><a href="#label-propagation-and-infomap" id="toc-label-propagation-and-infomap" class="nav-link" data-scroll-target="#label-propagation-and-infomap">Label Propagation and Infomap</a></li>
+  </ul></li>
+  <li><a href="#part-iii-overlapping-and-hierarchical-communities" id="toc-part-iii-overlapping-and-hierarchical-communities" class="nav-link" data-scroll-target="#part-iii-overlapping-and-hierarchical-communities">Part III: Overlapping and Hierarchical Communities</a>
+  <ul class="collapse">
+  <li><a href="#clique-percolation-method-overlapping-communities" id="toc-clique-percolation-method-overlapping-communities" class="nav-link" data-scroll-target="#clique-percolation-method-overlapping-communities">Clique Percolation Method: Overlapping Communities</a></li>
+  <li><a href="#hierarchical-decomposition-and-dendrograms" id="toc-hierarchical-decomposition-and-dendrograms" class="nav-link" data-scroll-target="#hierarchical-decomposition-and-dendrograms">Hierarchical Decomposition and Dendrograms</a></li>
+  </ul></li>
+  <li><a href="#part-iv-intelligence-applications" id="toc-part-iv-intelligence-applications" class="nav-link" data-scroll-target="#part-iv-intelligence-applications">Part IV: Intelligence Applications</a>
+  <ul class="collapse">
+  <li><a href="#algorithm-comparison-a-practical-guide" id="toc-algorithm-comparison-a-practical-guide" class="nav-link" data-scroll-target="#algorithm-comparison-a-practical-guide">Algorithm Comparison: A Practical Guide</a>
+  <ul class="collapse">
+  <li><a href="#consensus-community-detection" id="toc-consensus-community-detection" class="nav-link" data-scroll-target="#consensus-community-detection">Consensus Community Detection</a></li>
+  </ul></li>
+  <li><a href="#faction-identification-in-political-and-insurgent-networks" id="toc-faction-identification-in-political-and-insurgent-networks" class="nav-link" data-scroll-target="#faction-identification-in-political-and-insurgent-networks">Faction Identification in Political and Insurgent Networks</a></li>
+  <li><a href="#cell-structure-recovery-in-covert-networks" id="toc-cell-structure-recovery-in-covert-networks" class="nav-link" data-scroll-target="#cell-structure-recovery-in-covert-networks">Cell Structure Recovery in Covert Networks</a></li>
+  <li><a href="#implementation-gephi-and-networkx" id="toc-implementation-gephi-and-networkx" class="nav-link" data-scroll-target="#implementation-gephi-and-networkx">Implementation: Gephi and NetworkX</a></li>
+  <li><a href="#caveating-community-findings-in-intelligence-products" id="toc-caveating-community-findings-in-intelligence-products" class="nav-link" data-scroll-target="#caveating-community-findings-in-intelligence-products">Caveating Community Findings in Intelligence Products</a></li>
+  </ul></li>
+  <li><a href="#lecture-summary" id="toc-lecture-summary" class="nav-link" data-scroll-target="#lecture-summary">Lecture Summary</a>
+  <ul class="collapse">
+  <li><a href="#key-formulas" id="toc-key-formulas" class="nav-link" data-scroll-target="#key-formulas">Key Formulas</a></li>
+  <li><a href="#algorithm-quick-reference" id="toc-algorithm-quick-reference" class="nav-link" data-scroll-target="#algorithm-quick-reference">Algorithm Quick Reference</a></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Community Detection and Clustering</h1>
+<p class="subtitle lead">IA 480: Applied Network Analysis: Systems, Connections, and Influence</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>School of Intelligence Analysis, James Madison University </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 1, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="uc-banner column-screen">
+UNCLASSIFIED // FOR EDUCATIONAL USE ONLY
+</div>
+<div class="course-meta">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Course</td>
+<td style="text-align: left;">IA 480: Applied Network Analysis</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Week</td>
+<td style="text-align: left;">6 of 12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Instructor</td>
+<td style="text-align: left;">School of Intelligence Analysis</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Term</td>
+<td style="text-align: left;">Fall 2026</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of this lecture, students should be able to:</p>
+<ol type="1">
+<li>Define modularity <span class="math inline">\(Q\)</span> formally and interpret its range as a measure of community structure quality.</li>
+<li>Describe and compare the Girvan-Newman, Louvain, Leiden, spectral, CPM, label propagation, and Infomap algorithms by mechanism, complexity, and appropriate use case.</li>
+<li>Explain the resolution limit and its operational implications for detecting small covert cells in large networks.</li>
+<li>Distinguish partition-based from overlapping community detection and select the appropriate method for a given intelligence problem.</li>
+<li>Apply community detection to faction identification and cell structure recovery, with appropriate caveats.</li>
+</ol>
+</div>
+</div>
+<section id="lecture-roadmap" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-roadmap">Lecture Roadmap</h2>
+<div class="roadmap-grid" style="grid-template-columns: repeat(2,1fr)">
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part I — What Is a Community?</div>
+    <ul>
+      <li>Defining network communities</li>
+      <li>Modularity <em>Q</em>: the core objective function</li>
+      <li>The resolution limit problem</li>
+      <li>Partition vs. cover: non-overlapping and overlapping</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part II — Algorithms</div>
+    <ul>
+      <li>Girvan-Newman: edge betweenness removal</li>
+      <li>Louvain: modularity optimization</li>
+      <li>Leiden: refinement of Louvain</li>
+      <li>Spectral clustering and Label Propagation</li>
+      <li>Clique Percolation Method (CPM)</li>
+      <li>Infomap: flow-based communities</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part III — Overlapping and Hierarchical Communities</div>
+    <ul>
+      <li>Overlapping community structure</li>
+      <li>Hierarchical decomposition and dendrograms</li>
+      <li><em>k</em>-core decomposition as community approximation</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part IV — Intelligence Applications</div>
+    <ul>
+      <li>Faction identification in insurgent networks</li>
+      <li>Cell structure recovery in covert networks</li>
+      <li>Comparing algorithm outputs: consensus detection</li>
+      <li>Gephi and NetworkX implementation</li>
+      <li>Caveating community findings</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section id="part-i-what-is-a-community" class="level1">
+<h1>Part I: What Is a Community?</h1>
+<section id="defining-network-communities" class="level2">
+<h2 class="anchored" data-anchor-id="defining-network-communities">Defining Network Communities</h2>
+<p>A <strong>community</strong> (also called a <em>cluster</em>, <em>module</em>, or <em>group</em>) is a subset of nodes more densely connected to each other than to the rest of the network. This intuition is widespread but surprisingly difficult to formalize — there is no single, universally accepted mathematical definition, and different formalizations lead to different algorithms with meaningfully different outputs.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="common-formalizations" class="level3">
+<h3 class="anchored" data-anchor-id="common-formalizations">Common Formalizations</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 35%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Approach</th>
+<th style="text-align: left;">Definition</th>
+<th style="text-align: left;">Limitation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Clique-based</strong></td>
+<td style="text-align: left;">Community = clique or near-clique</td>
+<td style="text-align: left;">Too strict; almost no real-world communities are cliques</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Cut-based</strong></td>
+<td style="text-align: left;">Minimize edges crossing community boundaries</td>
+<td style="text-align: left;">Tends to isolate single nodes (unbalanced partitions)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Density-based</strong></td>
+<td style="text-align: left;">Internal density &gt;&gt; external density</td>
+<td style="text-align: left;">No principled threshold for “significantly exceeds”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Modularity-based</strong></td>
+<td style="text-align: left;">Partition maximizing <span class="math inline">\(Q\)</span> vs.&nbsp;random null model</td>
+<td style="text-align: left;">Resolution limit; NP-hard exact optimization</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Flow-based</strong></td>
+<td style="text-align: left;">Communities = regions where random walkers stay</td>
+<td style="text-align: left;">Requires flow intuition; can be tuned via map equation</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="why-communities-matter-in-intelligence" class="level3">
+<h3 class="anchored" data-anchor-id="why-communities-matter-in-intelligence">Why Communities Matter in Intelligence</h3>
+<ul>
+<li>Reveal <strong>latent organizational structure</strong> not visible from individual actor attributes — cells, factions, functional subgroups</li>
+<li>Enable <strong>role assignment by structural position</strong>: who is a core member vs.&nbsp;a boundary actor vs.&nbsp;an isolate?</li>
+<li>Identify <strong>boundary actors</strong> (nodes with low-modularity membership straddling two communities) — the structurally most interesting actors for collection and targeting</li>
+<li>Enable <strong>temporal tracking</strong>: rising modularity signals fragmentation; falling modularity signals consolidation</li>
+<li>Support <strong>hypothesis generation</strong> about organizational compartmentalization when the organizational chart is unknown</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.5rem">
+    Three-Community Example Network
+  </p>
+  <svg viewbox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:400px;display:block;font-family:'IBM Plex Sans',sans-serif">
+
+    <!-- Community background ovals -->
+    <ellipse cx="90" cy="110" rx="72" ry="85" fill="rgba(69,0,132,0.09)" stroke="#450084" stroke-width="1.2" stroke-dasharray="5,3"></ellipse>
+    <ellipse cx="245" cy="80" rx="80" ry="68" fill="rgba(203,182,119,0.15)" stroke="#AD9C65" stroke-width="1.2" stroke-dasharray="5,3"></ellipse>
+    <ellipse cx="330" cy="180" rx="68" ry="50" fill="rgba(89,89,89,0.09)" stroke="#595959" stroke-width="1.2" stroke-dasharray="5,3"></ellipse>
+
+    <!-- Community labels -->
+    <text x="90" y="22" text-anchor="middle" font-size="9.5" font-weight="700" fill="#450084">COMMUNITY A</text>
+    <text x="248" y="18" text-anchor="middle" font-size="9.5" font-weight="700" fill="#AD9C65">COMMUNITY B</text>
+    <text x="332" y="137" text-anchor="middle" font-size="9.5" font-weight="700" fill="#595959">COMMUNITY C</text>
+
+    <!-- Inter-community edges (dashed, light) -->
+    <line x1="138" y1="85" x2="188" y2="72" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="5,4"></line>
+    <line x1="140" y1="140" x2="272" y2="155" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="5,4"></line>
+    <line x1="295" y1="100" x2="297" y2="150" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="5,4"></line>
+
+    <!-- Community A edges (purple, solid) -->
+    <line x1="55" y1="80" x2="128" y2="65" stroke="#450084" stroke-width="2"></line>
+    <line x1="55" y1="80" x2="60" y2="155" stroke="#450084" stroke-width="2"></line>
+    <line x1="55" y1="80" x2="120" y2="150" stroke="#450084" stroke-width="2"></line>
+    <line x1="128" y1="65" x2="120" y2="150" stroke="#450084" stroke-width="2"></line>
+    <line x1="60" y1="155" x2="120" y2="150" stroke="#450084" stroke-width="2"></line>
+
+    <!-- Community B edges (gold, solid) -->
+    <line x1="190" y1="50" x2="280" y2="48" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="190" y1="50" x2="210" y2="115" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="280" y1="48" x2="300" y2="105" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="210" y1="115" x2="300" y2="105" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="190" y1="50" x2="300" y2="105" stroke="#AD9C65" stroke-width="2"></line>
+
+    <!-- Community C edges (gray, solid) -->
+    <line x1="273" y1="158" x2="355" y2="158" stroke="#595959" stroke-width="2"></line>
+    <line x1="273" y1="158" x2="315" y2="205" stroke="#595959" stroke-width="2"></line>
+    <line x1="355" y1="158" x2="315" y2="205" stroke="#595959" stroke-width="2"></line>
+
+    <!-- Community A nodes -->
+    <circle cx="55" cy="80" r="18" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="55" y="85" text-anchor="middle" font-size="12" font-weight="bold" fill="#450084">1</text>
+    <circle cx="128" cy="65" r="18" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="128" y="70" text-anchor="middle" font-size="12" font-weight="bold" fill="#450084">2</text>
+    <circle cx="60" cy="155" r="18" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="60" y="160" text-anchor="middle" font-size="12" font-weight="bold" fill="#450084">3</text>
+    <circle cx="120" cy="150" r="18" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="120" y="155" text-anchor="middle" font-size="12" font-weight="bold" fill="#450084">4</text>
+
+    <!-- Community B nodes -->
+    <circle cx="190" cy="50" r="18" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2.2"></circle>
+    <text x="190" y="55" text-anchor="middle" font-size="12" font-weight="bold" fill="#AD9C65">5</text>
+    <circle cx="280" cy="48" r="18" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2.2"></circle>
+    <text x="280" y="53" text-anchor="middle" font-size="12" font-weight="bold" fill="#AD9C65">6</text>
+    <circle cx="210" cy="115" r="18" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2.2"></circle>
+    <text x="210" y="120" text-anchor="middle" font-size="12" font-weight="bold" fill="#AD9C65">7</text>
+    <circle cx="300" cy="105" r="18" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2.2"></circle>
+    <text x="300" y="110" text-anchor="middle" font-size="12" font-weight="bold" fill="#AD9C65">8</text>
+
+    <!-- Community C nodes -->
+    <circle cx="273" cy="158" r="18" fill="#D6D6D6" stroke="#595959" stroke-width="2.2"></circle>
+    <text x="273" y="163" text-anchor="middle" font-size="12" font-weight="bold" fill="#595959">9</text>
+    <circle cx="355" cy="158" r="18" fill="#D6D6D6" stroke="#595959" stroke-width="2.2"></circle>
+    <text x="355" y="163" text-anchor="middle" font-size="12" font-weight="bold" fill="#595959">10</text>
+    <circle cx="315" cy="205" r="18" fill="#D6D6D6" stroke="#595959" stroke-width="2.2"></circle>
+    <text x="315" y="210" text-anchor="middle" font-size="12" font-weight="bold" fill="#595959">11</text>
+  </svg>
+  <figcaption>
+    Solid edges: intra-community (dense). Dashed: inter-community (sparse).<br>
+    Dashed ovals show detected community boundaries.
+  </figcaption>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="A Critical Warning">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>A Critical Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Community detection is <strong>unsupervised</strong>: algorithms find communities whether they are operationally meaningful or not. Every detected community must be validated against domain knowledge and additional intelligence. Statistical communities are not automatically intelligence communities.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="modularity-the-core-objective-function" class="level2">
+<h2 class="anchored" data-anchor-id="modularity-the-core-objective-function">Modularity: The Core Objective Function</h2>
+<p>Modularity <span class="math inline">\(Q\)</span>, introduced by Newman and Girvan in 2004, is the dominant quality measure for community partitions and the objective function for the most widely used algorithms.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="definition" class="level3">
+<h3 class="anchored" data-anchor-id="definition">Definition</h3>
+<p><span class="math display">\[Q = \frac{1}{2m} \sum_{i,j} \left[ A_{ij} - \frac{k_i k_j}{2m} \right] \delta(c_i, c_j)\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(A_{ij}\)</span>: entry of the adjacency matrix (1 if edge, 0 otherwise)</li>
+<li><span class="math inline">\(k_i, k_j\)</span>: degrees of nodes <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span></li>
+<li><span class="math inline">\(m = |E|\)</span>: total number of edges in the network</li>
+<li><span class="math inline">\(\frac{k_i k_j}{2m}\)</span>: <strong>expected</strong> number of edges between <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> under the configuration model null — a random graph with the same degree sequence as <span class="math inline">\(G\)</span></li>
+<li><span class="math inline">\(\delta(c_i, c_j) = 1\)</span> if nodes <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> are in the same community, 0 otherwise</li>
+</ul>
+<p>The term in brackets computes the <em>excess</em> of actual edges over expected edges for each pair. Summing over all same-community pairs, normalized by <span class="math inline">\(2m\)</span>, gives the overall quality of the partition.</p>
+</section>
+<section id="interpretation-and-range" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-and-range">Interpretation and Range</h3>
+<ul>
+<li><span class="math inline">\(Q &gt; 0\)</span>: more internal edges than chance predicts → genuine community structure</li>
+<li><span class="math inline">\(Q \approx 0\)</span>: community structure no better than random</li>
+<li><span class="math inline">\(Q &lt; 0\)</span>: fewer internal edges than expected (anti-communities or bipartite structure)</li>
+<li><strong>Practical thresholds:</strong> <span class="math inline">\(Q &gt; 0.3\)</span> = meaningful structure; <span class="math inline">\(Q &gt; 0.6\)</span> = strong structure; <span class="math inline">\(Q &gt; 0.8\)</span> = rare, very tight communities</li>
+<li>Exact maximization of <span class="math inline">\(Q\)</span> is NP-hard; all practical implementations use heuristics<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></li>
+</ul>
+</section>
+<section id="resolution-adjusted-modularity" class="level3">
+<h3 class="anchored" data-anchor-id="resolution-adjusted-modularity">Resolution-Adjusted Modularity</h3>
+<p>Leiden and other modern algorithms use a resolution parameter <span class="math inline">\(\gamma\)</span>:</p>
+<p><span class="math display">\[Q_\gamma = \frac{1}{2m} \sum_{i,j} \left[ A_{ij} - \gamma \frac{k_i k_j}{2m} \right] \delta(c_i, c_j)\]</span></p>
+<ul>
+<li><span class="math inline">\(\gamma &gt; 1\)</span>: penalizes larger communities → reveals finer structure</li>
+<li><span class="math inline">\(\gamma &lt; 1\)</span>: favors larger communities → coarser partition</li>
+<li><span class="math inline">\(\gamma = 1\)</span>: standard modularity</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Worked Intuition">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Worked Intuition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Suppose a network has <span class="math inline">\(m = 100\)</span> edges. A proposed partition places 60 of them <em>within</em> communities. How many would we expect within communities by chance, given the nodes’ degrees?</p>
+<p>Under the null model, if high-degree nodes have many edges, some of those edges will fall within communities simply by chance even in a random graph. Suppose the null model predicts 40 edges should fall within communities by chance.</p>
+<p>Then: <span class="math inline">\(Q \approx (60 - 40) / 100 = 0.20\)</span></p>
+<p>The partition captures real structure — 50% more within-community edges than expected. But <span class="math inline">\(Q = 0.20\)</span> is below the 0.3 threshold, suggesting the structure is weak or the partition is suboptimal.</p>
+<p>For stronger structure: if the same network places 75 edges within communities vs.&nbsp;40 expected: <span class="math inline">\(Q \approx 0.35\)</span> — above threshold, meaningful.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="The Phantom Community Problem">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>The Phantom Community Problem
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Even random networks show non-zero modularity.</strong></p>
+<p>For an Erdős-Rényi random graph, the expected maximum modularity is approximately <span class="math inline">\(Q_{\max} \sim n^{-1/2}\)</span> — which is near zero for large networks but can reach <span class="math inline">\(Q \approx 0.1\)</span>–<span class="math inline">\(0.2\)</span> for small networks (<span class="math inline">\(n &lt; 200\)</span>) even when no true community structure exists.</p>
+<p>Before interpreting a partition with <span class="math inline">\(Q = 0.25\)</span> as real community structure, compare against the modularity of 100 random graphs with the same size and degree sequence (bootstrap test). If the observed <span class="math inline">\(Q\)</span> exceeds the 95th percentile of the null distribution, the structure is statistically significant.</p>
+<p>This check is mandatory in intelligence products where the network is small (&lt; 200 nodes) — exactly the scale typical of collected dark network data.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-resolution-limit-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-resolution-limit-problem">The Resolution Limit Problem</h2>
+<p>Modularity maximization has a fundamental scale limitation: it cannot reliably detect communities smaller than a scale that depends on the total number of edges in the network.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="the-formal-limit" class="level3">
+<h3 class="anchored" data-anchor-id="the-formal-limit">The Formal Limit</h3>
+<p>Communities with fewer than <span class="math inline">\(\sqrt{2m}\)</span> internal edges may be merged with adjacent communities by modularity-maximizing algorithms, even when the communities are structurally distinct.</p>
+<p><strong>Threshold examples:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Network size <span class="math inline">\(m\)</span></th>
+<th style="text-align: center;">Resolution limit <span class="math inline">\(\sqrt{2m}\)</span></th>
+<th style="text-align: left;">Implication</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">500 edges</td>
+<td style="text-align: center;">~32 edges</td>
+<td style="text-align: left;">Cells of &lt; 8 members may be merged</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">5,000 edges</td>
+<td style="text-align: center;">~100 edges</td>
+<td style="text-align: left;">Cells of &lt; 14 members may be merged</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">50,000 edges</td>
+<td style="text-align: center;">~316 edges</td>
+<td style="text-align: left;">Cells of &lt; 25 members may be merged</td>
+</tr>
+</tbody>
+</table>
+<p>For a full social media graph (<span class="math inline">\(m \sim 10^9\)</span>), the resolution limit absorbs any cell smaller than thousands of edges — rendering modularity-based detection useless for small covert cells without pre-segmentation.</p>
+<p><strong>Consequences in practice:</strong></p>
+<ul>
+<li>In large terrorism-adjacent networks (e.g., a full Twitter retweet graph of 50,000 accounts), small operational cells (3–7 members) are resolution-limit invisible — they are systematically merged into larger detected communities alongside unrelated actors</li>
+<li>The resolution limit <strong>grows with network size</strong>: analysts working on large networks must segment or pre-filter before running community detection if the target is small cells</li>
+<li>Different algorithms have different effective resolutions; Infomap’s resolution limit is different from modularity-based methods</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Resolution Limit: Small Cells Incorrectly Merged
+  </p>
+  <svg viewbox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:380px;display:block;font-family:'IBM Plex Sans',sans-serif">
+
+    <!-- Large "background" community (gray, big) -->
+    <ellipse cx="200" cy="115" rx="185" ry="95" fill="rgba(89,89,89,0.07)" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="6,4"></ellipse>
+    <text x="200" y="220" text-anchor="middle" font-size="9" fill="#B2B2B2" font-style="italic">Detected community (incorrectly merged)</text>
+
+    <!-- Many background nodes to suggest large network -->
+    <circle cx="160" cy="90" r="7" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1"></circle>
+    <circle cx="200" cy="75" r="7" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1"></circle>
+    <circle cx="240" cy="90" r="7" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1"></circle>
+    <circle cx="175" cy="125" r="7" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1"></circle>
+    <circle cx="225" cy="125" r="7" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1"></circle>
+    <circle cx="200" cy="145" r="7" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1"></circle>
+    <line x1="160" y1="90" x2="200" y2="75" stroke="#D6D6D6" stroke-width="1"></line>
+    <line x1="200" y1="75" x2="240" y2="90" stroke="#D6D6D6" stroke-width="1"></line>
+    <line x1="175" y1="125" x2="225" y2="125" stroke="#D6D6D6" stroke-width="1"></line>
+    <line x1="200" y1="145" x2="175" y2="125" stroke="#D6D6D6" stroke-width="1"></line>
+    <line x1="200" y1="145" x2="225" y2="125" stroke="#D6D6D6" stroke-width="1"></line>
+    <line x1="160" y1="90" x2="175" y2="125" stroke="#D6D6D6" stroke-width="1"></line>
+    <line x1="240" y1="90" x2="225" y2="125" stroke="#D6D6D6" stroke-width="1"></line>
+
+    <!-- LEFT small cell (purple, real but should be distinct) -->
+    <text x="68" y="32" text-anchor="middle" font-size="8.5" font-weight="600" fill="#450084">Cell 1</text>
+    <text x="68" y="43" text-anchor="middle" font-size="7.5" fill="#450084" font-style="italic">(should be separate)</text>
+    <line x1="38" y1="70" x2="78" y2="55" stroke="#450084" stroke-width="2.2"></line>
+    <line x1="38" y1="70" x2="58" y2="108" stroke="#450084" stroke-width="2.2"></line>
+    <line x1="78" y1="55" x2="58" y2="108" stroke="#450084" stroke-width="2.2"></line>
+    <circle cx="38" cy="70" r="13" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="78" cy="55" r="13" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="58" cy="108" r="13" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <!-- Weak link to big community -->
+    <line x1="75" y1="108" x2="160" y2="90" stroke="#B2B2B2" stroke-width="1.2" stroke-dasharray="4,3"></line>
+
+    <!-- RIGHT small cell (gold, real but should be distinct) -->
+    <text x="332" y="32" text-anchor="middle" font-size="8.5" font-weight="600" fill="#AD9C65">Cell 2</text>
+    <text x="332" y="43" text-anchor="middle" font-size="7.5" fill="#AD9C65" font-style="italic">(should be separate)</text>
+    <line x1="302" y1="70" x2="362" y2="55" stroke="#AD9C65" stroke-width="2.2"></line>
+    <line x1="302" y1="70" x2="342" y2="108" stroke="#AD9C65" stroke-width="2.2"></line>
+    <line x1="362" y1="55" x2="342" y2="108" stroke="#AD9C65" stroke-width="2.2"></line>
+    <circle cx="302" cy="70" r="13" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <circle cx="362" cy="55" r="13" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <circle cx="342" cy="108" r="13" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <!-- Weak link to big community -->
+    <line x1="305" y1="108" x2="240" y2="90" stroke="#B2B2B2" stroke-width="1.2" stroke-dasharray="4,3"></line>
+
+    <!-- Warning label -->
+    <text x="200" y="65" text-anchor="middle" font-size="9" fill="#595959" font-weight="600">Large background community</text>
+    <text x="200" y="77" text-anchor="middle" font-size="8.5" fill="#595959">(both cells absorbed here by algorithm)</text>
+  </svg>
+  <figcaption>
+    Both small cells (purple, gold) have fewer internal edges than √2m.<br>
+    The algorithm merges them into the large background community.
+  </figcaption>
+</div>
+<section id="mitigation-strategies" class="level3">
+<h3 class="anchored" data-anchor-id="mitigation-strategies">Mitigation Strategies</h3>
+<ul>
+<li><strong>Resolution parameter <span class="math inline">\(\gamma\)</span></strong>: higher <span class="math inline">\(\gamma\)</span> reveals smaller communities at the cost of fragmenting real large ones. Requires multi-value exploration.</li>
+<li><strong>Hierarchical analysis</strong>: decompose recursively; run detection on each detected community’s induced subgraph to find sub-communities.</li>
+<li><strong>Multi-resolution analysis</strong>: run detection at several <span class="math inline">\(\gamma\)</span> values; communities stable across scales are real.</li>
+<li><strong>Network segmentation</strong>: pre-filter the network to the subgraph of interest before running detection — reduces <span class="math inline">\(m\)</span> and lowers the resolution threshold.</li>
+<li><strong>Leiden algorithm</strong>: improved theoretical guarantees and more consistent behavior at the resolution boundary.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></li>
+</ul>
+</section>
+</div>
+</div>
+</section>
+</section>
+<section id="part-ii-community-detection-algorithms" class="level1">
+<h1>Part II: Community Detection Algorithms</h1>
+<section id="girvan-newman-edge-betweenness-removal" class="level2">
+<h2 class="anchored" data-anchor-id="girvan-newman-edge-betweenness-removal">Girvan-Newman: Edge Betweenness Removal</h2>
+<p>The Girvan-Newman algorithm detects communities by iteratively removing the edges that carry the most inter-community traffic — measured by edge betweenness centrality. The intuition: edges connecting different communities lie on many shortest paths and therefore have disproportionately high betweenness.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="algorithm" class="level3">
+<h3 class="anchored" data-anchor-id="algorithm">Algorithm</h3>
+<ol type="1">
+<li>Compute edge betweenness <span class="math inline">\(C_B(e) = \sum_{s \neq t} \sigma_{st}(e)/\sigma_{st}\)</span> for all edges</li>
+<li>Remove the edge with the highest betweenness</li>
+<li><strong>Recompute</strong> edge betweenness for all remaining edges (removal changes paths)</li>
+<li>Repeat until no edges remain or a stopping criterion is met</li>
+<li>At each step, record the partition into connected components and its modularity <span class="math inline">\(Q\)</span></li>
+<li>Select the partition with the highest observed <span class="math inline">\(Q\)</span> as the final answer</li>
+</ol>
+<p>The output is a <strong>dendrogram</strong> (hierarchical tree) showing the sequence of edge removals. Each horizontal cut across the dendrogram yields a different partition; the optimal cut maximizes <span class="math inline">\(Q\)</span>.</p>
+<p><strong>Complexity:</strong> <span class="math inline">\(O(m^2 n)\)</span> for sparse graphs — prohibitively slow for <span class="math inline">\(n &gt; 10^3\)</span>. The recomputation of betweenness after each removal is the bottleneck.</p>
+<p><strong>When to use:</strong> small-to-medium networks (<span class="math inline">\(n &lt; 1{,}000\)</span>) where the dendrogram is itself an analytical product and the hierarchical merge order is informative. Not suitable for large-scale networks; use Leiden instead.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Girvan-Newman: Bridge Edge Has Maximum Betweenness
+  </p>
+  <svg viewbox="0 0 380 215" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:360px;display:block;font-family:'IBM Plex Sans',sans-serif">
+
+    <!-- Left cluster edges (purple) -->
+    <line x1="55" y1="55" x2="128" y2="55" stroke="#450084" stroke-width="2.2"></line>
+    <line x1="55" y1="55" x2="55" y2="135" stroke="#450084" stroke-width="2.2"></line>
+    <line x1="55" y1="55" x2="128" y2="135" stroke="#450084" stroke-width="2.2"></line>
+    <line x1="128" y1="55" x2="55" y2="135" stroke="#450084" stroke-width="2.2"></line>
+    <line x1="128" y1="55" x2="128" y2="135" stroke="#450084" stroke-width="2.2"></line>
+    <line x1="55" y1="135" x2="128" y2="135" stroke="#450084" stroke-width="2.2"></line>
+
+    <!-- Right cluster edges (gold) -->
+    <line x1="240" y1="55" x2="315" y2="55" stroke="#AD9C65" stroke-width="2.2"></line>
+    <line x1="240" y1="55" x2="240" y2="135" stroke="#AD9C65" stroke-width="2.2"></line>
+    <line x1="240" y1="55" x2="315" y2="135" stroke="#AD9C65" stroke-width="2.2"></line>
+    <line x1="315" y1="55" x2="240" y2="135" stroke="#AD9C65" stroke-width="2.2"></line>
+    <line x1="315" y1="55" x2="315" y2="135" stroke="#AD9C65" stroke-width="2.2"></line>
+    <line x1="240" y1="135" x2="315" y2="135" stroke="#AD9C65" stroke-width="2.2"></line>
+
+    <!-- Bridge edge (gold dashed, labeled) -->
+    <line x1="128" y1="135" x2="240" y2="55" stroke="#CBB677" stroke-width="3.5" stroke-dasharray="9,5"></line>
+
+    <!-- Bridge label -->
+    <rect x="135" y="75" width="105" height="20" rx="3" fill="#F4EFE1" stroke="#CBB677" stroke-width="1"></rect>
+    <text x="187" y="89" text-anchor="middle" font-size="9.5" font-weight="700" fill="#AD9C65">max C_B — remove first</text>
+
+    <!-- Left nodes -->
+    <circle cx="55" cy="55" r="18" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="55" y="60" text-anchor="middle" font-size="12" font-weight="bold" fill="#450084">1</text>
+    <circle cx="128" cy="55" r="18" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="128" y="60" text-anchor="middle" font-size="12" font-weight="bold" fill="#450084">2</text>
+    <circle cx="55" cy="135" r="18" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="55" y="140" text-anchor="middle" font-size="12" font-weight="bold" fill="#450084">3</text>
+    <circle cx="128" cy="135" r="18" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="128" y="140" text-anchor="middle" font-size="12" font-weight="bold" fill="#450084">4</text>
+
+    <!-- Right nodes -->
+    <circle cx="240" cy="55" r="18" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2.2"></circle>
+    <text x="240" y="60" text-anchor="middle" font-size="12" font-weight="bold" fill="#AD9C65">5</text>
+    <circle cx="315" cy="55" r="18" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2.2"></circle>
+    <text x="315" y="60" text-anchor="middle" font-size="12" font-weight="bold" fill="#AD9C65">6</text>
+    <circle cx="240" cy="135" r="18" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2.2"></circle>
+    <text x="240" y="140" text-anchor="middle" font-size="12" font-weight="bold" fill="#AD9C65">7</text>
+    <circle cx="315" cy="135" r="18" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2.2"></circle>
+    <text x="315" y="140" text-anchor="middle" font-size="12" font-weight="bold" fill="#AD9C65">8</text>
+
+    <!-- Caption line -->
+    <text x="190" y="200" text-anchor="middle" font-size="8.5" fill="#595959">
+      All 16 shortest paths between {1,2,3,4} and {5,6,7,8} cross edge 4→5.
+    </text>
+  </svg>
+  <figcaption>
+    The bridge edge (4–5) is the first removed. Every inter-cluster shortest path<br>
+    uses it, giving it maximum betweenness. Its removal reveals two communities.
+  </figcaption>
+</div>
+</div>
+</div>
+</section>
+<section id="louvain-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="louvain-algorithm">Louvain Algorithm</h2>
+<p>The Louvain algorithm is the most widely used community detection method in practice, offering near-linear scalability and a hierarchical output.<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="two-phase-process" class="level3">
+<h3 class="anchored" data-anchor-id="two-phase-process">Two-Phase Process</h3>
+<p><strong>Phase 1 — Local Modularity Optimization:</strong></p>
+<ol type="1">
+<li>Initialize: each node forms its own community (<span class="math inline">\(n\)</span> singletons)</li>
+<li>For each node <span class="math inline">\(v\)</span>, compute the modularity gain <span class="math inline">\(\Delta Q\)</span> from moving <span class="math inline">\(v\)</span> into each neighbor’s community</li>
+<li>Move <span class="math inline">\(v\)</span> to the community with the maximum <span class="math inline">\(\Delta Q &gt; 0\)</span></li>
+<li>Repeat until no node reassignment improves <span class="math inline">\(Q\)</span></li>
+</ol>
+<p>The modularity gain for moving <span class="math inline">\(v\)</span> into community <span class="math inline">\(C\)</span>:</p>
+<p><span class="math display">\[\Delta Q = \left[\frac{\Sigma_{in} + 2k_{v,in}}{2m} - \left(\frac{\Sigma_{tot} + k_v}{2m}\right)^2\right] - \left[\frac{\Sigma_{in}}{2m} - \left(\frac{\Sigma_{tot}}{2m}\right)^2 - \left(\frac{k_v}{2m}\right)^2\right]\]</span></p>
+<p>where <span class="math inline">\(\Sigma_{in}\)</span> = total edge weight within <span class="math inline">\(C\)</span>; <span class="math inline">\(\Sigma_{tot}\)</span> = total degree of nodes in <span class="math inline">\(C\)</span>; <span class="math inline">\(k_{v,in}\)</span> = edges from <span class="math inline">\(v\)</span> to <span class="math inline">\(C\)</span>; <span class="math inline">\(k_v\)</span> = degree of <span class="math inline">\(v\)</span>.</p>
+<p><strong>Phase 2 — Aggregation:</strong></p>
+<ol type="1">
+<li>Build a new graph where each detected community becomes a <strong>supernode</strong></li>
+<li>Edge weights between supernodes = total edge weight between corresponding communities</li>
+<li>Self-loops on each supernode = total weight of internal edges</li>
+<li>Apply Phase 1 to the aggregated graph</li>
+<li>Repeat phases until <span class="math inline">\(Q\)</span> no longer improves across levels</li>
+</ol>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Louvain: From Singletons to Aggregated Graph
+  </p>
+  <svg viewbox="0 0 540 185" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;display:block;font-family:'IBM Plex Sans',sans-serif">
+
+    <!-- Dividers -->
+    <line x1="178" y1="5" x2="178" y2="180" stroke="#D6D6D6" stroke-width="1.2"></line>
+    <line x1="358" y1="5" x2="358" y2="180" stroke="#D6D6D6" stroke-width="1.2"></line>
+
+    <!-- Stage labels -->
+    <text x="89" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#595959" letter-spacing="0.04em">INIT: SINGLETONS</text>
+    <text x="268" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#595959" letter-spacing="0.04em">PHASE 1: LOCAL OPT.</text>
+    <text x="449" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#595959" letter-spacing="0.04em">PHASE 2: AGGREGATED</text>
+
+    <!-- STAGE 1: 6 singleton nodes, each different gray/color shade -->
+    <!-- Nodes: A(35,95), B(75,60), C(75,130), D(115,60), E(115,130), F(155,95) -->
+    <circle cx="35" cy="95" r="14" fill="#ffffff" stroke="#B2B2B2" stroke-width="1.8"></circle>
+    <text x="35" y="100" text-anchor="middle" font-size="10" fill="#595959">A</text>
+    <circle cx="75" cy="60" r="14" fill="#ffffff" stroke="#B2B2B2" stroke-width="1.8"></circle>
+    <text x="75" y="65" text-anchor="middle" font-size="10" fill="#595959">B</text>
+    <circle cx="75" cy="130" r="14" fill="#ffffff" stroke="#B2B2B2" stroke-width="1.8"></circle>
+    <text x="75" y="135" text-anchor="middle" font-size="10" fill="#595959">C</text>
+    <circle cx="125" cy="60" r="14" fill="#ffffff" stroke="#B2B2B2" stroke-width="1.8"></circle>
+    <text x="125" y="65" text-anchor="middle" font-size="10" fill="#595959">D</text>
+    <circle cx="125" cy="130" r="14" fill="#ffffff" stroke="#B2B2B2" stroke-width="1.8"></circle>
+    <text x="125" y="135" text-anchor="middle" font-size="10" fill="#595959">E</text>
+    <circle cx="160" cy="95" r="14" fill="#ffffff" stroke="#B2B2B2" stroke-width="1.8"></circle>
+    <text x="160" y="100" text-anchor="middle" font-size="10" fill="#595959">F</text>
+    <!-- Edges -->
+    <line x1="48" y1="84" x2="62" y2="68" stroke="#D6D6D6" stroke-width="1.5"></line>
+    <line x1="48" y1="106" x2="62" y2="121" stroke="#D6D6D6" stroke-width="1.5"></line>
+    <line x1="89" y1="60" x2="111" y2="60" stroke="#D6D6D6" stroke-width="1.5"></line>
+    <line x1="89" y1="130" x2="111" y2="130" stroke="#D6D6D6" stroke-width="1.5"></line>
+    <line x1="75" y1="74" x2="75" y2="116" stroke="#D6D6D6" stroke-width="1.5"></line>
+    <line x1="138" y1="68" x2="150" y2="82" stroke="#D6D6D6" stroke-width="1.5"></line>
+    <line x1="138" y1="122" x2="150" y2="108" stroke="#D6D6D6" stroke-width="1.5"></line>
+    <text x="89" y="165" text-anchor="middle" font-size="8" fill="#595959">Each node = own community</text>
+
+    <!-- STAGE 2: Nodes colored by community after local optimization -->
+    <!-- Left community (purple): A, B, C -->
+    <line x1="215" y1="85" x2="255" y2="60" stroke="#450084" stroke-width="2"></line>
+    <line x1="215" y1="105" x2="255" y2="130" stroke="#450084" stroke-width="2"></line>
+    <line x1="255" y1="60" x2="255" y2="130" stroke="#450084" stroke-width="2"></line>
+    <circle cx="215" cy="95" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="215" y="100" text-anchor="middle" font-size="10" fill="#450084">A</text>
+    <circle cx="255" cy="60" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="255" y="65" text-anchor="middle" font-size="10" fill="#450084">B</text>
+    <circle cx="255" cy="130" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="255" y="135" text-anchor="middle" font-size="10" fill="#450084">C</text>
+    <!-- Right community (gold): D, E, F -->
+    <line x1="295" y1="60" x2="295" y2="130" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="295" y1="60" x2="335" y2="95" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="295" y1="130" x2="335" y2="95" stroke="#AD9C65" stroke-width="2"></line>
+    <circle cx="295" cy="60" r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="295" y="65" text-anchor="middle" font-size="10" fill="#AD9C65">D</text>
+    <circle cx="295" cy="130" r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="295" y="135" text-anchor="middle" font-size="10" fill="#AD9C65">E</text>
+    <circle cx="335" cy="95" r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="335" y="100" text-anchor="middle" font-size="10" fill="#AD9C65">F</text>
+    <!-- Inter-comm edge -->
+    <line x1="269" y1="60" x2="282" y2="60" stroke="#D6D6D6" stroke-width="1.5" stroke-dasharray="4,3"></line>
+    <text x="268" y="165" text-anchor="middle" font-size="8" fill="#595959">ΔQ maximized per node</text>
+
+    <!-- STAGE 3: Two supernodes -->
+    <circle cx="415" cy="95" r="34" fill="#DACCE6" stroke="#450084" stroke-width="2.5"></circle>
+    <text x="415" y="88" text-anchor="middle" font-size="10" font-weight="bold" fill="#450084">{A,B,C}</text>
+    <text x="415" y="102" text-anchor="middle" font-size="9" fill="#450084">supernode</text>
+    <circle cx="495" cy="95" r="28" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2.5"></circle>
+    <text x="495" y="88" text-anchor="middle" font-size="10" font-weight="bold" fill="#AD9C65">{D,E,F}</text>
+    <text x="495" y="102" text-anchor="middle" font-size="9" fill="#AD9C65">supernode</text>
+    <!-- Supernode edge -->
+    <line x1="449" y1="95" x2="467" y2="95" stroke="#595959" stroke-width="2"></line>
+    <!-- Self-loops (simplified) -->
+    <path d="M415,61 C415,38 435,38 435,61" fill="none" stroke="#450084" stroke-width="1.5"></path>
+    <path d="M495,67 C495,48 512,48 512,67" fill="none" stroke="#AD9C65" stroke-width="1.5"></path>
+    <text x="449" y="165" text-anchor="middle" font-size="8" fill="#595959">Communities become supernodes</text>
+  </svg>
+  <figcaption>
+    Self-loops on supernodes encode internal edge weight. The aggregated<br>
+    graph is then partitioned again in the next Louvain phase.
+  </figcaption>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Leiden: The Recommended Default">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Leiden: The Recommended Default
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The Leiden algorithm (Traag, Waltman, and van Eck, 2019) adds a <strong>refinement step</strong> between Phase 1 and Phase 2 that guarantees communities are internally connected. Louvain can produce communities where removing a single node disconnects the group — violating the intuitive definition of a community. Leiden prevents this.</p>
+<p><strong>Practical recommendation:</strong> use Leiden for all production analysis and intelligence products. Louvain remains appropriate for legacy tooling compatibility and when Leiden is unavailable. The <code>leidenalg</code> Python package and the <code>igraph</code> R package both implement Leiden with the modularity vertex partition.</p>
+</div>
+</div>
+</section>
+<section id="spectral-clustering" class="level2">
+<h2 class="anchored" data-anchor-id="spectral-clustering">Spectral Clustering</h2>
+<p>Spectral clustering uses the eigenstructure of the <strong>graph Laplacian</strong> to partition the network. Unlike modularity-based methods, it has theoretical grounding in graph cut optimization and is robust to certain resolution limit failure modes.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="the-graph-laplacian" class="level3">
+<h3 class="anchored" data-anchor-id="the-graph-laplacian">The Graph Laplacian</h3>
+<p>The <strong>unnormalized Laplacian:</strong> <span class="math inline">\(L = D - A\)</span>, where <span class="math inline">\(D\)</span> is the diagonal degree matrix (<span class="math inline">\(D_{ii} = k_i\)</span>) and <span class="math inline">\(A\)</span> is the adjacency matrix.</p>
+<p>The <strong>normalized (symmetric) Laplacian:</strong> <span class="math inline">\(L_{sym} = D^{-1/2} L D^{-1/2} = I - D^{-1/2} A D^{-1/2}\)</span></p>
+<p>Key properties of <span class="math inline">\(L\)</span>: - <span class="math inline">\(L\)</span> is positive semi-definite: all eigenvalues <span class="math inline">\(\lambda \geq 0\)</span> - The number of zero eigenvalues equals the number of connected components - The <strong>Fiedler vector</strong> (eigenvector of the second-smallest eigenvalue <span class="math inline">\(\lambda_2\)</span>) gives the optimal bipartition of a connected graph: nodes with positive Fiedler values form one cluster, negative values the other</p>
+</section>
+<section id="spectral-clustering-steps-for-k-communities" class="level3">
+<h3 class="anchored" data-anchor-id="spectral-clustering-steps-for-k-communities">Spectral Clustering Steps (for <span class="math inline">\(k\)</span> communities)</h3>
+<ol type="1">
+<li>Compute the <span class="math inline">\(k\)</span> smallest eigenvectors of <span class="math inline">\(L\)</span> (or <span class="math inline">\(L_{sym}\)</span>)</li>
+<li>Embed each node as a point in <span class="math inline">\(\mathbb{R}^k\)</span> using its eigenvector values</li>
+<li>Apply <span class="math inline">\(k\)</span>-means clustering to the embedded points</li>
+<li>Return the resulting <span class="math inline">\(k\)</span>-cluster partition</li>
+</ol>
+<p><strong>Complexity:</strong> <span class="math inline">\(O(n^3)\)</span> for full eigendecomposition; approximate methods exist. Requires pre-specifying <span class="math inline">\(k\)</span>.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="properties-and-use-cases" class="level3">
+<h3 class="anchored" data-anchor-id="properties-and-use-cases">Properties and Use Cases</h3>
+<ul>
+<li><strong>Theoretically principled:</strong> the Fiedler vector minimizes the normalized graph cut (Cheeger inequality), providing a quality guarantee not available for modularity-based methods</li>
+<li><strong><span class="math inline">\(k\)</span> must be pre-specified:</strong> appropriate when the analyst has prior knowledge of the number of communities (e.g., known faction count from HUMINT)</li>
+<li><strong>Computationally expensive:</strong> <span class="math inline">\(O(n^3)\)</span> full decomposition limits use to networks of <span class="math inline">\(n &lt; 10^4\)</span>; approximate spectral methods exist for larger networks</li>
+<li><strong>Robust to resolution limit</strong> for graphs with clear spectral gaps (eigenvalue jumps) in the spectrum of <span class="math inline">\(L\)</span></li>
+</ul>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Intelligence Application">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Intelligence Application
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Spectral clustering is most valuable when the analyst has prior information about the expected number of organizational clusters. For example, if HUMINT indicates a terrorist organization is known to have three regional branches, spectral clustering with <span class="math inline">\(k=3\)</span> finds the optimal partition <em>given</em> that prior. Modularity-based methods discover <span class="math inline">\(k\)</span> endogenously — useful when the number is unknown.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+<section id="label-propagation-and-infomap" class="level2">
+<h2 class="anchored" data-anchor-id="label-propagation-and-infomap">Label Propagation and Infomap</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<section id="label-propagation-lpa" class="level3">
+<h3 class="anchored" data-anchor-id="label-propagation-lpa">Label Propagation (LPA)</h3>
+<p>A fast, near-linear algorithm based on iterative label spreading.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></p>
+<p><strong>Steps:</strong></p>
+<ol type="1">
+<li>Initialize: each node receives a unique label (community ID)</li>
+<li>Iterate: each node adopts the label held by the <strong>plurality</strong> of its neighbors; ties broken randomly</li>
+<li>Repeat until no node changes its label</li>
+<li>Nodes sharing a label form a community</li>
+</ol>
+<p><strong>Properties:</strong></p>
+<ul>
+<li>Complexity: <span class="math inline">\(O(m)\)</span> per iteration, <span class="math inline">\(O(m \log n)\)</span> total — scales to billions of edges</li>
+<li>Non-deterministic: different random tie-breaking produces different results; high variance</li>
+<li>No pre-specified <span class="math inline">\(k\)</span></li>
+<li>Poor resolution on small communities</li>
+<li>Frequently produces giant communities that absorb many smaller ones</li>
+</ul>
+<p><strong>When to use:</strong> fast first-pass exploration to get a rough partition before applying Leiden or CPM for rigorous analysis.</p>
+</section>
+</div><div class="column" style="width:50%;">
+<section id="infomap-flow-based-communities" class="level3">
+<h3 class="anchored" data-anchor-id="infomap-flow-based-communities">Infomap: Flow-Based Communities</h3>
+<p>Infomap uses <strong>random walk theory</strong> to find communities: communities are regions where information tends to remain rather than escape.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> The objective is to minimize the <strong>map equation:</strong></p>
+<p><span class="math display">\[L(\mathcal{M}) = q_{\curvearrowright} H(\mathcal{Q}) + \sum_{i=1}^{m} p_i^{\circlearrowleft} H(\mathcal{P}^i)\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(q_{\curvearrowright}\)</span> = probability a random walker exits any module per step</li>
+<li><span class="math inline">\(H(\mathcal{Q})\)</span> = entropy of the distribution of exits from each module</li>
+<li><span class="math inline">\(p_i^{\circlearrowleft}\)</span> = probability of being inside module <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(H(\mathcal{P}^i)\)</span> = entropy of movement within module <span class="math inline">\(i\)</span></li>
+</ul>
+<p>Minimizing <span class="math inline">\(L\)</span> finds the partition that minimizes the description length of a random walker’s path — a community is a region the walker explores before exiting.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Intelligence Use: Cell Communication Detection">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Intelligence Use: Cell Communication Detection
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Infomap is particularly suited to <strong>communication networks</strong> where the operative relationship is <em>information flow</em>, not co-membership. In a phone call metadata graph, a cell corresponds to a group within which calls circulate before one call exits to another group. The Infomap partition directly models this structure.</p>
+<p>Applied to the Noordin Top JI communication network (Everton), Infomap recovered cell boundaries that aligned more closely with known operational cells than did Louvain, because communication flow — not co-occurrence — was the operative relationship.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+</section>
+<section id="part-iii-overlapping-and-hierarchical-communities" class="level1">
+<h1>Part III: Overlapping and Hierarchical Communities</h1>
+<section id="clique-percolation-method-overlapping-communities" class="level2">
+<h2 class="anchored" data-anchor-id="clique-percolation-method-overlapping-communities">Clique Percolation Method: Overlapping Communities</h2>
+<p>All partitioning algorithms assign each node to exactly one community. Real actors frequently belong to multiple networks simultaneously: a person may be a member of two criminal organizations, an account may participate in multiple coordinated amplification campaigns, a broker may facilitate for two otherwise independent cells.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="algorithm-palla-et-al.-2005" class="level3">
+<h3 class="anchored" data-anchor-id="algorithm-palla-et-al.-2005">Algorithm (Palla et al.&nbsp;2005)</h3>
+<ol type="1">
+<li>Find all cliques of size <span class="math inline">\(k\)</span> in the network (<span class="math inline">\(k\)</span> is a free parameter, typically 3–5)</li>
+<li>Define two <span class="math inline">\(k\)</span>-cliques as <strong>adjacent</strong> if they share exactly <span class="math inline">\(k-1\)</span> nodes (they overlap by all but one node)</li>
+<li>A <strong>community</strong> is the union of all <span class="math inline">\(k\)</span>-cliques reachable from each other through chains of adjacent <span class="math inline">\(k\)</span>-cliques</li>
+<li>A node belongs to <strong>multiple communities</strong> if it participates in clique chains connecting two distinct community sets</li>
+</ol>
+<p><strong>Complexity:</strong> exponential in worst case; practical for moderate-density networks with <span class="math inline">\(n &lt; 10^4\)</span>.</p>
+</section>
+<section id="interpretation-of-overlapping-nodes" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation-of-overlapping-nodes">Interpretation of Overlapping Nodes</h3>
+<p>Nodes in multiple communities are analytically privileged:</p>
+<ul>
+<li>They are natural <strong>liaison or broker candidates</strong> with simultaneous access to multiple compartments</li>
+<li>In a financial network: a person simultaneously embedded in two transaction communities may be the laundering interface between them</li>
+<li>In a terrorist network: an actor in both the operational and logistics communities may be the only conduit between those functions</li>
+<li><strong>Overlap membership is a collection priority indicator</strong>: the node has information access that single-community members do not</li>
+</ul>
+<p><strong>Implementation:</strong> <code>nx.community.k_clique_communities(G, k)</code> in NetworkX.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    CPM Overlapping Communities (k=3)
+  </p>
+  <svg viewbox="0 0 380 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:360px;display:block;font-family:'IBM Plex Sans',sans-serif">
+
+    <!-- Community A background (purple oval) -->
+    <ellipse cx="120" cy="115" rx="100" ry="85" fill="rgba(69,0,132,0.09)" stroke="#450084" stroke-width="1.5" stroke-dasharray="5,3"></ellipse>
+    <!-- Community B background (gold oval) -->
+    <ellipse cx="260" cy="115" rx="100" ry="85" fill="rgba(203,182,119,0.12)" stroke="#AD9C65" stroke-width="1.5" stroke-dasharray="5,3"></ellipse>
+
+    <!-- Labels -->
+    <text x="60" y="22" text-anchor="middle" font-size="9.5" font-weight="700" fill="#450084">COMMUNITY A</text>
+    <text x="315" y="22" text-anchor="middle" font-size="9.5" font-weight="700" fill="#AD9C65">COMMUNITY B</text>
+    <text x="190" y="210" text-anchor="middle" font-size="8.5" fill="#595959" font-style="italic">Overlap region — node D in both communities</text>
+
+    <!-- Left clique: A,B,C,D (complete graph on 4 nodes) -->
+    <line x1="55" y1="75" x2="115" y2="55" stroke="#450084" stroke-width="2"></line>
+    <line x1="55" y1="75" x2="70" y2="155" stroke="#450084" stroke-width="2"></line>
+    <line x1="55" y1="75" x2="185" y2="115" stroke="#450084" stroke-width="2"></line>
+    <line x1="115" y1="55" x2="70" y2="155" stroke="#450084" stroke-width="2"></line>
+    <line x1="115" y1="55" x2="185" y2="115" stroke="#450084" stroke-width="2"></line>
+    <line x1="70" y1="155" x2="185" y2="115" stroke="#450084" stroke-width="2"></line>
+
+    <!-- Right clique: D,E,F,G (complete graph on 4 nodes) -->
+    <line x1="185" y1="115" x2="275" y2="60" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="185" y1="115" x2="310" y2="150" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="185" y1="115" x2="350" y2="80" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="275" y1="60" x2="310" y2="150" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="275" y1="60" x2="350" y2="80" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="310" y1="150" x2="350" y2="80" stroke="#AD9C65" stroke-width="2"></line>
+
+    <!-- Community A nodes -->
+    <circle cx="55" cy="75" r="20" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="55" y="80" text-anchor="middle" font-size="13" font-weight="bold" fill="#450084">A</text>
+    <circle cx="115" cy="55" r="20" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="115" y="60" text-anchor="middle" font-size="13" font-weight="bold" fill="#450084">B</text>
+    <circle cx="70" cy="155" r="20" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="70" y="160" text-anchor="middle" font-size="13" font-weight="bold" fill="#450084">C</text>
+
+    <!-- Overlap node D (split fill) -->
+    <circle cx="185" cy="115" r="22" fill="url(#splitD)" stroke="#333" stroke-width="2.5"></circle>
+    <defs>
+      <lineargradient id="splitD" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="50%" stop-color="#DACCE6"></stop>
+        <stop offset="50%" stop-color="#F4EFE1"></stop>
+      </lineargradient>
+    </defs>
+    <text x="185" y="120" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">D</text>
+    <!-- D label -->
+    <text x="185" y="148" text-anchor="middle" font-size="8" fill="#333" font-style="italic">overlap</text>
+
+    <!-- Community B nodes -->
+    <circle cx="275" cy="60" r="20" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2.2"></circle>
+    <text x="275" y="65" text-anchor="middle" font-size="13" font-weight="bold" fill="#AD9C65">E</text>
+    <circle cx="310" cy="150" r="20" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2.2"></circle>
+    <text x="310" y="155" text-anchor="middle" font-size="13" font-weight="bold" fill="#AD9C65">F</text>
+    <circle cx="350" cy="80" r="20" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2.2"></circle>
+    <text x="350" y="85" text-anchor="middle" font-size="13" font-weight="bold" fill="#AD9C65">G</text>
+  </svg>
+  <figcaption>
+    Node D belongs to both triangle-chain communities (split fill).<br>
+    In intelligence terms: D has simultaneous access to both cells.
+  </figcaption>
+</div>
+</div>
+</div>
+</section>
+<section id="hierarchical-decomposition-and-dendrograms" class="level2">
+<h2 class="anchored" data-anchor-id="hierarchical-decomposition-and-dendrograms">Hierarchical Decomposition and Dendrograms</h2>
+<p>Many real networks exhibit <strong>hierarchical modularity</strong>: communities contain sub-communities which contain sub-sub-communities, forming a nested tree structure. This pattern is particularly common in military organizations (theater → regional → cell), corporations (division → department → team), and terrorist networks (global → regional → operational cell).</p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="dendrogram-representation" class="level3">
+<h3 class="anchored" data-anchor-id="dendrogram-representation">Dendrogram Representation</h3>
+<p>A <strong>dendrogram</strong> is a tree diagram where:</p>
+<ul>
+<li><strong>Leaves</strong> are individual nodes (actors)</li>
+<li><strong>Internal nodes</strong> represent the merger of communities at a given level</li>
+<li><strong>Cutting horizontally</strong> at different heights yields different partitions at different granularities</li>
+<li>The <strong>optimal cut height</strong> maximizes <span class="math inline">\(Q\)</span> across all possible cuts<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a></li>
+</ul>
+<p>Girvan-Newman produces a <strong>top-down</strong> dendrogram (edge removals = communities splitting apart). Agglomerative methods (e.g., Ward linkage) produce a <strong>bottom-up</strong> dendrogram (merging nodes into larger clusters).</p>
+</section>
+<section id="multi-scale-analysis-workflow" class="level3">
+<h3 class="anchored" data-anchor-id="multi-scale-analysis-workflow">Multi-Scale Analysis Workflow</h3>
+<p>For intelligence networks with a suspected hierarchical structure:</p>
+<ol type="1">
+<li><strong>Macro level:</strong> run Leiden on the full network to identify top-level faction/cluster partition</li>
+<li><strong>Meso level:</strong> for each detected community, run Leiden on the induced subgraph to find sub-communities (cells within factions)</li>
+<li><strong>Micro level:</strong> apply <span class="math inline">\(k\)</span>-core decomposition within each sub-community to identify the inner leadership core — the highest-<span class="math inline">\(k\)</span> core is the operational leadership</li>
+<li><strong>Resolution adjustment:</strong> if macro-level partition absorbs too many nodes, increase <span class="math inline">\(\gamma\)</span>; if too many small fragments, decrease <span class="math inline">\(\gamma\)</span></li>
+</ol>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Dendrogram: Hierarchical Partition Cuts
+  </p>
+  <svg viewbox="0 0 360 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:340px;display:block;font-family:'IBM Plex Sans',sans-serif">
+
+    <!-- Leaves at y=180, x = 25,65,105,145,205,245,285,325 -->
+    <!-- Level 1 merges at y=140: (1,2), (3,4), (5,6), (7,8) -->
+    <!-- Level 2 merges at y=90: (1-4), (5-8) -->
+    <!-- Root at y=45: all together -->
+
+    <!-- Cut line annotations -->
+    <line x1="10" y1="100" x2="348" y2="100" stroke="#CBB677" stroke-width="1.5" stroke-dasharray="8,4"></line>
+    <text x="352" y="104" font-size="8" fill="#AD9C65" font-weight="600">cut A → 2 comm.</text>
+    <line x1="10" y1="150" x2="348" y2="150" stroke="#B599CE" stroke-width="1.5" stroke-dasharray="8,4"></line>
+    <text x="352" y="154" font-size="8" fill="#450084" font-weight="600">cut B → 4 comm.</text>
+
+    <!-- Leaf verticals -->
+    <line x1="25" y1="180" x2="25" y2="140" stroke="#450084" stroke-width="2"></line>
+    <line x1="65" y1="180" x2="65" y2="140" stroke="#450084" stroke-width="2"></line>
+    <line x1="105" y1="180" x2="105" y2="140" stroke="#450084" stroke-width="2"></line>
+    <line x1="145" y1="180" x2="145" y2="140" stroke="#450084" stroke-width="2"></line>
+    <line x1="205" y1="180" x2="205" y2="140" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="245" y1="180" x2="245" y2="140" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="285" y1="180" x2="285" y2="140" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="325" y1="180" x2="325" y2="140" stroke="#AD9C65" stroke-width="2"></line>
+
+    <!-- Level 1 horizontals and verticals -->
+    <line x1="25" y1="140" x2="65" y2="140" stroke="#450084" stroke-width="2"></line>
+    <line x1="45" y1="140" x2="45" y2="90" stroke="#450084" stroke-width="2"></line>
+    <line x1="105" y1="140" x2="145" y2="140" stroke="#450084" stroke-width="2"></line>
+    <line x1="125" y1="140" x2="125" y2="90" stroke="#450084" stroke-width="2"></line>
+    <line x1="205" y1="140" x2="245" y2="140" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="225" y1="140" x2="225" y2="90" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="285" y1="140" x2="325" y2="140" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="305" y1="140" x2="305" y2="90" stroke="#AD9C65" stroke-width="2"></line>
+
+    <!-- Level 2 horizontals and verticals -->
+    <line x1="45" y1="90" x2="125" y2="90" stroke="#450084" stroke-width="2"></line>
+    <line x1="85" y1="90" x2="85" y2="45" stroke="#595959" stroke-width="2"></line>
+    <line x1="225" y1="90" x2="305" y2="90" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="265" y1="90" x2="265" y2="45" stroke="#595959" stroke-width="2"></line>
+
+    <!-- Root horizontal -->
+    <line x1="85" y1="45" x2="265" y2="45" stroke="#595959" stroke-width="2"></line>
+    <line x1="175" y1="45" x2="175" y2="30" stroke="#595959" stroke-width="1.5" stroke-dasharray="4,3"></line>
+
+    <!-- Leaf nodes -->
+    <circle cx="25" cy="185" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <text x="25" y="189" text-anchor="middle" font-size="8" fill="#450084">1</text>
+    <circle cx="65" cy="185" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <text x="65" y="189" text-anchor="middle" font-size="8" fill="#450084">2</text>
+    <circle cx="105" cy="185" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <text x="105" y="189" text-anchor="middle" font-size="8" fill="#450084">3</text>
+    <circle cx="145" cy="185" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <text x="145" y="189" text-anchor="middle" font-size="8" fill="#450084">4</text>
+    <circle cx="205" cy="185" r="10" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.5"></circle>
+    <text x="205" y="189" text-anchor="middle" font-size="8" fill="#AD9C65">5</text>
+    <circle cx="245" cy="185" r="10" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.5"></circle>
+    <text x="245" y="189" text-anchor="middle" font-size="8" fill="#AD9C65">6</text>
+    <circle cx="285" cy="185" r="10" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.5"></circle>
+    <text x="285" y="189" text-anchor="middle" font-size="8" fill="#AD9C65">7</text>
+    <circle cx="325" cy="185" r="10" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.5"></circle>
+    <text x="325" y="189" text-anchor="middle" font-size="8" fill="#AD9C65">8</text>
+  </svg>
+  <figcaption>
+    Gold cut (A): 2 communities {1–4} and {5–8}.<br>
+    Purple cut (B): 4 communities {1,2}, {3,4}, {5,6}, {7,8}.
+  </figcaption>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="k-Core Decomposition as Hierarchical Approximation">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>k-Core Decomposition as Hierarchical Approximation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The nested <span class="math inline">\(k\)</span>-core structure (Week 3) provides a computationally cheap hierarchical decomposition without explicit community detection:</p>
+<ul>
+<li><strong>Highest-<span class="math inline">\(k\)</span> core</strong> → densely interconnected inner circle: leadership, core operatives, ideological founders</li>
+<li><strong>Intermediate <span class="math inline">\(k\)</span>-cores</strong> → regular members, coordinators, facilitators</li>
+<li><strong><span class="math inline">\(k=1\)</span> periphery</strong> → support actors, recruits, peripheral associates awaiting activation</li>
+</ul>
+<p>Each shell of the <span class="math inline">\(k\)</span>-core decomposition corresponds roughly to a hierarchy level. Combined with Leiden’s top-level partition, <span class="math inline">\(k\)</span>-core decomposition within each partition provides a fast, interpretable multi-scale organizational model without requiring recursive community detection.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="part-iv-intelligence-applications" class="level1">
+<h1>Part IV: Intelligence Applications</h1>
+<section id="algorithm-comparison-a-practical-guide" class="level2">
+<h2 class="anchored" data-anchor-id="algorithm-comparison-a-practical-guide">Algorithm Comparison: A Practical Guide</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 17%">
+<col style="width: 16%">
+<col style="width: 19%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Algorithm</th>
+<th style="text-align: center;">Overlapping</th>
+<th style="text-align: center;">Complexity</th>
+<th style="text-align: center;"><span class="math inline">\(k\)</span> Required</th>
+<th style="text-align: left;">Best Intelligence Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Girvan-Newman</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;"><span class="math inline">\(O(m^2 n)\)</span> — slow</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: left;">Small networks; dendrogram is an analytical product</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Louvain</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;"><span class="math inline">\(O(m \log m)\)</span> — fast</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: left;">General purpose; legacy Gephi tooling</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Leiden</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;"><span class="math inline">\(O(m \log m)\)</span> — fast</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: left;"><strong>Default for production analysis</strong>; guarantees connectivity</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Spectral</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;"><span class="math inline">\(O(n^3)\)</span> — moderate</td>
+<td style="text-align: center;"><strong>Yes</strong></td>
+<td style="text-align: left;">When faction count is known from prior intelligence</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Label Propagation</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;"><span class="math inline">\(O(m)\)</span> — very fast</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: left;">Fast exploration on large networks; high variance</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CPM (<span class="math inline">\(k\)</span>-clique)</td>
+<td style="text-align: center;"><strong>Yes</strong></td>
+<td style="text-align: center;">Exponential — slow</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: left;">Dual-membership detection; overlapping cells/organizations</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Infomap</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;"><span class="math inline">\(O(m)\)</span> — fast</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: left;">Communication and information flow networks</td>
+</tr>
+</tbody>
+</table>
+<section id="consensus-community-detection" class="level3">
+<h3 class="anchored" data-anchor-id="consensus-community-detection">Consensus Community Detection</h3>
+<p>Because Louvain and Label Propagation are non-deterministic, running them once produces a single partition that may not be reproducible. The <strong>consensus approach</strong> converts multiple stochastic runs into a stable result:</p>
+<ol type="1">
+<li>Run the algorithm <span class="math inline">\(R\)</span> times (typically <span class="math inline">\(R = 100\)</span>)</li>
+<li>Build an <span class="math inline">\(n \times n\)</span> <strong>co-assignment matrix</strong> <span class="math inline">\(S\)</span>: <span class="math inline">\(S_{ij}\)</span> = fraction of runs in which nodes <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> were assigned to the same community</li>
+<li>Apply one final deterministic community detection (e.g., spectral) to <span class="math inline">\(S\)</span> as a weighted adjacency matrix</li>
+<li>The resulting partition reflects only stable co-assignments</li>
+</ol>
+<p><strong>Interpreting the co-assignment matrix:</strong></p>
+<ul>
+<li><span class="math inline">\(S_{ij} \approx 1\)</span>: nodes <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> are always co-assigned → <strong>high-confidence</strong> same community</li>
+<li><span class="math inline">\(S_{ij} \approx 0\)</span>: nodes always assigned to different communities → <strong>high-confidence</strong> different communities</li>
+<li><span class="math inline">\(S_{ij} \approx 0.5\)</span>: variable assignment → <strong>boundary node</strong>; analytically significant; may be a bridge actor, dual-role operative, or recently recruited member not yet fully embedded</li>
+</ul>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Analytical Best Practice">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Analytical Best Practice
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Run <strong>at least two different algorithms</strong> on the same network data. Present communities that are stable across both algorithms with high confidence. Flag any node whose community assignment differs across algorithms — those nodes are at community boundaries and may be the most analytically interesting actors in the network: brokers, coordinators with dual affiliations, or structurally ambiguous peripheral figures.</p>
+<p>Never present a single algorithm’s output as definitive ground truth. The algorithm-dependence of community assignments is not a flaw — it reflects genuine structural ambiguity in the data that should be preserved in the analytical product.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="faction-identification-in-political-and-insurgent-networks" class="level2">
+<h2 class="anchored" data-anchor-id="faction-identification-in-political-and-insurgent-networks">Faction Identification in Political and Insurgent Networks</h2>
+<p>Insurgent organizations, political movements, and criminal enterprises are rarely monolithic. Internal factions compete over ideology, territory, resources, or leadership succession. Community detection provides the primary quantitative tool for faction identification from relational data.</p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="analytical-problem-and-data-sources" class="level3">
+<h3 class="anchored" data-anchor-id="analytical-problem-and-data-sources">Analytical Problem and Data Sources</h3>
+<p><strong>Community detection reveals:</strong></p>
+<ul>
+<li>The number and composition of internal factions — without requiring the analyst to pre-define the factions</li>
+<li>Which actors <strong>bridge factions</strong> — potential mediators, defectors, or double agents with leverage over multiple subgroups</li>
+<li>Whether factions are internally cohesive or fracturing under internal strain</li>
+<li>How detected faction structure maps onto attribute-based groupings: ethnicity, geography, ideology, entry cohort</li>
+</ul>
+<p><strong>Network data types for faction analysis:</strong></p>
+<ul>
+<li><strong>Communication:</strong> who contacts whom, with what frequency (highest analytical value; most sensitive to SIGINT collection gaps)</li>
+<li><strong>Trust / alliance:</strong> reported loyalty relationships (HUMINT-derived; less complete but captures informal structure)</li>
+<li><strong>Financial:</strong> shared funding sources, joint transactions</li>
+<li><strong>Co-attendance:</strong> participation in the same meetings, training events, or religious observances</li>
+<li><strong>Conflict / disagreement:</strong> reported disputes or personal conflicts (negative ties can reveal factional boundaries as clearly as positive ties)</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Case Study: Hamas Political-Military Bifurcation">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Case Study: Hamas Political-Military Bifurcation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Hamas provides a well-documented example of a <strong>two-community structure</strong> within a single organization:</p>
+<ul>
+<li><strong>Political Bureau (Politburo):</strong> based in Doha, Qatar; manages international diplomacy, fundraising, and political legitimacy. High internal density among a small set of senior figures with extensive ties to state-level international actors.</li>
+<li><strong>Izz ad-Din al-Qassam Brigades (military wing):</strong> based in Gaza; operational command structure separate from the Politburo. Internal communication deliberately compartmentalized from political leadership.</li>
+</ul>
+<p>The two communities were structurally distinct by design — organizational separation provides political deniability for the Politburo and operational security for the Brigades. Applied post-hoc to open-source network data, Louvain consistently recovers these two communities as the primary partition, with a small number of liaison figures spanning the boundary.</p>
+<p><strong>Analytical implication:</strong> boundary actors between the political and military communities are the highest-value targets for intelligence collection — they are the only nodes with visibility into both organizational logics.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Modularity as a Fragmentation Warning">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Modularity as a Fragmentation Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Monitoring <span class="math inline">\(Q(t)\)</span> as a <strong>time series</strong> provides early warning of organizational fragmentation. Rising modularity over successive network snapshots signals that an organization is splitting into increasingly distinct subcommunities — a potential opportunity for influence operations, defector recruitment, or exploitation of internal conflict. Decreasing modularity signals consolidation under a single coordination structure.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="cell-structure-recovery-in-covert-networks" class="level2">
+<h2 class="anchored" data-anchor-id="cell-structure-recovery-in-covert-networks">Cell Structure Recovery in Covert Networks</h2>
+<p>The <strong>cell recovery problem</strong> is the inverse of organizational design: a covert organization deliberately structures itself in cells to resist network analysis, and the analyst must reverse-engineer the cell structure from observed relational data.</p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="expected-cell-properties" class="level3">
+<h3 class="anchored" data-anchor-id="expected-cell-properties">Expected Cell Properties</h3>
+<p>A well-compartmentalized cell structure has predictable network signatures:</p>
+<ul>
+<li><strong>High intra-cell clustering coefficient:</strong> cell members all know each other; the cell is a near-clique</li>
+<li><strong>Low inter-cell edge density:</strong> minimal cross-cell contact; inter-cell communication routed through designated cutout nodes</li>
+<li><strong>Small cell size:</strong> 3–7 members is the operational security optimum — small enough to maintain full mutual trust, large enough to complete multi-step operations</li>
+<li><strong>Inter-cell communication by high-betweenness, low-degree nodes:</strong> the cutout profile (Week 4) — the inter-cell coordinator is a structural broker who deliberately minimizes overall connectivity to reduce exposure</li>
+</ul>
+<p><strong>Recovery strategy:</strong></p>
+<ol type="1">
+<li>Run Leiden or CPM on the full network to find candidate cells</li>
+<li>Compute within-community clustering coefficients; cells should have high clustering</li>
+<li>Identify high-betweenness nodes at community boundaries — these are the cutout candidates</li>
+<li>Map inter-community edges: these are the inter-cell communication channels and the highest-priority collection targets</li>
+<li>Run Infomap for validation: if Infomap and Leiden agree on community assignments, cell boundaries are high-confidence</li>
+</ol>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Sageman's Global Salafi Jihad Network">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Sageman’s Global Salafi Jihad Network
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Marc Sageman’s analysis of 172 global Salafi jihad operatives (2004) identified four structurally distinct geographic-ideological clusters:</p>
+<ol type="1">
+<li><strong>Central Staff:</strong> bin Laden’s inner circle, Afghanistan-based; highest coreness</li>
+<li><strong>Core Arabs:</strong> Egyptians and Saudis; dense ties to Central Staff and to each other</li>
+<li><strong>Maghreb Arabs:</strong> North Africans (Algeria, Morocco, Tunisia); distinct geographic-linguistic clustering with fewer ties to Core Arabs</li>
+<li><strong>Southeast Asians:</strong> Indonesian and Malaysian networks; structurally the most isolated, with JI as the primary link<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a></li>
+</ol>
+<p>Retroactively applied, Louvain-type modularity optimization on Sageman’s co-membership data recovers these four communities as the primary partition, with modularity <span class="math inline">\(Q \approx 0.41\)</span> — above the 0.3 threshold, indicating genuine community structure.</p>
+<p><strong>Intelligence implication:</strong> the four clusters had distinct recruitment pathways, geographic safe-haven dependencies, and financing networks. Disruption strategy differed by cluster — decapitation was viable for the Central Staff; financial disruption was more effective against the Southeast Asian cluster.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="The IRA Cell Structure Case">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>The IRA Cell Structure Case
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The Irish Republican Army’s active service unit (ASU) structure during 1970–1990 was deliberately designed to minimize community detection: ASUs of 4–6 members with no inter-ASU direct contact, all coordination through Northern Command staff.</p>
+<p>This structure produced detectably low modularity in observed communication networks relative to the organizational hierarchy — a finding that is itself intelligence: low observed modularity in a network expected to have high modularity (cell structure) suggests either collection gaps or deliberate counter-surveillance measures.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="implementation-gephi-and-networkx" class="level2">
+<h2 class="anchored" data-anchor-id="implementation-gephi-and-networkx">Implementation: Gephi and NetworkX</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<section id="gephi-workflow" class="level3">
+<h3 class="anchored" data-anchor-id="gephi-workflow">Gephi Workflow</h3>
+<ol type="1">
+<li>Import edge list → <strong>Statistics → Modularity</strong> (Louvain implementation)</li>
+<li>Resolution parameter <span class="math inline">\(\gamma\)</span> is adjustable in the Modularity dialog (default 1.0)</li>
+<li>Each node receives a <code>modularity_class</code> integer attribute (community ID)</li>
+<li><strong>Appearance panel:</strong> color nodes by <code>modularity_class</code> using a categorical palette</li>
+<li>Inspect community boundaries: check which nodes have high betweenness across communities</li>
+<li><strong>Export:</strong> node table with community assignments as CSV for further analysis or inclusion in intelligence products</li>
+<li><strong>Run multiple times</strong> (Louvain is random); compare outputs; flag nodes whose community assignment changes across runs as boundary actors</li>
+</ol>
+<p><strong>Interpreting Gephi output:</strong></p>
+<ul>
+<li><span class="math inline">\(Q\)</span> score displayed after run: <span class="math inline">\(&gt;0.3\)</span> = real structure; <span class="math inline">\(&gt;0.6\)</span> = strong</li>
+<li>Color-coded layout reveals visual cluster separation</li>
+<li>Isolated small communities in the layout may reflect collection artifacts; validate before reporting</li>
+</ul>
+</section>
+</div><div class="column" style="width:50%;">
+<section id="networkx-python" class="level3">
+<h3 class="anchored" data-anchor-id="networkx-python">NetworkX / Python</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> leidenalg, igraph <span class="im">as</span> ig</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>G <span class="op">=</span> nx.read_edgelist(<span class="st">'edges.csv'</span>, delimiter<span class="op">=</span><span class="st">','</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>G_ig <span class="op">=</span> ig.Graph.from_networkx(G)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Leiden (recommended) ──────────────────────────</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>part <span class="op">=</span> leidenalg.find_partition(</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    G_ig,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    leidenalg.ModularityVertexPartition,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    seed<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>Q_leiden <span class="op">=</span> part.quality()</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>membership_leiden <span class="op">=</span> <span class="bu">dict</span>(<span class="bu">zip</span>(G.nodes(), part.membership))</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Louvain (python-louvain package) ─────────────</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> community <span class="im">as</span> community_louvain</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>part_louv <span class="op">=</span> community_louvain.best_partition(G)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>Q_louv <span class="op">=</span> community_louvain.modularity(part_louv, G)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Infomap ───────────────────────────────────────</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Via cdlib package</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cdlib <span class="im">import</span> algorithms</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>infomap_result <span class="op">=</span> algorithms.infomap(G)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co"># ── CPM overlapping (NetworkX built-in) ───────────</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> networkx.algorithms.community <span class="im">import</span> k_clique_communities</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>cpm_comms <span class="op">=</span> <span class="bu">list</span>(k_clique_communities(G, k<span class="op">=</span><span class="dv">3</span>))</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Consensus co-assignment matrix ───────────────</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>R <span class="op">=</span> <span class="dv">100</span>  <span class="co"># runs</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>nodes <span class="op">=</span> <span class="bu">list</span>(G.nodes())</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>S <span class="op">=</span> np.zeros((<span class="bu">len</span>(nodes), <span class="bu">len</span>(nodes)))</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>node_idx <span class="op">=</span> {n: i <span class="cf">for</span> i, n <span class="kw">in</span> <span class="bu">enumerate</span>(nodes)}</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(R):</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> community_louvain.best_partition(G)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> u <span class="kw">in</span> nodes:</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> v <span class="kw">in</span> nodes:</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> p[u] <span class="op">==</span> p[v]:</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>                S[node_idx[u], node_idx[v]] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>S <span class="op">/=</span> R  <span class="co"># normalize to [0,1]</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Nodes with S[i,j] ~ 0.5 are boundary actors</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Lab Note">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Lab Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>All three primary methods (Leiden, CPM, Infomap) will be applied to the same dataset in the lab session. Students will compare outputs, build the co-assignment matrix, and identify boundary-actor discrepancies.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+<section id="caveating-community-findings-in-intelligence-products" class="level2">
+<h2 class="anchored" data-anchor-id="caveating-community-findings-in-intelligence-products">Caveating Community Findings in Intelligence Products</h2>
+<p>Community detection is a <strong>hypothesis-generating</strong> tool, not a conclusion-generating one. Every product that includes community detection findings must address what the algorithm cannot tell you.</p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="what-community-detection-does-not-tell-you" class="level3">
+<h3 class="anchored" data-anchor-id="what-community-detection-does-not-tell-you">What Community Detection Does Not Tell You</h3>
+<ul>
+<li>It does not tell you the <strong>function or purpose</strong> of a detected community — a cluster of frequently communicating actors may be a cell, a social group, a geographic artifact, or a collection artifact</li>
+<li>It does not confirm that community membership reflects <strong>organizational intent</strong> — geographic co-location, co-attendance at legal events, or shared platform use can produce communities with no operational significance</li>
+<li>It does not account for <strong>missing nodes and edges</strong> — incomplete networks produce spurious communities and miss real ones; a community that corresponds to a known cell may appear subdivided due to collection gaps</li>
+<li>It is <strong>sensitive to algorithm and parameter choice</strong> — different choices produce different partitions, all of which are mathematically valid</li>
+<li>It cannot distinguish between a <strong>tight operational cell</strong> and a group of friends who happen to communicate frequently</li>
+</ul>
+</section>
+<section id="required-product-language" class="level3">
+<h3 class="anchored" data-anchor-id="required-product-language">Required Product Language</h3>
+<p>Include the following elements in any product presenting community detection findings:</p>
+<ol type="1">
+<li><em>“<a href="#algorithm">Algorithm</a> detected [N] communities with modularity <span class="math inline">\(Q = [value]\)</span>, indicating [strong / moderate / weak] community structure above / below the 0.3 threshold.”</em></li>
+<li><em>“Community assignments were [stable / unstable] across [R] repeated runs, with [X] nodes showing variable assignments (boundary nodes).”</em></li>
+<li><em>“Findings were validated / not validated against known organizational structure from [source type].”</em></li>
+<li><em>“The following community assignments are ambiguous (boundary nodes) and should be treated as low-confidence: [list].”</em></li>
+</ol>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="validation-against-domain-knowledge" class="level3">
+<h3 class="anchored" data-anchor-id="validation-against-domain-knowledge">Validation Against Domain Knowledge</h3>
+<p>Cross-reference detected communities against:</p>
+<ul>
+<li><strong>Known organizational structure</strong> from HUMINT, court records, or analytical reporting — do community assignments align with known cell membership?</li>
+<li><strong>Geographic distribution</strong> — does community structure correspond to geographic clustering? If yes, communities may reflect geography rather than operational structure</li>
+<li><strong>Known leadership concentration</strong> — are senior figures concentrated in the same community? This validates the community as the leadership core</li>
+<li><strong>Court record co-conspirators</strong> — defendants named as co-conspirators in the same indictment should typically be in the same detected community; if not, the community detection has failed or the network is more compartmentalized than the indictment suggests</li>
+</ul>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="The Ground Truth Problem">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>The Ground Truth Problem
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For covert networks, <strong>there is rarely definitive ground truth</strong> for community structure. Analysts should:</p>
+<ol type="1">
+<li>Treat community detection as <strong>one analytical input</strong>, not the sole basis for structural conclusions</li>
+<li>Present multiple algorithm outputs with explicit stability assessment</li>
+<li>Identify convergent (stable) and divergent (boundary) node assignments</li>
+<li>Validate convergent communities against HUMINT and SIGINT before including in finished products</li>
+<li>Flag divergent assignments as analytical uncertainty, not as errors to be resolved by choosing a different algorithm</li>
+</ol>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+</section>
+<section id="lecture-summary" class="level1 page-columns page-full">
+<h1>Lecture Summary</h1>
+<section id="key-formulas" class="level2">
+<h2 class="anchored" data-anchor-id="key-formulas">Key Formulas</h2>
+<div class="key-terms">
+<dl>
+<dt><strong>Modularity <span class="math inline">\(Q\)</span></strong></dt>
+<dd>
+<span class="math inline">\(Q = \dfrac{1}{2m}\sum_{i,j}\!\Bigl[A_{ij} - \dfrac{k_i k_j}{2m}\Bigr]\delta(c_i,c_j)\)</span>; range <span class="math inline">\((-1,1)\)</span>; <span class="math inline">\(&gt;0.3\)</span> = real structure
+</dd>
+<dt><strong>Resolution-adjusted modularity</strong></dt>
+<dd>
+<span class="math inline">\(Q_\gamma\)</span>: replaces <span class="math inline">\(\dfrac{k_ik_j}{2m}\)</span> with <span class="math inline">\(\gamma\dfrac{k_ik_j}{2m}\)</span>; <span class="math inline">\(\gamma&gt;1\)</span> finds smaller communities
+</dd>
+<dt><strong>Resolution limit threshold</strong></dt>
+<dd>
+Communities with <span class="math inline">\(&lt;\!\sqrt{2m}\)</span> internal edges may be merged; grows with network size
+</dd>
+<dt><strong>Graph Laplacian</strong></dt>
+<dd>
+<span class="math inline">\(L = D - A\)</span>; positive semi-definite; Fiedler vector (eigenvector of <span class="math inline">\(\lambda_2\)</span>) gives optimal bisection
+</dd>
+<dt><strong>Louvain modularity gain</strong></dt>
+<dd>
+<span class="math inline">\(\Delta Q\)</span> per node reassignment to neighbor’s community; node moves to community with <span class="math inline">\(\max \Delta Q &gt; 0\)</span>
+</dd>
+<dt><strong>Map equation (Infomap)</strong></dt>
+<dd>
+<span class="math inline">\(L(\mathcal{M}) = q_{\curvearrowright}H(\mathcal{Q}) + \sum_i p_i^{\circlearrowleft}H(\mathcal{P}^i)\)</span>; minimize to find flow-based communities
+</dd>
+<dt><strong>Girvan-Newman edge betweenness</strong></dt>
+<dd>
+<span class="math inline">\(C_B(e) = \sum_{s\neq t}\sigma_{st}(e)/\sigma_{st}\)</span>; iteratively remove max-betweenness edge
+</dd>
+</dl>
+</div>
+</section>
+<section id="algorithm-quick-reference" class="level2">
+<h2 class="anchored" data-anchor-id="algorithm-quick-reference">Algorithm Quick Reference</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 42%">
+<col style="width: 57%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Analytical Need</th>
+<th style="text-align: left;">Recommended Algorithm</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Default general-purpose analysis, large network</td>
+<td style="text-align: left;"><strong>Leiden</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Small network (<span class="math inline">\(n &lt; 1000\)</span>), dendrogram needed</td>
+<td style="text-align: left;">Girvan-Newman</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Known number of communities from prior intelligence</td>
+<td style="text-align: left;">Spectral clustering</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Overlapping memberships, dual-role actors</td>
+<td style="text-align: left;">CPM (<span class="math inline">\(k\)</span>-clique, <span class="math inline">\(k=3\)</span> or <span class="math inline">\(4\)</span>)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Communication / information flow communities</td>
+<td style="text-align: left;">Infomap</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fast first-pass exploration</td>
+<td style="text-align: left;">Label Propagation</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Non-deterministic algorithm, need stability</td>
+<td style="text-align: left;">Consensus (run Louvain ×100, co-assignment matrix)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="key-takeaways" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h2>
+<ol type="1">
+<li>Modularity <span class="math inline">\(Q\)</span> is the standard quality measure; <span class="math inline">\(Q &gt; 0.3\)</span> indicates real structure; always bootstrap against null model for small networks.</li>
+<li>The resolution limit means modularity maximization cannot detect communities smaller than <span class="math inline">\(\sqrt{2m}\)</span> internal edges; segment large networks before looking for small cells.</li>
+<li>Leiden is theoretically stronger than Louvain and is the recommended default; Louvain remains prevalent in legacy tooling including Gephi.</li>
+<li>Overlapping communities are the norm in real intelligence targets; CPM detects dual-role actors invisible to partitioning methods.</li>
+<li>Run multiple algorithms and multiple trials; stable community assignments have high confidence; boundary nodes and algorithm-divergent assignments are the most analytically interesting outputs.</li>
+<li>Community detection generates hypotheses; validation against domain knowledge (HUMINT, court records, known structure) is mandatory before inclusion in a finished intelligence product.</li>
+</ol>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Next Lecture">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Next Lecture
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Geospatial and Multi-Layer Networks</strong> — embedding networks in geographic space, spatial network analysis, multilayer and multiplex network frameworks, ArcGIS Network Analyst for intelligence applications, and GEOINT integration with relational network data.</p>
+</div>
+</div>
+<div style="margin-top:2rem">
+  <ul class="course-sequence">
+    <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> What is Network Analysis?</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Graph Theory Basics</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Centrality and Influence</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Social Network Analysis in Intelligence</li>
+    <li class="seq-active"><span class="seq-icon">▶</span> <strong>Community Detection and Clustering</strong> (this lecture)</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Geospatial / Multi-Layer Networks</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Temporal / Dynamic Networks</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Global Security Networks</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Financial Networks</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Information / Influence Networks</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Infrastructure Networks</li>
+  </ul>
+</div>
+
+<div class="page-footer-custom">
+School of Intelligence Analysis &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
+</div>
+<div class="uc-banner column-screen uc-banner-bottom">
+UNCLASSIFIED // FOR EDUCATIONAL USE ONLY
+</div>
+
+
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Santo Fortunato, “Community Detection in Graphs,” <em>Physics Reports</em> 486, no. 3–5 (2010): 75–174.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>M. E. J. Newman and Michelle Girvan, “Finding and Evaluating Community Structure in Networks,” <em>Physical Review E</em> 69, no. 2 (2004): 026113.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Fortunato, “Community Detection in Graphs,” 83–85.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Santo Fortunato and Marc Barthélemy, “Resolution Limit in Community Detection,” <em>Proceedings of the National Academy of Sciences</em> 104, no. 1 (2007): 36–41.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Vincent A. Traag, Ludo Waltman, and Nees Jan van Eck, “From Louvain to Leiden: Guaranteeing Well-Connected Communities,” <em>Scientific Reports</em> 9 (2019): 5234.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Michelle Girvan and M. E. J. Newman, “Community Structure in Social and Biological Networks,” <em>Proceedings of the National Academy of Sciences</em> 99, no. 12 (2002): 7821–7826.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Vincent D. Blondel et al., “Fast Unfolding of Communities in Large Networks,” <em>Journal of Statistical Mechanics: Theory and Experiment</em> 2008, no. 10 (2008): P10008.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>Fortunato, “Community Detection in Graphs,” 116–122.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>Usha Nandini Raghavan, Réka Albert, and Soundar Kumara, “Near Linear Time Algorithm to Detect Community Structures in Large-Scale Networks,” <em>Physical Review E</em> 76, no. 3 (2007): 036106.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>Martin Rosvall and Carl T. Bergstrom, “Maps of Random Walks on Complex Networks Reveal Community Structure,” <em>Proceedings of the National Academy of Sciences</em> 105, no. 4 (2008): 1118–1123.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>Gábor Palla et al., “Uncovering the Overlapping Community Structure of Complex Networks in Nature and Society,” <em>Nature</em> 435 (2005): 814–818.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p>M. E. J. Newman, “Modularity and Community Structure in Networks,” <em>Proceedings of the National Academy of Sciences</em> 103, no. 23 (2006): 8577–8582.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p>Marc Sageman, <em>Understanding Terror Networks</em> (Philadelphia: University of Pennsylvania Press, 2004), 101–136.<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
