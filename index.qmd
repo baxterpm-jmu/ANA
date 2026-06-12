@@ -1,0 +1,21 @@
+---
+title: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
+author: "Professor Philip Baxter, Intelligence Analysis Program, James Madison University"
+---
+
+Welcome to the course website. 
+
+## Quick Links
+
+- [Week 1](/Week1Lecture/index.qmd)
+- [Week 2](/Week2Lecture/index.qmd)
+- [Week 3](/Week3Lecture/index.qmd) 
+- [Week 4](/Week4Lecture/index.qmd)
+- [Week 5](/Week5Lecture/index.qmd)
+- [Week 6](/Week6Lecture/index.qmd)
+- [Week 7](/Week7Lecture/index.qmd)
+- [Week 8](/Week8Lecture/index.qmd)
+- [Week 9](/Week9Lecture/index.qmd)
+- [Week 10](/Week10Lecture/index.qmd)
+- [Week 11](/Week11Lecture/index.qmd)
+
