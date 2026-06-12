@@ -10,27 +10,26 @@ website:
         text: Home
       - text: Weekly Materials
         menu:
-          - href: IA480-NA/Week2Lecture/index.qmd
+          - href: /Week1Lecture/index.qmd
+            text: Week 1 Course Materials
+          - href: /Week2Lecture/index.qmd
             text: Week 2 Course Materials
-          - href: IA480-NA/Week3Lecture/index.qmd
+          - href: /Week3Lecture/index.qmd
             text: Week 3 Course Materials
-          - href: IA480-NA/Week4Lecture/index.qmd
+          - href: /Week4Lecture/index.qmd
             text: Week 4 Course Materials
-          - href: IA480-NA/Week5Lecture/index.qmd
+          - href: /Week5Lecture/index.qmd
             text: Week 5 Course Materials
-          - href: IA480-NA/Week6Lecture/index.qmd
+          - href: /Week6Lecture/index.qmd
             text: Week 6 Course Materials
-          - href: IA480-NA/Week7Lecture/index.qmd
-            text: Week 7 Course Materials
-          - href: IA480-NA/Week8Lecture/index.qmd
+          - href: /Week8Lecture/index.qmd
             text: Week 8 Course Materials
-          - href: IA480-NA/Week9Lecture/index.qmd
+          - href: /Week9Lecture/index.qmd
             text: Week 9 Course Materials
-          - href: IA480-NA/Week10Lecture/index.qmd
+          - href: /Week10Lecture/index.qmd
             text: Week 10 Course Materials
-          - href: IA480-NA/Week11Lecture/index.qmd
+          - href: /Week11Lecture/index.qmd
             text: Week 11 Course Materials
-          - href: IA480-NA/Week12Lecture/index.qmd
 
 format:
   html:
