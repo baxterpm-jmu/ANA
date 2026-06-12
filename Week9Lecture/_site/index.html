@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="School of Intelligence Analysis, James Madison University">
+<meta name="dcterms.date" content="2026-01-01">
+
+<title>Temporal and Dynamic Networks</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="index_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="index_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="index_files/libs/quarto-html/anchor.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="index_files/libs/bootstrap/bootstrap-1f00ba136ce09e10588635caec7cb406.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<style>html{ scroll-behavior: smooth; }</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul>
+  <li><a href="#part-i-why-temporal-analysis" id="toc-part-i-why-temporal-analysis" class="nav-link active" data-scroll-target="#part-i-why-temporal-analysis">Part I: Why Temporal Analysis?</a>
+  <ul class="collapse">
+  <li><a href="#the-static-network-assumption-and-its-failures" id="toc-the-static-network-assumption-and-its-failures" class="nav-link" data-scroll-target="#the-static-network-assumption-and-its-failures">The Static Network Assumption and Its Failures</a></li>
+  <li><a href="#burstiness-and-inter-event-time-distributions" id="toc-burstiness-and-inter-event-time-distributions" class="nav-link" data-scroll-target="#burstiness-and-inter-event-time-distributions">Burstiness and Inter-Event Time Distributions</a></li>
+  </ul></li>
+  <li><a href="#part-ii-temporal-network-representations" id="toc-part-ii-temporal-network-representations" class="nav-link" data-scroll-target="#part-ii-temporal-network-representations">Part II: Temporal Network Representations</a>
+  <ul class="collapse">
+  <li><a href="#four-representation-formats" id="toc-four-representation-formats" class="nav-link" data-scroll-target="#four-representation-formats">Four Representation Formats</a>
+  <ul class="collapse">
+  <li><a href="#interval-graphs-and-4.-temporal-supra-adjacency" id="toc-interval-graphs-and-4.-temporal-supra-adjacency" class="nav-link" data-scroll-target="#interval-graphs-and-4.-temporal-supra-adjacency">3. Interval Graphs and 4. Temporal Supra-Adjacency</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#part-iii-temporal-metrics" id="toc-part-iii-temporal-metrics" class="nav-link" data-scroll-target="#part-iii-temporal-metrics">Part III: Temporal Metrics</a>
+  <ul class="collapse">
+  <li><a href="#temporal-paths-latency-and-reachability" id="toc-temporal-paths-latency-and-reachability" class="nav-link" data-scroll-target="#temporal-paths-latency-and-reachability">Temporal Paths, Latency, and Reachability</a></li>
+  <li><a href="#temporal-centrality-measures" id="toc-temporal-centrality-measures" class="nav-link" data-scroll-target="#temporal-centrality-measures">Temporal Centrality Measures</a></li>
+  <li><a href="#temporal-motif-analysis" id="toc-temporal-motif-analysis" class="nav-link" data-scroll-target="#temporal-motif-analysis">Temporal Motif Analysis</a></li>
+  </ul></li>
+  <li><a href="#part-iv-network-evolution-and-change-detection" id="toc-part-iv-network-evolution-and-change-detection" class="nav-link" data-scroll-target="#part-iv-network-evolution-and-change-detection">Part IV: Network Evolution and Change Detection</a>
+  <ul class="collapse">
+  <li><a href="#models-of-network-growth-and-decay" id="toc-models-of-network-growth-and-decay" class="nav-link" data-scroll-target="#models-of-network-growth-and-decay">Models of Network Growth and Decay</a></li>
+  <li><a href="#dynamic-community-detection" id="toc-dynamic-community-detection" class="nav-link" data-scroll-target="#dynamic-community-detection">Dynamic Community Detection</a></li>
+  <li><a href="#structural-break-and-anomaly-detection" id="toc-structural-break-and-anomaly-detection" class="nav-link" data-scroll-target="#structural-break-and-anomaly-detection">Structural Break and Anomaly Detection</a></li>
+  </ul></li>
+  <li><a href="#part-v-intelligence-applications" id="toc-part-v-intelligence-applications" class="nav-link" data-scroll-target="#part-v-intelligence-applications">Part V: Intelligence Applications</a>
+  <ul class="collapse">
+  <li><a href="#organizational-adaptation-after-disruption" id="toc-organizational-adaptation-after-disruption" class="nav-link" data-scroll-target="#organizational-adaptation-after-disruption">Organizational Adaptation After Disruption</a></li>
+  <li><a href="#temporal-radicalization-and-recruitment-networks" id="toc-temporal-radicalization-and-recruitment-networks" class="nav-link" data-scroll-target="#temporal-radicalization-and-recruitment-networks">Temporal Radicalization and Recruitment Networks</a></li>
+  <li><a href="#surveillance-windows-and-collection-gap-analysis" id="toc-surveillance-windows-and-collection-gap-analysis" class="nav-link" data-scroll-target="#surveillance-windows-and-collection-gap-analysis">Surveillance Windows and Collection Gap Analysis</a></li>
+  <li><a href="#networkx-temporal-analysis-workflow" id="toc-networkx-temporal-analysis-workflow" class="nav-link" data-scroll-target="#networkx-temporal-analysis-workflow">NetworkX Temporal Analysis Workflow</a>
+  <ul class="collapse">
+  <li><a href="#constructing-and-analyzing-snapshot-sequences" id="toc-constructing-and-analyzing-snapshot-sequences" class="nav-link" data-scroll-target="#constructing-and-analyzing-snapshot-sequences">Constructing and Analyzing Snapshot Sequences</a></li>
+  <li><a href="#edge-turnover-and-structural-break-detection" id="toc-edge-turnover-and-structural-break-detection" class="nav-link" data-scroll-target="#edge-turnover-and-structural-break-detection">Edge Turnover and Structural Break Detection</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#lecture-summary" id="toc-lecture-summary" class="nav-link" data-scroll-target="#lecture-summary">Lecture Summary</a>
+  <ul class="collapse">
+  <li><a href="#key-formulas-and-definitions" id="toc-key-formulas-and-definitions" class="nav-link" data-scroll-target="#key-formulas-and-definitions">Key Formulas and Definitions</a></li>
+  <li><a href="#key-analytical-takeaways" id="toc-key-analytical-takeaways" class="nav-link" data-scroll-target="#key-analytical-takeaways">Key Analytical Takeaways</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Temporal and Dynamic Networks</h1>
+<p class="subtitle lead">IA 480: Applied Network Analysis: Systems, Connections, and Influence</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>School of Intelligence Analysis, James Madison University </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 1, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="course-meta">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Course</td>
+<td style="text-align: left;">IA 480: Applied Network Analysis</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Week</td>
+<td style="text-align: left;">9 of 12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Instructor</td>
+<td style="text-align: left;">School of Intelligence Analysis</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Term</td>
+<td style="text-align: left;">Fall 2026</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of this lecture, students should be able to:</p>
+<ol type="1">
+<li>Explain why the static network assumption fails for intelligence network analysis and identify the specific distortions it introduces.</li>
+<li>Represent a temporal network as a time-stamped edge list, snapshot sequence, and temporal supra-adjacency matrix.</li>
+<li>Define temporal path, latency, foremost path, and temporal reachability, and explain why temporal reachability is asymmetric.</li>
+<li>Compute burstiness coefficient and interpret its intelligence significance.</li>
+<li>Describe the six community lifecycle events and distinguish them from algorithmic artifacts of non-deterministic detection.</li>
+<li>Apply temporal SNA to post-disruption network assessment, producing a structured analytical deliverable.</li>
+</ol>
+</div>
+</div>
+<section id="part-i-why-temporal-analysis" class="level1">
+<h1>Part I: Why Temporal Analysis?</h1>
+<section id="the-static-network-assumption-and-its-failures" class="level2">
+<h2 class="anchored" data-anchor-id="the-static-network-assumption-and-its-failures">The Static Network Assumption and Its Failures</h2>
+<p>Classical network analysis treats a graph <span class="math inline">\(G = (V, E)\)</span> as a fixed, timeless object. All edges are simultaneously present; metrics reflect aggregate structure over the entire observation period. This is appropriate when the observation window is short relative to the network’s rate of change, when temporal ordering is analytically irrelevant, or when timestamps are unavailable.</p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="where-static-analysis-fails" class="level3">
+<h3 class="anchored" data-anchor-id="where-static-analysis-fails">Where Static Analysis Fails</h3>
+<p>In intelligence network analysis, the static assumption introduces specific, operationally consequential distortions:<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<ul>
+<li><strong>Stale edges appear current:</strong> a communication link from 2019 is treated identically to one active today. Actors who have exited, been arrested, or changed roles appear as active participants.</li>
+<li><strong>Phantom connectivity:</strong> two actors who never communicated simultaneously may appear connected in the aggregate. The path <span class="math inline">\(A \to B \to C\)</span> exists in the static graph even if the <span class="math inline">\(A\)</span>–<span class="math inline">\(B\)</span> contact occurred <em>after</em> the <span class="math inline">\(B\)</span>–<span class="math inline">\(C\)</span> contact — meaning B could not have been the relay.</li>
+<li><strong>Conflated activity:</strong> centrality computed over the full period merges periods of intense activity with dormant phases. A node active for one week in a year-long observation window receives the same structural treatment as a node active every week.</li>
+<li><strong>Disruption effects invisible:</strong> removing a node from the aggregate graph does not reveal which <em>subsequent</em> interactions would have been prevented. It collapses the causal ordering that is precisely what makes disruption effective.</li>
+<li><strong>Sequencing is lost:</strong> the causal structure of information flow depends critically on contact ordering. A message can travel from A to C via B only if the A–B contact precedes the B–C contact.</li>
+</ul>
+</section>
+<section id="when-static-analysis-is-acceptable" class="level3">
+<h3 class="anchored" data-anchor-id="when-static-analysis-is-acceptable">When Static Analysis Is Acceptable</h3>
+<p>Despite its limitations, static aggregation remains appropriate when:</p>
+<ul>
+<li>The rate of network change is slow relative to the observation window (a treaty network that changes yearly, analyzed annually)</li>
+<li>The research question is about structural capacity rather than realized flow (can this network in principle reach all nodes, ignoring when?)</li>
+<li>Timestamps are unreliable or unavailable</li>
+<li>Computational resources prohibit full temporal analysis on a large network</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    The Sequencing Problem: Causal Ordering in Temporal Networks
+  </p>
+  <svg viewbox="0 0 380 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:360px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <defs>
+      <marker id="arr9" markerwidth="8" markerheight="8" refx="6" refy="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#450084"></path>
+      </marker>
+      <marker id="arrg" markerwidth="8" markerheight="8" refx="6" refy="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#CBB677"></path>
+      </marker>
+      <marker id="arrr" markerwidth="8" markerheight="8" refx="6" refy="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#cc0000"></path>
+      </marker>
+    </defs>
+
+    <!-- Network triangle -->
+    <circle cx="110" cy="60" r="22" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="110" cy="60" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#450084">A</text>
+    <circle cx="250" cy="60" r="22" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="250" y="65" text-anchor="middle" font-size="14" font-weight="bold" fill="#450084">B</text>
+    <circle cx="180" cy="155" r="22" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="180" y="160" text-anchor="middle" font-size="14" font-weight="bold" fill="#450084">C</text>
+
+    <!-- A→B at t=1 (gold = valid path start) -->
+    <line x1="133" y1="60" x2="227" y2="60" stroke="#CBB677" stroke-width="2.5" marker-end="url(#arrg)"></line>
+    <rect x="163" y="42" width="34" height="16" rx="3" fill="#F4EFE1" stroke="#CBB677" stroke-width="1"></rect>
+    <text x="180" y="54" text-anchor="middle" font-size="10" font-weight="700" fill="#AD9C65">t = 1</text>
+
+    <!-- B→C at t=3 (gold = valid path continuation) -->
+    <line x1="237" y1="77" x2="200" y2="138" stroke="#CBB677" stroke-width="2.5" marker-end="url(#arrg)"></line>
+    <rect x="228" y="100" width="34" height="16" rx="3" fill="#F4EFE1" stroke="#CBB677" stroke-width="1"></rect>
+    <text x="245" y="112" text-anchor="middle" font-size="10" font-weight="700" fill="#AD9C65">t = 3</text>
+
+    <!-- C→A at t=2 (red = breaks causality for feedback) -->
+    <line x1="162" y1="143" x2="123" y2="74" stroke="#cc0000" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrr)"></line>
+    <rect x="102" y="102" width="34" height="16" rx="3" fill="#fdd" stroke="#cc0000" stroke-width="1"></rect>
+    <text x="119" y="114" text-anchor="middle" font-size="10" font-weight="700" fill="#cc0000">t = 2</text>
+
+    <!-- Verdict annotations -->
+    <rect x="20" y="186" width="330" height="26" rx="3" fill="#F4EFE1" stroke="#CBB677" stroke-width="1.2"></rect>
+    <text x="35" y="203" font-size="9.5" fill="#AD9C65" font-weight="700">✓ VALID:</text>
+    <text x="96" y="203" font-size="9.5" fill="#333">A→B (t=1) → B→C (t=3) — causal order respected</text>
+
+    <rect x="20" y="220" width="330" height="38" rx="3" fill="#fdd" stroke="#cc0000" stroke-width="1.2"></rect>
+    <text x="35" y="237" font-size="9.5" fill="#cc0000" font-weight="700">✗ INVALID:</text>
+    <text x="100" y="237" font-size="9.5" fill="#333">A→B→C→A feedback loop</text>
+    <text x="35" y="252" font-size="8.5" fill="#595959">C received B's message at t=3; cannot relay it to A via t=2 contact</text>
+  </svg>
+  <figcaption>
+    Static analysis sees a directed cycle A–B–C–A.<br>
+    Temporal analysis reveals C→A (t=2) precedes B→C (t=3): the feedback loop cannot exist.
+  </figcaption>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Intelligence Implication">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Intelligence Implication
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Reconstructing the <em>temporal</em> flow of a network — not just its aggregate structure — is necessary to correctly identify <strong>who could have known what, and when</strong>. In operational sequence reconstruction, attribution, and disruption assessment, causal ordering is not a refinement — it is the essential analytical object.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="burstiness-and-inter-event-time-distributions" class="level2">
+<h2 class="anchored" data-anchor-id="burstiness-and-inter-event-time-distributions">Burstiness and Inter-Event Time Distributions</h2>
+<p>In most real communication networks — phone calls, emails, encrypted messaging — interactions are not uniformly distributed over time. Instead, they cluster in <strong>bursts</strong>: short periods of intense activity separated by long periods of silence.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="the-burstiness-coefficient" class="level3">
+<h3 class="anchored" data-anchor-id="the-burstiness-coefficient">The Burstiness Coefficient</h3>
+<p>The inter-event time <span class="math inline">\(\tau\)</span> (time between consecutive contacts between the same pair of actors) follows a <strong>heavy-tailed distribution</strong> in bursty networks, approximated by a power law <span class="math inline">\(P(\tau) \sim \tau^{-\alpha}\)</span>.</p>
+<p>For a sequence of inter-event times <span class="math inline">\(\{\tau_1, \tau_2, \ldots, \tau_n\}\)</span> with mean <span class="math inline">\(\mu_\tau\)</span> and standard deviation <span class="math inline">\(\sigma_\tau\)</span>:</p>
+<p><span class="math display">\[B = \frac{\sigma_\tau - \mu_\tau}{\sigma_\tau + \mu_\tau} \in [-1, 1]\]</span></p>
+<ul>
+<li><span class="math inline">\(B = 1\)</span>: maximally bursty — contacts are highly irregular, clustered in rare intense episodes</li>
+<li><span class="math inline">\(B = 0\)</span>: Poisson process — contacts arrive randomly and independently (memoryless)</li>
+<li><span class="math inline">\(B = -1\)</span>: perfectly regular — contacts arrive at fixed intervals (metronomic)</li>
+</ul>
+</section>
+<section id="consequences-of-burstiness" class="level3">
+<h3 class="anchored" data-anchor-id="consequences-of-burstiness">Consequences of Burstiness</h3>
+<ul>
+<li><strong>Slows spreading:</strong> information propagates <em>slower</em> on bursty networks than equivalent Poisson networks, because long inter-event gaps create temporal bottlenecks. Counterintuitive but empirically robust.</li>
+<li><strong>Concentrates influence:</strong> nodes with high-frequency bursty contacts have disproportionate temporal influence <em>during</em> their active windows — but are structurally dormant between bursts.</li>
+<li><strong>Masks network structure:</strong> a bursty edge may appear weak in aggregate (low total contact count) but be operationally intense within short windows — exactly the pattern of operationally-activated relationships in covert networks.</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Bursty vs. Regular Communication Patterns
+  </p>
+  <svg viewbox="0 0 420 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:400px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <!-- Panel divider -->
+    <line x1="20" y1="100" x2="400" y2="100" stroke="#D6D6D6" stroke-width="1.2"></line>
+
+    <!-- TOP: Bursty (B ≈ 0.7) -->
+    <text x="22" y="18" font-size="9" font-weight="700" fill="#450084">BURSTY  (B ≈ 0.7)</text>
+    <text x="22" y="30" font-size="8" fill="#595959" font-style="italic">event-driven, operationally activated</text>
+    <!-- Axis -->
+    <line x1="30" y1="75" x2="400" y2="75" stroke="#B2B2B2" stroke-width="1"></line>
+    <!-- Burst 1: dense cluster -->
+    <line x1="55" y1="75" x2="55" y2="48" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="62" y1="75" x2="62" y2="42" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="70" y1="75" x2="70" y2="52" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="75" y1="75" x2="75" y2="45" stroke="#450084" stroke-width="2.5"></line>
+    <!-- Long gap -->
+    <!-- Burst 2: dense cluster -->
+    <line x1="190" y1="75" x2="190" y2="50" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="198" y1="75" x2="198" y2="43" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="205" y1="75" x2="205" y2="55" stroke="#450084" stroke-width="2.5"></line>
+    <!-- Short gap -->
+    <line x1="218" y1="75" x2="218" y2="48" stroke="#450084" stroke-width="2.5"></line>
+    <!-- Long gap -->
+    <!-- Burst 3 -->
+    <line x1="340" y1="75" x2="340" y2="52" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="347" y1="75" x2="347" y2="44" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="355" y1="75" x2="355" y2="56" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="362" y1="75" x2="362" y2="48" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="369" y1="75" x2="369" y2="42" stroke="#450084" stroke-width="2.5"></line>
+    <!-- Gap labels -->
+    <text x="128" y="90" text-anchor="middle" font-size="8" fill="#B2B2B2" font-style="italic">long gap</text>
+    <text x="280" y="90" text-anchor="middle" font-size="8" fill="#B2B2B2" font-style="italic">long gap</text>
+    <!-- Time axis labels -->
+    <text x="30" y="85" font-size="7.5" fill="#B2B2B2">t₀</text>
+    <text x="393" y="85" font-size="7.5" fill="#B2B2B2">T</text>
+
+    <!-- BOTTOM: Regular (B ≈ -0.9) -->
+    <text x="22" y="116" font-size="9" font-weight="700" fill="#AD9C65">REGULAR  (B ≈ −0.9)</text>
+    <text x="22" y="128" font-size="8" fill="#595959" font-style="italic">check-in protocol, dead drop schedule, automated</text>
+    <!-- Axis -->
+    <line x1="30" y1="175" x2="400" y2="175" stroke="#B2B2B2" stroke-width="1"></line>
+    <!-- Evenly spaced ticks at ~37px intervals -->
+    <line x1="55" y1="175" x2="55" y2="148" stroke="#AD9C65" stroke-width="2.5"></line>
+    <line x1="92" y1="175" x2="92" y2="148" stroke="#AD9C65" stroke-width="2.5"></line>
+    <line x1="129" y1="175" x2="129" y2="148" stroke="#AD9C65" stroke-width="2.5"></line>
+    <line x1="166" y1="175" x2="166" y2="148" stroke="#AD9C65" stroke-width="2.5"></line>
+    <line x1="203" y1="175" x2="203" y2="148" stroke="#AD9C65" stroke-width="2.5"></line>
+    <line x1="240" y1="175" x2="240" y2="148" stroke="#AD9C65" stroke-width="2.5"></line>
+    <line x1="277" y1="175" x2="277" y2="148" stroke="#AD9C65" stroke-width="2.5"></line>
+    <line x1="314" y1="175" x2="314" y2="148" stroke="#AD9C65" stroke-width="2.5"></line>
+    <line x1="351" y1="175" x2="351" y2="148" stroke="#AD9C65" stroke-width="2.5"></line>
+    <line x1="388" y1="175" x2="388" y2="148" stroke="#AD9C65" stroke-width="2.5"></line>
+    <!-- Interval brace -->
+    <line x1="55" y1="190" x2="92" y2="190" stroke="#AD9C65" stroke-width="1"></line>
+    <line x1="55" y1="186" x2="55" y2="194" stroke="#AD9C65" stroke-width="1"></line>
+    <line x1="92" y1="186" x2="92" y2="194" stroke="#AD9C65" stroke-width="1"></line>
+    <text x="73" y="199" text-anchor="middle" font-size="8" fill="#AD9C65">fixed Δτ</text>
+    <text x="30" y="185" font-size="7.5" fill="#B2B2B2">t₀</text>
+    <text x="393" y="185" font-size="7.5" fill="#B2B2B2">T</text>
+  </svg>
+  <figcaption>
+    Bursty pattern (purple): long silence punctuated by bursts — operationally activated contacts.<br>
+    Regular pattern (gold): uniform spacing — scheduled protocol, dead drop, or automated check-in.
+  </figcaption>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Intelligence Interpretation of Burstiness">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Intelligence Interpretation of Burstiness
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong><span class="math inline">\(B &gt; 0.5\)</span> (bursty):</strong> operationally driven, event-responsive communication. Consistent with coordination around specific activities or operational phases. The Taliban’s communication network shows pronounced seasonal burstiness — intense contact during spring offensive planning (March–May), relative dormancy in winter.</li>
+<li><strong><span class="math inline">\(B \approx -1\)</span> (regular):</strong> scheduled, routine contact. Consistent with check-in protocols, dead drop schedules, or automated communication. Metronomic patterns in a counterintelligence target may signal tradecraft — deliberate scheduling to avoid triggering anomaly detectors.</li>
+<li><strong>Sudden increase in <span class="math inline">\(B\)</span>:</strong> a previously quiescent or regular relationship becomes bursty — a potential indicator of operational mobilization or threat activation.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-ii-temporal-network-representations" class="level1">
+<h1>Part II: Temporal Network Representations</h1>
+<section id="four-representation-formats" class="level2">
+<h2 class="anchored" data-anchor-id="four-representation-formats">Four Representation Formats</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="time-stamped-edge-list" class="level3">
+<h3 class="anchored" data-anchor-id="time-stamped-edge-list">1. Time-Stamped Edge List</h3>
+<p>The simplest and most flexible format. Each row records one contact event:</p>
+<p><span class="math display">\[\text{Instantaneous:}\quad (u,\, v,\, t)\]</span> <span class="math display">\[\text{Duration contact:}\quad (u,\, v,\, t_{\text{start}},\, t_{\text{end}})\]</span></p>
+<ul>
+<li>Phone call, message sent, one-time transaction → instantaneous <span class="math inline">\((u, v, t)\)</span></li>
+<li>Meeting, surveillance overlap, sustained cohabitation → duration <span class="math inline">\((u, v, t_s, t_e)\)</span></li>
+<li>The ordered sequence of all events is the <strong>contact sequence</strong> — the most complete temporal representation</li>
+<li>Preserves all timing information; direct input for temporal path algorithms</li>
+</ul>
+<p>Additional columns in practice: <code>weight</code>, <code>type</code> (communication/financial/physical), <code>source_reliability</code>, <code>classification_level</code></p>
+</section>
+<section id="snapshot-model" class="level3">
+<h3 class="anchored" data-anchor-id="snapshot-model">2. Snapshot Model</h3>
+<p>Divide the observation window <span class="math inline">\([0, T]\)</span> into <span class="math inline">\(K\)</span> equal intervals of width <span class="math inline">\(\Delta t\)</span>. Within each interval <span class="math inline">\(k\)</span>, aggregate all events into a static graph <span class="math inline">\(G^{(k)}\)</span>:</p>
+<p><span class="math display">\[\{G^{(1)},\; G^{(2)},\; \ldots,\; G^{(K)}\}\]</span></p>
+<ul>
+<li><strong>Choice of <span class="math inline">\(\Delta t\)</span> is critical:</strong> too small → graphs are too sparse for meaningful metrics; too large → temporal resolution is lost and the static-assumption failure modes reappear</li>
+<li>Enables direct application of all static SNA metrics within each snapshot</li>
+<li>Supports systematic comparison of network state across periods — the primary format for disruption analysis</li>
+<li>Standard choice for intelligence applications: <span class="math inline">\(\Delta t\)</span> = one week or one month, depending on operational tempo<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Snapshot Sequence: Network Evolving Across Three Windows
+  </p>
+  <svg viewbox="0 0 500 185" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:480px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <!-- Dividers between panels -->
+    <line x1="166" y1="10" x2="166" y2="175" stroke="#D6D6D6" stroke-width="1.2"></line>
+    <line x1="333" y1="10" x2="333" y2="175" stroke="#D6D6D6" stroke-width="1.2"></line>
+
+    <!-- Labels -->
+    <text x="83" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">G⁽¹⁾  t = 0–30</text>
+    <text x="249" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">G⁽²⁾  t = 31–60</text>
+    <text x="416" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">G⁽³⁾  t = 61–90</text>
+    <!-- Transition arrows -->
+    <text x="166" y="100" text-anchor="middle" font-size="14" fill="#CBB677">→</text>
+    <text x="333" y="100" text-anchor="middle" font-size="14" fill="#CBB677">→</text>
+    <text x="155" y="92" text-anchor="middle" font-size="7.5" fill="#AD9C65">Δt</text>
+    <text x="322" y="92" text-anchor="middle" font-size="7.5" fill="#AD9C65">Δt</text>
+
+    <!-- === G1: 5 nodes, 4 edges === -->
+    <!-- Nodes: A(45,95), B(85,55), C(85,135), D(135,55), E(135,135) -->
+    <line x1="45" y1="95" x2="85" y2="55" stroke="#450084" stroke-width="2"></line>
+    <line x1="45" y1="95" x2="85" y2="135" stroke="#450084" stroke-width="2"></line>
+    <line x1="85" y1="55" x2="135" y2="55" stroke="#450084" stroke-width="2"></line>
+    <line x1="85" y1="135" x2="135" y2="135" stroke="#450084" stroke-width="2"></line>
+    <circle cx="45" cy="95" r="13" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="45" y="99" text-anchor="middle" font-size="10" font-weight="bold" fill="#450084">A</text>
+    <circle cx="85" cy="55" r="13" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="85" y="59" text-anchor="middle" font-size="10" font-weight="bold" fill="#450084">B</text>
+    <circle cx="85" cy="135" r="13" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="85" y="139" text-anchor="middle" font-size="10" font-weight="bold" fill="#450084">C</text>
+    <circle cx="135" cy="55" r="13" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="135" y="59" text-anchor="middle" font-size="10" font-weight="bold" fill="#450084">D</text>
+    <circle cx="135" cy="135" r="13" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="4,2"></circle>
+    <text x="135" y="139" text-anchor="middle" font-size="10" fill="#B2B2B2">E</text>
+
+    <!-- === G2: same nodes, different edges — E now active, B-C new link === -->
+    <line x1="212" y1="95" x2="252" y2="55" stroke="#450084" stroke-width="2"></line>
+    <line x1="252" y1="55" x2="252" y2="135" stroke="#CBB677" stroke-width="2.5"></line><!-- NEW -->
+    <line x1="252" y1="55" x2="302" y2="55" stroke="#450084" stroke-width="2"></line>
+    <line x1="302" y1="55" x2="302" y2="135" stroke="#CBB677" stroke-width="2.5"></line><!-- NEW -->
+    <circle cx="212" cy="95" r="13" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="212" y="99" text-anchor="middle" font-size="10" font-weight="bold" fill="#450084">A</text>
+    <circle cx="252" cy="55" r="13" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="252" y="59" text-anchor="middle" font-size="10" font-weight="bold" fill="#450084">B</text>
+    <circle cx="252" cy="135" r="13" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="252" y="139" text-anchor="middle" font-size="10" font-weight="bold" fill="#450084">C</text>
+    <circle cx="302" cy="55" r="13" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="302" y="59" text-anchor="middle" font-size="10" font-weight="bold" fill="#450084">D</text>
+    <circle cx="302" cy="135" r="13" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="302" y="139" text-anchor="middle" font-size="10" font-weight="bold" fill="#450084">E</text>
+
+    <!-- === G3: A isolated, B-C-D-E remain, new D-E-C triangle === -->
+    <line x1="418" y1="55" x2="418" y2="135" stroke="#450084" stroke-width="2"></line>
+    <line x1="418" y1="55" x2="468" y2="55" stroke="#450084" stroke-width="2"></line>
+    <line x1="468" y1="55" x2="468" y2="135" stroke="#450084" stroke-width="2"></line>
+    <line x1="418" y1="135" x2="468" y2="55" stroke="#CBB677" stroke-width="2.5"></line>
+    <circle cx="380" cy="95" r="13" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="4,2"></circle>
+    <text x="380" y="99" text-anchor="middle" font-size="10" fill="#B2B2B2">A</text>
+    <circle cx="418" cy="55" r="13" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="418" y="59" text-anchor="middle" font-size="10" font-weight="bold" fill="#450084">B</text>
+    <circle cx="418" cy="135" r="13" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="418" y="139" text-anchor="middle" font-size="10" font-weight="bold" fill="#450084">C</text>
+    <circle cx="468" cy="55" r="13" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="468" y="59" text-anchor="middle" font-size="10" font-weight="bold" fill="#450084">D</text>
+    <circle cx="468" cy="135" r="13" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="468" y="139" text-anchor="middle" font-size="10" font-weight="bold" fill="#450084">E</text>
+
+    <!-- Legend -->
+    <line x1="25" y1="168" x2="50" y2="168" stroke="#CBB677" stroke-width="2.5"></line>
+    <text x="55" y="172" font-size="8" fill="#333">New edge in this snapshot</text>
+    <circle cx="270" cy="168" r="7" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="4,2"></circle>
+    <text x="283" y="172" font-size="8" fill="#333">Inactive node</text>
+  </svg>
+  <figcaption>
+    G¹: A is the hub; E is inactive. G²: E activates, two new edges (gold) form.<br>
+    G³: A becomes isolated; remaining nodes form a denser sub-cluster.
+  </figcaption>
+</div>
+</div>
+</div>
+<section id="interval-graphs-and-4.-temporal-supra-adjacency" class="level3">
+<h3 class="anchored" data-anchor-id="interval-graphs-and-4.-temporal-supra-adjacency">3. Interval Graphs and 4. Temporal Supra-Adjacency</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Interval graphs</strong> represent each edge <span class="math inline">\((u, v)\)</span> as existing during one or more time intervals <span class="math inline">\([t_s, t_e]\)</span>. An actor’s <strong>activity window</strong> is the union of all intervals during which it has at least one active edge. Useful for modeling:</p>
+<ul>
+<li>Sustained relationships (organizational membership, treaty validity) vs.&nbsp;instantaneous events</li>
+<li>Dormancy periods: an actor may be a network member but operationally inactive for extended intervals</li>
+<li>Reactivation: a dormant link suddenly activating is among the most analytically significant temporal events</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Temporal supra-adjacency matrix:</strong> stack <span class="math inline">\(K\)</span> snapshot adjacency matrices as diagonal blocks; add identity inter-layer couplings between consecutive time steps:<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<p><span class="math display">\[\mathbf{A}_T = \begin{pmatrix} A^{(1)} &amp; I &amp; 0 &amp; \cdots \\ I &amp; A^{(2)} &amp; I &amp; \cdots \\ 0 &amp; I &amp; A^{(3)} &amp; \cdots \\ \vdots &amp; &amp; &amp; \ddots \end{pmatrix}\]</span></p>
+<p>Enables spectral and centrality analysis capturing both intra-snapshot structure and temporal continuity across snapshots. The identity coupling <span class="math inline">\(I\)</span> encodes the assumption that a node in snapshot <span class="math inline">\(k\)</span> is the same entity as that node in snapshot <span class="math inline">\(k+1\)</span> with unit weight.</p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="part-iii-temporal-metrics" class="level1">
+<h1>Part III: Temporal Metrics</h1>
+<section id="temporal-paths-latency-and-reachability" class="level2">
+<h2 class="anchored" data-anchor-id="temporal-paths-latency-and-reachability">Temporal Paths, Latency, and Reachability</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="definition" class="level3">
+<h3 class="anchored" data-anchor-id="definition">Definition</h3>
+<p>A <strong>temporal path</strong> from <span class="math inline">\(u\)</span> to <span class="math inline">\(v\)</span> is a sequence of contacts:</p>
+<p><span class="math display">\[(u = v_0,\, v_1,\, t_1),\; (v_1,\, v_2,\, t_2),\; \ldots,\; (v_{k-1},\, v_k = v,\, t_k)\]</span></p>
+<p>subject to the <strong>causal ordering constraint:</strong> <span class="math inline">\(t_1 \leq t_2 \leq \cdots \leq t_k\)</span> — contacts must occur in non-decreasing time order.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
+<p>The constraint is the fundamental departure from static path analysis: not all graph-theoretic paths are temporally valid. Two actors may be graph-connected but temporally unreachable during a specific time window.</p>
+</section>
+<section id="three-optimality-criteria" class="level3">
+<h3 class="anchored" data-anchor-id="three-optimality-criteria">Three Optimality Criteria</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 28%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Path Type</th>
+<th style="text-align: left;">Minimizes</th>
+<th style="text-align: left;">Intelligence Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Fastest path</strong></td>
+<td style="text-align: left;">Latency <span class="math inline">\(t_k - t_1\)</span></td>
+<td style="text-align: left;">How quickly can a command reach the target?</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Shortest temporal path</strong></td>
+<td style="text-align: left;">Number of hops <span class="math inline">\(k\)</span></td>
+<td style="text-align: left;">How many intermediaries are required?</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Foremost path</strong></td>
+<td style="text-align: left;">Arrival time <span class="math inline">\(t_k\)</span></td>
+<td style="text-align: left;">What is the earliest the target can receive a message sent at <span class="math inline">\(t_1\)</span>?</td>
+</tr>
+</tbody>
+</table>
+<p>These three criteria produce <strong>different node rankings</strong> — a fastest-path broker may not be the shortest-path broker. Choose based on the analytical question.</p>
+</section>
+<section id="temporal-reachability" class="level3">
+<h3 class="anchored" data-anchor-id="temporal-reachability">Temporal Reachability</h3>
+<p>The <strong>temporal reachability set</strong> <span class="math inline">\(R(u, t)\)</span> is the set of all nodes reachable from <span class="math inline">\(u\)</span> via time-respecting paths starting at or after time <span class="math inline">\(t\)</span>. As <span class="math inline">\(t\)</span> advances, <span class="math inline">\(R(u, t)\)</span> can only decrease or stay the same — contacts that have already occurred cannot be used for future paths.</p>
+<p>This has a profound operational implication: <strong>temporal reachability is asymmetric</strong>. <span class="math inline">\(v\)</span> being reachable from <span class="math inline">\(u\)</span> starting at time <span class="math inline">\(t\)</span> does not imply <span class="math inline">\(u\)</span> is reachable from <span class="math inline">\(v\)</span> starting at <span class="math inline">\(t\)</span>, even if the underlying network has undirected edges.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Latency vs. Hop Count">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Latency vs.&nbsp;Hop Count
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Two paths from A to D:</p>
+<ul>
+<li><strong>Path 1:</strong> <span class="math inline">\(A \xrightarrow{t=1} B \xrightarrow{t=2} D\)</span> — 2 hops, latency <span class="math inline">\(= 2 - 1 = 1\)</span></li>
+<li><strong>Path 2:</strong> <span class="math inline">\(A \xrightarrow{t=1} C \xrightarrow{t=10} D\)</span> — 2 hops, latency <span class="math inline">\(= 10 - 1 = 9\)</span></li>
+</ul>
+<p>Both have identical hop count. Path 1 is the <strong>fastest</strong> — a command routed through B reaches D within 1 time unit; routed through C, it requires 9 time units.</p>
+<p><strong>Intelligence application:</strong> fastest path analysis identifies the optimal relay for time-critical operational coordination — not the relay with fewest intermediaries, but the relay with the most temporally convenient contact schedule.</p>
+<p>If B is arrested after <span class="math inline">\(t=2\)</span>, Path 1 is eliminated. C becomes the only relay — but with a 9-unit latency penalty and exposure during the longer waiting period.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Causal Ordering Constraint">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Causal Ordering Constraint
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Temporal reachability is not symmetric. Always treat temporal networks as <strong>directed in time</strong> even when edges are undirected in space.</p>
+<p><strong>Consequence for attribution:</strong> if a piece of intelligence appears in Actor C’s possession at time <span class="math inline">\(t_C\)</span>, and A is the suspected source, the analysis must verify that a valid temporal path from A to C existed with arrival time <span class="math inline">\(\leq t_C\)</span>. If no such path exists in the temporal contact data, A cannot be the proximate source — even if A and C are graph-adjacent.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="temporal-centrality-measures" class="level2">
+<h2 class="anchored" data-anchor-id="temporal-centrality-measures">Temporal Centrality Measures</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="temporal-betweenness-centrality" class="level3">
+<h3 class="anchored" data-anchor-id="temporal-betweenness-centrality">Temporal Betweenness Centrality</h3>
+<p>Extending betweenness to temporal networks requires specifying which paths count. Two primary definitions:<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+<ul>
+<li><strong>Shortest-path temporal betweenness:</strong> fraction of <em>shortest</em> temporal paths (minimizing hops) passing through <span class="math inline">\(v\)</span>. Identifies nodes that are topologically efficient relays.</li>
+<li><strong>Fastest-path temporal betweenness:</strong> fraction of <em>fastest</em> temporal paths (minimizing latency) passing through <span class="math inline">\(v\)</span>. Identifies nodes that are temporally efficient — whose contact schedule enables rapid information propagation. This is the more operationally relevant measure for coordination network analysis.</li>
+</ul>
+<p>The two definitions produce different node rankings. A node with a conveniently timed contact schedule has high fastest-path betweenness even if it has moderate hop-count betweenness.</p>
+</section>
+<section id="temporal-closeness-centrality" class="level3">
+<h3 class="anchored" data-anchor-id="temporal-closeness-centrality">Temporal Closeness Centrality</h3>
+<p>For node <span class="math inline">\(v\)</span> at time <span class="math inline">\(t\)</span>:</p>
+<p><span class="math display">\[C_C^T(v, t) = \frac{|R(v,t)| - 1}{\sum_{u \in R(v,t)} d_T(v, u, t)}\]</span></p>
+<p>where <span class="math inline">\(d_T(v, u, t)\)</span> is temporal distance (latency to reach <span class="math inline">\(u\)</span> from <span class="math inline">\(v\)</span> starting at or after <span class="math inline">\(t\)</span>), and <span class="math inline">\(R(v,t)\)</span> is the temporal reachability set. Nodes in isolated temporal components receive closeness <span class="math inline">\(= 0\)</span>.</p>
+<p>Temporal closeness measures how quickly a node can reach its temporal neighborhood — a time-varying measure that changes as the observation window advances.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="dynamic-centrality-snapshot-comparison" class="level3">
+<h3 class="anchored" data-anchor-id="dynamic-centrality-snapshot-comparison">Dynamic Centrality: Snapshot Comparison</h3>
+<p>Compute centrality on each snapshot <span class="math inline">\(G^{(k)}\)</span>; track the time series <span class="math inline">\(C_X(v, k)\)</span> for each node <span class="math inline">\(v\)</span>:</p>
+<ul>
+<li><strong>Centrality velocity:</strong> <span class="math inline">\(\Delta C_X(v) = C_X(v, k) - C_X(v, k-1)\)</span> — the rate of change in structural importance. Rapid increases signal growing importance; sudden drops signal marginalization or operational dormancy.</li>
+<li><strong>Centrality volatility:</strong> variance of <span class="math inline">\(C_X(v, k)\)</span> over time. High volatility indicates an unstable positional role — consistent with an actor in a transitional state (newly recruited, being reassigned, under surveillance pressure). Low volatility indicates structural stability.</li>
+<li><strong>Temporal rank correlation:</strong> Kendall <span class="math inline">\(\tau\)</span> or Spearman <span class="math inline">\(\rho\)</span> between centrality rankings at <span class="math inline">\(k\)</span> and <span class="math inline">\(k+1\)</span>. A high correlation indicates the network’s structural hierarchy is stable; a low correlation indicates leadership shuffling or structural reorganization.</li>
+</ul>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Activity-Driven Model">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Activity-Driven Model
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Perra et al.&nbsp;(2012) proposed the <strong>activity-driven model</strong>: each node <span class="math inline">\(i\)</span> has an activity rate <span class="math inline">\(a_i\)</span> drawn from a power-law distribution; at each time step, active nodes initiate <span class="math inline">\(m\)</span> contacts with randomly chosen others.<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></p>
+<p>This generates realistic bursty temporal networks and provides a null model for assessing whether observed temporal centrality patterns are structurally driven (the actor’s network position makes it central) or <strong>activity-driven</strong> (the actor is simply more active than others, inflating its apparent centrality). Distinguishing these two explanations is analytically important: high activity-driven centrality is fragile (can drop when the actor becomes dormant); high structurally-driven centrality persists regardless of activity level.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+<section id="temporal-motif-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="temporal-motif-analysis">Temporal Motif Analysis</h2>
+<p>A <strong>temporal motif</strong> is a recurring pattern of contacts among a small set of actors, respecting causal ordering.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> Unlike structural motifs (which count graph subgraph patterns), temporal motifs encode the <em>sequence</em> of interactions.</p>
+<p>Common intelligence-relevant temporal motifs:</p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<ul>
+<li><strong>Sequential relay</strong> (<span class="math inline">\(A \to B\)</span>, then <span class="math inline">\(B \to C\)</span>, at times <span class="math inline">\(t_1 &lt; t_2\)</span>): a message transmitted through an intermediary. Frequency anomalies in this motif — sudden increase among a specific trio — may indicate operational coordination.</li>
+<li><strong>Convergent burst</strong> (multiple actors contact the same node in a short window): consistent with reporting to a handler or coordinator; intelligence from separate sources converging at one node.</li>
+<li><strong>Symmetric exchange</strong> (<span class="math inline">\(A \to B\)</span> then <span class="math inline">\(B \to A\)</span> within a short window): negotiation or reciprocal coordination pattern; differs from one-directional reporting.</li>
+<li><strong>Closed triangle</strong> (A→B, B→C, C→A, in rapid succession): all three actors coordinating with each other — possible joint planning event.</li>
+</ul>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Intelligence Application">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Intelligence Application
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Anomalous frequency of a specific temporal motif relative to a baseline period is a detection signal independent of standard centrality metrics. A trio that shows no temporal motif activity for six months and then shows 15 sequential relay motifs in one week has undergone a structural activation event — even if the aggregate, static network analysis shows no unusual centrality scores for any of the three actors individually.</p>
+<p>This is the principle underlying temporal motif scan statistics: detect coordinated behavioral activation at the group level, not just individual actor anomalies.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-iv-network-evolution-and-change-detection" class="level1">
+<h1>Part IV: Network Evolution and Change Detection</h1>
+<section id="models-of-network-growth-and-decay" class="level2">
+<h2 class="anchored" data-anchor-id="models-of-network-growth-and-decay">Models of Network Growth and Decay</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="preferential-attachment-barabási-albert" class="level3">
+<h3 class="anchored" data-anchor-id="preferential-attachment-barabási-albert">Preferential Attachment (Barabási-Albert)</h3>
+<p>The BA model generates scale-free networks through growth and preferential attachment: new nodes join and attach to existing nodes with probability proportional to their current degree. This produces power-law degree distributions matching many empirical social networks.</p>
+<p><strong>Intelligence relevance:</strong> covert networks that grow through recruitment may exhibit preferential attachment — recruits who are personally introduced to a well-connected existing member tend to preferentially form ties through that member, reinforcing existing hubs. This has been observed in analysis of pre-9/11 recruitment into Al-Qaeda’s Hamburg cell.</p>
+</section>
+<section id="edge-activationdeactivation-models" class="level3">
+<h3 class="anchored" data-anchor-id="edge-activationdeactivation-models">Edge Activation/Deactivation Models</h3>
+<p>At each time step, each edge independently: - <strong>Activates</strong> with probability <span class="math inline">\(p\)</span> (dormant link becomes active) - <strong>Deactivates</strong> with probability <span class="math inline">\(q\)</span> (active link goes dormant)</p>
+<p>The stationary distribution has average density <span class="math inline">\(p/(p+q)\)</span>. This model captures the sporadic, contingent nature of covert communication: actors who are connected <em>in principle</em> may not communicate in any given observation window. This distinction — structural adjacency vs.&nbsp;operational activation — is critical for collection gap analysis.</p>
+</section>
+<section id="node-arrival-and-departure" class="level3">
+<h3 class="anchored" data-anchor-id="node-arrival-and-departure">Node Arrival and Departure</h3>
+<p>The node set <span class="math inline">\(V(t)\)</span> is itself time-varying. Recruitment, arrest, and voluntary exit create discrete structural shocks:</p>
+<ul>
+<li>New member joins: isolated node with high out-degree (newcomer reaches out to many established members) or high in-degree (established members contact the newcomer)</li>
+<li>Arrest/removal: degree collapses to zero; neighbors must rewire</li>
+<li>Voluntary exit (defection, retirement): typically gradual degree reduction over several snapshots before full exit</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="measuring-network-change" class="level3">
+<h3 class="anchored" data-anchor-id="measuring-network-change">Measuring Network Change</h3>
+<p><strong>Edge turnover (Jaccard dissimilarity):</strong></p>
+<p><span class="math display">\[\lambda^{(k,k+1)} = \frac{|E^{(k)} \triangle E^{(k+1)}|}{|E^{(k)} \cup E^{(k+1)}|}\]</span></p>
+<p>where <span class="math inline">\(\triangle\)</span> is the symmetric difference. <span class="math inline">\(\lambda = 0\)</span> means no change; <span class="math inline">\(\lambda = 1\)</span> means complete edge replacement. Equivalently, network <strong>similarity</strong> <span class="math inline">\(s = 1 - \lambda\)</span>.</p>
+<p><strong>Spectral distance:</strong> compares the eigenvalue spectra of consecutive Laplacians:</p>
+<p><span class="math display">\[d_\text{spec}^{(k,k+1)} = \|\lambda(L^{(k)}) - \lambda(L^{(k+1)})\|_2\]</span></p>
+<p>A compact, computationally efficient summary of structural change that is sensitive to changes in connectivity and community structure without requiring explicit community detection.</p>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Baseline Turnover">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Baseline Turnover
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Natural background edge turnover is expected even in stable networks. Random contact scheduling and data collection noise produce non-zero <span class="math inline">\(\lambda\)</span> even when the underlying organizational structure is unchanged.</p>
+<p><strong>Standard practice:</strong> establish a baseline turnover rate <span class="math inline">\(\bar{\lambda}\)</span> over a training period of known stability. Flag snapshots where <span class="math inline">\(\lambda^{(k,k+1)} &gt; \bar{\lambda} + 2\sigma_\lambda\)</span> as anomalous. Require corroborating evidence (behavioral change, external event, HUMINT) before concluding a real structural break.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+<section id="dynamic-community-detection" class="level2">
+<h2 class="anchored" data-anchor-id="dynamic-community-detection">Dynamic Community Detection</h2>
+<p>Static community detection (Louvain, Leiden) treats each snapshot independently, producing community assignments that may vary arbitrarily between snapshots even when organizational structure is stable — an artifact of algorithmic non-determinism, not real structural change.</p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="temporal-smoothing" class="level3">
+<h3 class="anchored" data-anchor-id="temporal-smoothing">Temporal Smoothing</h3>
+<p>Dynamic community detection enforces <strong>temporal smoothness</strong>: assignments in snapshot <span class="math inline">\(k+1\)</span> should be consistent with those in snapshot <span class="math inline">\(k\)</span> unless the network has genuinely changed. This is implemented through:</p>
+<ul>
+<li><strong>Smoothed modularity optimization:</strong> add a temporal regularization term <span class="math inline">\(\mu \sum_{k} \sum_v \mathbb{1}[c_v^{(k)} \neq c_v^{(k-1)}]\)</span> to the modularity objective, penalizing changes in community assignment; the parameter <span class="math inline">\(\mu\)</span> controls the smoothing strength</li>
+<li><strong>Jaccard-based matching:</strong> match communities in adjacent snapshots by membership similarity <span class="math inline">\(J = |C_k \cap C_{k+1}| / |C_k \cup C_{k+1}|\)</span>; communities with <span class="math inline">\(J &gt; \theta\)</span> are considered the “same” community persisting through time</li>
+<li><strong>Tensor decomposition:</strong> represent the temporal network as a node × node × time tensor; joint decomposition extracts community structure simultaneously across all time steps</li>
+</ul>
+</section>
+<section id="community-lifecycle-events" class="level3">
+<h3 class="anchored" data-anchor-id="community-lifecycle-events">Community Lifecycle Events</h3>
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6;padding:0.8rem">
+  <svg viewbox="0 0 540 255" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <defs>
+      <marker id="lc" markerwidth="7" markerheight="7" refx="5" refy="3" orient="auto">
+        <path d="M0,0 L0,6 L7,3 z" fill="#595959"></path>
+      </marker>
+    </defs>
+    <!-- 6 panels in 3×2 grid -->
+    <!-- Row 1: BIRTH(0-178,0-120), GROWTH(180-358,0-120), MERGE(360-540,0-120) -->
+    <!-- Row 2: DEATH(0-178,125-245), SHRINK(180-358,125-245), SPLIT(360-540,125-245) -->
+    <line x1="180" y1="5" x2="180" y2="250" stroke="#D6D6D6" stroke-width="1"></line>
+    <line x1="360" y1="5" x2="360" y2="250" stroke="#D6D6D6" stroke-width="1"></line>
+    <line x1="5" y1="125" x2="535" y2="125" stroke="#D6D6D6" stroke-width="1"></line>
+
+    <!-- BIRTH -->
+    <text x="90" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#450084">BIRTH</text>
+    <!-- Before: 3 isolated nodes -->
+    <circle cx="35" cy="65" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <circle cx="60" cy="45" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <circle cx="60" cy="85" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <!-- Arrow -->
+    <line x1="80" y1="65" x2="105" y2="65" stroke="#595959" stroke-width="1.5" marker-end="url(#lc)"></line>
+    <!-- After: triangle formed -->
+    <line x1="120" y1="45" x2="155" y2="45" stroke="#450084" stroke-width="2"></line>
+    <line x1="120" y1="45" x2="138" y2="85" stroke="#450084" stroke-width="2"></line>
+    <line x1="155" y1="45" x2="138" y2="85" stroke="#450084" stroke-width="2"></line>
+    <circle cx="120" cy="45" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="155" cy="45" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="138" cy="85" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+
+    <!-- GROWTH -->
+    <text x="270" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#450084">GROWTH</text>
+    <!-- Before: small triangle -->
+    <line x1="200" y1="45" x2="235" y2="45" stroke="#450084" stroke-width="2"></line>
+    <line x1="200" y1="45" x2="218" y2="85" stroke="#450084" stroke-width="2"></line>
+    <line x1="235" y1="45" x2="218" y2="85" stroke="#450084" stroke-width="2"></line>
+    <circle cx="200" cy="45" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="235" cy="45" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="218" cy="85" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="248" cy="85" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="3,2"></circle>
+    <!-- Arrow -->
+    <line x1="258" y1="65" x2="280" y2="65" stroke="#595959" stroke-width="1.5" marker-end="url(#lc)"></line>
+    <!-- After: 4-node cluster -->
+    <line x1="295" y1="45" x2="330" y2="45" stroke="#450084" stroke-width="2"></line>
+    <line x1="295" y1="45" x2="313" y2="85" stroke="#450084" stroke-width="2"></line>
+    <line x1="330" y1="45" x2="313" y2="85" stroke="#450084" stroke-width="2"></line>
+    <line x1="330" y1="45" x2="343" y2="85" stroke="#450084" stroke-width="2"></line>
+    <line x1="313" y1="85" x2="343" y2="85" stroke="#450084" stroke-width="2"></line>
+    <circle cx="295" cy="45" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="330" cy="45" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="313" cy="85" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="343" cy="85" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+
+    <!-- MERGE -->
+    <text x="450" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#450084">MERGE</text>
+    <!-- Before: two small clusters -->
+    <line x1="378" y1="40" x2="410" y2="55" stroke="#450084" stroke-width="2"></line>
+    <line x1="378" y1="40" x2="378" y2="70" stroke="#450084" stroke-width="2"></line>
+    <line x1="410" y1="55" x2="378" y2="70" stroke="#450084" stroke-width="2"></line>
+    <circle cx="378" cy="40" r="8" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="410" cy="55" r="8" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="378" cy="70" r="8" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <line x1="428" y1="40" x2="460" y2="55" stroke="#595959" stroke-width="2"></line>
+    <line x1="428" y1="40" x2="428" y2="70" stroke="#595959" stroke-width="2"></line>
+    <line x1="460" y1="55" x2="428" y2="70" stroke="#595959" stroke-width="2"></line>
+    <circle cx="428" cy="40" r="8" fill="#D6D6D6" stroke="#595959" stroke-width="2"></circle>
+    <circle cx="460" cy="55" r="8" fill="#D6D6D6" stroke="#595959" stroke-width="2"></circle>
+    <circle cx="428" cy="70" r="8" fill="#D6D6D6" stroke="#595959" stroke-width="2"></circle>
+    <!-- Arrow down -->
+    <line x1="420" y1="82" x2="420" y2="98" stroke="#595959" stroke-width="1.5" marker-end="url(#lc)"></line>
+    <!-- After: merged cluster -->
+    <line x1="385" y1="110" x2="415" y2="110" stroke="#450084" stroke-width="2"></line>
+    <line x1="415" y1="110" x2="435" y2="110" stroke="#450084" stroke-width="2"></line>
+    <line x1="400" y1="110" x2="420" y2="110" stroke="#450084" stroke-width="1"></line>
+    <circle cx="382" cy="110" r="7" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="397" cy="110" r="7" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="412" cy="110" r="7" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="427" cy="110" r="7" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="442" cy="110" r="7" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="457" cy="110" r="7" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+
+    <!-- DEATH -->
+    <text x="90" y="140" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">DEATH</text>
+    <!-- Before: triangle -->
+    <line x1="25" y1="163" x2="60" y2="163" stroke="#450084" stroke-width="2"></line>
+    <line x1="25" y1="163" x2="43" y2="203" stroke="#450084" stroke-width="2"></line>
+    <line x1="60" y1="163" x2="43" y2="203" stroke="#450084" stroke-width="2"></line>
+    <circle cx="25" cy="163" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="60" cy="163" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="43" cy="203" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <!-- Arrow -->
+    <line x1="78" y1="183" x2="100" y2="183" stroke="#595959" stroke-width="1.5" marker-end="url(#lc)"></line>
+    <!-- After: isolated nodes -->
+    <circle cx="118" cy="163" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <circle cx="145" cy="163" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <circle cx="132" cy="203" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+
+    <!-- SHRINK -->
+    <text x="270" y="140" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">SHRINK</text>
+    <!-- Before: 4-node cluster -->
+    <line x1="195" y1="163" x2="230" y2="163" stroke="#450084" stroke-width="2"></line>
+    <line x1="195" y1="163" x2="213" y2="203" stroke="#450084" stroke-width="2"></line>
+    <line x1="230" y1="163" x2="213" y2="203" stroke="#450084" stroke-width="2"></line>
+    <line x1="230" y1="163" x2="248" y2="203" stroke="#450084" stroke-width="2"></line>
+    <line x1="213" y1="203" x2="248" y2="203" stroke="#450084" stroke-width="2"></line>
+    <circle cx="195" cy="163" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="230" cy="163" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="213" cy="203" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="248" cy="203" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <!-- Arrow -->
+    <line x1="260" y1="183" x2="280" y2="183" stroke="#595959" stroke-width="1.5" marker-end="url(#lc)"></line>
+    <!-- After: 3-node triangle (1 node left) -->
+    <line x1="295" y1="163" x2="330" y2="163" stroke="#450084" stroke-width="2"></line>
+    <line x1="295" y1="163" x2="313" y2="203" stroke="#450084" stroke-width="2"></line>
+    <line x1="330" y1="163" x2="313" y2="203" stroke="#450084" stroke-width="2"></line>
+    <circle cx="295" cy="163" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="330" cy="163" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="313" cy="203" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="345" cy="203" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="3,2"></circle>
+
+    <!-- SPLIT -->
+    <text x="450" y="140" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">SPLIT</text>
+    <!-- Before: larger cluster connected -->
+    <line x1="375" y1="165" x2="410" y2="175" stroke="#450084" stroke-width="2"></line>
+    <line x1="410" y1="175" x2="430" y2="175" stroke="#450084" stroke-width="2"></line>
+    <line x1="430" y1="175" x2="455" y2="165" stroke="#450084" stroke-width="2"></line>
+    <line x1="410" y1="175" x2="410" y2="200" stroke="#450084" stroke-width="2"></line>
+    <line x1="430" y1="175" x2="430" y2="200" stroke="#450084" stroke-width="2"></line>
+    <circle cx="375" cy="165" r="8" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="410" cy="175" r="8" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="430" cy="175" r="8" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="455" cy="165" r="8" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="410" cy="200" r="8" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="430" cy="200" r="8" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <!-- Split arrow down -->
+    <line x1="420" y1="210" x2="395" y2="228" stroke="#595959" stroke-width="1.2" marker-end="url(#lc)"></line>
+    <line x1="420" y1="210" x2="445" y2="228" stroke="#595959" stroke-width="1.2" marker-end="url(#lc)"></line>
+    <!-- After: two small clusters -->
+    <line x1="375" y1="237" x2="395" y2="245" stroke="#450084" stroke-width="2"></line>
+    <line x1="375" y1="237" x2="385" y2="248" stroke="#450084" stroke-width="2"></line>
+    <circle cx="375" cy="237" r="7" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="395" cy="245" r="7" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="383" cy="249" r="7" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <line x1="435" y1="237" x2="455" y2="245" stroke="#595959" stroke-width="2"></line>
+    <line x1="435" y1="237" x2="445" y2="248" stroke="#595959" stroke-width="2"></line>
+    <circle cx="435" cy="237" r="7" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"></circle>
+    <circle cx="455" cy="245" r="7" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"></circle>
+    <circle cx="443" cy="249" r="7" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"></circle>
+  </svg>
+</div>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="intelligence-interpretation-of-lifecycle-events" class="level3">
+<h3 class="anchored" data-anchor-id="intelligence-interpretation-of-lifecycle-events">Intelligence Interpretation of Lifecycle Events</h3>
+<ul>
+<li><strong>Birth:</strong> a new cell or faction emerges from previously unclustered actors. May indicate new recruitment cohort, external sponsorship, or ideological schism producing a new organizational unit.</li>
+<li><strong>Death:</strong> a community dissolves. Consistent with law enforcement disruption, attrition, voluntary exit, or loss of coordination capacity.</li>
+<li><strong>Growth/Shrink:</strong> membership change within a stable community. Recruitment vs.&nbsp;attrition signals operational expansion or contraction.</li>
+<li><strong>Merge:</strong> two previously distinct communities combine. May indicate alliance formation between factions, leadership transition creating new coordination ties, or response to external pressure (law enforcement, rival group).</li>
+<li><strong>Split:</strong> one community fractures. Consistent with factional conflict, ideological divergence, geographic dispersal, or loss of the broker who held two subgroups together.</li>
+</ul>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Hamas Community Dynamics">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Hamas Community Dynamics
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Analysis of Hamas communication network data (reconstructed from court records and journalistic reporting) shows recurrent <strong>split events</strong> in the political bureau–military wing relationship in the months following major Israeli military operations. The merge/split cycle tracks the political dynamics of the organization — periods of centralized command (merge) followed by security-driven decentralization (split) when operational security pressure increases.</p>
+<p>Monitoring <span class="math inline">\(Q(t)\)</span> and community lifecycle events thus provides an early-warning indicator of organizational security posture changes, not merely structural shifts.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+<section id="structural-break-and-anomaly-detection" class="level2">
+<h2 class="anchored" data-anchor-id="structural-break-and-anomaly-detection">Structural Break and Anomaly Detection</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="structural-break-detection" class="level3">
+<h3 class="anchored" data-anchor-id="structural-break-detection">Structural Break Detection</h3>
+<p>A <strong>structural break</strong> is a point in time at which network statistical properties change discontinuously — not due to random fluctuation but due to a real underlying event: arrest, organizational decision, leadership transition, external shock.</p>
+<p><strong>Detection approaches:</strong></p>
+<ul>
+<li><strong>CUSUM (Cumulative Sum) on graph metrics:</strong> maintain a running statistic of a network metric (density, average path length, number of components); flag when cumulative deviation exceeds a threshold <span class="math inline">\(h\)</span>. CUSUM is sensitive to gradual drift as well as sudden breaks — making it more powerful than simple threshold tests.</li>
+<li><strong>PELT (Pruned Exact Linear Time):</strong> a computationally efficient change point detection algorithm applied to centrality time series for individual nodes. PELT is <span class="math inline">\(O(n)\)</span> in the length of the time series and suitable for real-time monitoring.</li>
+<li><strong>Spectral monitoring:</strong> track the leading eigenvalue <span class="math inline">\(\lambda_1\)</span> of the adjacency matrix over time; sudden changes in <span class="math inline">\(\lambda_1\)</span> signal structural reorganization. The second-smallest eigenvalue of the Laplacian (Fiedler value) tracks connectivity; drops toward zero signal fragmentation.</li>
+<li><strong>Scan statistics:</strong> detect space-time clusters of anomalous activity; identify subsets of nodes showing coordinated behavioral change within a time window, raising fewer false positives than individual-node monitoring.</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="anomalous-edge-and-node-detection" class="level3">
+<h3 class="anchored" data-anchor-id="anomalous-edge-and-node-detection">Anomalous Edge and Node Detection</h3>
+<ul>
+<li><strong>Anomalous edge:</strong> an edge that appears or disappears significantly earlier or later than a baseline activity model predicts. A new communication link between two previously unconnected actors is anomalous if the activity model assigns low probability to spontaneous edge formation between them — it implies an external introduction or instruction.</li>
+<li><strong>Anomalous node:</strong> a node whose centrality or activity pattern deviates sharply from its historical baseline within a given time window. Centrality velocity <span class="math inline">\(\Delta C_X(v)\)</span> exceeding <span class="math inline">\(2\sigma\)</span> of its historical distribution warrants attention.</li>
+<li><strong>Temporal motif anomalies:</strong> unusual frequency of specific temporal interaction patterns among a small group — a burst in triangular communication among three actors may indicate coordination on a specific task.</li>
+</ul>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="False Positive Rate">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>False Positive Rate
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Anomaly detection in networks is prone to false positives. Random fluctuation in small networks (typical of intelligence-scale dark networks) can mimic structural breaks.</p>
+<p><strong>Require multiple independent signals before concluding a break is real:</strong></p>
+<ol type="1">
+<li>Statistical signal from CUSUM or PELT on at least two metrics</li>
+<li>Corroborating behavioral change (communication burstiness shift)</li>
+<li>External event from all-source intelligence (known arrest, border closure, rival group activity)</li>
+</ol>
+<p>A statistical anomaly without corroboration is a collection hypothesis, not a finding.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+</section>
+<section id="part-v-intelligence-applications" class="level1">
+<h1>Part V: Intelligence Applications</h1>
+<section id="organizational-adaptation-after-disruption" class="level2">
+<h2 class="anchored" data-anchor-id="organizational-adaptation-after-disruption">Organizational Adaptation After Disruption</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="disruption-as-a-natural-experiment" class="level3">
+<h3 class="anchored" data-anchor-id="disruption-as-a-natural-experiment">Disruption as a Natural Experiment</h3>
+<p>Law enforcement or military action against a target network creates a quasi-experimental condition: the pre-disruption network is the control state; the post-disruption network is the treatment state. Temporal SNA supports systematic comparison across the before/after boundary.</p>
+<p><strong>Typical post-disruption dynamics, by phase:</strong></p>
+<ul>
+<li><strong>Immediate (days):</strong> sharp drop in density; increase in number of components; increase in average path length. The network is structurally fragmented but actors have not yet had time to rewire.</li>
+<li><strong>Short-term (weeks to months):</strong> surviving members rewire around removed nodes; new edges form to bypass absent actors; centrality rankings shift as new brokers emerge to fill structural holes.</li>
+<li><strong>Medium-term (months to years):</strong> the network either consolidates around surviving leadership (lower centralization, broader coordination base) or permanently splits into independent successor groups.</li>
+<li><strong>Long-term:</strong> organizational learning may produce a more resilient network structure than the original — flatter, more decentralized, with deliberate redundancy built in.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Post-Disruption Giant Component Trajectories
+  </p>
+  <svg viewbox="0 0 460 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <!-- Axes -->
+    <line x1="55" y1="15" x2="55" y2="175" stroke="#333" stroke-width="1.5"></line>
+    <line x1="55" y1="175" x2="430" y2="175" stroke="#333" stroke-width="1.5"></line>
+
+    <!-- Y axis labels -->
+    <text x="50" y="19" text-anchor="end" font-size="8.5" fill="#595959">1.0</text>
+    <text x="50" y="63" text-anchor="end" font-size="8.5" fill="#595959">0.8</text>
+    <text x="50" y="107" text-anchor="end" font-size="8.5" fill="#595959">0.6</text>
+    <text x="50" y="151" text-anchor="end" font-size="8.5" fill="#595959">0.4</text>
+    <text x="50" y="175" text-anchor="end" font-size="8.5" fill="#595959">0.2</text>
+    <text x="15" y="100" text-anchor="middle" font-size="8.5" fill="#595959" transform="rotate(-90,15,100)">Giant component size</text>
+
+    <!-- X axis labels -->
+    <text x="55" y="188" text-anchor="middle" font-size="8.5" fill="#595959">0</text>
+    <text x="135" y="188" text-anchor="middle" font-size="8.5" fill="#595959">4</text>
+    <text x="215" y="188" text-anchor="middle" font-size="8.5" fill="#595959">8</text>
+    <text x="295" y="188" text-anchor="middle" font-size="8.5" fill="#595959">12</text>
+    <text x="375" y="188" text-anchor="middle" font-size="8.5" fill="#595959">16</text>
+    <text x="240" y="200" text-anchor="middle" font-size="8.5" fill="#595959">Time (snapshots)</text>
+
+    <!-- Gridlines -->
+    <line x1="55" y1="63" x2="430" y2="63" stroke="#E0E0E0" stroke-width="1"></line>
+    <line x1="55" y1="107" x2="430" y2="107" stroke="#E0E0E0" stroke-width="1"></line>
+    <line x1="55" y1="151" x2="430" y2="151" stroke="#E0E0E0" stroke-width="1"></line>
+
+    <!-- Disruption vertical line -->
+    <line x1="215" y1="15" x2="215" y2="175" stroke="#cc0000" stroke-width="1.8" stroke-dasharray="7,4"></line>
+    <text x="218" y="28" font-size="8.5" fill="#cc0000" font-weight="700">DISRUPTION</text>
+
+    <!-- Scale: y=15 → GC=1.0, y=175 → GC=0 (but minimum we show is ~0.2)
+         y position = 175 - (GC × 160)
+         GC=1.0 → y=15; GC=0.8 → y=47; GC=0.6 → y=79; GC=0.4 → y=111; GC=0.2 → y=143
+         x position = 55 + (t × 23.75) for t=0..16 -->
+
+    <!-- V-SHAPE RECOVERY (purple): pre=1.0, drops to 0.35 at t=9, recovers to 0.85 at t=16 -->
+    <!-- t=0(55,15), t=4(150,15), t=8(245,19), t=9(268,119), t=10(291,107), t=12(338,79), t=14(385,55), t=16(430,39) -->
+    <polyline points="55,15 150,15 213,19 238,17 215,17" fill="none" stroke="#450084" stroke-width="0"></polyline>
+    <!-- Pre-disruption: stable at ~0.95 -->
+    <polyline points="55,22 215,22" fill="none" stroke="#450084" stroke-width="2.5"></polyline>
+    <!-- At disruption: sharp drop to 0.35 at t=9 -->
+    <polyline points="215,22 238,120 260,108 283,94 307,75 330,58 353,45 376,38 430,32" fill="none" stroke="#450084" stroke-width="2.5"></polyline>
+
+    <!-- PERMANENT REDUCTION (gray dashed): pre=0.95, drops to 0.40, stays -->
+    <polyline points="55,22 215,22" fill="none" stroke="#595959" stroke-width="2" stroke-dasharray="8,5"></polyline>
+    <polyline points="215,22 238,120 260,118 283,116 330,114 376,112 430,110" fill="none" stroke="#595959" stroke-width="2" stroke-dasharray="8,5"></polyline>
+
+    <!-- Legend -->
+    <line x1="65" y1="152" x2="100" y2="152" stroke="#450084" stroke-width="2.5"></line>
+    <text x="108" y="156" font-size="8.5" fill="#333">V-shape recovery (adaptive network)</text>
+    <line x1="65" y1="165" x2="100" y2="165" stroke="#595959" stroke-width="2" stroke-dasharray="8,5"></line>
+    <text x="108" y="169" font-size="8.5" fill="#333">Permanent reduction (effective disruption)</text>
+  </svg>
+  <figcaption>
+    Purple: network recovers to ~85% GC within 7 snapshots — adaptive, resilient organization.<br>
+    Gray dashed: network remains at ~40% GC — effective disruption, sustained fragmentation.
+  </figcaption>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Case Studies: Disruption Trajectories">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Case Studies: Disruption Trajectories
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Jemaah Islamiyah after the 2002 Bali bombings:</strong> Indonesian National Police operations 2002–2004 arrested 280+ JI members including several high-betweenness operational coordinators. Temporal SNA of reconstructed communication data shows: immediate drop in giant component from ~90% to ~45% of remaining members; betweenness redistribution to previously peripheral regional figures within 18 months; partial recovery to ~70% GC by 2005. Pattern: adaptive — the organization survived and reconstituted, though at lower operational capacity. The V-shape recovery trajectory suggested that disruption was insufficient and needed to be sustained.</p>
+<p><strong>Al-Qaeda 2001–2005:</strong> the Afghan campaign removed the organizational core including training infrastructure and leadership. Temporal SNA shows no V-shape recovery in the core network — instead, the fragmentation event produced the regional affiliate structure (AQI, AQAP, AQIM) visible as permanent split events in the community lifecycle record rather than recovery in the original network. Disruption was effective at the core level but produced a fundamentally different successor structure with higher geographic distribution and lower betweenness centralization.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a></p>
+</div>
+</div>
+<p><strong>Temporal metrics for disruption assessment:</strong></p>
+<ul>
+<li><strong>Recovery time:</strong> number of snapshots required to return to pre-disruption density, path length, and component count — the primary measure of disruptive effectiveness</li>
+<li><strong>Centrality redistribution:</strong> after removal of the top-betweenness node, track whether betweenness redistributes to peripheral nodes (network adapting) or remains depressed (network fragmented)</li>
+<li><strong>New edge formation rate:</strong> speed at which surviving actors establish new ties post-disruption; fast rewiring → organizationally resilient; slow → disruption remains effective</li>
+<li><strong>Component size trajectory:</strong> plot GC size over time before and after disruption; V-shape trajectory (rapid recovery) vs.&nbsp;permanent reduction determines whether follow-on operations are needed</li>
+</ul>
+</section>
+<section id="temporal-radicalization-and-recruitment-networks" class="level2">
+<h2 class="anchored" data-anchor-id="temporal-radicalization-and-recruitment-networks">Temporal Radicalization and Recruitment Networks</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="radicalization-as-a-network-process" class="level3">
+<h3 class="anchored" data-anchor-id="radicalization-as-a-network-process">Radicalization as a Network Process</h3>
+<p>Radicalization is not solely an individual psychological process — it is a <em>relational</em> process in which social network ties drive the adoption of extremist ideology and eventual operational engagement. Temporal SNA maps this process with precision:<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
+<p><strong>Five temporal stages with network signatures:</strong></p>
+<ol type="1">
+<li><strong>Pre-radicalization:</strong> individual is peripheral or isolated; few or no ties to network members; betweenness ≈ 0, degree ≈ 0.</li>
+<li><strong>Contact:</strong> first edge forms between the individual and a network member — often through a shared social context (mosque, prison, online forum, diaspora community). Degree spikes from 0 to 1.</li>
+<li><strong>Integration:</strong> degree grows rapidly; the individual is drawn into a dense local cluster; clustering coefficient rises sharply as they are introduced to their contact’s network neighbors.</li>
+<li><strong>Activation:</strong> ideological-to-operational role transition; new edges form to operational nodes (weapons acquisition, financing, logistics) — structurally distinct from the ideological community.</li>
+<li><strong>Operational:</strong> individual has a distinct and stable structural position; may form a structural hole between their social community and the operational cell.</li>
+</ol>
+<p><strong>Sageman’s empirical finding</strong> (from 172 global Salafi jihad operatives): 75% radicalized within pre-existing social groups (friendship or kinship ties to at least two prior network members); mean time from first contact edge to operational activation: 8–14 months.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="temporal-signatures-of-radicalization" class="level3">
+<h3 class="anchored" data-anchor-id="temporal-signatures-of-radicalization">Temporal Signatures of Radicalization</h3>
+<p><strong>Detectable network patterns:</strong></p>
+<ul>
+<li><strong>Rapid degree growth in a short window:</strong> an individual acquires many new ties quickly — inconsistent with slow-forming organic social relationships; consistent with deliberate recruitment facilitation</li>
+<li><strong>Sudden neighborhood shift:</strong> individual’s contact set changes from moderate to radicalized actors; network-level contagion model predicts this shift precedes ideological change, not follows it</li>
+<li><strong>New edges to operationally-flagged nodes:</strong> the transition from social to operational community is marked by first-time ties to high-betweenness or previously flagged actors</li>
+<li><strong>Burstiness shift:</strong> previously sporadic contact becomes regular and patterned — consistent with structured commitment (training schedule, regular ideological sessions, operational briefings)</li>
+</ul>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Civil Liberties Warning">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Civil Liberties Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Temporal radicalization analysis using large-scale communication metadata raises significant <strong>First and Fourth Amendment concerns</strong>.</p>
+<ul>
+<li>Network position and temporal patterns do not constitute evidence of intent or culpability</li>
+<li>Structural indicators are analytical hypotheses requiring corroboration — not conclusions</li>
+<li>Collection and analysis of U.S. person communication metadata for this purpose requires specific legal authorization</li>
+<li>Products using this methodology must include explicit caveats on the inferential limitations of network position as a predictor of behavior</li>
+</ul>
+<p>Structural proximity to radicalized actors is a collection flag, not a finding.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+<section id="surveillance-windows-and-collection-gap-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="surveillance-windows-and-collection-gap-analysis">Surveillance Windows and Collection Gap Analysis</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="the-surveillance-window-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-surveillance-window-problem">The Surveillance Window Problem</h3>
+<p>Intelligence collection on a target network is never continuous. Collection occurs in windows determined by tasking, resource availability, and access. A collection gap — a period with no observation — produces genuine uncertainty about network state that must be explicitly reasoned about in any temporal analysis.</p>
+<p><strong>What can change in a collection gap?</strong></p>
+<ul>
+<li>New nodes may have joined the network (recruitment occurred between windows)</li>
+<li>Old nodes may have left (arrest, death, voluntary withdrawal)</li>
+<li>New edges may have formed — entirely new coordination links not visible in either bookending window</li>
+<li>Existing edges may have activated and deactivated: a dormant link became active for a specific operation then went silent again</li>
+<li>Community structure may have reorganized: the faction structure at the end of the gap may not resemble the structure from the last observation</li>
+</ul>
+</section>
+<section id="gap-inference-methods" class="level3">
+<h3 class="anchored" data-anchor-id="gap-inference-methods">Gap Inference Methods</h3>
+<ul>
+<li><strong>Linear interpolation:</strong> assume the mid-gap network is a linear mixture of the bookending snapshots. Appropriate for slow-changing networks with no reason to expect discrete structural events in the gap.</li>
+<li><strong>Link prediction:</strong> use the pre-gap network to predict which edges are likely to have formed during the gap — common neighbor, Jaccard, Adamic-Adar, or preferential attachment scores rank candidate links by formation probability. Highest-probability unobserved links become collection priorities.</li>
+<li><strong>ERGM inference:</strong> fit an exponential random graph model (ERGM) to the observed pre- and post-gap snapshots; the ERGM estimates the probability distribution over networks consistent with the observed statistics, generating a probabilistic picture of the gap-period network.</li>
+<li><strong>Activity model baseline:</strong> use actor-level activity rates from pre-gap data to predict the expected number of contacts that occurred during the gap; flag actors whose inferred gap-period activity significantly exceeds their baseline.</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Link Prediction for Collection Prioritization">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Link Prediction for Collection Prioritization
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After a collection gap, the analyst needs to know which relationships may have formed that were not observable. Link prediction provides a ranked list of candidate edges:</p>
+<p><strong>Adamic-Adar score</strong> for nodes <span class="math inline">\(u\)</span> and <span class="math inline">\(v\)</span>:</p>
+<p><span class="math display">\[AA(u,v) = \sum_{w \in N(u) \cap N(v)} \frac{1}{\log \deg(w)}\]</span></p>
+<p>High AA score: <span class="math inline">\(u\)</span> and <span class="math inline">\(v\)</span> share high-degree common neighbors — they have many mutual connections weighted by those connections’ rarity. High AA pairs that are not yet connected are the most likely new links.</p>
+<p><strong>Intelligence application:</strong> after a 90-day collection gap on a trafficking network, compute AA scores for all unconnected node pairs in the pre-gap network. The top 20 by AA score are the highest-probability new links that formed during the gap — the highest-priority pairs to investigate in post-gap collection.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Required Product Language">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Required Product Language
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Intelligence products based on temporal network analysis must specify:</p>
+<ol type="1">
+<li>The <strong>observation window</strong> (start and end dates of collection)</li>
+<li><strong>Identified collection gaps</strong> (specific periods with no or degraded collection)</li>
+<li>The <strong>confidence impact</strong> of those gaps on structural conclusions: which centrality rankings, community assignments, and path structures are potentially affected by gap-period changes</li>
+<li><strong>Analytical assumptions</strong> made about gap-period network state (interpolation, link prediction, or treating the gap as a complete unknown)</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="networkx-temporal-analysis-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="networkx-temporal-analysis-workflow">NetworkX Temporal Analysis Workflow</h2>
+<section id="constructing-and-analyzing-snapshot-sequences" class="level3">
+<h3 class="anchored" data-anchor-id="constructing-and-analyzing-snapshot-sequences">Constructing and Analyzing Snapshot Sequences</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load time-stamped edge list</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'events.csv'</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Required columns: source, target, timestamp</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Optional: weight, type, confidence</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Divide into K snapshots</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'period'</span>] <span class="op">=</span> pd.cut(</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'timestamp'</span>],</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    bins<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span><span class="va">False</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Build snapshot sequence</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>snapshots <span class="op">=</span> {}</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k, group <span class="kw">in</span> df.groupby(<span class="st">'period'</span>):</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> nx.DiGraph()</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    G.add_edges_from(</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="bu">zip</span>(group.source, group.target),</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    snapshots[k] <span class="op">=</span> G</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Track betweenness centrality over time</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>btw_series <span class="op">=</span> {</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    k: nx.betweenness_centrality(G, normalized<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k, G <span class="kw">in</span> snapshots.items()</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>btw_df <span class="op">=</span> pd.DataFrame(btw_series).T</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Centrality velocity: rate of change per snapshot</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>velocity <span class="op">=</span> btw_df.diff()</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify nodes with anomalous velocity</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>threshold <span class="op">=</span> btw_df.std() <span class="op">*</span> <span class="dv">2</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>anomalous <span class="op">=</span> (velocity.<span class="bu">abs</span>() <span class="op">&gt;</span> threshold).<span class="bu">any</span>()</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>rising_nodes <span class="op">=</span> anomalous[anomalous].index.tolist()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="edge-turnover-and-structural-break-detection" class="level3">
+<h3 class="anchored" data-anchor-id="edge-turnover-and-structural-break-detection">Edge Turnover and Structural Break Detection</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> jaccard_dissimilarity(G1, G2):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    e1 <span class="op">=</span> <span class="bu">set</span>(G1.edges())</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    e2 <span class="op">=</span> <span class="bu">set</span>(G2.edges())</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    inter <span class="op">=</span> <span class="bu">len</span>(e1 <span class="op">&amp;</span> e2)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    union <span class="op">=</span> <span class="bu">len</span>(e1 <span class="op">|</span> e2)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">-</span> inter <span class="op">/</span> union <span class="cf">if</span> union <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="dv">0</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>ks <span class="op">=</span> <span class="bu">sorted</span>(snapshots.keys())</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>turnover <span class="op">=</span> [</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    jaccard_dissimilarity(</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        snapshots[ks[i]],</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        snapshots[ks[i <span class="op">+</span> <span class="dv">1</span>]]</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ks) <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co"># CUSUM-based structural break detection</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>mean_t <span class="op">=</span> np.mean(turnover)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>std_t  <span class="op">=</span> np.std(turnover)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Flag snapshots where turnover exceeds baseline + 2σ</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>breaks <span class="op">=</span> [</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    i <span class="cf">for</span> i, t <span class="kw">in</span> <span class="bu">enumerate</span>(turnover)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> t <span class="op">&gt;</span> mean_t <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> std_t</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Spectral distance between consecutive snapshots</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> spectral_dist(G1, G2):</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    L1 <span class="op">=</span> nx.normalized_laplacian_matrix(G1).toarray()</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    L2 <span class="op">=</span> nx.normalized_laplacian_matrix(G2).toarray()</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    ev1 <span class="op">=</span> np.sort(np.linalg.eigvalsh(L1))</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    ev2 <span class="op">=</span> np.sort(np.linalg.eigvalsh(L2))</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Pad shorter to same length</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">max</span>(<span class="bu">len</span>(ev1), <span class="bu">len</span>(ev2))</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    ev1 <span class="op">=</span> np.pad(ev1, (<span class="dv">0</span>, n <span class="op">-</span> <span class="bu">len</span>(ev1)))</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    ev2 <span class="op">=</span> np.pad(ev2, (<span class="dv">0</span>, n <span class="op">-</span> <span class="bu">len</span>(ev2)))</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.linalg.norm(ev1 <span class="op">-</span> ev2)</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>spec_dists <span class="op">=</span> [</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    spectral_dist(snapshots[ks[i]], snapshots[ks[i<span class="op">+</span><span class="dv">1</span>]])</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ks) <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+</section>
+<section id="lecture-summary" class="level1">
+<h1>Lecture Summary</h1>
+<section id="key-formulas-and-definitions" class="level2">
+<h2 class="anchored" data-anchor-id="key-formulas-and-definitions">Key Formulas and Definitions</h2>
+<div class="key-terms">
+<dl>
+<dt><strong>Temporal path (time-respecting path)</strong></dt>
+<dd>
+Sequence of contacts <span class="math inline">\((v_0,v_1,t_1), (v_1,v_2,t_2), \ldots\)</span> with <span class="math inline">\(t_1 \leq t_2 \leq \cdots\)</span>; causal ordering is mandatory
+</dd>
+<dt><strong>Temporal reachability set</strong></dt>
+<dd>
+<span class="math inline">\(R(u,t)\)</span>: all nodes reachable from <span class="math inline">\(u\)</span> via temporal paths starting <span class="math inline">\(\geq t\)</span>; shrinks monotonically as <span class="math inline">\(t\)</span> advances
+</dd>
+<dt><strong>Latency</strong></dt>
+<dd>
+<span class="math inline">\(t_k - t_1\)</span> for a temporal path; minimized by the fastest path (distinct from the shortest-hop path)
+</dd>
+<dt><strong>Temporal closeness centrality</strong></dt>
+<dd>
+<span class="math inline">\(C_C^T(v,t) = (|R(v,t)|-1) / \sum_{u \in R(v,t)} d_T(v,u,t)\)</span>
+</dd>
+<dt><strong>Burstiness coefficient</strong></dt>
+<dd>
+<span class="math inline">\(B = (\sigma_\tau - \mu_\tau)/(\sigma_\tau + \mu_\tau) \in [-1,1]\)</span>; <span class="math inline">\(B&gt;0\)</span> = bursty; <span class="math inline">\(B&lt;0\)</span> = regular
+</dd>
+<dt><strong>Centrality velocity</strong></dt>
+<dd>
+<span class="math inline">\(\Delta C_X(v) = C_X(v,k) - C_X(v,k-1)\)</span>; rapid increase signals growing structural importance
+</dd>
+<dt><strong>Edge turnover (Jaccard dissimilarity)</strong></dt>
+<dd>
+<span class="math inline">\(\lambda = |E^{(k)} \triangle E^{(k+1)}| / |E^{(k)} \cup E^{(k+1)}|\)</span>; baseline for structural break detection
+</dd>
+<dt><strong>Temporal supra-adjacency matrix</strong></dt>
+<dd>
+Block-diagonal <span class="math inline">\(A^{(k)}\)</span> with identity <span class="math inline">\(I\)</span> inter-layer couplings between consecutive snapshots <span class="math inline">\(k\)</span> and <span class="math inline">\(k+1\)</span>
+</dd>
+<dt><strong>Activity-driven model</strong></dt>
+<dd>
+Each node has activity rate <span class="math inline">\(a_i \sim\)</span> power law; active nodes initiate <span class="math inline">\(m\)</span> contacts per time step
+</dd>
+</dl>
+</div>
+</section>
+<section id="key-analytical-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-analytical-takeaways">Key Analytical Takeaways</h2>
+<ol type="1">
+<li>Static analysis conflates time: contacts that never co-occurred appear simultaneously; causal ordering — who could have told whom, and when — is completely lost.</li>
+<li>Temporal paths require causal ordering; reachability is asymmetric in time even on undirected contact networks. Temporal analysis of information attribution requires this distinction.</li>
+<li>Burstiness slows spreading and masks structural importance; regular (metronomic) communication patterns may indicate scheduled check-in protocols — a tradecraft signal.</li>
+<li>Post-disruption temporal analysis is the primary tool for assessing network recovery and adaptation. V-shape recovery trajectory vs.&nbsp;permanent reduction determines whether follow-on operations are warranted.</li>
+<li>Radicalization leaves temporal network signatures: rapid degree growth, neighborhood shift toward operational actors. These are collection hypotheses requiring corroboration, not evidentiary conclusions.</li>
+<li>Collection gaps must be explicitly accounted for in any temporal product. Treat the network between windows as partially unknown; apply link prediction to bound uncertainty and generate collection priorities.</li>
+</ol>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Next Lecture">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Next Lecture
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Global Security and Network Analysis</strong> — applying network methods to macro-level global security problems: terrorist organization structures across case studies, arms trafficking and proliferation supply chain networks, interstate security cooperation networks, and insurgency organizational analysis.</p>
+</div>
+</div>
+<div style="margin-top:2rem">
+  <ul class="course-sequence">
+    <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> What is Network Analysis?</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Graph Theory Basics</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Centrality and Influence</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Social Network Analysis in Intelligence</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Community Detection and Clustering</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Geospatial and Multi-Layer Networks</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> [Week 8]</li>
+    <li class="seq-active"><span class="seq-icon">▶</span> <strong>Temporal and Dynamic Networks</strong> (this lecture)</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Global Security Networks</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Financial Networks</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Information / Influence Networks</li>
+  </ul>
+</div>
+
+<div class="page-footer-custom">
+Intelligence Analysis Program &nbsp;|&nbsp; School of Integrated Sciences &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
+</div>
+
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Petter Holme and Jari Saramäki, “Temporal Networks,” <em>Physics Reports</em> 519, no. 3 (2012): 97–125.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Petter Holme, “Modern Temporal Network Theory: A Colloquium,” <em>European Physical Journal B</em> 88, no. 9 (2015): 234.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Holme and Saramäki, “Temporal Networks,” 100–107.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Holme, “Modern Temporal Network Theory,” 4–8.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>David Kempe, Jon Kleinberg, and Amit Kumar, “Connectivity and Inference Problems for Temporal Networks,” <em>Proceedings of the 32nd ACM Symposium on Theory of Computing</em> (2000): 504–513.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Holme, “Modern Temporal Network Theory,” 10–14.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Nicola Perra et al., “Activity Driven Modeling of Time Varying Networks,” <em>Scientific Reports</em> 2 (2012): 469.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>Isma Fadhli Fatholahzadeh and Jari Saramäki, “Temporal Motifs in Time-Aggregated Networks,” <em>Physical Review E</em> 104 (2021): 014304.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>Brian A. Jackson et al., <em>Aptitude for Destruction, Volume 1: Organizational Learning in Terrorist Groups</em> (Santa Monica: RAND Corporation, 2005), 45–72.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>Jackson et al., <em>Aptitude for Destruction</em>, 62–68.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>Marc Sageman, <em>Leaderless Jihad: Terror Networks in the Twenty-First Century</em> (Philadelphia: University of Pennsylvania Press, 2008), 65–90.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<script src="index_files/libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="week2-lecture_files/libs/clipboard/clipboard.min.js"></script>
+<script src="week2-lecture_files/libs/quarto-html/tabby.min.js"></script>
+<script src="week2-lecture_files/libs/quarto-html/popper.min.js"></script>
+<script src="week2-lecture_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="week2-lecture_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="week2-lecture_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="week2-lecture_files/libs/quarto-html/quarto-syntax-highlighting-8b4baf804e461d9b72633f0de59a0cac.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.27">
+
+  <meta name="author" content="James Madison University">
+  <meta name="dcterms.date" content="2026-01-01">
+  <title>What is Network Analysis?</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="week2-lecture_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="week2-lecture_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="week2-lecture_files/libs/revealjs/dist/theme/quarto-ab49d71e62fef3893fd2f70888b8abf0.css">
+  <link href="week2-lecture_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="week2-lecture_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="week2-lecture_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="week2-lecture_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" data-background-color="#ffffff" class="quarto-title-block center">
+  <h1 class="title">What is Network Analysis?</h1>
+  <p class="subtitle">IA 480: Applied Network Analysis: Systems, Connections, and Influence</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+James Madison University 
+</div>
+        <p class="quarto-title-affiliation">
+            School of Intelligence Analysis
+          </p>
+    </div>
+</div>
+
+  <p class="date">2026-01-01</p>
+</section>
+<section id="lecture-roadmap" class="slide level2">
+<h2>Lecture Roadmap</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Part I: Conceptual Foundations</strong></p>
+<ul>
+<li>Defining networks and why they matter</li>
+<li>A brief history of network science</li>
+<li>Core vocabulary: nodes, edges, attributes</li>
+<li>Types of networks</li>
+</ul>
+<p><br></p>
+<p><strong>Part II: Networks in the Real World</strong></p>
+<ul>
+<li>Social, organizational, infrastructure</li>
+<li>Information and financial networks</li>
+<li>Dark networks and illicit systems</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Part III: The Intelligence Lens</strong></p>
+<ul>
+<li>Why networks matter for analysts</li>
+<li>What network analysis can (and cannot) do</li>
+<li>Key analytical questions</li>
+<li>Connecting to the course arc</li>
+</ul>
+<p><br></p>
+<div title="Learning Objectives">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Learning Objectives</strong></p>
+</div>
+<div class="callout-content">
+<p>By the end of this lecture, students should be able to: define a network formally; distinguish network types; articulate the intelligence value of network analysis; and identify key analytical questions networks can answer.</p>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section>
+<section id="part-i-conceptual-foundations" class="title-slide slide level1 center">
+<h1>Part I: Conceptual Foundations</h1>
+
+</section>
+<section id="what-is-a-network" class="slide level2">
+<h2>What Is a Network?</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div title="Formal Definition">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Formal Definition</strong></p>
+</div>
+<div class="callout-content">
+<p>A <strong>network</strong> (or <em>graph</em>) is a set of <strong>entities</strong> (nodes/vertices) connected by <strong>relationships</strong> (edges/links). Formally: <span class="math inline">\(G = (V, E)\)</span> where <span class="math inline">\(V\)</span> is the vertex set and <span class="math inline">\(E \subseteq V \times V\)</span> is the edge set.</p>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+<p><strong>Why this formalism matters:</strong></p>
+<ul>
+<li>The same mathematical structure underlies <em>any</em> relational system</li>
+<li>Terrorist cells, power grids, financial flows, and social media all reduce to nodes and edges</li>
+<li>Shared formalism means shared analytical tools across domains</li>
+<li>Quantitative rigor reduces analyst bias in pattern recognition</li>
+</ul>
+<p><br> Networks are <em>not</em> merely visualizations — they are structures that encode relationships. Visualization is one output; analysis is the goal.</p>
+</div><div class="column" style="width:40%;">
+<div class="net-diagram">
+<svg viewbox="0 0 340 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:300px;display:block;margin:0 auto">
+  <!-- Edges -->
+  <line x1="80" y1="75" x2="185" y2="75" stroke="#333333" stroke-width="2"></line>
+  <line x1="80" y1="75" x2="132" y2="155" stroke="#333333" stroke-width="2"></line>
+  <line x1="185" y1="75" x2="132" y2="155" stroke="#333333" stroke-width="2"></line>
+  <line x1="185" y1="75" x2="185" y2="155" stroke="#333333" stroke-width="2"></line>
+  <line x1="185" y1="75" x2="290" y2="75" stroke="#333333" stroke-width="2"></line>
+  <line x1="185" y1="155" x2="290" y2="75" stroke="#333333" stroke-width="2"></line>
+  <!-- Nodes -->
+  <circle cx="80" cy="75" r="22" fill="#DACCE6" stroke="#450084" stroke-width="2.5"></circle>
+  <text x="80" y="80" text-anchor="middle" font-size="14" font-weight="bold" fill="#450084" font-family="sans-serif">A</text>
+  <circle cx="185" cy="75" r="22" fill="#DACCE6" stroke="#450084" stroke-width="2.5"></circle>
+  <text x="185" y="80" text-anchor="middle" font-size="14" font-weight="bold" fill="#450084" font-family="sans-serif">B</text>
+  <circle cx="132" cy="155" r="22" fill="#DACCE6" stroke="#450084" stroke-width="2.5"></circle>
+  <text x="132" y="160" text-anchor="middle" font-size="14" font-weight="bold" fill="#450084" font-family="sans-serif">C</text>
+  <circle cx="185" cy="155" r="22" fill="#DACCE6" stroke="#450084" stroke-width="2.5"></circle>
+  <text x="185" y="160" text-anchor="middle" font-size="14" font-weight="bold" fill="#450084" font-family="sans-serif">D</text>
+  <circle cx="290" cy="75" r="22" fill="#DACCE6" stroke="#450084" stroke-width="2.5"></circle>
+  <text x="290" y="80" text-anchor="middle" font-size="14" font-weight="bold" fill="#450084" font-family="sans-serif">E</text>
+</svg>
+</div>
+<div class="xsmall">
+<p><span class="math inline">\(V = \{A, B, C, D, E\}\)</span></p>
+<p><span class="math inline">\(|V| = 5\)</span> nodes, <span class="math inline">\(|E| = 6\)</span> edges</p>
+<p>Node B has degree 4 (most connected)</p>
+</div>
+</div></div>
+</section>
+<section id="a-brief-history-of-network-science" class="slide level2">
+<h2>A Brief History of Network Science</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Mathematical Origins</strong></p>
+<ul>
+<li><p><strong>1736 — Euler’s Königsberg Bridge Problem:</strong> First formal graph theory problem; demonstrated that an Eulerian path requires nodes of even degree.<sup>1</sup></p></li>
+<li><p><strong>1930s–60s — Sociometry:</strong> Moreno’s sociograms mapped interpersonal relationships; first systematic social network visualization.<sup>2</sup></p></li>
+<li><p><strong>1960s — Random Graph Theory:</strong> Erdős and Rényi established probability models for graph formation; foundational for understanding network connectivity.<sup>3</sup></p></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Modern Network Science</strong></p>
+<ul>
+<li><p><strong>1967 — Small World Experiment:</strong> Milgram demonstrated six degrees of separation; empirical validation of short path lengths in social networks.<sup>4</sup></p></li>
+<li><p><strong>1998 — Small-World Networks:</strong> Watts and Strogatz formalized the clustering/path-length tradeoff that characterizes most real-world networks.<sup>5</sup></p></li>
+<li><p><strong>1999 — Scale-Free Networks:</strong> Barabási and Albert identified preferential attachment and power-law degree distributions in real networks.<sup>6</sup></p></li>
+<li><p><strong>2001 — Intelligence Application:</strong> Krebs mapped the 9/11 hijacker network, bringing SNA to national security discourse.<sup>7</sup></p></li>
+</ul>
+</div></div>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>Leonhard Euler, “Solutio problematis ad geometriam situs pertinentis,” <em>Commentarii Academiae Scientiarum Petropolitanae</em> 8 (1741): 128–140.</p></li><li id="fn2"><p>Jacob L. Moreno, <em>Who Shall Survive? Foundations of Sociometry, Group Psychotherapy and Sociodrama</em> (Washington, D.C.: Nervous and Mental Disease Publishing, 1934).</p></li><li id="fn3"><p>Paul Erdős and Alfréd Rényi, “On the Evolution of Random Graphs,” <em>Publications of the Mathematical Institute of the Hungarian Academy of Sciences</em> 5 (1960): 17–61.</p></li><li id="fn4"><p>Stanley Milgram, “The Small World Problem,” <em>Psychology Today</em> 2, no. 1 (1967): 60–67.</p></li><li id="fn5"><p>Duncan J. Watts and Steven H. Strogatz, “Collective Dynamics of ‘Small-World’ Networks,” <em>Nature</em> 393, no. 6684 (1998): 440–442.</p></li><li id="fn6"><p>Albert-László Barabási and Réka Albert, “Emergence of Scaling in Random Networks,” <em>Science</em> 286, no. 5439 (1999): 509–512.</p></li><li id="fn7"><p>Valdis Krebs, “Mapping Networks of Terrorist Cells,” <em>Connections</em> 24, no. 3 (2002): 43–52.</p></li></ol></aside></section>
+<section id="core-vocabulary-nodes-and-edges" class="slide level2">
+<h2>Core Vocabulary: Nodes and Edges</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Nodes (Vertices)</strong></p>
+<ul>
+<li>Represent entities in the network</li>
+<li>Can be: persons, organizations, locations, events, accounts, documents, states</li>
+<li>Nodes carry <strong>attributes</strong>: demographics, role, capacity, status</li>
+<li>Node count <span class="math inline">\(= |V|\)</span>; also called <em>order</em> of the graph</li>
+</ul>
+<p><br></p>
+<p><strong>Edges (Links, Ties)</strong></p>
+<ul>
+<li>Represent relationships between nodes</li>
+<li>Can be: communication, transaction, membership, trust, kinship, co-occurrence</li>
+<li>Edge count <span class="math inline">\(= |E|\)</span>; also called <em>size</em> of the graph</li>
+<li>Edges carry <strong>attributes</strong>: weight, direction, timestamp, type</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Edge Attribute Examples in Intelligence Contexts</strong></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Attribute</th>
+<th>Type</th>
+<th>Intel Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Weight</td>
+<td>Numeric</td>
+<td>Call frequency</td>
+</tr>
+<tr class="even">
+<td>Direction</td>
+<td>Boolean</td>
+<td>Wire transfer flow</td>
+</tr>
+<tr class="odd">
+<td>Timestamp</td>
+<td>Temporal</td>
+<td>Meeting date</td>
+</tr>
+<tr class="even">
+<td>Type</td>
+<td>Categorical</td>
+<td>Kinship vs.&nbsp;financial</td>
+</tr>
+<tr class="odd">
+<td>Confidence</td>
+<td>Ordinal</td>
+<td>Source reliability</td>
+</tr>
+<tr class="even">
+<td>Duration</td>
+<td>Temporal</td>
+<td>Relationship length</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<div title="Analyst Note">
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Analyst Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Attribute quality drives analytical quality. A network with poorly coded edge types or missing weights produces misleading centrality scores.</p>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="graph-types-and-directionality" class="slide level2">
+<h2>Graph Types and Directionality</h2>
+<div class="columns">
+<div class="column" style="width:48%;">
+<p><strong>By Edge Direction</strong></p>
+<ul>
+<li><strong>Undirected:</strong> edges have no directionality; relationship is symmetric (e.g., co-membership in an organization)</li>
+<li><strong>Directed (digraph):</strong> edges have a source and a target; relationship is asymmetric (e.g., wire transfers, command authority)</li>
+<li><strong>Mixed:</strong> some edges directed, some not</li>
+</ul>
+<p><br></p>
+<p><strong>By Edge Multiplicity</strong></p>
+<ul>
+<li><strong>Simple graph:</strong> at most one edge between any pair of nodes; no self-loops</li>
+<li><strong>Multigraph:</strong> multiple edges allowed between same pair (e.g., both a phone call and a financial transaction)</li>
+<li><strong>Pseudograph:</strong> self-loops permitted (e.g., a transaction back to the originating account)</li>
+</ul>
+</div><div class="column" style="width:48%;">
+<p><strong>By Edge Weight</strong></p>
+<ul>
+<li><strong>Unweighted:</strong> presence/absence only; all edges treated equally</li>
+<li><strong>Weighted:</strong> numeric value on each edge encoding magnitude (frequency, volume, strength)</li>
+</ul>
+<p><br></p>
+<p><strong>By Node Type</strong></p>
+<ul>
+<li><strong>Unipartite (one-mode):</strong> all nodes are the same type (e.g., all persons)</li>
+<li><strong>Bipartite (two-mode):</strong> two distinct node types; edges only between types (e.g., persons and events they attended)<sup>1</sup></li>
+<li><strong>Multipartite / Multilayer:</strong> multiple node types or multiple relationship layers</li>
+</ul>
+</div></div>
+<aside><ol class="aside-footnotes"><li id="fn8"><p>Stanley Wasserman and Katherine Faust, <em>Social Network Analysis: Methods and Applications</em> (Cambridge: Cambridge University Press, 1994), 29–35.</p></li></ol></aside></section>
+<section id="network-density-and-sparsity" class="slide level2">
+<h2>Network Density and Sparsity</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<p><strong>Density</strong> measures how many edges exist relative to the maximum possible:</p>
+<p><span class="math display">\[\Delta = \frac{|E|}{|V|(|V|-1)/2} \quad \text{(undirected)}\]</span></p>
+<p><span class="math display">\[\Delta = \frac{|E|}{|V|(|V|-1)} \quad \text{(directed)}\]</span></p>
+<ul>
+<li><span class="math inline">\(\Delta = 1.0\)</span>: complete graph (every node connected to every other)</li>
+<li><span class="math inline">\(\Delta = 0.0\)</span>: empty graph (no edges)</li>
+<li>Most real-world networks are <strong>sparse</strong>: <span class="math inline">\(\Delta \ll 0.1\)</span></li>
+</ul>
+<p><br></p>
+<p><strong>Intelligence implications of density:</strong></p>
+<ul>
+<li>Dense networks: high redundancy, harder to disrupt, strong group cohesion</li>
+<li>Sparse networks: rely on key connectors (high betweenness); vulnerable to targeted removal</li>
+<li>Compartmentalized illicit networks are deliberately sparse for operational security<sup>1</sup></li>
+</ul>
+</div><div class="column" style="width:42%;">
+<div title="Worked Example">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Worked Example</strong></p>
+</div>
+<div class="callout-content">
+<p>A network with <span class="math inline">\(|V| = 10\)</span> nodes and <span class="math inline">\(|E| = 12\)</span> edges (undirected):</p>
+<p><span class="math display">\[\Delta = \frac{12}{10 \cdot 9 / 2} = \frac{12}{45} \approx 0.267\]</span></p>
+<p>Interpretation: about 27% of all possible connections exist. Moderately sparse. Compare: the 9/11 hijacker network had density <span class="math inline">\(\approx 0.16\)</span>.<sup>2</sup></p>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+<div title="Key Point">
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Key Point</strong></p>
+</div>
+<div class="callout-content">
+<p>Density alone does not identify <em>which</em> connections matter — centrality measures do that.</p>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+<aside><ol class="aside-footnotes"><li id="fn9"><p>Jorg Raab and H. Brinton Milward, “Dark Networks as Problems,” <em>Journal of Public Administration Research and Theory</em> 13, no. 4 (2003): 413–439.</p></li><li id="fn10"><p>Krebs, “Mapping Networks of Terrorist Cells,” 45.</p></li></ol></aside></section></section>
+<section>
+<section id="part-ii-networks-in-the-real-world" class="title-slide slide level1 center">
+<h1>Part II: Networks in the Real World</h1>
+
+</section>
+<section id="a-typology-of-networks" class="slide level2">
+<h2>A Typology of Networks</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Social Networks</strong></p>
+<ul>
+<li>Nodes: individuals or groups</li>
+<li>Edges: communication, friendship, trust, kinship, co-membership</li>
+<li>Examples: phone call graphs, organizational charts, diaspora networks</li>
+<li>Analytically relevant to: insider threat, radicalization, influence operations</li>
+</ul>
+<p><br></p>
+<p><strong>Organizational Networks</strong></p>
+<ul>
+<li>Nodes: units, roles, or individuals within institutions</li>
+<li>Edges: reporting relationships, resource flows, coordination ties</li>
+<li>Examples: military command structures, terrorist cell hierarchies, NGO coordination</li>
+<li>Analytically relevant to: leadership targeting, command disruption, resilience assessment</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Infrastructure Networks</strong></p>
+<ul>
+<li>Nodes: physical assets (substations, pipelines, ports, routers)</li>
+<li>Edges: physical connectivity, flow capacity</li>
+<li>Examples: power grids, transportation networks, internet topology</li>
+<li>Analytically relevant to: critical node identification, attack/failure modeling</li>
+</ul>
+<p><br></p>
+<p><strong>Information Networks</strong></p>
+<ul>
+<li>Nodes: accounts, content, platforms</li>
+<li>Edges: follows, retweets, hyperlinks, citations</li>
+<li>Examples: social media influence graphs, citation networks, propaganda amplification chains</li>
+<li>Analytically relevant to: influence operations, disinformation attribution, narrative mapping</li>
+</ul>
+</div></div>
+</section>
+<section id="financial-and-transaction-networks" class="slide level2">
+<h2>Financial and Transaction Networks</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<p><strong>Structure</strong></p>
+<ul>
+<li>Typically bipartite or directed weighted graphs: persons/entities <span class="math inline">\(\leftrightarrow\)</span> accounts/institutions</li>
+<li>Edge weight = transaction volume; edge direction = flow direction</li>
+<li>Temporal dimension critical: layering, placement, and integration in money laundering occur in sequence</li>
+</ul>
+<p><br></p>
+<p><strong>Analytical Goals</strong></p>
+<ul>
+<li>Trace illicit funds across jurisdictions and shell entities</li>
+<li>Identify structuring patterns (transactions just below reporting thresholds)</li>
+<li>Detect anomalous flows inconsistent with declared business activity</li>
+<li>Map financial controllers vs.&nbsp;operational actors (often different nodes)</li>
+<li>Identify chokepoints for sanctions enforcement</li>
+</ul>
+</div><div class="column" style="width:45%;">
+<div title="Case: Hawala Networks">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Case: Hawala Networks</strong></p>
+</div>
+<div class="callout-content">
+<p>Informal value transfer systems (hawala) operate as sparse, trust-based networks connecting brokers (<em>hawaladars</em>) across jurisdictions. No physical currency crosses borders. Network analysis identifies: broker communities, geographic reach, settlement patterns, and high-betweenness brokers who connect otherwise separate regional clusters.<sup>1</sup></p>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+<p><strong>Key data sources:</strong> FinCEN SARs, SWIFT transaction data, corporate registry filings, beneficial ownership databases</p>
+</div></div>
+<aside><ol class="aside-footnotes"><li id="fn11"><p>Patrick Jost and Harjit Singh Sandhu, “The Hawala Alternative Remittance System and Its Role in Money Laundering,” Interpol General Secretariat (2000).</p></li></ol></aside></section>
+<section id="dark-networks-illicit-and-covert-systems" class="slide level2">
+<h2>Dark Networks: Illicit and Covert Systems</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<p><strong>Defining Dark Networks</strong></p>
+<p>Dark networks are clandestine, trust-based networks that operate outside legal or institutional frameworks. They include terrorist organizations, drug trafficking networks, proliferation supply chains, and criminal enterprises.<sup>1</sup></p>
+<p><br></p>
+<p><strong>Distinctive Properties</strong></p>
+<ul>
+<li><strong>Operational security constraints:</strong> Actors deliberately limit connectivity to reduce exposure; result is sparse, compartmentalized structure</li>
+<li><strong>Secrecy-efficiency tradeoff:</strong> More connected networks are more efficient but more vulnerable to infiltration and decapitation<sup>2</sup></li>
+<li><strong>Trust substitutes for formal structure:</strong> Kinship, ethnicity, and shared criminal history replace bureaucratic coordination</li>
+<li><strong>Adaptive reorganization:</strong> Networks restructure after disruption; static analysis understates resilience</li>
+</ul>
+</div><div class="column" style="width:45%;">
+<div title="The Secrecy-Efficiency Tradeoff">
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>The Secrecy-Efficiency Tradeoff</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Highly connected cells coordinate well but one arrested member can expose many</li>
+<li>Highly compartmentalized cells are hard to infiltrate but cannot coordinate complex operations</li>
+<li>Most sophisticated networks modularize: dense internal clusters, sparse inter-cluster bridges</li>
+<li><strong>Implication:</strong> bridge nodes (high betweenness) are highest-value targets for disruption</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+<div title="Empirical Reference">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Empirical Reference</strong></p>
+</div>
+<div class="callout-content">
+<p>Analysis of 43 terrorist networks found average density of 0.047 — far sparser than equivalent legal organizations.<sup>3</sup></p>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+<aside><ol class="aside-footnotes"><li id="fn12"><p>Raab and Milward, “Dark Networks as Problems,” 413.</p></li><li id="fn13"><p>Valdis Krebs, “Uncloaking Terrorist Networks,” <em>First Monday</em> 7, no. 4 (2002).</p></li><li id="fn14"><p>Kathleen Carley et al., “Destabilizing Networks,” <em>Connections</em> 24, no. 3 (2002): 31–34.</p></li></ol></aside></section></section>
+<section>
+<section id="part-iii-the-intelligence-lens" class="title-slide slide level1 center">
+<h1>Part III: The Intelligence Lens</h1>
+
+</section>
+<section id="why-network-analysis-for-intelligence" class="slide level2">
+<h2>Why Network Analysis for Intelligence?</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>What Traditional Analysis Misses</strong></p>
+<ul>
+<li>Attribute-focused analysis (who is this person?) misses relational structure (who does this person connect?)</li>
+<li>Hierarchical org charts miss informal influence and communication patterns</li>
+<li>Individual-level reporting does not aggregate to systemic vulnerability</li>
+<li>Human analysts cannot hold large relational datasets in working memory</li>
+</ul>
+<p><br></p>
+<p><strong>What Network Analysis Adds</strong></p>
+<ul>
+<li><strong>Structural discovery:</strong> identifies roles not evident from individual profiles (gatekeepers, brokers, isolates)</li>
+<li><strong>Comparative assessment:</strong> compare network states over time or across cases</li>
+<li><strong>Targeting prioritization:</strong> rank nodes by structural criticality, not just profile prominence</li>
+<li><strong>Effect prediction:</strong> model consequences of node/edge removal before action<sup>1</sup></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<div title="The Analytical Value Proposition">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>The Analytical Value Proposition</strong></p>
+</div>
+<div class="callout-content">
+<p>Network analysis transforms intelligence from a collection of facts about entities into a model of <em>relationships</em> — and relationships are where power, influence, vulnerability, and intent live.</p>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+<p><strong>Domains where this is established practice:</strong></p>
+<ul>
+<li>Counterterrorism: cell mapping, leadership targeting</li>
+<li>Counternarcotics: trafficking route and financial flow analysis</li>
+<li>Counterproliferation: supplier network mapping</li>
+<li>Influence operations: amplification network attribution</li>
+<li>Critical infrastructure protection: vulnerability modeling</li>
+<li>Financial intelligence: sanctions evasion and money laundering</li>
+<li>Cyber: threat actor infrastructure mapping</li>
+</ul>
+</div></div>
+<aside><ol class="aside-footnotes"><li id="fn15"><p>Sean F. Everton, <em>Disrupting Dark Networks</em> (Cambridge: Cambridge University Press, 2012), 10–25.</p></li></ol></aside></section>
+<section id="what-network-analysis-can-and-cannot-do" class="slide level2">
+<h2>What Network Analysis Can and Cannot Do</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><span style="color:#450084"><strong>What It Can Do</strong></span></p>
+<ul>
+<li>Identify structurally important nodes independent of analyst preconception</li>
+<li>Detect communities and subgroups within large datasets</li>
+<li>Track network change over time (growth, contraction, reorganization)</li>
+<li>Quantify network resilience and vulnerability</li>
+<li>Generate competing hypotheses about structure and function</li>
+<li>Integrate multiple data types (financial, communication, geospatial) into a unified model</li>
+<li>Prioritize collection gaps by identifying structurally important but poorly covered nodes</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><span style="color:#595959"><strong>What It Cannot Do</strong></span></p>
+<ul>
+<li>Infer intent from structure alone</li>
+<li>Compensate for missing data — partial networks can produce misleading centrality scores</li>
+<li>Establish causation: correlation in network structure does not explain <em>why</em> a relationship exists</li>
+<li>Replace source validation: garbage in, garbage out</li>
+<li>Produce finished intelligence without analytical interpretation</li>
+<li>Resolve questions of identity or attribution without corroborating intelligence</li>
+</ul>
+<p><br></p>
+<div title="Methodological Warning">
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Methodological Warning</strong></p>
+</div>
+<div class="callout-content">
+<p>Network analysis is a <strong>tool</strong>, not a conclusion. Structural findings must be interpreted in context, caveated for data incompleteness, and integrated with all-source analysis.<sup>1</sup></p>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+<aside><ol class="aside-footnotes"><li id="fn16"><p>Nancy Roberts and Sean Everton, “Strategies for Combating Dark Networks,” <em>Journal of Social Structure</em> 12 (2011): 1–32.</p></li></ol></aside></section>
+<section id="key-analytical-questions-networks-can-answer" class="slide level2">
+<h2>Key Analytical Questions Networks Can Answer</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Structural Questions</strong></p>
+<ul>
+<li>Who are the most influential or critical nodes? (centrality)</li>
+<li>Are there distinct subgroups or factions? (community detection)</li>
+<li>How connected is the network overall? (density, components)</li>
+<li>What is the shortest path between two actors? (geodesic distance)</li>
+<li>Does the network have a hierarchical or flat structure? (hierarchy index)</li>
+</ul>
+<p><br></p>
+<p><strong>Vulnerability Questions</strong></p>
+<ul>
+<li>Which node or edge removal would maximally fragment the network?</li>
+<li>Are there single points of failure (articulation points, bridges)?</li>
+<li>How does the network respond to disruption? (robustness simulation)</li>
+<li>Has the network adapted after a previous disruption?</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Relational Questions</strong></p>
+<ul>
+<li>Who is the likely broker between otherwise disconnected groups?</li>
+<li>Which actors occupy structurally equivalent positions?</li>
+<li>Is there evidence of coordination or coincidence in timing of ties?</li>
+<li>Who has disproportionate access to information flow?</li>
+</ul>
+<p><br></p>
+<p><strong>Temporal Questions</strong></p>
+<ul>
+<li>How has the network evolved over time?</li>
+<li>Is the network growing or contracting?</li>
+<li>Did a specific event trigger network restructuring?</li>
+<li>Are new nodes being recruited into the network?</li>
+</ul>
+<p><br></p>
+<div title="Connecting to Course">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Connecting to Course</strong></p>
+</div>
+<div class="callout-content">
+<p>Each of these question types maps to specific methods and tools covered in this course.</p>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="data-sources-for-intelligence-network-analysis" class="slide level2">
+<h2>Data Sources for Intelligence Network Analysis</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>OSINT-Derived Network Data</strong></p>
+<ul>
+<li>Social media: follower/following graphs, interaction networks, co-hashtag networks</li>
+<li>Corporate registries: beneficial ownership, director interlocks, subsidiary structures</li>
+<li>Court records and indictments: named co-conspirators, financial transactions</li>
+<li>News and event data: co-occurrence of actors in events, meetings, travel</li>
+<li>Academic and professional networks: co-authorship, conference attendance</li>
+<li>Leaked databases: Panama Papers, FinCEN Files, Pandora Papers</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Classified / Controlled Source Data</strong></p>
+<ul>
+<li>SIGINT: communications metadata (who called whom, when, for how long)</li>
+<li>HUMINT: reported relationships, organizational rosters</li>
+<li>Financial intelligence: transaction records, account associations</li>
+<li>Biometric and identity data: co-location, travel records</li>
+<li>Law enforcement databases: known associates, gang rosters</li>
+</ul>
+<p><br></p>
+<div title="Data Quality and Completeness">
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Data Quality and Completeness</strong></p>
+</div>
+<div class="callout-content">
+<p>All network data in intelligence contexts is <strong>incomplete</strong>. Clandestine actors evade collection. Analysts must reason carefully about what is missing and how gaps affect structural conclusions.<sup>1</sup></p>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+<aside><ol class="aside-footnotes"><li id="fn17"><p>Everton, <em>Disrupting Dark Networks</em>, 37–42.</p></li></ol></aside></section>
+<section id="the-course-arc-from-foundations-to-intelligence-products" class="slide level2">
+<h2>The Course Arc: From Foundations to Intelligence Products</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<p><strong>Where We Are Going</strong></p>
+<p>This course builds competency across three dimensions:</p>
+<ol type="1">
+<li><strong>Conceptual:</strong> Graph theory, centrality, community structure, temporal dynamics, multi-layer networks</li>
+<li><strong>Technical:</strong> Gephi, i2 Analyst Notebook, ArcGIS, Python/NetworkX — each appropriate to different analytical tasks</li>
+<li><strong>Applied:</strong> Domain-specific network types (social, financial, infrastructure, information, global security) with real-world datasets</li>
+</ol>
+<p><br></p>
+<p>The final project integrates all three: a network intelligence product on an analyst-selected topic, including written assessment and briefing.</p>
+</div><div class="column" style="width:45%;">
+<div title="Lecture Sequence">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Lecture Sequence</strong></p>
+</div>
+<div class="callout-content">
+<ul class="checklist">
+  <li class="done">Course Introduction</li>
+  <li class="active">What is Network Analysis? (today)</li>
+  <li class="todo">Graph Theory Basics</li>
+  <li class="todo">Centrality and Influence</li>
+  <li class="todo">SNA in Intelligence</li>
+  <li class="todo">Community Detection</li>
+  <li class="todo">Geospatial / Multi-Layer</li>
+  <li class="todo">Temporal / Dynamic Networks</li>
+  <li class="todo">Global Security Networks</li>
+  <li class="todo">Financial Networks</li>
+  <li class="todo">Information / Influence Networks</li>
+  <li class="todo">Infrastructure Networks</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="lecture-summary-and-key-terms" class="slide level2">
+<h2>Lecture Summary and Key Terms</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Core Definitions</strong></p>
+<ul>
+<li><strong>Graph</strong> <span class="math inline">\(G = (V, E)\)</span>: a set of nodes <span class="math inline">\(V\)</span> and edges <span class="math inline">\(E\)</span></li>
+<li><strong>Node (vertex):</strong> entity in the network</li>
+<li><strong>Edge (link, tie):</strong> relationship between nodes</li>
+<li><strong>Directed graph:</strong> edges have direction (source <span class="math inline">\(\to\)</span> target)</li>
+<li><strong>Weighted graph:</strong> edges carry numeric values</li>
+<li><strong>Bipartite graph:</strong> two node types; edges only between types</li>
+<li><strong>Density</strong> <span class="math inline">\(\Delta\)</span>: ratio of actual to possible edges</li>
+<li><strong>Dark network:</strong> covert, trust-based, illicit relational system</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Key Takeaways</strong></p>
+<ol type="1">
+<li>Network analysis is a <em>relational</em> paradigm — structure matters as much as attributes</li>
+<li>The same mathematical framework applies across all domains: social, financial, infrastructure, information</li>
+<li>Density, directionality, and weight fundamentally change what a network tells you</li>
+<li>Dark networks are deliberately sparse; bridge nodes are highest-value targets</li>
+<li>Network analysis has real limitations: incomplete data and structural findings require interpretive judgment</li>
+</ol>
+<p><br></p>
+<div title="Next Lecture">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Next Lecture</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Graph Theory Basics</strong> — formalizing the mathematics of networks: paths, cycles, components, degree sequences, and the metrics that underpin all subsequent analysis.</p>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+
+</section></section>
+
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>James Madison University — School of Intelligence Analysis | IA 480: Applied Network Analysis</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="week2-lecture_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="week2-lecture_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="week2-lecture_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="week2-lecture_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="week2-lecture_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="week2-lecture_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="week2-lecture_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="week2-lecture_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="week2-lecture_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="week2-lecture_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': false,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'fast',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+
+        height: 720,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 6.0e-2,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

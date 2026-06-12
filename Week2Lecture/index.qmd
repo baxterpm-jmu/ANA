@@ -1,0 +1,526 @@
+---
+title: "What is Network Analysis?"
+subtitle: "IA 480: Applied Network Analysis — Systems, Connections, and Influence"
+date: "Fall 2026"
+---
+
+```{=html}
+```
+
+::: {.course-meta}
+| | |
+|:--|:--|
+| Course | IA 480: Applied Network Analysis |
+| Week | 2 of 16 |
+| Instructor | Philip Baxter |
+| Term | Fall 2026 |
+:::
+
+::: {.callout-note title="Learning Objectives" icon=false}
+By the end of this lecture, students should be able to:
+
+1. Define a network formally using graph-theoretic notation.
+2. Distinguish among major network types by structure and domain.
+3. Articulate the intelligence value of network analysis relative to attribute-focused approaches.
+4. Identify the principal question categories that network analysis can and cannot answer.
+:::
+
+## Lecture Roadmap
+
+```{=html}
+<div class="roadmap-grid">
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part I — Conceptual Foundations</div>
+    <ul>
+      <li>Defining networks and why they matter</li>
+      <li>A brief history of network science</li>
+      <li>Core vocabulary: nodes, edges, attributes</li>
+      <li>Types of networks</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part II — Networks in the Real World</div>
+    <ul>
+      <li>Social, organizational, infrastructure</li>
+      <li>Information and financial networks</li>
+      <li>Dark networks and illicit systems</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part III — The Intelligence Lens</div>
+    <ul>
+      <li>Why networks matter for analysts</li>
+      <li>What network analysis can (and cannot) do</li>
+      <li>Key analytical questions</li>
+      <li>Connecting to the course arc</li>
+    </ul>
+  </div>
+</div>
+```
+
+# Part I: Conceptual Foundations
+
+## What Is a Network?
+
+::: {.callout-note title="Formal Definition" icon=false}
+A **network** (or *graph*) is a set of **entities** (nodes/vertices) connected by **relationships** (edges/links). Formally: $G = (V, E)$ where $V$ is the vertex set and $E \subseteq V \times V$ is the edge set.
+:::
+
+The formalism matters because the same mathematical structure underlies *any* relational system. Terrorist cells, power grids, financial flows, and social media platforms all reduce to nodes and edges. Shared formalism means shared analytical tools across disparate domains, and quantitative rigor reduces analyst bias in pattern recognition.
+
+Networks are **not** merely visualizations — they are structures that encode relationships. Visualization is one output; analysis is the goal.
+
+**Why this formalism matters:**
+
+- The same mathematical structure underlies *any* relational system
+- Terrorist cells, power grids, financial flows, and social media all reduce to nodes and edges
+- Shared formalism means shared analytical tools across domains
+- Quantitative rigor reduces analyst bias in pattern recognition
+
+```{=html}
+<div class="net-diagram-container">
+  <svg viewBox="0 0 360 210" xmlns="http://www.w3.org/2000/svg"
+       style="width:100%;max-width:340px;display:block">
+    <!-- Edges -->
+    <line x1="80"  y1="80"  x2="185" y2="80"  stroke="#333333" stroke-width="2.2"/>
+    <line x1="80"  y1="80"  x2="132" y2="160" stroke="#333333" stroke-width="2.2"/>
+    <line x1="185" y1="80"  x2="132" y2="160" stroke="#333333" stroke-width="2.2"/>
+    <line x1="185" y1="80"  x2="185" y2="160" stroke="#333333" stroke-width="2.2"/>
+    <line x1="185" y1="80"  x2="300" y2="80"  stroke="#333333" stroke-width="2.2"/>
+    <line x1="185" y1="160" x2="300" y2="80"  stroke="#333333" stroke-width="2.2"/>
+    <!-- Nodes -->
+    <circle cx="80"  cy="80"  r="24" fill="#DACCE6" stroke="#450084" stroke-width="2.5"/>
+    <text   x="80"  y="85"   text-anchor="middle" font-size="15" font-weight="bold" fill="#450084" font-family="IBM Plex Serif, serif">A</text>
+    <circle cx="185" cy="80"  r="24" fill="#DACCE6" stroke="#450084" stroke-width="2.5"/>
+    <text   x="185" y="85"   text-anchor="middle" font-size="15" font-weight="bold" fill="#450084" font-family="IBM Plex Serif, serif">B</text>
+    <circle cx="132" cy="160" r="24" fill="#DACCE6" stroke="#450084" stroke-width="2.5"/>
+    <text   x="132" y="165"  text-anchor="middle" font-size="15" font-weight="bold" fill="#450084" font-family="IBM Plex Serif, serif">C</text>
+    <circle cx="185" cy="160" r="24" fill="#DACCE6" stroke="#450084" stroke-width="2.5"/>
+    <text   x="185" y="165"  text-anchor="middle" font-size="15" font-weight="bold" fill="#450084" font-family="IBM Plex Serif, serif">D</text>
+    <circle cx="300" cy="80"  r="24" fill="#DACCE6" stroke="#450084" stroke-width="2.5"/>
+    <text   x="300" y="85"   text-anchor="middle" font-size="15" font-weight="bold" fill="#450084" font-family="IBM Plex Serif, serif">E</text>
+  </svg>
+  <figcaption>
+    V = {A, B, C, D, E} &nbsp;|&nbsp; |V| = 5 nodes, |E| = 6 edges<br>
+    Node B has degree 4 — the most connected node in this graph.
+  </figcaption>
+</div>
+```
+
+## A Brief History of Network Science
+
+Network analysis has roots in three disciplines that converged over three centuries: mathematics, sociology, and physics. The following timeline traces the major developments from Euler's foundational insight to the intelligence community's adoption of social network analysis.
+
+::: {.timeline}
+**1736 — Euler's Königsberg Bridge Problem**
+: The first formal graph theory problem. Euler demonstrated that traversing all seven bridges of Königsberg without repetition was impossible, and that an Eulerian path requires every node to have even degree. This established the field of graph theory.^[Leonhard Euler, "Solutio problematis ad geometriam situs pertinentis," *Commentarii Academiae Scientiarum Petropolitanae* 8 (1741): 128–140.]
+
+**1930s–1960s — Sociometry**
+: Jacob Moreno developed sociograms — visual representations of interpersonal relationships — as a tool for mapping social structure in small groups. This was the first systematic use of network visualization in the social sciences.^[Jacob L. Moreno, *Who Shall Survive? Foundations of Sociometry, Group Psychotherapy and Sociodrama* (Washington, D.C.: Nervous and Mental Disease Publishing, 1934).]
+
+**1960s — Random Graph Theory**
+: Erdős and Rényi established probability models for graph formation, creating a mathematical foundation for understanding how connectivity emerges in large networks.^[Paul Erdős and Alfréd Rényi, "On the Evolution of Random Graphs," *Publications of the Mathematical Institute of the Hungarian Academy of Sciences* 5 (1960): 17–61.]
+
+**1967 — Small World Experiment**
+: Milgram's chain-letter experiment demonstrated empirically that any two people in the United States were connected through an average of about six intermediaries — what became known as "six degrees of separation."^[Stanley Milgram, "The Small World Problem," *Psychology Today* 2, no. 1 (1967): 60–67.]
+
+**1998 — Small-World Networks**
+: Watts and Strogatz formalized the clustering/path-length tradeoff that characterizes most real-world networks: high local clustering *and* short average path lengths — a combination that random graph models could not explain.^[Duncan J. Watts and Steven H. Strogatz, "Collective Dynamics of 'Small-World' Networks," *Nature* 393, no. 6684 (1998): 440–442.]
+
+**1999 — Scale-Free Networks**
+: Barabási and Albert showed that many real networks (the web, protein interaction networks, citation graphs) grow via preferential attachment, producing power-law degree distributions: a few "hub" nodes with very high degree, and many nodes with very low degree.^[Albert-László Barabási and Réka Albert, "Emergence of Scaling in Random Networks," *Science* 286, no. 5439 (1999): 509–512.]
+
+**2001–2002 — Intelligence Application**
+: Following the September 11 attacks, Krebs mapped the hijacker network and demonstrated how social network analysis could reveal organizational structure, key connectors, and vulnerability points in covert cells. This brought SNA into mainstream national security discourse.^[Valdis Krebs, "Mapping Networks of Terrorist Cells," *Connections* 24, no. 3 (2002): 43–52.]
+:::
+
+## Core Vocabulary: Nodes and Edges
+
+### Nodes (Vertices)
+
+Nodes represent the **entities** in a network. They can be persons, organizations, locations, events, documents, accounts, or states — any discrete unit that can form a relationship with another. Nodes carry **attributes**: demographic characteristics, role labels, capacity values, status flags, or any metadata relevant to the analytical problem. The total node count $|V|$ is called the *order* of the graph.
+
+### Edges (Links, Ties)
+
+Edges represent the **relationships** between nodes. They can encode communication, financial transactions, organizational membership, trust, kinship, co-occurrence in an event, or any other meaningful connection. The total edge count $|E|$ is called the *size* of the graph. Like nodes, edges carry **attributes** — and attribute quality is a major driver of analytical quality.
+
+**Edge Attribute Examples in Intelligence Contexts**
+
+| Attribute   | Type        | Intelligence Example                 |
+|-------------|-------------|--------------------------------------|
+| Weight      | Numeric     | Call frequency; transaction volume   |
+| Direction   | Boolean     | Wire transfer flow; command authority|
+| Timestamp   | Temporal    | Meeting date; message sent time      |
+| Type        | Categorical | Kinship vs. financial vs. communication |
+| Confidence  | Ordinal     | Source reliability rating            |
+| Duration    | Temporal    | Length of known relationship         |
+
+::: {.callout-warning title="Analyst Note" icon=false}
+Attribute quality drives analytical quality. A network with poorly coded edge types or missing weights produces misleading centrality scores. Data quality assessment must precede structural interpretation.
+:::
+
+## Graph Types and Directionality
+
+### By Edge Direction
+
+- **Undirected:** Edges have no directionality; the relationship is symmetric (e.g., co-membership in an organization). If A is connected to B, B is equally connected to A.
+- **Directed (digraph):** Edges have a source and a target; the relationship is asymmetric (e.g., wire transfers, command authority, web hyperlinks). A directing to B does not imply B directing to A.
+- **Mixed:** Some edges are directed, some are not — common when modeling systems with both symmetric and asymmetric relationship types.
+
+### By Edge Multiplicity
+
+- **Simple graph:** At most one edge between any pair of nodes; no self-loops. The standard graph type for most SNA applications.
+- **Multigraph:** Multiple edges allowed between the same pair of nodes (e.g., a phone call *and* a financial transaction between the same two actors).
+- **Pseudograph:** Self-loops permitted (e.g., a shell company transacting with itself to obscure a money trail).
+
+### By Edge Weight
+
+- **Unweighted:** Presence or absence only; all edges treated as equal regardless of relationship strength or frequency.
+- **Weighted:** A numeric value on each edge encodes magnitude — call frequency, transaction volume, relationship strength. Weighting changes virtually every centrality measure.
+
+### By Node Type
+
+- **Unipartite (one-mode):** All nodes are the same type (e.g., all persons). The most common network type in SNA.
+- **Bipartite (two-mode):** Two distinct node types; edges only run *between* types, never within (e.g., persons and the events they attended).^[Stanley Wasserman and Katherine Faust, *Social Network Analysis: Methods and Applications* (Cambridge: Cambridge University Press, 1994), 29–35.] Bipartite networks can be projected into unipartite networks at the cost of information loss.
+- **Multipartite / Multilayer:** Multiple node types or multiple relationship layers — increasingly common in complex intelligence problems.
+
+## Network Density and Sparsity
+
+**Density** $\Delta$ measures how many edges actually exist relative to the maximum number possible:
+
+$$\Delta = \frac{|E|}{|V|(|V|-1)/2} \quad \text{(undirected)}$$
+
+$$\Delta = \frac{|E|}{|V|(|V|-1)} \quad \text{(directed)}$$
+
+A $\Delta$ of 1.0 is a complete graph (every node connected to every other); $\Delta = 0.0$ is an empty graph. Most real-world networks — especially illicit ones — are **sparse**, with $\Delta \ll 0.1$.
+
+::: {.callout-tip title="Worked Example" icon=false}
+A network with $|V| = 10$ nodes and $|E| = 12$ edges (undirected):
+
+$$\Delta = \frac{12}{10 \cdot 9 / 2} = \frac{12}{45} \approx 0.267$$
+
+About 27% of all possible connections exist — moderately sparse. For comparison, the 9/11 hijacker network had density $\approx 0.16$.^[Krebs, "Mapping Networks of Terrorist Cells," 45.]
+:::
+
+### Intelligence Implications of Density
+
+- **Dense networks** have high redundancy, strong group cohesion, and are harder to disrupt — removing any single node changes the network structure relatively little.
+- **Sparse networks** rely on key connectors (nodes with high betweenness centrality); removal of those nodes can fragment the network. Compartmentalized illicit networks are deliberately sparse for operational security.^[Jorg Raab and H. Brinton Milward, "Dark Networks as Problems," *Journal of Public Administration Research and Theory* 13, no. 4 (2003): 413–439.]
+
+::: {.callout-warning title="Key Point" icon=false}
+Density alone does not identify *which* connections matter — centrality measures do that. Density is a global network property; analyst targeting requires node-level structural metrics.
+:::
+
+# Part II: Networks in the Real World
+
+## A Typology of Networks
+
+The same graph-theoretic framework applies across all network domains. What changes is the substantive meaning of nodes, edges, and structural features.
+
+```{=html}
+<div class="network-grid">
+
+  <div class="net-card">
+    <h4>Social Networks</h4>
+    <dl>
+      <dt>Nodes</dt>
+      <dd>Individuals or groups</dd>
+      <dt>Edges</dt>
+      <dd>Communication, friendship, trust, kinship, co-membership</dd>
+      <dt>Examples</dt>
+      <dd>Phone call graphs, organizational charts, diaspora networks</dd>
+      <dt>Intelligence relevance</dt>
+      <dd>Insider threat, radicalization, influence operations</dd>
+    </dl>
+  </div>
+
+  <div class="net-card">
+    <h4>Organizational Networks</h4>
+    <dl>
+      <dt>Nodes</dt>
+      <dd>Units, roles, or individuals within institutions</dd>
+      <dt>Edges</dt>
+      <dd>Reporting relationships, resource flows, coordination ties</dd>
+      <dt>Examples</dt>
+      <dd>Military command structures, terrorist cell hierarchies, NGO coordination graphs</dd>
+      <dt>Intelligence relevance</dt>
+      <dd>Leadership targeting, command disruption, resilience assessment</dd>
+    </dl>
+  </div>
+
+  <div class="net-card">
+    <h4>Infrastructure Networks</h4>
+    <dl>
+      <dt>Nodes</dt>
+      <dd>Physical assets: substations, pipelines, ports, routers</dd>
+      <dt>Edges</dt>
+      <dd>Physical connectivity, flow capacity</dd>
+      <dt>Examples</dt>
+      <dd>Power grids, transportation networks, internet topology</dd>
+      <dt>Intelligence relevance</dt>
+      <dd>Critical node identification, attack/failure modeling</dd>
+    </dl>
+  </div>
+
+  <div class="net-card">
+    <h4>Information Networks</h4>
+    <dl>
+      <dt>Nodes</dt>
+      <dd>Accounts, content pieces, platforms</dd>
+      <dt>Edges</dt>
+      <dd>Follows, retweets, hyperlinks, citations</dd>
+      <dt>Examples</dt>
+      <dd>Social media influence graphs, citation networks, propaganda amplification chains</dd>
+      <dt>Intelligence relevance</dt>
+      <dd>Influence operations, disinformation attribution, narrative mapping</dd>
+    </dl>
+  </div>
+
+</div>
+```
+
+## Financial and Transaction Networks
+
+Financial networks are typically bipartite or directed weighted graphs linking persons/entities to accounts and institutions. Edge weight encodes transaction volume; edge direction encodes flow. The temporal dimension is analytically critical: layering, placement, and integration in money laundering occur in sequence, and time-ordered edge data can expose the operational logic of the scheme.
+
+**Key analytical goals in financial network analysis:**
+
+- Trace illicit funds across jurisdictions and shell entities
+- Identify structuring patterns (transactions just below reporting thresholds)
+- Detect anomalous flows inconsistent with declared business activity
+- Map financial controllers versus operational actors (often different nodes)
+- Identify chokepoints suitable for sanctions enforcement
+
+::: {.callout-note title="Case: Hawala Networks" icon=false}
+Informal value transfer systems (hawala) operate as sparse, trust-based networks connecting brokers (*hawaladars*) across jurisdictions. No physical currency crosses borders — debts are settled through reciprocal book-keeping between brokers. Network analysis identifies broker communities, geographic reach, settlement patterns, and high-betweenness brokers who connect otherwise separate regional clusters.^[Patrick Jost and Harjit Singh Sandhu, "The Hawala Alternative Remittance System and Its Role in Money Laundering," Interpol General Secretariat (2000).]
+:::
+
+**Key data sources:** FinCEN Suspicious Activity Reports, SWIFT transaction data, corporate registry filings, beneficial ownership databases, Panama/Pandora Papers.
+
+## Dark Networks: Illicit and Covert Systems
+
+Dark networks are clandestine, trust-based networks that operate outside legal or institutional frameworks. They include terrorist organizations, drug trafficking networks, proliferation supply chains, and criminal enterprises.^[Raab and Milward, "Dark Networks as Problems," 413.] Their structural properties differ systematically from legal organizations — and those differences are analytically exploitable.
+
+### Distinctive Properties
+
+- **Operational security constraints:** Actors deliberately limit connectivity to reduce exposure. The result is sparse, compartmentalized structure with few ties crossing cell boundaries.
+- **Secrecy-efficiency tradeoff:** More connected networks are more efficient operationally but more vulnerable to infiltration and decapitation.^[Valdis Krebs, "Uncloaking Terrorist Networks," *First Monday* 7, no. 4 (2002).] The optimal balance depends on the threat environment.
+- **Trust substitutes for formal structure:** Kinship, shared ethnicity, and shared criminal history replace bureaucratic coordination — relationships that are harder to disrupt than formal authority structures.
+- **Adaptive reorganization:** Networks restructure after disruption. Static analysis understates resilience; temporal analysis is required to assess how a network responds to intervention.
+
+::: {.callout-warning title="The Secrecy-Efficiency Tradeoff" icon=false}
+- Highly connected cells coordinate well operationally — but one arrested member can expose many others.
+- Highly compartmentalized cells resist infiltration — but cannot coordinate complex, multi-step operations.
+- Sophisticated networks modularize: dense internal clusters, sparse inter-cluster bridges.
+- **Analytical implication:** Bridge nodes (high betweenness centrality) are the highest-value targets for network disruption.
+:::
+
+::: {.callout-tip title="Empirical Reference" icon=false}
+Analysis of 43 terrorist networks found an average density of 0.047 — far sparser than equivalent legal organizations operating at similar scale.^[Kathleen Carley et al., "Destabilizing Networks," *Connections* 24, no. 3 (2002): 31–34.]
+:::
+
+# Part III: The Intelligence Lens
+
+## Why Network Analysis for Intelligence?
+
+Traditional intelligence analysis is predominantly **attribute-focused**: who is this person, what are their known associations, what is their role? Network analysis shifts the paradigm to **relational-focused**: what position does this person occupy in a structure, who do they connect, and what would change if they were removed?
+
+### What Traditional Analysis Misses
+
+- Attribute-focused analysis misses relational structure — a mid-level actor with weak individual attributes may be the critical broker between two otherwise disconnected factions
+- Hierarchical org charts miss informal influence and actual communication patterns
+- Individual-level reporting does not aggregate to systemic vulnerability assessment
+- Human analysts cannot hold large relational datasets in working memory; computational tools are required
+
+### What Network Analysis Adds
+
+- **Structural discovery:** Identifies roles not evident from individual profiles — gatekeepers, brokers, isolates, and peripheral recruiters
+- **Comparative assessment:** Compare network states over time or across cases to identify change
+- **Targeting prioritization:** Rank nodes by structural criticality, not just profile prominence or seniority
+- **Effect prediction:** Model the consequences of node or edge removal *before* action is taken^[Sean F. Everton, *Disrupting Dark Networks* (Cambridge: Cambridge University Press, 2012), 10–25.]
+
+::: {.callout-note title="The Analytical Value Proposition" icon=false}
+Network analysis transforms intelligence from a collection of facts about entities into a model of *relationships* — and relationships are where power, influence, vulnerability, and intent live.
+:::
+
+**Domains where network analysis is established practice:**
+
+Social network analysis for counterterrorism cell mapping and leadership targeting; trafficking route and financial flow analysis for counternarcotics; supplier network mapping for counterproliferation; amplification network attribution for influence operations; vulnerability modeling for critical infrastructure protection; sanctions evasion and money laundering tracing for financial intelligence; threat actor infrastructure mapping for cyber.
+
+## What Network Analysis Can and Cannot Do
+
+```{=html}
+<div class="col-pair">
+  <div class="col-left">
+    <h3 style="color:#450084">What It Can Do</h3>
+    <ul>
+      <li>Identify structurally important nodes independent of analyst preconception</li>
+      <li>Detect communities and subgroups within large datasets</li>
+      <li>Track network change over time — growth, contraction, reorganization</li>
+      <li>Quantify network resilience and vulnerability</li>
+      <li>Generate competing hypotheses about structure and function</li>
+      <li>Integrate multiple data types (financial, communication, geospatial) into a unified model</li>
+      <li>Prioritize collection gaps by identifying structurally important but poorly covered nodes</li>
+    </ul>
+  </div>
+  <div class="col-right">
+    <h3 style="color:#595959">What It Cannot Do</h3>
+    <ul>
+      <li>Infer intent from structure alone</li>
+      <li>Compensate for missing data — partial networks can produce misleading centrality scores</li>
+      <li>Establish causation: correlation in network structure does not explain <em>why</em> a relationship exists</li>
+      <li>Replace source validation: garbage in, garbage out</li>
+      <li>Produce finished intelligence without analytical interpretation</li>
+      <li>Resolve questions of identity or attribution without corroborating intelligence</li>
+    </ul>
+  </div>
+</div>
+```
+
+::: {.callout-warning title="Methodological Warning" icon=false}
+Network analysis is a **tool**, not a conclusion. Structural findings must be interpreted in context, caveated for data incompleteness, and integrated with all-source analysis before appearing in any intelligence product.^[Nancy Roberts and Sean Everton, "Strategies for Combating Dark Networks," *Journal of Social Structure* 12 (2011): 1–32.]
+:::
+
+## Key Analytical Questions Networks Can Answer
+
+Network analysis organizes analytical questions into four categories. Each maps to specific methods and tools covered across this course.
+
+```{=html}
+<div class="col-pair">
+  <div class="col-left">
+    <h3>Structural Questions</h3>
+    <ul>
+      <li>Who are the most influential or critical nodes? <em>(centrality)</em></li>
+      <li>Are there distinct subgroups or factions? <em>(community detection)</em></li>
+      <li>How connected is the network overall? <em>(density, components)</em></li>
+      <li>What is the shortest path between two actors? <em>(geodesic distance)</em></li>
+      <li>Does the network have a hierarchical or flat structure? <em>(hierarchy index)</em></li>
+    </ul>
+    <h3>Vulnerability Questions</h3>
+    <ul>
+      <li>Which node or edge removal would maximally fragment the network?</li>
+      <li>Are there single points of failure — articulation points, bridges?</li>
+      <li>How does the network respond to disruption? <em>(robustness simulation)</em></li>
+      <li>Has the network adapted after a previous disruption?</li>
+    </ul>
+  </div>
+  <div class="col-right">
+    <h3>Relational Questions</h3>
+    <ul>
+      <li>Who is the likely broker between otherwise disconnected groups?</li>
+      <li>Which actors occupy structurally equivalent positions?</li>
+      <li>Is there evidence of coordination or coincidence in timing of ties?</li>
+      <li>Who has disproportionate access to information flow?</li>
+    </ul>
+    <h3>Temporal Questions</h3>
+    <ul>
+      <li>How has the network evolved over time?</li>
+      <li>Is the network growing or contracting?</li>
+      <li>Did a specific event trigger network restructuring?</li>
+      <li>Are new nodes being recruited into the network?</li>
+    </ul>
+  </div>
+</div>
+```
+
+## Data Sources for Intelligence Network Analysis
+
+Network data quality is the single most important variable in structural analysis. All intelligence network data is, to some degree, **incomplete** — clandestine actors evade collection, sources have gaps, and the data that exists has varying reliability.
+
+### OSINT-Derived Network Data
+
+- **Social media:** follower/following graphs, interaction networks, co-hashtag networks
+- **Corporate registries:** beneficial ownership, director interlocks, subsidiary structures
+- **Court records and indictments:** named co-conspirators, financial transactions, documented meetings
+- **News and event data:** co-occurrence of actors in events, travel, public statements
+- **Leaked databases:** Panama Papers, FinCEN Files, Pandora Papers
+
+### Classified and Controlled Source Data
+
+- **SIGINT:** Communications metadata — who called whom, when, for how long, from where
+- **HUMINT:** Reported relationships, organizational rosters, physical meeting reports
+- **Financial intelligence:** Transaction records, account associations, correspondent banking relationships
+- **Biometric and identity data:** Co-location events, travel records, border crossings
+- **Law enforcement databases:** Known associates, gang rosters, watch lists
+
+::: {.callout-warning title="Data Quality and Completeness" icon=false}
+All network data in intelligence contexts is **incomplete**. Clandestine actors evade collection. Analysts must reason carefully about what is *missing* and how gaps affect structural conclusions. A high-betweenness score may reflect genuine structural importance — or simply reflect the portion of the network that was collected.^[Everton, *Disrupting Dark Networks*, 37–42.]
+:::
+
+## The Course Arc
+
+This course builds competency across three integrated dimensions:
+
+1. **Conceptual** — Graph theory, centrality measures, community structure, temporal dynamics, multi-layer networks: the mathematical foundations that make quantitative analysis possible.
+2. **Technical** — Gephi, i2 Analyst Notebook, ArcGIS, Python/NetworkX: tools appropriate to different analytical tasks and different levels of classification.
+3. **Applied** — Domain-specific network types with real-world datasets: social, financial, infrastructure, information, and global security networks.
+
+The final project integrates all three dimensions: a network intelligence product on an analyst-selected topic, delivered as a written assessment and an oral briefing.
+
+::: {.callout-note title="Lecture Sequence" icon=false}
+```{=html}
+<ul class="course-sequence">
+  <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
+  <li class="seq-active"><span class="seq-icon">▶</span> <strong>What is Network Analysis?</strong> (this lecture)</li>
+  <li class="seq-todo"><span class="seq-icon">○</span> Graph Theory Basics</li>
+  <li class="seq-todo"><span class="seq-icon">○</span> Centrality and Influence</li>
+  <li class="seq-todo"><span class="seq-icon">○</span> SNA in Intelligence</li>
+  <li class="seq-todo"><span class="seq-icon">○</span> Community Detection</li>
+  <li class="seq-todo"><span class="seq-icon">○</span> Geospatial / Multi-Layer Networks</li>
+  <li class="seq-todo"><span class="seq-icon">○</span> Temporal / Dynamic Networks</li>
+  <li class="seq-todo"><span class="seq-icon">○</span> Global Security Networks</li>
+  <li class="seq-todo"><span class="seq-icon">○</span> Financial Networks</li>
+  <li class="seq-todo"><span class="seq-icon">○</span> Information / Influence Networks</li>
+  <li class="seq-todo"><span class="seq-icon">○</span> Infrastructure Networks</li>
+</ul>
+```
+:::
+
+# Lecture Summary
+
+## Key Terms
+
+::: {.key-terms}
+**Graph** $G = (V, E)$
+: A set of nodes $V$ and edges $E \subseteq V \times V$.
+
+**Node (vertex)**
+: An entity in the network — person, organization, location, event, account, or other discrete unit.
+
+**Edge (link, tie)**
+: A relationship between two nodes; carries attributes including weight, direction, timestamp, and type.
+
+**Directed graph (digraph)**
+: A graph in which edges have an explicit source and target; the relationship is asymmetric.
+
+**Weighted graph**
+: A graph in which each edge carries a numeric value encoding relationship strength, frequency, or volume.
+
+**Bipartite graph**
+: A graph with two distinct node types; edges run only between types, not within.
+
+**Density** $\Delta$
+: The ratio of observed edges to the maximum possible edges; a global measure of network connectedness.
+
+**Dark network**
+: A covert, trust-based relational system operating outside legal or institutional frameworks; characterized by deliberate sparsity and adaptive resilience.
+:::
+
+## Key Takeaways
+
+1. Network analysis is a *relational* paradigm — structure matters as much as (often more than) individual attributes.
+2. The same mathematical framework applies across all domains: social, financial, infrastructure, information, global security.
+3. Density, directionality, and edge weight fundamentally change what a network tells you and what metrics are appropriate.
+4. Dark networks are deliberately sparse; bridge nodes with high betweenness centrality are the highest-value targets for disruption.
+5. Network analysis has real, hard limits: incomplete data and structural findings always require interpretive judgment by a trained analyst.
+
+::: {.callout-note title="Next Lecture" icon=false}
+**Graph Theory Basics** — formalizing the mathematics of networks: paths, cycles, components, degree sequences, and the centrality metrics that underpin all subsequent analysis in this course.
+:::
+
+```{=html}
+<div class="page-footer-custom">
+School of Intelligence Analysis &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
+</div>
+
+```

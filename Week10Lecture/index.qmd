@@ -1,0 +1,772 @@
+---
+title: "Global Security and Network Analysis"
+subtitle: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
+author: "School of Intelligence Analysis, James Madison University"
+date: "Fall 2026"
+---
+
+```{=html}
+<div class="uc-banner column-screen">
+UNCLASSIFIED // FOR EDUCATIONAL USE ONLY
+</div>
+```
+
+::: {.course-meta}
+| | |
+|:--|:--|
+| Course | IA 480: Applied Network Analysis |
+| Week | 10 of 12 |
+| Instructor | School of Intelligence Analysis |
+| Term | Fall 2026 |
+:::
+
+::: {.callout-note title="Learning Objectives" icon=false}
+By the end of this lecture, students should be able to:
+
+1. Characterize the network structure of the three generations of terrorist organizational form and match each to the appropriate disruption strategy.
+2. Apply Staniland's network theory of insurgency to derive disruption approaches for each organizational type.
+3. Describe the A.Q. Khan proliferation network as a multilayer structure and identify which node held highest betweenness in each layer.
+4. Model sanctions evasion as a minimum vertex cut problem and identify optimal designation targets.
+5. Interpret arms transfer networks and UN voting similarity networks as analytical tools for assessing political alignment.
+:::
+
+## Lecture Roadmap
+
+```{=html}
+<div class="roadmap-grid" style="grid-template-columns: repeat(2,1fr)">
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part I — Terrorism and Insurgency Networks</div>
+    <ul>
+      <li>Three generations of terrorist network structure</li>
+      <li>ISIS: network evolution and territorial control</li>
+      <li>Inter-group cooperation and network ties</li>
+      <li>Staniland's network theory of insurgency</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part II — Arms Trafficking and Proliferation</div>
+    <ul>
+      <li>Formal arms transfer networks: structure and data</li>
+      <li>Illicit arms trafficking and shadow brokers</li>
+      <li>The A.Q. Khan proliferation network</li>
+      <li>Dual-use supply chains as bipartite networks</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part III — Sanctions Evasion and State Sponsorship</div>
+    <ul>
+      <li>Sanctions evasion as a minimum cut problem</li>
+      <li>Shell company and beneficial ownership graphs</li>
+      <li>State sponsorship as interlayer coupling</li>
+      <li>PMC and proxy networks</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part IV — Alliance and Interstate Networks</div>
+    <ul>
+      <li>Formal alliance networks (COW, ATOP)</li>
+      <li>UN voting similarity networks</li>
+      <li>Arms transfers and political alignment</li>
+      <li>Intelligence cooperation networks</li>
+    </ul>
+  </div>
+</div>
+```
+
+# Part I: Terrorism and Insurgency Networks
+
+## Three Generations of Terrorist Network Structure
+
+The evolution of terrorist organizational form reflects adaptive response to state counter-terrorism capacity. Each generation has a distinctive network topology, a characteristic vulnerability profile, and requires a different analytical and disruption approach.^[Audrey Kurth Cronin, "How al-Qaida Ends: The Decline and Demise of Terrorist Groups," *International Security* 31, no. 1 (2006): 7--48.]
+
+```{=html}
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.5rem">Three Generations of Terrorist Network Form</p>
+  <svg viewBox="0 0 580 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <line x1="193" y1="5" x2="193" y2="235" stroke="#D6D6D6" stroke-width="1.2"/>
+    <line x1="386" y1="5" x2="386" y2="235" stroke="#D6D6D6" stroke-width="1.2"/>
+    <text x="96" y="18" text-anchor="middle" font-size="9.5" font-weight="700" fill="#450084">1ST GEN: HIERARCHICAL</text>
+    <text x="96" y="30" text-anchor="middle" font-size="8" fill="#595959">IRA, Red Brigades, early PLO</text>
+    <line x1="96" y1="55" x2="60" y2="100" stroke="#450084" stroke-width="2"/>
+    <line x1="96" y1="55" x2="132" y2="100" stroke="#450084" stroke-width="2"/>
+    <line x1="60" y1="100" x2="35" y2="152" stroke="#450084" stroke-width="2"/>
+    <line x1="60" y1="100" x2="85" y2="152" stroke="#450084" stroke-width="2"/>
+    <line x1="132" y1="100" x2="107" y2="152" stroke="#450084" stroke-width="2"/>
+    <line x1="132" y1="100" x2="157" y2="152" stroke="#450084" stroke-width="2"/>
+    <circle cx="96" cy="55" r="16" fill="#450084" stroke="#450084" stroke-width="2"/>
+    <text x="96" y="60" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">CMD</text>
+    <circle cx="60" cy="100" r="13" fill="#B599CE" stroke="#450084" stroke-width="2"/>
+    <circle cx="132" cy="100" r="13" fill="#B599CE" stroke="#450084" stroke-width="2"/>
+    <circle cx="35" cy="152" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="85" cy="152" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="107" cy="152" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="157" cy="152" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <rect x="18" y="182" width="158" height="44" rx="3" fill="#F4EFE1" stroke="#CBB677" stroke-width="1"/>
+    <text x="97" y="196" text-anchor="middle" font-size="8" fill="#333" font-weight="700">Vulnerability: DECAPITATION</text>
+    <text x="97" y="208" text-anchor="middle" font-size="7.5" fill="#595959">Remove top nodes for rapid collapse</text>
+    <text x="289" y="18" text-anchor="middle" font-size="9.5" font-weight="700" fill="#450084">2ND GEN: CELLULAR</text>
+    <text x="289" y="30" text-anchor="middle" font-size="8" fill="#595959">AQ 1996-2001, IRA ASUs</text>
+    <line x1="220" y1="68" x2="255" y2="68" stroke="#450084" stroke-width="2"/>
+    <line x1="220" y1="68" x2="238" y2="105" stroke="#450084" stroke-width="2"/>
+    <line x1="255" y1="68" x2="238" y2="105" stroke="#450084" stroke-width="2"/>
+    <line x1="280" y1="50" x2="315" y2="50" stroke="#450084" stroke-width="2"/>
+    <line x1="280" y1="50" x2="298" y2="87" stroke="#450084" stroke-width="2"/>
+    <line x1="315" y1="50" x2="298" y2="87" stroke="#450084" stroke-width="2"/>
+    <line x1="225" y1="130" x2="260" y2="130" stroke="#450084" stroke-width="2"/>
+    <line x1="225" y1="130" x2="243" y2="167" stroke="#450084" stroke-width="2"/>
+    <line x1="260" y1="130" x2="243" y2="167" stroke="#450084" stroke-width="2"/>
+    <line x1="238" y1="105" x2="298" y2="87" stroke="#CBB677" stroke-width="2" stroke-dasharray="6,4"/>
+    <line x1="238" y1="105" x2="243" y2="130" stroke="#CBB677" stroke-width="2" stroke-dasharray="6,4"/>
+    <line x1="298" y1="87" x2="260" y2="130" stroke="#CBB677" stroke-width="2" stroke-dasharray="6,4"/>
+    <circle cx="220" cy="68" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="255" cy="68" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="238" cy="105" r="12" fill="#450084" stroke="#450084" stroke-width="2"/>
+    <text x="238" y="109" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">C</text>
+    <circle cx="280" cy="50" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="315" cy="50" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="298" cy="87" r="12" fill="#450084" stroke="#450084" stroke-width="2"/>
+    <text x="298" y="91" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">C</text>
+    <circle cx="225" cy="130" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="260" cy="130" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="243" cy="167" r="12" fill="#450084" stroke="#450084" stroke-width="2"/>
+    <text x="243" y="171" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">C</text>
+    <rect x="200" y="182" width="178" height="44" rx="3" fill="#F4EFE1" stroke="#CBB677" stroke-width="1"/>
+    <text x="289" y="196" text-anchor="middle" font-size="8" fill="#333" font-weight="700">Vulnerability: CUTOUT TARGETING</text>
+    <text x="289" y="208" text-anchor="middle" font-size="7.5" fill="#595959">Gold C nodes bridge cells; remove to sever coordination</text>
+    <text x="483" y="18" text-anchor="middle" font-size="9.5" font-weight="700" fill="#450084">3RD GEN: LEADERLESS</text>
+    <text x="483" y="30" text-anchor="middle" font-size="8" fill="#595959">post-2004 AQ, ISIS franchises</text>
+    <line x1="415" y1="65" x2="460" y2="45" stroke="#450084" stroke-width="1.8"/>
+    <line x1="415" y1="65" x2="455" y2="100" stroke="#450084" stroke-width="1.8"/>
+    <line x1="415" y1="65" x2="415" y2="115" stroke="#450084" stroke-width="1.8"/>
+    <line x1="460" y1="45" x2="510" y2="55" stroke="#450084" stroke-width="1.8"/>
+    <line x1="460" y1="45" x2="455" y2="100" stroke="#450084" stroke-width="1.8"/>
+    <line x1="510" y1="55" x2="550" y2="80" stroke="#450084" stroke-width="1.8"/>
+    <line x1="510" y1="55" x2="530" y2="120" stroke="#450084" stroke-width="1.8"/>
+    <line x1="455" y1="100" x2="415" y2="115" stroke="#450084" stroke-width="1.8"/>
+    <line x1="455" y1="100" x2="495" y2="140" stroke="#450084" stroke-width="1.8"/>
+    <line x1="455" y1="100" x2="530" y2="120" stroke="#450084" stroke-width="1.8"/>
+    <line x1="415" y1="115" x2="445" y2="160" stroke="#450084" stroke-width="1.8"/>
+    <line x1="530" y1="120" x2="495" y2="140" stroke="#450084" stroke-width="1.8"/>
+    <line x1="530" y1="120" x2="550" y2="155" stroke="#450084" stroke-width="1.8"/>
+    <line x1="495" y1="140" x2="445" y2="160" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="415" cy="65" r="11" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="460" cy="45" r="11" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="510" cy="55" r="11" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="550" cy="80" r="11" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="455" cy="100" r="11" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="415" cy="115" r="11" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="530" cy="120" r="11" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="495" cy="140" r="11" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="445" cy="160" r="11" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="550" cy="155" r="11" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <rect x="396" y="182" width="175" height="44" rx="3" fill="#fdd" stroke="#cc0000" stroke-width="1"/>
+    <text x="483" y="196" text-anchor="middle" font-size="8" fill="#cc0000" font-weight="700">Vulnerability: MINIMAL</text>
+    <text x="483" y="208" text-anchor="middle" font-size="7.5" fill="#595959">No hub; structural targeting is ineffective</text>
+  </svg>
+  <figcaption>Generation 2: C nodes (purple-filled) are cutouts bridging cells via gold dashed links.<br>Generation 3: all nodes structurally equivalent — no decapitation target exists.</figcaption>
+</div>
+```
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### The Three Generations
+
+**First generation (hierarchical):** Centralized command with clear org chart and formal membership. Examples: early PLO, Red Brigades, IRA Army Council. High organizational efficiency; high decapitation vulnerability. Traditional HUMINT penetration and leadership targeting is the analytically appropriate disruption approach.
+
+**Second generation (cellular):** Deliberately compartmentalized; cells operationally isolated, connected only through designated cutout nodes. Examples: al-Qaeda 1996--2001, IRA Active Service Units. Moderate decapitation vulnerability at the cutout level. The appropriate disruption approach: cutout identification via betweenness analysis and targeted removal.
+
+**Third generation (networked/leaderless):** Franchise and inspiration model. No formal membership; local groups self-organize around shared ideology via online communities. Examples: post-2004 al-Qaeda affiliates, ISIS post-2019, accelerationist movements.^[Marc Sageman, *Leaderless Jihad: Terror Networks in the Twenty-First Century* (Philadelphia: University of Pennsylvania Press, 2008), 48--72.] Removing any node has minimal structural effect. Strategy must shift from structural targeting to **counter-narrative and online community disruption**.
+
+:::
+::: {.column width="45%"}
+
+::: {.callout-warning title="Match Strategy to Form" icon=false}
+The critical first step is characterizing the target network's organizational generation before selecting metrics and disruption models.
+
+A betweenness-targeting strategy effective against second-generation cellular networks is analytically irrelevant against a third-generation inspiration network where betweenness is uniformly distributed.
+
+**Diagnostic questions:**
+
+1. Is there a node with betweenness significantly exceeding the mean? → Second generation; target that cutout.
+2. Is modularity high and betweenness flat? → Third generation franchise; structural targeting will fail.
+3. Is there a clear degree hierarchy? → First generation; decapitation is viable.
+:::
+
+:::
+::::
+
+## ISIS: Network Evolution and Territorial Control
+
+:::: {.columns}
+::: {.column width="55%"}
+
+**Phase 1 (2003--2013) — Underground Network:** ISIS emerged from AQI under Zarqawi and survived repeated degradation campaigns through tight cell structure and prison-derived strong ties. Camp Bucca and Abu Ghraib functioned as organizational incubators: senior AQI figures and future ISIS leadership (including Abu Bakr al-Baghdadi) formed high-clustering-coefficient strong-tie networks within the detention population. These prison ties became the organizational backbone from which subsequent recruitment radiated.
+
+**Phase 2 (2013--2017) — Territorial State:** Controlled territory transformed the network. Nodes became administrative units; edges became governance and resource channels. A dual structure emerged: overt administrative network (governorates, taxation) with low modularity, and a covert operational network (external attack planning, financing).^[Michael Kenney, *From Pablo to Osama* (University Park: Pennsylvania State University Press, 2007), 55--80.] The caliphate functioned as a **network attractor** — foreign fighter recruitment produced preferential attachment to key nodes, generating scale-free growth.
+
+**Phase 3 (2017--present) — Post-Territorial Franchise:** Loss of territory destroyed the administrative layer. Surviving actors dispersed: ISKP (Afghanistan/Pakistan), ISGS (Sahel), Libya, IS-Philippines, Mozambique. Structural transformation: from low-modularity territorial to high-modularity geographic franchise. External attack capability maintained through **virtual planners** — high-betweenness nodes bridging geographically dispersed cells through encrypted communications.
+
+:::
+::: {.column width="45%"}
+
+```{=html}
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">ISIS Network Transformation 2015 to 2023</p>
+  <svg viewBox="0 0 480 235" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <line x1="238" y1="5" x2="238" y2="230" stroke="#D6D6D6" stroke-width="1.5"/>
+    <text x="119" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#450084">2015: TERRITORIAL STATE</text>
+    <text x="119" y="29" text-anchor="middle" font-size="7.5" fill="#595959">density 0.14 · Q 0.22 · low diameter</text>
+    <circle cx="119" cy="110" r="18" fill="#450084" stroke="#450084" stroke-width="2"/>
+    <text x="119" y="114" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">Raqqa</text>
+    <line x1="119" y1="92" x2="65" y2="68" stroke="#450084" stroke-width="1.8"/>
+    <line x1="119" y1="92" x2="162" y2="72" stroke="#450084" stroke-width="1.8"/>
+    <line x1="101" y1="110" x2="45" y2="110" stroke="#450084" stroke-width="1.8"/>
+    <line x1="137" y1="110" x2="195" y2="102" stroke="#450084" stroke-width="1.8"/>
+    <line x1="119" y1="128" x2="75" y2="165" stroke="#450084" stroke-width="1.8"/>
+    <line x1="119" y1="128" x2="160" y2="162" stroke="#450084" stroke-width="1.8"/>
+    <line x1="65" y1="68" x2="45" y2="110" stroke="#450084" stroke-width="1.5"/>
+    <line x1="65" y1="68" x2="75" y2="165" stroke="#450084" stroke-width="1.5"/>
+    <line x1="162" y1="72" x2="195" y2="102" stroke="#450084" stroke-width="1.5"/>
+    <line x1="162" y1="72" x2="160" y2="162" stroke="#450084" stroke-width="1.5"/>
+    <line x1="45" y1="110" x2="75" y2="165" stroke="#450084" stroke-width="1.5"/>
+    <line x1="195" y1="102" x2="160" y2="162" stroke="#450084" stroke-width="1.5"/>
+    <circle cx="65" cy="68" r="12" fill="#B599CE" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="162" cy="72" r="12" fill="#B599CE" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="45" cy="110" r="12" fill="#B599CE" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="195" cy="102" r="12" fill="#B599CE" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="75" cy="165" r="12" fill="#B599CE" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="160" cy="162" r="12" fill="#B599CE" stroke="#450084" stroke-width="1.8"/>
+    <rect x="18" y="190" width="204" height="34" rx="3" fill="#F4EFE1" stroke="#CBB677" stroke-width="1"/>
+    <text x="120" y="204" text-anchor="middle" font-size="8" fill="#333" font-weight="600">Centralized; decapitation viable</text>
+    <text x="120" y="216" text-anchor="middle" font-size="8" fill="#333">Raqqa = structural hub</text>
+    <text x="359" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">2023: GEOGRAPHIC FRANCHISE</text>
+    <text x="359" y="29" text-anchor="middle" font-size="7.5" fill="#595959">density 0.04 · Q 0.58 · high diameter</text>
+    <line x1="268" y1="58" x2="303" y2="50" stroke="#450084" stroke-width="2"/>
+    <line x1="268" y1="58" x2="278" y2="83" stroke="#450084" stroke-width="2"/>
+    <line x1="303" y1="50" x2="278" y2="83" stroke="#450084" stroke-width="2"/>
+    <circle cx="268" cy="58" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="303" cy="50" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="278" cy="83" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <text x="285" y="40" text-anchor="middle" font-size="7.5" fill="#595959">ISKP</text>
+    <line x1="388" y1="55" x2="423" y2="60" stroke="#450084" stroke-width="2"/>
+    <line x1="388" y1="55" x2="403" y2="86" stroke="#450084" stroke-width="2"/>
+    <line x1="423" y1="60" x2="403" y2="86" stroke="#450084" stroke-width="2"/>
+    <circle cx="388" cy="55" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="423" cy="60" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="403" cy="86" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <text x="406" y="40" text-anchor="middle" font-size="7.5" fill="#595959">ISGS/Sahel</text>
+    <line x1="338" y1="115" x2="363" y2="100" stroke="#450084" stroke-width="2"/>
+    <line x1="338" y1="115" x2="353" y2="138" stroke="#450084" stroke-width="2"/>
+    <line x1="363" y1="100" x2="353" y2="138" stroke="#450084" stroke-width="2"/>
+    <circle cx="338" cy="115" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="363" cy="100" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="353" cy="138" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <text x="350" y="92" text-anchor="middle" font-size="7.5" fill="#595959">Libya</text>
+    <line x1="265" y1="162" x2="293" y2="156" stroke="#450084" stroke-width="2"/>
+    <line x1="265" y1="162" x2="270" y2="190" stroke="#450084" stroke-width="2"/>
+    <line x1="293" y1="156" x2="270" y2="190" stroke="#450084" stroke-width="2"/>
+    <circle cx="265" cy="162" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="293" cy="156" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="270" cy="190" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <text x="272" y="150" text-anchor="middle" font-size="7.5" fill="#595959">Iraq/Syria</text>
+    <line x1="413" y1="162" x2="450" y2="158" stroke="#450084" stroke-width="2"/>
+    <line x1="413" y1="162" x2="432" y2="196" stroke="#450084" stroke-width="2"/>
+    <line x1="450" y1="158" x2="432" y2="196" stroke="#450084" stroke-width="2"/>
+    <circle cx="413" cy="162" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="450" cy="158" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="432" cy="196" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <text x="435" y="150" text-anchor="middle" font-size="7.5" fill="#595959">IS-Phil/Moz</text>
+    <line x1="278" y1="83" x2="338" y2="115" stroke="#CBB677" stroke-width="1.5" stroke-dasharray="5,4"/>
+    <line x1="403" y1="86" x2="338" y2="115" stroke="#CBB677" stroke-width="1.5" stroke-dasharray="5,4"/>
+    <line x1="338" y1="115" x2="288" y2="156" stroke="#CBB677" stroke-width="1.5" stroke-dasharray="5,4"/>
+    <line x1="338" y1="115" x2="413" y2="162" stroke="#CBB677" stroke-width="1.5" stroke-dasharray="5,4"/>
+    <rect x="248" y="210" width="218" height="20" rx="3" fill="#fdd" stroke="#cc0000" stroke-width="1"/>
+    <text x="357" y="224" text-anchor="middle" font-size="7.5" fill="#cc0000" font-weight="700">Decapitation ineffective; counter-narrative required</text>
+  </svg>
+  <figcaption>2015: Dense hub-and-spoke, decapitation viable.<br>2023: High-modularity franchises; dashed = online inter-cluster links.</figcaption>
+</div>
+```
+
+:::
+::::
+
+## Inter-Group Cooperation and Network Ties
+
+Terrorist organizations form cooperation ties for training, financing, weapons, sanctuary, and ideological reinforcement.^[Brian J. Phillips, "Terrorist Group Cooperation and Longevity," *International Studies Quarterly* 58, no. 2 (2014): 336--347.]
+
+**Network structure:** Nodes are designated terrorist organizations, state sponsors, and criminal networks. Edges encode cooperation type (training, financing, weapons transfer, joint operations) with direction and weight. **Phillips (2014)** found groups with more cooperation ties significantly more likely to survive — state sponsors are high-degree hubs whose removal reduces connected groups' longevity disproportionately. Cooperation is clustered by ideology and geography.
+
+::: {.callout-tip title="Iran's Proxy Network as Multilayer Structure" icon=false}
+Iran's sponsorship illustrates inter-group cooperation as interlayer coupling. One layer: inter-group operational ties (Hezbollah--Hamas--PIJ--Iraqi militias). A second layer: state-group support (IRGC-QF as the hub connecting all groups to Iran).
+
+Coupling strength varies by group: **Hezbollah** (maximum coupling — strategic direction, financial subsidy ~$700M/year, weapons, training infrastructure); **Hamas** (moderate — financial support, some weapons; strategic autonomy maintained); **PIJ** (strong — more financially dependent than Hamas); **PMF/Kata'ib Hezbollah** (strong operational coupling for regional force projection).
+
+The interlayer coupling identifies which groups receive Iranian strategic direction vs. merely logistical support — a distinction that predicts group behavior on issues where Iranian and group interests diverge.
+:::
+
+::: {.callout-note title="PMCs and Gray Zone Networks" icon=false}
+Russia's Wagner Group (until 2023) and successor structures operated as **interlayer bridge nodes** connecting the Russian state layer to non-state conflict actors in Libya, Mali, CAR, Sudan, and Ukraine. Wagner's post-Prigozhin restructuring into Africa Corps and other successors represents a structural adaptation: reducing the single-node betweenness concentration that made Wagner's leadership a decapitation target — deliberately distributing broker function across multiple lower-profile nodes.
+:::
+
+## Staniland's Network Theory of Insurgency
+
+Paul Staniland's *Networks of Rebellion* (2014) argues that pre-war social networks of leaders and fighters — not battlefield strategy — determine insurgent organizational structure and cohesion.^[Paul Staniland, *Networks of Rebellion: Explaining Insurgent Cohesion and Collapse* (Ithaca: Cornell University Press, 2014), 12--50.]
+
+:::: {.columns}
+::: {.column width="50%"}
+
+**Two network dimensions:**
+
+- **Horizontal ties:** linkages among local commanders at the same level. Enable decentralized coordination without central direction.
+- **Vertical ties:** linkages between central leadership and local commanders. Enable command and resource distribution.
+
+**Network measures for Staniland's typology:**
+
+| Metric | What it captures |
+|:-------|:----------------|
+| Horizontal density | Parochial vs. integrated |
+| Vertical density | Vanguard vs. integrated |
+| Betweenness centralization | High = vanguard structure |
+| Modularity | High = parochial clusters |
+| Vertical path length | Short = effective command |
+
+:::
+::: {.column width="50%"}
+
+```{=html}
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6;padding:0.8rem">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">Staniland's 2x2 Insurgency Typology</p>
+  <svg viewBox="0 0 380 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:360px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <line x1="60" y1="18" x2="60" y2="295" stroke="#333" stroke-width="1.5"/>
+    <line x1="60" y1="295" x2="375" y2="295" stroke="#333" stroke-width="1.5"/>
+    <line x1="60" y1="156" x2="375" y2="156" stroke="#D6D6D6" stroke-width="1"/>
+    <line x1="217" y1="18" x2="217" y2="295" stroke="#D6D6D6" stroke-width="1"/>
+    <text x="32" y="90" text-anchor="middle" font-size="9" fill="#595959" font-weight="700" transform="rotate(-90,32,90)">HORIZONTAL TIES</text>
+    <text x="32" y="220" text-anchor="middle" font-size="8" fill="#595959" transform="rotate(-90,32,220)">Low</text>
+    <text x="32" y="50" text-anchor="middle" font-size="8" fill="#595959" transform="rotate(-90,32,50)">High</text>
+    <text x="140" y="310" text-anchor="middle" font-size="8" fill="#595959">Low</text>
+    <text x="296" y="310" text-anchor="middle" font-size="8" fill="#595959">High</text>
+    <text x="217" y="323" text-anchor="middle" font-size="9" fill="#595959" font-weight="700">VERTICAL TIES</text>
+    <rect x="62" y="20" width="153" height="134" rx="2" fill="rgba(203,182,119,0.08)"/>
+    <text x="139" y="36" text-anchor="middle" font-size="9" font-weight="700" fill="#AD9C65">PAROCHIAL</text>
+    <text x="139" y="47" text-anchor="middle" font-size="7.5" fill="#595959">Taliban 1990s, Afghan mujahideen</text>
+    <line x1="85" y1="88" x2="115" y2="72" stroke="#AD9C65" stroke-width="2"/>
+    <line x1="85" y1="88" x2="100" y2="112" stroke="#AD9C65" stroke-width="2"/>
+    <line x1="115" y1="72" x2="100" y2="112" stroke="#AD9C65" stroke-width="2"/>
+    <line x1="145" y1="88" x2="175" y2="72" stroke="#AD9C65" stroke-width="2"/>
+    <line x1="145" y1="88" x2="160" y2="112" stroke="#AD9C65" stroke-width="2"/>
+    <line x1="175" y1="72" x2="160" y2="112" stroke="#AD9C65" stroke-width="2"/>
+    <line x1="105" y1="82" x2="142" y2="82" stroke="#D6D6D6" stroke-width="1.2" stroke-dasharray="4,3"/>
+    <circle cx="85" cy="88" r="9" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"/>
+    <circle cx="115" cy="72" r="9" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"/>
+    <circle cx="100" cy="112" r="9" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"/>
+    <circle cx="145" cy="88" r="9" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"/>
+    <circle cx="175" cy="72" r="9" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"/>
+    <circle cx="160" cy="112" r="9" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"/>
+    <text x="139" y="137" text-anchor="middle" font-size="7.5" fill="#AD9C65">Locally effective; cannot coordinate</text>
+    <text x="139" y="147" text-anchor="middle" font-size="7.5" fill="#AD9C65">multi-front operations</text>
+    <rect x="218" y="20" width="155" height="134" rx="2" fill="rgba(69,0,132,0.07)"/>
+    <text x="295" y="36" text-anchor="middle" font-size="9" font-weight="700" fill="#450084">INTEGRATED</text>
+    <text x="295" y="47" text-anchor="middle" font-size="7.5" fill="#595959">Viet Cong, LTTE, PKK post-2000</text>
+    <circle cx="295" cy="68" r="10" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <line x1="295" y1="78" x2="265" y2="96" stroke="#450084" stroke-width="2"/>
+    <line x1="295" y1="78" x2="325" y2="96" stroke="#450084" stroke-width="2"/>
+    <line x1="265" y1="96" x2="325" y2="96" stroke="#450084" stroke-width="2"/>
+    <line x1="265" y1="106" x2="252" y2="128" stroke="#450084" stroke-width="2"/>
+    <line x1="265" y1="106" x2="278" y2="128" stroke="#450084" stroke-width="2"/>
+    <line x1="325" y1="106" x2="312" y2="128" stroke="#450084" stroke-width="2"/>
+    <line x1="325" y1="106" x2="338" y2="128" stroke="#450084" stroke-width="2"/>
+    <line x1="252" y1="128" x2="278" y2="128" stroke="#450084" stroke-width="2"/>
+    <line x1="312" y1="128" x2="338" y2="128" stroke="#450084" stroke-width="2"/>
+    <line x1="265" y1="96" x2="312" y2="128" stroke="#450084" stroke-width="1.5"/>
+    <circle cx="265" cy="96" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="325" cy="96" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="252" cy="128" r="8" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="278" cy="128" r="8" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="312" cy="128" r="8" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="338" cy="128" r="8" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <text x="295" y="146" text-anchor="middle" font-size="7.5" fill="#450084">Most resilient; requires simultaneous</text>
+    <text x="295" y="156" text-anchor="middle" font-size="7.5" fill="#450084">pressure on H and V ties</text>
+    <rect x="62" y="158" width="153" height="135" rx="2" fill="rgba(89,89,89,0.06)"/>
+    <text x="139" y="174" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">FRAGMENTED</text>
+    <text x="139" y="185" text-anchor="middle" font-size="7.5" fill="#595959">Early Syrian rebels, Libya 2011</text>
+    <circle cx="90" cy="230" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"/>
+    <circle cx="135" cy="215" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"/>
+    <circle cx="125" cy="260" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"/>
+    <circle cx="180" cy="238" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"/>
+    <line x1="90" y1="230" x2="135" y2="215" stroke="#B2B2B2" stroke-width="1.2" stroke-dasharray="4,3"/>
+    <text x="139" y="278" text-anchor="middle" font-size="7.5" fill="#595959">Barely functional; internal conflict</text>
+    <text x="139" y="288" text-anchor="middle" font-size="7.5" fill="#595959">dominates; low disruption return</text>
+    <rect x="218" y="158" width="155" height="135" rx="2" fill="rgba(89,89,89,0.06)"/>
+    <text x="295" y="174" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">VANGUARD</text>
+    <text x="295" y="185" text-anchor="middle" font-size="7.5" fill="#595959">Shining Path, early PKK</text>
+    <circle cx="295" cy="210" r="10" fill="#D6D6D6" stroke="#595959" stroke-width="2"/>
+    <line x1="295" y1="220" x2="268" y2="244" stroke="#595959" stroke-width="2"/>
+    <line x1="295" y1="220" x2="322" y2="244" stroke="#595959" stroke-width="2"/>
+    <circle cx="268" cy="244" r="9" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <circle cx="322" cy="244" r="9" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <line x1="268" y1="253" x2="254" y2="274" stroke="#595959" stroke-width="2"/>
+    <line x1="268" y1="253" x2="281" y2="274" stroke="#595959" stroke-width="2"/>
+    <line x1="322" y1="253" x2="308" y2="274" stroke="#595959" stroke-width="2"/>
+    <line x1="322" y1="253" x2="336" y2="274" stroke="#595959" stroke-width="2"/>
+    <circle cx="254" cy="274" r="8" fill="#D6D6D6" stroke="#595959" stroke-width="1.5"/>
+    <circle cx="281" cy="274" r="8" fill="#D6D6D6" stroke="#595959" stroke-width="1.5"/>
+    <circle cx="308" cy="274" r="8" fill="#D6D6D6" stroke="#595959" stroke-width="1.5"/>
+    <circle cx="336" cy="274" r="8" fill="#D6D6D6" stroke="#595959" stroke-width="1.5"/>
+    <text x="295" y="288" text-anchor="middle" font-size="7.5" fill="#595959">High vertical centralization;</text>
+    <text x="295" y="298" text-anchor="middle" font-size="7.5" fill="#595959">decapitation highly effective</text>
+  </svg>
+</div>
+```
+
+:::
+::::
+
+::: {.callout-warning title="Disruption Strategy by Quadrant" icon=false}
+**Vanguard:** decapitation is highly effective — high vertical centralization means leadership removal severs command to all subordinate levels. **Parochial:** decapitation is ineffective (no vertical structure to sever); disrupt horizontal ties between local commander networks. **Integrated:** hardest to disrupt; requires sustained simultaneous pressure on both horizontal and vertical ties; neither decapitation nor local disruption alone is sufficient. **Fragmented:** least operationally capable, but also lowest disruption return — internal conflict already limits effectiveness; political accommodation may be more effective than security operations.
+:::
+
+# Part II: Arms Trafficking and Proliferation
+
+## Formal Arms Transfer Networks
+
+**Structure:** Directed, weighted network. Nodes: nation-states. Edges: documented transfers, directed supplier-to-recipient, weighted by SIPRI Trend Indicator Value (TIV). **Data:** SIPRI Arms Transfers Database (annual since 1950, publicly available); UN Comtrade; ATT annual reports; UN Panel of Experts reports.
+
+:::: {.columns}
+::: {.column width="55%"}
+
+**Network properties:**
+
+- Highly skewed degree distribution: a small number of major exporters (US, Russia, France, Germany, UK, China, Israel) have very high out-degree; most states are recipient-only
+- Dense within alliance blocs: NATO members primarily receive from NATO exporters; SCO/CSTO members from Russia and China
+- Community structure maps to geopolitical alignment: US-supplier and Russia-supplier communities show minimal overlap
+- **Supplier dependency creates coercive leverage:** recipient states captive to a single supplier for spare parts and maintenance face significant coercive vulnerability if the supplier threatens to withhold support
+
+:::
+::: {.column width="45%"}
+
+```{=html}
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">Arms Transfer: Supplier Hub Communities</p>
+  <svg viewBox="0 0 380 270" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:360px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <defs><marker id="at" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#B2B2B2"/></marker></defs>
+    <ellipse cx="105" cy="105" rx="88" ry="78" fill="rgba(69,0,132,0.07)" stroke="#450084" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <ellipse cx="265" cy="105" rx="88" ry="78" fill="rgba(89,89,89,0.07)" stroke="#595959" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <ellipse cx="185" cy="235" rx="60" ry="28" fill="rgba(203,182,119,0.10)" stroke="#AD9C65" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <text x="60" y="20" text-anchor="middle" font-size="8.5" font-weight="700" fill="#450084">US COMMUNITY</text>
+    <text x="315" y="20" text-anchor="middle" font-size="8.5" font-weight="700" fill="#595959">RUS/CHN COMMUNITY</text>
+    <text x="185" y="208" text-anchor="middle" font-size="8.5" font-weight="700" fill="#AD9C65">MULTI-SOURCE</text>
+    <circle cx="105" cy="96" r="22" fill="#450084" stroke="#450084" stroke-width="2"/>
+    <text x="105" y="100" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">US</text>
+    <circle cx="50" cy="58" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <text x="50" y="62" text-anchor="middle" font-size="7.5" fill="#450084">NATO</text>
+    <circle cx="42" cy="115" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <text x="42" y="119" text-anchor="middle" font-size="7.5" fill="#450084">GCC</text>
+    <circle cx="65" cy="168" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <text x="65" y="172" text-anchor="middle" font-size="7.5" fill="#450084">KOR/JP</text>
+    <circle cx="150" cy="65" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <text x="150" y="69" text-anchor="middle" font-size="7.5" fill="#450084">Taiwan</text>
+    <circle cx="158" cy="143" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <text x="158" y="147" text-anchor="middle" font-size="7.5" fill="#450084">Aust.</text>
+    <line x1="87" y1="80" x2="59" y2="65" stroke="#450084" stroke-width="1.8" marker-end="url(#at)"/>
+    <line x1="85" y1="102" x2="54" y2="113" stroke="#450084" stroke-width="1.8" marker-end="url(#at)"/>
+    <line x1="90" y1="116" x2="72" y2="160" stroke="#450084" stroke-width="1.8" marker-end="url(#at)"/>
+    <line x1="124" y1="80" x2="142" y2="71" stroke="#450084" stroke-width="1.8" marker-end="url(#at)"/>
+    <line x1="126" y1="104" x2="150" y2="137" stroke="#450084" stroke-width="1.8" marker-end="url(#at)"/>
+    <circle cx="265" cy="86" r="20" fill="#595959" stroke="#595959" stroke-width="2"/>
+    <text x="265" y="90" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">RUS</text>
+    <circle cx="278" cy="145" r="15" fill="#B2B2B2" stroke="#595959" stroke-width="2"/>
+    <text x="278" y="149" text-anchor="middle" font-size="8.5" fill="#fff" font-weight="bold">CHN</text>
+    <line x1="268" y1="106" x2="276" y2="132" stroke="#595959" stroke-width="1.8" marker-end="url(#at)"/>
+    <circle cx="222" cy="52" r="12" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text x="222" y="56" text-anchor="middle" font-size="7.5" fill="#595959">CSTO</text>
+    <circle cx="335" cy="55" r="12" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text x="335" y="59" text-anchor="middle" font-size="7.5" fill="#595959">Syria</text>
+    <circle cx="348" cy="105" r="12" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text x="348" y="109" text-anchor="middle" font-size="7.5" fill="#595959">Iran</text>
+    <circle cx="325" cy="162" r="12" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text x="325" y="166" text-anchor="middle" font-size="7.5" fill="#595959">Africa</text>
+    <line x1="248" y1="72" x2="233" y2="59" stroke="#595959" stroke-width="1.8" marker-end="url(#at)"/>
+    <line x1="282" y1="70" x2="328" y2="62" stroke="#595959" stroke-width="1.8" marker-end="url(#at)"/>
+    <line x1="283" y1="90" x2="338" y2="100" stroke="#595959" stroke-width="1.8" marker-end="url(#at)"/>
+    <line x1="288" y1="156" x2="316" y2="158" stroke="#595959" stroke-width="1.8" marker-end="url(#at)"/>
+    <circle cx="148" cy="235" r="13" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <text x="148" y="239" text-anchor="middle" font-size="7.5" fill="#AD9C65" font-weight="600">India</text>
+    <circle cx="222" cy="235" r="13" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <text x="222" y="239" text-anchor="middle" font-size="7.5" fill="#AD9C65" font-weight="600">Egypt</text>
+    <line x1="115" y1="116" x2="143" y2="225" stroke="#450084" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#at)"/>
+    <line x1="270" y1="104" x2="226" y2="225" stroke="#595959" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#at)"/>
+    <line x1="120" y1="104" x2="215" y2="230" stroke="#450084" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#at)"/>
+    <line x1="258" y1="104" x2="153" y2="228" stroke="#595959" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#at)"/>
+    <text x="185" y="260" text-anchor="middle" font-size="7.5" fill="#595959">Multi-source states have structural independence from any single supplier</text>
+  </svg>
+  <figcaption>Dashed = cross-community transfers to multi-source states.<br>India and Egypt receive from both communities — not coercible by either supplier.</figcaption>
+</div>
+```
+
+:::
+::::
+
+## Illicit Arms Trafficking: Shadow Brokers
+
+Illicit arms trafficking violates UN arms embargoes and supplies non-state actors, operating on enforcement risk management rather than legal compliance.
+
+**Viktor Bout (convicted 2011)** — the canonical shadow broker case. Bout's network functioned as a logistics and brokering hub connecting multiple African conflict zones (Liberia, Sierra Leone, Rwanda, DRC, Angola) through common air logistics infrastructure. **Structural position:** high betweenness between otherwise disconnected conflict-zone recipient communities — each group could only access certain supply markets; Bout provided the bridge. UN Security Council Panel of Experts reports on Liberia (2000--2003) documented his network in sufficient detail to construct an entity-relationship graph from open sources — one of the earliest applications of SNA principles to arms trafficking intelligence.
+
+## The A.Q. Khan Proliferation Network
+
+The A.Q. Khan network (approximately 1987--2004) transferred centrifuge designs, uranium enrichment technology, and weapons design information to Libya, Iran, North Korea, and others.^[David Albright, *Peddling Peril: How the Secret Nuclear Trade Arms America's Enemies* (New York: Free Press, 2010), 55--120.] Its multilayer structure:
+
+:::: {.columns}
+::: {.column width="55%"}
+
+**Layer 1 — Commercial:** Front companies in UAE (SMB Computers), Malaysia (SCOPE), South Africa, Switzerland, and UK provided legitimate business cover.
+
+**Layer 2 — Technical:** Nuclear scientists and engineers from Pakistan, Netherlands, Germany, and South Africa transferred centrifuge designs and enrichment expertise.
+
+**Layer 3 — Financial:** Payments routed through Dubai banks; commissions distributed to intermediaries; proceeds partially reinvested in Pakistan's nuclear program.
+
+**Layer 4 — Political protection:** ISI and senior Pakistani government relationships provided operational cover and insulated the network from interdiction until 2003.^[Gordon Corera, *Shopping for Bombs* (Oxford: Oxford University Press, 2006), 88--145.]
+
+:::
+::: {.column width="45%"}
+
+**Layer-specific centrality:**
+
+| Layer | Highest Centrality | Measure |
+|:------|:-------------------|:-------:|
+| Commercial | B.S.A. Tahir (Dubai) | Betweenness |
+| Technical | A.Q. Khan | Eigenvector |
+| Financial | Dubai banking nodes | Degree |
+| Political | ISI liaison | Consequence |
+
+**Key lesson:** aggregate centrality analysis would have deprioritized Tahir relative to Khan — but Tahir occupied the critical chokepoint in the commercial layer. Layer-specific analysis was necessary to identify the correct operational target.
+
+::: {.callout-warning title="Interdiction Failure" icon=false}
+The network persisted for 16 years partly because Western intelligence focused on state-level proliferation monitoring rather than the non-state commercial layer. The front company structure was largely invisible to traditional GEOINT and SIGINT collection. SNA of commercial registry data, export control violations, and financial transactions — all available open-source — would have revealed the commercial layer earlier.
+:::
+
+:::
+::::
+
+## Dual-Use Supply Chains as Bipartite Networks
+
+**Bipartite model:** Node set $U$ = controlled items; Node set $W$ = procurement entities. Edges = documented or suspected procurement. Projection to $W$: two entities connected if they procured the same item — reveals co-procurement communities. Projection to $U$: two items connected if procured by the same entity — identifies item clusters revealing weapon-system Bills of Materials.
+
+**Analytical indicators:** *Item clustering* — a BOM-consistent combination of controlled items is a strong program indicator even if no single item is conclusive. *Entity betweenness* — an entity connecting multiple item types from multiple supplier countries is a likely central broker. *Geographic clustering* — sudden concentration of controlled-item exports to a third country indicates transshipment. *Temporal acceleration* — accelerating procurement pace signals a program approaching a critical test or production milestone.
+
+**Data sources:** U.S. Commerce Department Entity List, EU dual-use control lists (Council Regulation 2021/821), UN Security Council sanctions lists, export control violation records.
+
+# Part III: Sanctions Evasion and State Sponsorship
+
+## Sanctions Evasion as a Network Problem
+
+Financial sanctions designate entities as prohibited from accessing the international financial system. Targeted actors construct networks of intermediaries, shell companies, and complicit third parties to maintain access. This is a **network connectivity maintenance problem** in adversarial competition: the sanctioned actor preserves connectivity; the sanctioning authority severs it.^[Juan C. Zarate, *Treasury's War: The Unleashing of a New Era of Financial Warfare* (New York: PublicAffairs, 2013), 98--145.]
+
+:::: {.columns}
+::: {.column width="55%"}
+
+**Structural mechanisms:**
+
+- **Shell company chains:** nominally independent companies, each holding shares in the next, obscuring ultimate beneficial ownership. The deeper the chain, the longer the path and the harder to trace.
+- **Front companies:** nominally legitimate businesses transacting on behalf of sanctioned actors. Detectable by: mismatch between declared business purpose and actual transaction patterns; registered agent overlap with known sanctioned entities.
+- **Third-country routing:** transactions through a jurisdiction that has not imposed the relevant sanctions — a path through a non-participating node.
+
+**Network analysis framework:**
+
+**Minimum vertex cut:** the minimum set of entities whose simultaneous OFAC designation would isolate the sanctioned entity from the financial system. This is the minimum vertex cut problem applied to the corporate ownership graph — the analytically correct designation strategy, not the most visible or prominent intermediary.
+
+**Beneficial ownership graph:** nodes are legal entities and natural persons; directed edges are ownership and control relationships; the root of each connected component is the **ultimate beneficial owner (UBO)**.
+
+:::
+::: {.column width="45%"}
+
+```{=html}
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">Sanctions Evasion Chain with Minimum Cut</p>
+  <svg viewBox="0 0 480 225" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:460px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <defs>
+      <marker id="se2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#595959"/></marker>
+      <marker id="ser2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#cc0000"/></marker>
+    </defs>
+    <circle cx="55" cy="112" r="28" fill="#fdd" stroke="#cc0000" stroke-width="2.5"/>
+    <text x="55" y="108" text-anchor="middle" font-size="8" fill="#cc0000" font-weight="700">SANC-</text>
+    <text x="55" y="119" text-anchor="middle" font-size="8" fill="#cc0000" font-weight="700">TIONED</text>
+    <line x1="80" y1="96" x2="140" y2="76" stroke="#cc0000" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#ser2)"/>
+    <line x1="80" y1="128" x2="140" y2="148" stroke="#cc0000" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#ser2)"/>
+    <circle cx="165" cy="70" r="18" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text x="165" y="67" text-anchor="middle" font-size="7.5" fill="#595959">Shell</text>
+    <text x="165" y="78" text-anchor="middle" font-size="7.5" fill="#595959">A</text>
+    <circle cx="165" cy="152" r="18" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text x="165" y="149" text-anchor="middle" font-size="7.5" fill="#595959">Shell</text>
+    <text x="165" y="160" text-anchor="middle" font-size="7.5" fill="#595959">C</text>
+    <line x1="183" y1="70" x2="238" y2="70" stroke="#595959" stroke-width="1.8" marker-end="url(#se2)"/>
+    <line x1="183" y1="152" x2="238" y2="128" stroke="#595959" stroke-width="1.8" marker-end="url(#se2)"/>
+    <circle cx="262" cy="70" r="18" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text x="262" y="67" text-anchor="middle" font-size="7.5" fill="#595959">Shell</text>
+    <text x="262" y="78" text-anchor="middle" font-size="7.5" fill="#595959">B</text>
+    <circle cx="262" cy="125" r="18" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text x="262" y="122" text-anchor="middle" font-size="7.5" fill="#595959">3rd-Ctry</text>
+    <text x="262" y="133" text-anchor="middle" font-size="7.5" fill="#595959">Bank</text>
+    <line x1="280" y1="70" x2="332" y2="95" stroke="#595959" stroke-width="1.8" marker-end="url(#se2)"/>
+    <line x1="276" y1="137" x2="332" y2="112" stroke="#595959" stroke-width="1.8" marker-end="url(#se2)"/>
+    <circle cx="356" cy="104" r="22" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <text x="356" y="100" text-anchor="middle" font-size="7.5" fill="#AD9C65" font-weight="600">Front</text>
+    <text x="356" y="111" text-anchor="middle" font-size="7.5" fill="#AD9C65" font-weight="600">Co.</text>
+    <line x1="378" y1="104" x2="420" y2="96" stroke="#595959" stroke-width="1.8" marker-end="url(#se2)"/>
+    <rect x="420" y="78" width="48" height="40" rx="4" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <text x="444" y="96" text-anchor="middle" font-size="8" fill="#450084" font-weight="700">Legit.</text>
+    <text x="444" y="108" text-anchor="middle" font-size="8" fill="#450084" font-weight="700">Bank</text>
+    <line x1="210" y1="32" x2="210" y2="185" stroke="#cc0000" stroke-width="2" stroke-dasharray="6,4"/>
+    <text x="210" y="22" text-anchor="middle" font-size="9" fill="#cc0000" font-weight="700">MIN CUT</text>
+    <text x="210" y="193" text-anchor="middle" font-size="7.5" fill="#cc0000">Shell B + 3rd-Ctry Bank (2 designations)</text>
+    <text x="210" y="203" text-anchor="middle" font-size="7.5" fill="#cc0000">severs ALL paths from sanctioned entity</text>
+  </svg>
+  <figcaption>Two simultaneous designations (Shell B + 3rd-Country Bank) sever both paths.<br>Designating only Shell B leaves Path 2 (via 3rd-Country Bank) intact.</figcaption>
+</div>
+```
+
+:::
+::::
+
+::: {.callout-note title="Panama Papers / Pandora Papers as Network Data" icon=false}
+Leaked corporate registry data from ICIJ (Panama Papers 2016; Pandora Papers 2021) provides open-source beneficial ownership edges for millions of shell entities across 200+ jurisdictions. ICIJ's Offshore Leaks database (offshoreleaks.icij.org) is queryable and downloadable. NetworkX-compatible edge lists can be constructed from the relationships table. Analysts have used this data to identify ownership chains connecting known sanctioned entities to apparently clean intermediaries — converting network data into actionable designation intelligence.
+:::
+
+# Part IV: Alliance and Interstate Networks
+
+## Formal Alliance Networks
+
+**Data:** COW Alliance Dataset (all formal alliances 1816--present); ATOP (specific treaty obligations — troop commitment, basing rights, intelligence sharing provisions).
+
+**Network properties:** Highly clustered community structure (NATO, CSTO, GCC). The **United States has the highest betweenness centrality** in the post-WWII alliance network — bridging otherwise disconnected ally communities: Japan-Korea-Australia-Pacific; European NATO; Gulf Cooperation Council; Latin American bilateral partners. Modularity has decreased since the Cold War as bilateral agreements proliferate outside formal blocs.
+
+::: {.callout-tip title="AUKUS as a New Bridging Tie" icon=false}
+The 2021 AUKUS agreement (Australia, United Kingdom, United States) created a new bridging tie in the global alliance network. UK betweenness centrality **increases** post-AUKUS: it now bridges the European NATO community (where it remains embedded at the defense level post-Brexit) and the Pacific security architecture (through Australia). This is a real-time example of alliance network structural change detectable and interpretable through the metrics covered in this course.
+:::
+
+## UN Voting Similarity Networks
+
+UNGA voting data provides a revealed-preference measure of political alignment independent of formal alliance structures.
+
+**Network:** Nodes = UN member states; Edges = voting similarity score (fraction of resolutions voted identically), weighted and undirected. **Data:** Voeten, Strezhnev, and Bailey (2009--present), all UNGA votes since 1946, available at Harvard Dataverse.
+
+**Analytical applications:**
+
+- **Latent alignment detection:** high voting similarity without formal alliance = potential relationship deepening candidate
+- **Alliance stress:** formally allied states with declining voting similarity are experiencing alignment stress
+- **Community detection** produces bloc structures often more accurate than formal alliance data for characterizing *current* alignment
+
+::: {.callout-note title="Russia-China Voting Convergence as Leading Indicator" icon=false}
+Temporal analysis of UNGA voting similarity shows sustained increase in Russia-China similarity since 2000 — from moderate in the 1990s to very high (>0.80) in the post-2014 period. This convergence **preceded many formal alignment signals** (joint exercises, energy deals, dual-use technology agreements) by several years.
+
+The Russia-Western bloc voting similarity showed the mirror pattern — steady divergence since 2000, accelerating after 2014, near-complete divergence post-2022. Both trends were visible in the voting network years before they became explicit policy events.
+
+**Analytical implication:** systematic monitoring of UNGA voting similarity time series provides early-warning signals of alignment shifts that precede formal policy changes by months or years.
+:::
+
+## Arms Transfer Networks and Political Alignment
+
+Arms transfers create structural dependencies: recipient states must maintain supplier relationships for spare parts, training, and upgrades — giving suppliers coercive leverage.
+
+- **Community structure maps to alignment:** US-supplier and Russia-supplier recipient communities show minimal overlap; the Cold War alignment pattern persists in modified form post-1991
+- **Multi-source recipients** (India, Egypt) source from multiple suppliers, gaining structural independence not visible from bilateral relationship assessments
+- **Supplier switches signal alignment shifts:** a state switching its primary arms supplier is a major alignment event; temporal analysis of the arms transfer network detects these early
+
+**SIPRI data application:** using SIPRI TIV data, construct a directed weighted arms transfer network for 2010--2024. Apply community detection to identify supplier-recipient communities. Compute supplier betweenness: which exporters bridge otherwise disconnected recipient communities? Identify high-in-degree from multiple suppliers — these have structural independence not visible in bilateral assessments.
+
+## Intelligence Cooperation Networks
+
+**Five Eyes (UKUSA Agreement):** the densest intelligence-sharing community in the global cooperation network. All-channel structure within the five-member core (US, UK, Canada, Australia, New Zealand). Hub-and-spoke with Five Eyes as collective hub and bilateral partners as peripheral nodes.
+
+**NATO intelligence sharing:** more restricted than alliance density implies. SIGINT sharing requires bilateral agreements even within NATO. The NATO alliance network has *higher density* than the NATO intelligence cooperation network — a counterintuitive structural finding.
+
+**US structural position:** with bilateral intelligence agreements with more than 70 countries, the US has the highest degree and betweenness in the intelligence cooperation network — a structural hub that also functions as broker between otherwise disconnected bilateral communities.
+
+::: {.callout-warning title="Classification Note" icon=false}
+Most intelligence cooperation network data is classified. Open-source analysis relies on treaty texts, official statements, liaison officer presence (inferrable from diplomatic mission staffing), and investigative journalism. All open-source assessments should be treated as highly incomplete — the gap between what is knowable from open sources and the actual cooperation topology is larger for this network than for any other covered in this course.
+:::
+
+**Byman's State Sponsorship Typology:** states sponsor terrorist groups across a spectrum from direct command (Iran → Hezbollah) to tacit tolerance.^[Daniel Byman, *Deadly Connections: States That Sponsor Terrorism* (Cambridge: Cambridge University Press, 2005), 1--30.] Each tier implies a different interlayer coupling strength $\omega$ in a multiplex state-group model — from $\omega pprox 0.8$ (direct command) to $\omega pprox 0.1$ (tacit tolerance).
+
+# Lecture Summary
+
+## Key Findings by Domain
+
+::: {.key-terms}
+
+**Three terrorist generations**
+: Hierarchical (decapitation), Cellular (cutout targeting), Leaderless (counter-narrative); organizational form must be characterized before selecting metrics or disruption strategy
+
+**ISIS structural transformation**
+: Territorial state (density 0.14, Q 0.22) → Geographic franchise (density 0.04, Q 0.58); betweenness decentralized; decapitation replaced by online/counter-narrative operations as primary tool
+
+**Phillips (2014)**
+: Groups with more inter-group cooperation ties significantly more likely to survive; state sponsors are high-degree hubs; ideology and geography predict tie formation
+
+**Staniland typology**
+: Integrated (dense H + V = hardest to disrupt); Vanguard (dense V = decapitation effective); Parochial (dense H = disrupt horizontal ties); Fragmented (sparse both = low disruption return)
+
+**Khan network layer centrality**
+: Commercial: B.S.A. Tahir (betweenness); Technical: Khan (eigenvector); aggregate view incorrectly deprioritizes Tahir; layer-specific analysis is required
+
+**Dual-use bipartite indicators**
+: Item clustering → BOM inference; entity betweenness → broker; geographic clustering → transshipment hub; temporal acceleration → program milestone
+
+**Sanctions evasion minimum cut**
+: Minimum vertex cut between sanctioned entity and financial system = optimal simultaneous designation targets; ICIJ Offshore Leaks provides open-source beneficial ownership edge data
+
+**UN voting similarity**
+: Revealed-preference alignment leading indicator; temporal drift predicts policy change before formal announcement; Russia-China convergence visible from 2000 in UNGA data
+
+**Arms transfer dependency**
+: Multi-source recipients (India, Egypt) have structural independence; supplier switches signal major alignment shifts; supplier betweenness identifies bridges between otherwise disconnected recipient communities
+
+**Intelligence cooperation structure**
+: Five Eyes = dense all-channel core; US = global hub (70+ bilateral agreements); NATO alliance density exceeds NATO intelligence-sharing density
+
+:::
+
+## Key Analytical Takeaways
+
+1. Organizational generation determines appropriate disruption strategy — characterize the network form *before* selecting metrics or disruption models. Applying decapitation logic to a third-generation leaderless network wastes resources.
+
+2. In multilayer proliferation networks, aggregate centrality conceals layer-specific importance. The commercial-layer broker (Tahir) and the technical-layer prestige holder (Khan) are both analytically necessary targets, invisible without layer-specific analysis.
+
+3. Sanctions evasion is a minimum cut problem — the analytically correct designation target is the minimum vertex cut set, not the most visible intermediary in the evasion chain.
+
+4. UN voting similarity is a leading indicator of alignment change — acting before states formalize their positions or before the divergence becomes an explicit policy event.
+
+5. Multi-source arms recipients have structural independence from any single supplier — a property with direct implications for how supplier states can use arms relationships as leverage.
+
+6. Alliance network density and intelligence cooperation network density diverge significantly — formal allies are not necessarily intelligence-sharing partners, and the intelligence cooperation structure is the more operationally relevant layer.
+
+::: {.callout-note title="Next Lecture" icon=false}
+**Financial and Transaction Networks** --- money laundering network structure, hawala informal transfer systems, cryptocurrency transaction graphs, shell company financial networks, FinCEN Suspicious Activity Report data, and the full methodological toolkit for financial intelligence network analysis.
+:::
+
+```{=html}
+<div style="margin-top:2rem">
+  <ul class="course-sequence">
+    <li class="seq-done"><span class="seq-icon">&#10003;</span> Course Introduction</li>
+    <li class="seq-done"><span class="seq-icon">&#10003;</span> What is Network Analysis?</li>
+    <li class="seq-done"><span class="seq-icon">&#10003;</span> Graph Theory Basics</li>
+    <li class="seq-done"><span class="seq-icon">&#10003;</span> Centrality and Influence</li>
+    <li class="seq-done"><span class="seq-icon">&#10003;</span> Social Network Analysis in Intelligence</li>
+    <li class="seq-done"><span class="seq-icon">&#10003;</span> Community Detection and Clustering</li>
+    <li class="seq-done"><span class="seq-icon">&#10003;</span> Geospatial and Multi-Layer Networks</li>
+    <li class="seq-done"><span class="seq-icon">&#10003;</span> [Week 8]</li>
+    <li class="seq-done"><span class="seq-icon">&#10003;</span> Temporal and Dynamic Networks</li>
+    <li class="seq-active"><span class="seq-icon">&#9658;</span> <strong>Global Security and Network Analysis</strong> (this lecture)</li>
+    <li class="seq-todo"><span class="seq-icon">&#9675;</span> Financial and Transaction Networks</li>
+    <li class="seq-todo"><span class="seq-icon">&#9675;</span> Information / Influence Networks</li>
+  </ul>
+</div>
+<div class="page-footer-custom">
+School of Intelligence Analysis &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
+</div>
+<div class="uc-banner column-screen uc-banner-bottom">
+UNCLASSIFIED // FOR EDUCATIONAL USE ONLY
+</div>
+```

@@ -1,0 +1,798 @@
+---
+title: "Graph Theory Basics"
+subtitle: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
+author: "School of Intelligence Analysis, James Madison University"
+date: "Fall 2026"
+---
+
+::: {.course-meta}
+| | |
+|:--|:--|
+| Course | IA 480: Applied Network Analysis |
+| Week | 3 of 12 |
+| Instructor | School of Intelligence Analysis |
+| Term | Fall 2026 |
+:::
+
+::: {.callout-note title="Learning Objectives" icon=false}
+By the end of this lecture, students should be able to:
+
+1. Formally define and compute basic graph metrics — degree, density, average path length, diameter, clustering coefficient.
+2. Represent a network as an adjacency matrix, edge list, and adjacency list, and explain the tradeoffs among these formats.
+3. Identify connected components, articulation points, and bridges in an undirected graph.
+4. Calculate geodesic distances and interpret them in the context of intelligence network analysis.
+5. Distinguish power-law from Poisson degree distributions and articulate the disruption implications of each.
+:::
+
+## Lecture Roadmap
+
+```{=html}
+<div class="roadmap-grid">
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part I — Graph Fundamentals</div>
+    <ul>
+      <li>Formal graph definitions and notation</li>
+      <li>Degree and degree sequences</li>
+      <li>Adjacency matrices and edge lists</li>
+      <li>Walks, trails, and paths</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part II — Structural Properties</div>
+    <ul>
+      <li>Connectivity and components</li>
+      <li>Geodesic distance and diameter</li>
+      <li>Clustering coefficient</li>
+      <li>Trees, cliques, and <em>k</em>-cores</li>
+      <li>Degree distribution and power laws</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part III — Graph Representations</div>
+    <ul>
+      <li>Comparison of representation formats</li>
+      <li>File formats used in practice</li>
+      <li>Bipartite graphs and one-mode projection</li>
+    </ul>
+  </div>
+</div>
+```
+
+---
+
+> **Running Example.** This lecture uses a single six-node graph throughout all worked examples, so that each new concept can be computed and verified on familiar data. The graph is introduced in the Degree section and reappears in every quantitative illustration.
+
+# Part I: Graph Fundamentals
+
+## Formal Graph Definitions
+
+A **graph** $G = (V, E)$ consists of a finite, non-empty set $V$ of *vertices* and a set $E$ of *edges*, where each edge is an unordered pair $\{u, v\}$ with $u, v \in V$. The **order** of $G$ is $|V| = n$ (number of nodes); the **size** of $G$ is $|E| = m$ (number of edges).
+
+:::: {.columns}
+::: {.column width="90%"}
+
+### Core Definitions
+
+- A **digraph** (directed graph) $D = (V, A)$ where $A$ is a set of ordered pairs $(u, v)$ called *arcs*. Crucially, $(u,v) \neq (v,u)$: direction matters.
+- A **weighted graph** assigns a function $w: E \to \mathbb{R}$ mapping each edge to a real-valued weight encoding strength, volume, frequency, or cost.
+- A **simple graph** has no self-loops ($\{v,v\} \notin E$) and no multi-edges (at most one edge between any pair of nodes). Most SNA applications assume simple graphs unless stated otherwise.
+- A **subgraph** $H = (V', E')$ satisfies $V' \subseteq V$ and $E' \subseteq E$. An **induced subgraph** on $V' \subseteq V$ retains *all* edges from $G$ whose both endpoints lie in $V'$.
+- The **complement** $\bar{G}$ of a graph $G$ has the same vertex set but includes an edge $\{u,v\}$ if and only if $\{u,v\} \notin E$. Edges present in $G$ are absent in $\bar{G}$ and vice versa.
+
+:::
+::: {.column width="90%"}
+
+### Special Graph Types
+
+- **Null graph:** $E = \emptyset$; no edges. Every node is isolated.
+- **Complete graph** $K_n$: every pair of distinct nodes is connected. Edge count: $\binom{n}{2} = \frac{n(n-1)}{2}$.
+- **Bipartite graph** $G = (U, W, E)$: the vertex set is partitioned into two disjoint sets ($U \cap W = \emptyset$), with all edges running *between* $U$ and $W$ and none within either set.^[Frank Harary, *Graph Theory* (Reading, MA: Addison-Wesley, 1969), 7–12.] A graph is bipartite if and only if it contains no odd-length cycles.
+- **Regular graph:** every node has the same degree. A $k$-regular graph has $\deg(v) = k$ for all $v \in V$.
+- **Planar graph:** can be drawn in a plane with no edge crossings. Relevant for infrastructure and geospatial network visualization.
+
+:::
+::::
+
+::: {.callout-tip title="Notation Conventions Used in This Course" icon=false}
+Throughout the course: $G$ for undirected graphs, $D$ for directed graphs; $n = |V|$ and $m = |E|$ for order and size; lowercase $v, u, w$ for individual nodes; $d(u,v)$ for the geodesic distance between nodes $u$ and $v$; $\deg(v)$ for degree in undirected graphs, $\deg^+(v)$ and $\deg^-(v)$ for out- and in-degree in directed graphs.
+:::
+
+## Degree: The Fundamental Node Metric
+
+**Degree** is the most basic measure of a node's connectivity. In undirected graphs, $\deg(v)$ is simply the count of edges incident to $v$. Despite its simplicity, degree is the foundation on which all centrality measures build.
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Undirected Graphs
+
+- **Degree** of node $v$: $\deg(v) =$ number of edges incident to $v$.
+- **Degree sequence:** the ordered list of all node degrees in the graph (typically descending). A graph invariant: two isomorphic graphs have the same degree sequence, though the converse is not always true.
+- **Handshaking Lemma:** $\sum_{v \in V} \deg(v) = 2|E|$. Every edge contributes exactly 2 to the total degree sum — one for each endpoint. This provides an immediate consistency check on any degree computation.
+- **Average degree:** $\langle k \rangle = \frac{2m}{n}$.
+- **Maximum degree** $\Delta(G)$; **Minimum degree** $\delta(G)$.
+- An **isolated node** has $\deg(v) = 0$; a **leaf** has $\deg(v) = 1$.
+
+### Directed Graphs
+
+- **In-degree** $\deg^-(v)$: number of arcs pointing *into* $v$ (incoming ties).
+- **Out-degree** $\deg^+(v)$: number of arcs pointing *out of* $v$ (outgoing ties).
+- A conservation identity holds: $\sum_{v} \deg^-(v) = \sum_{v} \deg^+(v) = |A|$. Every arc contributes one unit to the in-degree total and one to the out-degree total.
+
+:::
+::: {.column width="45%"}
+
+::: {.callout-tip title="Intelligence Interpretation of Degree" icon=false}
+Degree is a preliminary, easily computed indicator of structural importance — but it must be interpreted with domain knowledge:
+
+- **High in-degree** in a communication network: many people initiate contact with this node. Possible leadership, coordination, or information-aggregation role.
+- **High out-degree** in a wire transfer network: this entity sends funds to many recipients. Possible distributing node in a financial layering scheme.
+- **High in-degree, low out-degree** in a command network: this node receives orders but does not pass them on — a terminal executor, not a relay.
+- **Isolated node** in an associate network: may represent a recently recruited actor, a peripheral support role, or — critically — a *collection gap*. Absence of observed ties is not evidence of absent ties.
+- **Degree alone is insufficient** for identifying the most structurally important nodes in sparse dark networks. A low-degree node positioned between two disconnected clusters may be more analytically significant than the highest-degree hub. That requires *betweenness centrality* (Week 4).
+:::
+
+:::
+::::
+
+## Worked Example: Degree Computation
+
+The six-node graph below serves as the running example for this lecture. It is intentionally small enough to permit hand computation of every metric.
+
+:::: {.columns}
+::: {.column width="45%"}
+
+```{=html}
+<div class="net-diagram-container">
+  <svg viewBox="0 0 430 300" xmlns="http://www.w3.org/2000/svg"
+       style="width:100%;max-width:380px;display:block">
+    <!-- Edges -->
+    <line x1="80"  y1="100" x2="210" y2="100" stroke="#333333" stroke-width="2.2"/>
+    <line x1="80"  y1="100" x2="145" y2="195" stroke="#333333" stroke-width="2.2"/>
+    <line x1="210" y1="100" x2="145" y2="195" stroke="#333333" stroke-width="2.2"/>
+    <line x1="210" y1="100" x2="210" y2="215" stroke="#333333" stroke-width="2.2"/>
+    <line x1="210" y1="100" x2="340" y2="100" stroke="#333333" stroke-width="2.2"/>
+    <line x1="145" y1="195" x2="210" y2="215" stroke="#333333" stroke-width="2.2"/>
+    <line x1="210" y1="215" x2="340" y2="215" stroke="#333333" stroke-width="2.2"/>
+    <line x1="340" y1="100" x2="340" y2="215" stroke="#333333" stroke-width="2.2"/>
+    <!-- Nodes -->
+    <circle cx="80"  cy="100" r="22" fill="#DACCE6" stroke="#450084" stroke-width="2.5"/>
+    <text   x="80"  y="105"  text-anchor="middle" font-size="14" font-weight="bold" fill="#450084" font-family="IBM Plex Serif, serif">1</text>
+    <circle cx="210" cy="100" r="22" fill="#450084" stroke="#450084" stroke-width="2.5"/>
+    <text   x="210" y="105"  text-anchor="middle" font-size="14" font-weight="bold" fill="#ffffff" font-family="IBM Plex Serif, serif">2</text>
+    <circle cx="145" cy="195" r="22" fill="#DACCE6" stroke="#450084" stroke-width="2.5"/>
+    <text   x="145" y="200"  text-anchor="middle" font-size="14" font-weight="bold" fill="#450084" font-family="IBM Plex Serif, serif">3</text>
+    <circle cx="210" cy="215" r="22" fill="#DACCE6" stroke="#450084" stroke-width="2.5"/>
+    <text   x="210" y="220"  text-anchor="middle" font-size="14" font-weight="bold" fill="#450084" font-family="IBM Plex Serif, serif">4</text>
+    <circle cx="340" cy="100" r="22" fill="#DACCE6" stroke="#450084" stroke-width="2.5"/>
+    <text   x="340" y="105"  text-anchor="middle" font-size="14" font-weight="bold" fill="#450084" font-family="IBM Plex Serif, serif">5</text>
+    <circle cx="340" cy="215" r="22" fill="#DACCE6" stroke="#450084" stroke-width="2.5"/>
+    <text   x="340" y="220"  text-anchor="middle" font-size="14" font-weight="bold" fill="#450084" font-family="IBM Plex Serif, serif">6</text>
+  </svg>
+  <figcaption>
+    Node 2 (filled purple) has the highest degree.<br>
+    Edges: {1,2}, {1,3}, {2,3}, {2,4}, {2,5}, {3,4}, {4,6}, {5,6}
+  </figcaption>
+</div>
+```
+
+:::
+::: {.column width="55%"}
+
+**Degree Table**
+
+| Node | Neighbors | Degree |
+|:----:|:----------|:------:|
+| 1 | 2, 3 | 2 |
+| 2 | 1, 3, 4, 5 | **4** |
+| 3 | 1, 2, 4 | 3 |
+| 4 | 2, 3, 6 | 3 |
+| 5 | 2, 6 | 2 |
+| 6 | 4, 5 | 2 |
+
+**Summary Statistics**
+
+- $|V| = 6$, $|E| = 8$
+- Degree sequence: $[4, 3, 3, 2, 2, 2]$
+- $\sum \deg = 16 = 2 \times 8$ ✓ *(Handshaking Lemma)*
+- $\langle k \rangle = 16/6 \approx 2.67$
+- $\Delta(G) = 4$ (Node 2); $\delta(G) = 2$ (Nodes 1, 5, 6)
+- No isolated nodes; no leaves.
+
+Node 2 is the preliminary highest-degree actor. Whether it is also the most *structurally* important node depends on centrality measures computed in Week 4.
+
+:::
+::::
+
+## Network Representations: Adjacency Matrix
+
+The **adjacency matrix** $A$ is an $n \times n$ matrix that encodes the complete edge structure of a graph:
+
+$$A_{ij} = \begin{cases} 1 & \text{if } \{i,j\} \in E \\ 0 & \text{otherwise} \end{cases}$$
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Properties (Undirected Graph)
+
+- $A$ is **symmetric**: $A_{ij} = A_{ji}$ for all $i, j$.
+- Diagonal entries $A_{ii} = 0$ (no self-loops in a simple graph).
+- $\deg(v_i) = \sum_{j} A_{ij}$ — the row sum gives node $i$'s degree.
+- $|E| = \frac{1}{2} \sum_{i,j} A_{ij}$ — half the total sum of all entries.
+- **$A^2_{ij}$** counts the number of *paths of length 2* from $i$ to $j$ (i.e., the number of common neighbors).
+- **$A^k_{ij}$** counts all *walks of length $k$* from $i$ to $j$. This property underpins many centrality algorithms.
+- **Weighted adjacency matrix:** substitute $A_{ij} = w_{ij}$ (the edge weight) for unweighted $\{0,1\}$ entries.
+- **Directed graph:** $A_{ij} = 1$ if arc $(i \to j) \in A$; the matrix need not be symmetric.
+
+**Spectral note:** the eigenvalues of $A$ encode global structural information — the largest eigenvalue approximates average degree; eigenvectors of $A$ are the basis of eigenvector centrality and spectral clustering, topics returned to in Weeks 4 and 6.
+
+:::
+::: {.column width="45%"}
+
+**Example (6-node running graph):**
+
+$$A = \begin{pmatrix}
+0 & 1 & 1 & 0 & 0 & 0 \\
+1 & 0 & 1 & 1 & 1 & 0 \\
+1 & 1 & 0 & 1 & 0 & 0 \\
+0 & 1 & 1 & 0 & 0 & 1 \\
+0 & 1 & 0 & 0 & 0 & 1 \\
+0 & 0 & 0 & 1 & 1 & 0 \\
+\end{pmatrix}$$
+
+Row 2 sums to 4 — Node 2's degree. $A^2_{13} = 2$: Nodes 1 and 3 share two common neighbors (Node 2 and the path through Node 2... confirming there are two walks of length 2 from 1 to 3: $1\to2\to3$ and $1\to3\to2$... wait: actually $A^2_{13}$ counts walks, so $1\to2\to3$ and $1\to3\to?$. $A^2_{13} = \sum_k A_{1k}A_{k3}$: $k=1$: 0×0=0; $k=2$: 1×1=1; $k=3$: 1×0=0; $k=4$: 0×1=0; $k=5$: 0×0=0; $k=6$: 0×0=0. So $A^2_{13} = 1$, meaning 1 walk of length 2 from Node 1 to Node 3: $1 \to 2 \to 3$.
+
+::: {.callout-warning title="Limitations" icon=false}
+For large, sparse networks, adjacency matrices are memory-inefficient. A network with $n = 10{,}000$ nodes requires $10^8$ matrix entries, the vast majority of which are zero. Edge lists and sparse matrix formats (CSR, COO) are strongly preferred for computational analysis.
+:::
+
+:::
+::::
+
+## Network Representations: Edge Lists and Adjacency Lists
+
+:::: {.columns}
+::: {.column width="50%"}
+
+### Edge List
+
+The simplest representation: one row per edge specifying source, target, and optionally weight, type, and timestamp. Space complexity $O(m)$ — efficient for sparse networks and the standard interchange format for Gephi, NetworkX, and i2 Analyst Notebook.
+
+**Example (6-node graph):**
+
+| Source | Target | Weight |
+|:------:|:------:|:------:|
+| 1 | 2 | 1.0 |
+| 1 | 3 | 1.0 |
+| 2 | 3 | 1.0 |
+| 2 | 4 | 1.0 |
+| 2 | 5 | 1.0 |
+| 3 | 4 | 1.0 |
+| 4 | 6 | 1.0 |
+| 5 | 6 | 1.0 |
+
+In a real intelligence dataset, additional columns would encode `type` (phone, financial, in-person), `date`, `source_reliability`, and `confidence_level`.
+
+:::
+::: {.column width="50%"}
+
+### Adjacency List
+
+For each node, stores a list of its neighbors. Space complexity $O(n + m)$. Efficient for neighborhood lookups and graph traversal algorithms (BFS, DFS).
+
+**Example:**
+
+```
+1: [2, 3]
+2: [1, 3, 4, 5]
+3: [1, 2, 4]
+4: [2, 3, 6]
+5: [2, 6]
+6: [4, 5]
+```
+
+In Python/NetworkX, `G.neighbors(2)` returns this list in $O(1)$ time; the adjacency matrix equivalent requires scanning the full row.
+
+::: {.callout-note title="Practical Note: Intelligence Workflows" icon=false}
+In operational and research workflows, **CSV edge lists** are the standard starting format. A file with columns `source, target, weight, type, date` is the input for Gephi, NetworkX, and i2 Analyst Notebook alike. When building a network dataset, begin with an edge list and convert to tool-native formats (GraphML, GEXF, JSON) as needed. All lab datasets in this course are provided in this format.
+:::
+
+:::
+::::
+
+## Walks, Trails, and Paths
+
+These three concepts form the foundation for geodesic distance, betweenness centrality, and most routing algorithms used in network analysis.
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Definitions
+
+- **Walk:** a sequence of nodes $v_0, v_1, \ldots, v_k$ where each consecutive pair $\{v_{i-1}, v_i\}$ is a valid edge. Edges *and* nodes may repeat. The *length* of a walk is the number of edges traversed, $k$.
+- **Trail:** a walk in which no *edge* is repeated, though nodes may be revisited.
+- **Path:** a walk in which no *node* is repeated. All paths are trails; not all trails are paths.
+- **Cycle:** a closed path $v_0, v_1, \ldots, v_{k-1}, v_0$ where $v_0 = v_{k}$ and all intermediate nodes are distinct.
+- **Geodesic** (shortest path): the path of minimum length between nodes $u$ and $v$; length denoted $d(u, v)$. If multiple shortest paths exist, a node's betweenness centrality score depends on how many of them pass through it.
+- **Eulerian path:** a trail visiting every *edge* exactly once (the Königsberg Bridge Problem).
+- **Hamiltonian path:** a path visiting every *node* exactly once.
+
+**In the 6-node example:**
+
+- A walk from 1 to 6: $1 \to 2 \to 3 \to 4 \to 6$ (length 4)
+- A shorter walk: $1 \to 2 \to 4 \to 6$ (length 3)
+- The geodesic from 1 to 6: $d(1, 6) = 3$ (the above is shortest)
+
+:::
+::: {.column width="45%"}
+
+::: {.callout-tip title="Intelligence Application: Information Distance and Cutouts" icon=false}
+In a communications network, the geodesic distance $d(A, B)$ measures **information distance**: the minimum number of intermediaries required for a signal to travel from actor $A$ to actor $B$.
+
+- $d = 1$ (direct contact): implies direct coordination; highest collection priority.
+- $d = 2$: one intermediary; common in cell-based structures.
+- $d \geq 3$: multi-hop routing, possibly through **cutouts** — deliberately interposed intermediaries who relay information without knowing the full chain. Long paths provide operational security but slow coordination and introduce failure points.
+
+The shortest path also encodes the *most likely* route for actual information or materiel flow, assuming rational actors minimize exposure. Path *multiplicity* — how many geodesics exist between two nodes — informs routing resilience.
+:::
+
+::: {.callout-warning title="Directed Graphs" icon=false}
+A path from $u$ to $v$ in a digraph does *not* imply a path from $v$ to $u$. Wire transfer paths are directional; following money requires respecting arc direction. Always treat directed and undirected shortest path problems as distinct.
+:::
+
+:::
+::::
+
+# Part II: Structural Properties
+
+## Connectivity and Components
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Undirected Connectivity
+
+A graph $G$ is **connected** if a path exists between every pair of nodes. A **connected component** is a maximal connected subgraph: every node within the component can reach every other, and no node outside can be added while preserving this property.
+
+- **Isolated nodes** form singleton (size-1) components.
+- **Articulation point (cut vertex):** a node whose removal strictly increases the number of connected components. Its removal severs at least one path that formerly connected two parts of the network. Equivalently, it lies on every path between two groups of nodes.
+- **Bridge:** an edge whose removal increases the number of components. Every bridge is, in a sense, the only path between the two sub-networks it connects.
+- **$k$-connected graph:** the graph remains connected after the removal of any $k-1$ nodes. Measures structural robustness. A 1-connected graph may have articulation points; a 2-connected graph has none.
+- **Biconnected component:** a maximal 2-connected subgraph; equivalent to a maximal subgraph with no articulation points. Biconnected components share at most one node (an articulation point) with each other.
+
+### Directed Connectivity
+
+- **Weakly connected:** the underlying undirected graph (edge directions ignored) is connected.
+- **Strongly connected:** a directed path exists from $u$ to $v$ *and* from $v$ to $u$ for every pair $u, v \in V$.
+- **Strongly connected component (SCC):** the maximal strongly connected subgraph. Real directed networks typically decompose into several SCCs of varying size.
+
+:::
+::: {.column width="45%"}
+
+::: {.callout-note title="The Giant Component" icon=false}
+In large real-world networks, one **giant connected component** typically contains the substantial majority of nodes — often 80–95% — with a scattering of smaller components and isolated nodes on the periphery. Barabási and Albert showed that scale-free networks develop a giant component rapidly as edges are added through preferential attachment: once a small fraction of possible edges have been placed, most nodes are already reachable from most others.^[Albert-László Barabási and Réka Albert, "Emergence of Scaling in Random Networks," *Science* 286, no. 5439 (1999): 510.]
+
+In a newly collected network dataset, the size of the largest component relative to $n$ is an immediate indicator of overall connectivity and data quality.
+:::
+
+::: {.callout-warning title="Intelligence Implication: Articulation Points" icon=false}
+**Articulation points are high-value disruption targets.**
+
+Removing an articulation point fragments the network into two or more disconnected components, severing all communication and coordination pathways between them. No alternate route exists by definition.
+
+Key analytic tasks:
+- Identify all articulation points before prioritizing targeting
+- Assess whether removal produces balanced or unbalanced fragmentation (which fragment retains operational capability?)
+- Recognize that sophisticated dark networks *avoid* articulation points structurally — their existence signals either forced compromise or poor security tradecraft^[Sean F. Everton, *Disrupting Dark Networks* (Cambridge: Cambridge University Press, 2012), 87–95.]
+:::
+
+:::
+::::
+
+## Geodesic Distance, Diameter, and Average Path Length
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Geodesic Distance $d(u,v)$
+
+The **shortest path length** between nodes $u$ and $v$. If no path exists (disconnected components), $d(u,v) = \infty$ by convention. Computed via:
+
+- **BFS** (Breadth-First Search) in unweighted graphs: $O(n + m)$
+- **Dijkstra's algorithm** in weighted graphs with non-negative weights: $O((n + m) \log n)$
+- **Bellman-Ford** when negative weights are possible: $O(nm)$
+- **Floyd-Warshall** for all-pairs shortest paths: $O(n^3)$; practical for networks up to a few thousand nodes
+
+### Derived Metrics
+
+- **Eccentricity** $\epsilon(v)$: $\max_{u \in V} d(v,u)$ — the farthest any node is from $v$.
+- **Radius** $r(G)$: $\min_{v} \epsilon(v)$ — the minimum eccentricity; identifies the *center* of the graph.
+- **Diameter** $\text{diam}(G)$: $\max_{u,v} d(u,v)$ — the longest shortest path. Nodes achieving the diameter are the *periphery*.
+- **Average path length:** $\bar{l} = \frac{1}{n(n-1)} \sum_{u \neq v} d(u,v)$
+
+The **small-world property**: most real networks have $\bar{l} \approx \log n$ even when $n$ is large — the empirical basis of "six degrees of separation."^[Duncan J. Watts and Steven H. Strogatz, "Collective Dynamics of 'Small-World' Networks," *Nature* 393, no. 6684 (1998): 440–441.]
+
+:::
+::: {.column width="45%"}
+
+**Distance matrix (6-node running example):**
+
+|   | **1** | **2** | **3** | **4** | **5** | **6** |
+|:-:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+| **1** | — | 1 | 1 | 2 | 2 | 3 |
+| **2** | 1 | — | 1 | 1 | 1 | 2 |
+| **3** | 1 | 1 | — | 1 | 2 | 2 |
+| **4** | 2 | 1 | 1 | — | 2 | 1 |
+| **5** | 2 | 1 | 2 | 2 | — | 1 |
+| **6** | 3 | 2 | 2 | 1 | 1 | — |
+
+**Derived statistics:**
+
+- Diameter: $\text{diam}(G) = 3$ (Nodes 1 and 6)
+- Eccentricities: $\epsilon(1) = \epsilon(6) = 3$; $\epsilon(2) = \epsilon(3) = \epsilon(4) = \epsilon(5) = 2$
+- Radius: $r(G) = 2$ (Nodes 2–5 are central)
+- Average path length: $\bar{l} = \frac{46}{30} \approx 1.53$
+
+*Verification:* sum of upper triangle = $1+1+2+2+3+1+1+1+2+1+2+2+2+1+1 = 23$; total for all ordered pairs = $2 \times 23 = 46$; divided by $n(n-1) = 30$.
+
+:::
+::::
+
+## Clustering Coefficient
+
+The clustering coefficient measures the degree to which a node's neighbors are *also* connected to each other — the network's local "cliquishness."
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Local Clustering Coefficient
+
+$$C_i = \frac{\text{edges among neighbors of } v_i}{\binom{k_i}{2}} = \frac{2 e_i}{k_i(k_i - 1)}$$
+
+where $k_i = \deg(v_i)$ and $e_i$ is the number of edges among $v_i$'s neighbors. $C_i$ is undefined when $k_i < 2$.
+
+### Global (Average) Clustering Coefficient
+
+$$\bar{C} = \frac{1}{n} \sum_{i \,:\, k_i \geq 2} C_i$$
+
+### Transitivity (Graph-Level)
+
+$$T = \frac{3 \times \text{number of triangles}}{\text{number of connected triples}}$$
+
+A connected triple is a path of length 2; a triangle is a closed triple. Transitivity weights high-degree nodes more heavily than $\bar{C}$ does.
+
+**6-node example:** Triangles: $\{1,2,3\}$ and $\{2,3,4\}$ — two triangles total. Connected triples: $\binom{k_i}{2}$ summed over all nodes: $1+6+3+3+1+1 = 15$. Transitivity: $T = \frac{3 \times 2}{15} = 0.40$.
+
+:::
+::: {.column width="45%"}
+
+**Clustering coefficients — all 6 nodes:**
+
+| Node | $k_i$ | $e_i$ | $C_i$ |
+|:----:|:-----:|:-----:|:-----:|
+| 1 | 2 | 1 | 1.00 |
+| 2 | 4 | 2 | 0.33 |
+| 3 | 3 | 2 | 0.67 |
+| 4 | 3 | 1 | 0.33 |
+| 5 | 2 | 0 | 0.00 |
+| 6 | 2 | 0 | 0.00 |
+
+$\bar{C} = (1.00 + 0.33 + 0.67 + 0.33 + 0 + 0)/6 \approx 0.39$
+
+::: {.callout-note title="Intelligence Interpretation" icon=false}
+**High $C_i$:** node's neighbors know each other — a locally cohesive, redundant cluster. Removing this node has limited effect; the neighbors remain connected to each other.
+
+**Low $C_i$ with high degree:** node bridges groups that are not connected to each other — a **structural broker** or cutout. This is Ronald Burt's concept of the *structural hole*: the broker derives power and information advantages from spanning an otherwise disconnected gap.^[Ronald S. Burt, *Structural Holes: The Social Structure of Competition* (Cambridge, MA: Harvard University Press, 1992), 18–30.] Structural brokers are highly efficient disruption targets.
+
+Node 5 ($C_5 = 0$) is an example: its two neighbors (2 and 6) are not connected to each other, making Node 5 the only bridge between them within that local neighborhood.
+:::
+
+:::
+::::
+
+## Trees, Cliques, and *k*-Cores
+
+:::: {.columns}
+::: {.column width="50%"}
+
+### Trees
+
+A **tree** is a connected graph with no cycles. Equivalently, $|E| = |V| - 1$, and there is a unique path between every pair of nodes. Every edge in a tree is a bridge — removing any single edge disconnects the graph.
+
+- **Spanning tree** of $G$: a tree subgraph that includes all $n$ nodes; a minimal connected spanning subgraph.
+- **Rooted tree:** a designated root node defines a parent–child hierarchy and natural direction of flow.
+- **Intelligence relevance:** command-and-control hierarchies, supply chains with no redundancy, decision trees. A tree topology is maximally fragile — it has $n - 1$ bridges and $n - 2$ articulation points (all internal nodes). Real dark networks rarely maintain pure tree structure for this reason; they add redundant ties to create resilience.
+
+### Cliques
+
+A **clique** is a complete subgraph $K_k$ in which every node is connected to every other. A **maximal clique** cannot be extended by adding any additional node while preserving completeness. A **maximum clique** is the largest such structure in $G$.
+
+- **Intelligence relevance:** tight operational cells, leadership councils, co-conspirator groups with full mutual awareness. Clique members are maximally exposed to each other — high trust, high coordination, high vulnerability to a single member's compromise.
+- Finding maximum cliques is NP-hard in general, but heuristics and exact algorithms for intelligence-scale networks (hundreds to low thousands of nodes) are tractable.
+
+:::
+::: {.column width="50%"}
+
+### $k$-Cores
+
+A **$k$-core** is the maximal subgraph in which every node has degree $\geq k$ *within the subgraph*. It is computed iteratively: remove all nodes with degree $< k$; repeat on the resulting graph until stable. The **coreness** of a node is the largest $k$ for which it belongs to the $k$-core.
+
+The $k$-core decomposition produces nested shells:
+
+```
+k=1 core ⊇ k=2 core ⊇ k=3 core ⊇ ...
+```
+
+The innermost non-empty core identifies the densely interconnected center of the network.
+
+::: {.callout-tip title="k-Core in Intelligence Practice" icon=false}
+In a terrorist or criminal network, the **3-core** identifies actors each of whom has at least three ties *to other members of that same dense subgroup*. This is analytically significant for two reasons:
+
+1. It reveals an **inner circle** — a cohesive operational nucleus unlikely to be visible from simple degree ranking alone.
+2. It separates this inner circle from **outer-shell actors** (coreness 1 or 2) who may be peripheral supporters, facilitators, or recruitment targets.
+
+Low-coreness nodes are not necessarily low-value: they may represent **handlers** deliberately maintaining low connectivity for security, or they may indicate collection artifacts. Context remains essential.^[Everton, *Disrupting Dark Networks*, 133–137.]
+:::
+
+**Relationship to cliques:** every clique $K_k$ is contained in the $(k-1)$-core, but the $k$-core is generally much easier to compute ($O(n + m)$ vs. NP-hard for maximum clique).
+
+:::
+::::
+
+## Degree Distribution and Power Laws
+
+The **degree distribution** $P(k)$ is the probability that a randomly chosen node has degree $k$. It characterizes the overall connectivity architecture of the network and has direct implications for disruption strategy.
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Random Graphs (Erdős–Rényi $G(n,p)$)
+
+Each of the $\binom{n}{2}$ possible edges exists independently with probability $p$.
+
+- Degree follows a **binomial distribution**, approximated by a **Poisson** distribution for large $n$: $P(k) \approx \frac{e^{-\lambda} \lambda^k}{k!}$ where $\lambda = p(n-1)$ is the expected degree.
+- The distribution has a pronounced peak near $\langle k \rangle$ and falls off rapidly in both directions.
+- Extremely high-degree or extremely low-degree nodes are statistically rare.
+
+### Scale-Free Networks (Preferential Attachment)
+
+New nodes join by preferentially attaching to already well-connected nodes ("the rich get richer"):
+
+- Degree follows a **power law**: $P(k) \sim k^{-\gamma}$, typically $2 < \gamma < 3$.
+- **Heavy tail:** a small number of **hubs** with very high degree coexist with a large majority of low-degree nodes.
+- **Robust to random failure** (most randomly chosen nodes are low-degree); **highly vulnerable to targeted hub removal.** When hubs are removed in order of degree, the network fragments rapidly.^[Réka Albert, Hawoong Jeong, and Albert-László Barabási, "Error and Attack Tolerance of Complex Networks," *Nature* 406 (2000): 378–382.]
+
+The exponent $\gamma$ carries information: lower $\gamma$ (closer to 2) means a heavier tail and more extreme hubs; higher $\gamma$ (approaching 3) means hubs are less extreme and the distribution approaches a more uniform shape.
+
+:::
+::: {.column width="45%"}
+
+::: {.callout-note title="Why This Matters for Intelligence" icon=false}
+If a target network is **scale-free** (common in social and organizational networks):
+
+- Most members are peripheral; removing random members has little operational effect.
+- Removing high-degree hubs rapidly fragments the network and disrupts coordination.
+- Hub identification is a strategic collection priority.
+- **Caveat:** degree alone does not identify the most disruptive removal targets in sparse, compartmentalized dark networks. In networks deliberately structured to minimize hub formation, **betweenness centrality** is more informative than degree (Week 4).
+:::
+
+::: {.callout-warning title="Empirical Note" icon=false}
+Many internet and large social media networks exhibit strong power-law degree distributions. **Clandestine networks often deviate.** Deliberate compartmentalization limits hub formation — the actor who *would* become a hub in an unconstrained network is split into multiple lower-degree nodes connected through dead drops or cutouts. This deviation from scale-free structure is itself analytically informative: it suggests the network is actively managed for security.^[Jorg Raab and H. Brinton Milward, "Dark Networks as Problems," *Journal of Public Administration Research and Theory* 13, no. 4 (2003): 420–422.] Truncated power laws and exponential cutoffs in the degree distribution are observed in several analyzed terrorist networks.
+:::
+
+:::
+::::
+
+# Part III: Graph Representations
+
+## Representing Networks: A Practical Summary
+
+**Format Comparison**
+
+| Format | Space | Best For |
+|:-------|:-----:|:---------|
+| Adjacency Matrix | $O(n^2)$ | Dense graphs; matrix algebra; walk counting via $A^k$; spectral methods |
+| Edge List | $O(m)$ | Sparse graphs; data storage and interchange; weighted/attributed networks |
+| Adjacency List | $O(n+m)$ | Neighborhood queries; BFS/DFS traversal; memory-efficient for large sparse graphs |
+| Incidence Matrix | $O(nm)$ | Bipartite analysis; hypergraph representation; edge-node relationships |
+| Sparse CSR/COO | $O(m)$ | Large-scale computation in Python (NumPy/SciPy/NetworkX); matrix operations without dense memory cost |
+
+### File Formats Used in Practice
+
+- **CSV edge list** — universal; the lingua franca of network data; used by Gephi, NetworkX, R/igraph, i2 Analyst Notebook.
+- **GraphML (`.graphml`)** — XML-based; supports rich node and edge attributes; Gephi-native.
+- **GEXF (`.gexf`)** — Gephi Extended Graph Format; supports *temporal* data (dynamic networks with edge timestamps and durations).
+- **GML (`.gml`)** — Gephi and Cytoscape interchange format; legacy but widely supported.
+- **Pajek (`.net`)** — legacy format; used in many published network science datasets; some published dark network datasets are Pajek-formatted.
+- **JSON (node-link)** — NetworkX default export; standard input for web visualization libraries (D3.js, vis.js).
+- **Shapefile / GeoJSON** — geospatial network data encoding coordinates alongside relational structure; used in ArcGIS and GeoPandas for infrastructure and geographic network analysis.
+
+::: {.callout-note title="Lab Note" icon=false}
+This course uses **CSV edge lists** as the primary input format, then converts to tool-native formats (GraphML for Gephi, JSON for NetworkX, shapefiles for ArcGIS) as needed. All lab datasets are provided as CSVs with columns: `source`, `target`, `weight`, `type`, `date`. Attribute encoding conventions will be specified per lab.
+:::
+
+## Bipartite Graphs and Projection
+
+### Structure and Properties
+
+A bipartite graph $G = (U, W, E)$ partitions $V = U \cup W$ with $U \cap W = \emptyset$; all edges run between $U$ and $W$, none within $U$ or within $W$. **Affiliation networks** — a central data structure in intelligence analysis — are bipartite: persons $\in U$, events or organizations $\in W$, with an edge representing attendance or membership.
+
+A graph is bipartite if and only if it contains no odd-length cycles.
+
+The bipartite structure is encoded in a **biadjacency matrix** $B$ of size $|U| \times |W|$:
+
+$$B_{ij} = \begin{cases} 1 & \text{if person } i \text{ attended event } j \\ 0 & \text{otherwise} \end{cases}$$
+
+### Projection to One-Mode
+
+The bipartite graph can be projected onto either node set to create a unipartite network:
+
+- **Persons projection** $A^{(U)} = B B^\top$: two persons are connected if they share at least one event; edge weight = number of co-attended events.
+- **Events projection** $A^{(W)} = B^\top B$: two events are connected if they share at least one person; edge weight = number of shared attendees.
+
+Projection collapses the bipartite structure to a form compatible with standard SNA tools, but at a cost: information about *which* shared event created a tie is lost. Whenever possible, analyze the bipartite structure directly.^[Stanley Wasserman and Katherine Faust, *Social Network Analysis: Methods and Applications* (Cambridge: Cambridge University Press, 1994), 299–310.]
+
+:::: {.columns}
+::: {.column width="50%"}
+
+::: {.callout-tip title="Intelligence Example: Meeting Networks" icon=false}
+Intelligence reporting identifies five individuals ($A$–$E$) attending three meetings:
+
+- $M_1$: $A, B, C$
+- $M_2$: $B, D$
+- $M_3$: $C, D, E$
+
+**Bipartite graph:** 5 person nodes + 3 meeting nodes + 8 edges.
+
+**Biadjacency matrix** $B$ (persons × meetings):
+
+|   | $M_1$ | $M_2$ | $M_3$ |
+|:-:|:-----:|:-----:|:-----:|
+| $A$ | 1 | 0 | 0 |
+| $B$ | 1 | 1 | 0 |
+| $C$ | 1 | 0 | 1 |
+| $D$ | 0 | 1 | 1 |
+| $E$ | 0 | 0 | 1 |
+
+**Persons projection:** $A$–$B$, $A$–$C$, $B$–$C$ (co-attend $M_1$, weight 1 each); $B$–$D$ (co-attend $M_2$); $C$–$D$, $C$–$E$, $D$–$E$ (co-attend $M_3$).
+
+**Key finding:** $B$ and $C$ emerge as bridges connecting the $M_1$ cluster to the $M_3$ cluster via $D$. This structural importance is invisible from attribute profiles alone.
+:::
+
+:::
+::: {.column width="50%"}
+
+```{=html}
+<div class="net-diagram-container">
+  <svg viewBox="0 0 320 360" xmlns="http://www.w3.org/2000/svg"
+       style="width:100%;max-width:280px;display:block">
+    <!-- Person nodes (left) -->
+    <!-- A: (60,50), B:(60,120), C:(60,190), D:(60,260), E:(60,330) -->
+    <!-- Meeting nodes (right) -->
+    <!-- M1:(240,100), M2:(240,195), M3:(240,290) -->
+    <!-- Labels -->
+    <text x="40" y="22" text-anchor="middle" font-size="10" fill="#595959" font-family="IBM Plex Sans, sans-serif" font-weight="600">PERSONS</text>
+    <text x="250" y="22" text-anchor="middle" font-size="10" fill="#595959" font-family="IBM Plex Sans, sans-serif" font-weight="600">MEETINGS</text>
+    <!-- Edges: A-M1, B-M1, C-M1, B-M2, D-M2, C-M3, D-M3, E-M3 -->
+    <line x1="80" y1="55"  x2="220" y2="100" stroke="#CBB677" stroke-width="1.8"/>
+    <line x1="80" y1="120" x2="220" y2="100" stroke="#CBB677" stroke-width="1.8"/>
+    <line x1="80" y1="185" x2="220" y2="100" stroke="#CBB677" stroke-width="1.8"/>
+    <line x1="80" y1="120" x2="220" y2="195" stroke="#CBB677" stroke-width="1.8"/>
+    <line x1="80" y1="250" x2="220" y2="195" stroke="#CBB677" stroke-width="1.8"/>
+    <line x1="80" y1="185" x2="220" y2="290" stroke="#CBB677" stroke-width="1.8"/>
+    <line x1="80" y1="250" x2="220" y2="290" stroke="#CBB677" stroke-width="1.8"/>
+    <line x1="80" y1="318" x2="220" y2="290" stroke="#CBB677" stroke-width="1.8"/>
+    <!-- Person circles -->
+    <circle cx="80" cy="55"  r="20" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <text   x="80" y="60"   text-anchor="middle" font-size="13" font-weight="bold" fill="#450084" font-family="IBM Plex Serif, serif">A</text>
+    <circle cx="80" cy="120" r="20" fill="#450084" stroke="#450084" stroke-width="2"/>
+    <text   x="80" y="125"  text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff" font-family="IBM Plex Serif, serif">B</text>
+    <circle cx="80" cy="185" r="20" fill="#450084" stroke="#450084" stroke-width="2"/>
+    <text   x="80" y="190"  text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff" font-family="IBM Plex Serif, serif">C</text>
+    <circle cx="80" cy="250" r="20" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <text   x="80" y="255"  text-anchor="middle" font-size="13" font-weight="bold" fill="#450084" font-family="IBM Plex Serif, serif">D</text>
+    <circle cx="80" cy="318" r="20" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <text   x="80" y="323"  text-anchor="middle" font-size="13" font-weight="bold" fill="#450084" font-family="IBM Plex Serif, serif">E</text>
+    <!-- Meeting rectangles -->
+    <rect x="212" y="80"  width="56" height="38" rx="4" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <text x="240" y="103" text-anchor="middle" font-size="12" font-weight="bold" fill="#333333" font-family="IBM Plex Serif, serif">M₁</text>
+    <rect x="212" y="175" width="56" height="38" rx="4" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <text x="240" y="199" text-anchor="middle" font-size="12" font-weight="bold" fill="#333333" font-family="IBM Plex Serif, serif">M₂</text>
+    <rect x="212" y="270" width="56" height="38" rx="4" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <text x="240" y="294" text-anchor="middle" font-size="12" font-weight="bold" fill="#333333" font-family="IBM Plex Serif, serif">M₃</text>
+  </svg>
+  <figcaption>
+    Filled nodes (B, C) are bridges across meetings.<br>
+    Rectangles = meeting events; circles = persons.
+  </figcaption>
+</div>
+```
+
+:::
+::::
+
+# Lecture Summary
+
+## Key Formulas
+
+::: {.key-terms}
+**Order / Size**
+: $|V| = n$ nodes; $|E| = m$ edges
+
+**Maximum edges (undirected)**
+: $\binom{n}{2} = \dfrac{n(n-1)}{2}$
+
+**Density (undirected)**
+: $\Delta = \dfrac{2m}{n(n-1)}$
+
+**Handshaking Lemma**
+: $\sum_{v} \deg(v) = 2m$
+
+**Average degree**
+: $\langle k \rangle = \dfrac{2m}{n}$
+
+**Local clustering coefficient**
+: $C_i = \dfrac{2e_i}{k_i(k_i - 1)}$
+
+**Average clustering coefficient**
+: $\bar{C} = \dfrac{1}{n}\sum_{i:\,k_i \geq 2} C_i$
+
+**Transitivity**
+: $T = \dfrac{3 \times \triangle}{\text{connected triples}}$
+
+**Diameter**
+: $\text{diam}(G) = \max_{u,v} d(u,v)$
+
+**Average path length**
+: $\bar{l} = \dfrac{1}{n(n-1)}\sum_{u \neq v} d(u,v)$
+
+**Walks of length $k$**
+: $A^k_{ij}$ counts all walks of length $k$ from $i$ to $j$
+
+**Bipartite projection**
+: $A^{(U)} = BB^\top$ (persons); $A^{(W)} = B^\top B$ (events)
+
+**Power-law degree distribution**
+: $P(k) \sim k^{-\gamma}$, typically $\gamma \in (2, 3)$
+:::
+
+## Key Concepts
+
+- **Adjacency matrix** $A$: symmetric for undirected graphs; $A^k_{ij}$ counts walks of length $k$; eigenvalues encode global structure.
+- **Edge list:** standard interchange format; $O(m)$ space; columns: `source, target, weight, type, date`.
+- **Connected component:** maximal connected subgraph.
+- **Articulation point:** removal increases component count; primary disruption target.
+- **Bridge:** edge whose removal increases component count; equivalent to a 0-redundancy pathway.
+- **Clique:** complete subgraph; tight operational cell analog.
+- **$k$-core:** mutual minimum-degree subgraph; identifies network inner circles in $O(n+m)$.
+- **Structural hole:** gap spanned by a broker with low clustering coefficient; Burt's concept; efficient disruption target.
+- **Power-law degree distribution:** scale-free networks with hubs; robust to random failure, fragile to targeted hub removal.
+- **Bipartite projection:** affiliation network to one-mode; information loss is inherent; use bipartite structure when possible.
+
+::: {.callout-note title="Next Lecture" icon=false}
+**Centrality and Influence** — degree, betweenness, closeness, eigenvector, and PageRank centrality: what each measure captures structurally, how to compute it efficiently, and how to translate centrality scores into intelligence targeting and collection prioritization decisions.
+:::
+
+```{=html}
+<div class="course-sequence" style="margin-top:2rem">
+  <ul class="course-sequence">
+    <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> What is Network Analysis?</li>
+    <li class="seq-active"><span class="seq-icon">▶</span> <strong>Graph Theory Basics</strong> (this lecture)</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Centrality and Influence</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> SNA in Intelligence</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Community Detection</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Geospatial / Multi-Layer Networks</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Temporal / Dynamic Networks</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Global Security Networks</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Financial Networks</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Information / Influence Networks</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Infrastructure Networks</li>
+  </ul>
+</div>
+
+<div class="page-footer-custom">
+Intelligence Analysis Program &nbsp;|&nbsp; School of Intelligence Analysis &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
+</div>
+
+```
