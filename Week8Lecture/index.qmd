@@ -1,7 +1,7 @@
 ---
 title: "Geospatial and Multi-Layer Networks"
 subtitle: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
-author: "Professor Philip Baxter, Intelligence Analysis Program, James Madison University"
+author: "Intelligence Analysis Program, James Madison University"
 date: "Fall 2026"
 ---
 
@@ -9,7 +9,8 @@ date: "Fall 2026"
 | | |
 |:--|:--|
 | Course | IA 480: Applied Network Analysis |
-| Instructor | Professor Philip Baxter |
+| Week | 8 of 16 |
+| Instructor | Prof. Philip Baxter, Intelligence Analysis Program |
 | Term | Fall 2026 |
 :::
 
@@ -942,5 +943,4 @@ In practice: run network analysis first to generate a priority target list ranke
 </div>
 <div class="page-footer-custom">
 Intelligence Analysis Program &nbsp;|&nbsp; School of Intergrated Science &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
-
-```
+</div>
