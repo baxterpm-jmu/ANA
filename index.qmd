@@ -3,19 +3,37 @@ title: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
 author: "Professor Philip Baxter, Intelligence Analysis Program, James Madison University"
 ---
 
-Welcome to the course website. 
+# Welcome to the course website for Applied Network Analysis: Systems, Connections, and Influence.
 
-## Quick Links
+This course introduces students to the principles and applications of network analysis. Network analysis provides a powerful framework for understanding relationships, structures, and interactions within complex systems. Students will explore key network analysis concepts, methodologies, and tools. The course will emphasize practical applications, enabling students to apply network analysis techniques to real-world problems. By the end of the course, students will be equipped with the skills to conduct independent network analyses, critically evaluate network structures, and integrate network methodologies into their research. 
 
-- [Week 1](/Week1Lecture/index.qmd)
-- [Week 2](/Week2Lecture/index.qmd)
-- [Week 3](/Week3Lecture/index.qmd) 
-- [Week 4](/Week4Lecture/index.qmd)
-- [Week 5](/Week5Lecture/index.qmd)
-- [Week 6](/Week6Lecture/index.qmd)
-- [Week 7](/Week7Lecture/index.qmd)
-- [Week 8](/Week8Lecture/index.qmd)
-- [Week 9](/Week9Lecture/index.qmd)
-- [Week 10](/Week10Lecture/index.qmd)
-- [Week 11](/Week11Lecture/index.qmd)
+## Course Goals
+- Understand the theoretical foundations of network analysis.
+- Develop technical proficiency across multiple analytical platforms. 
+- Apply network analysis methods to substantive intelligence problems. 
+- Exercise sound analytical judgment in measure and tool selection. 
+- Critically evaluate the limits of network analysis findings. 
+- Communicate network findings as professional analytical products. 
+
+## Weekly Materials
+
+This course is organized into weekly modules, each containing lecture materials, readings, and assignments. The following links will take you to the respective week's materials. Please note that the course is designed to be completed sequentially, and it is recommended to follow the order of the weeks for optimal learning.
+
+- [Week 1](/Week1Lecture/index.qmd) - Course Introduction and Overview
+- [Week 2](/Week2Lecture/index.qmd) - What is Network Analysis?
+- [Week 3](/Week3Lecture/index.qmd) - Graph Theory Basics
+- [Week 4](/Week4Lecture/index.qmd) - Centrality and Influence
+- [Week 5](/Week5Lecture/index.qmd) - SNA in Intelligence
+- [Week 6](/Week6Lecture/index.qmd) - Community Detection and Clustering 
+- Week 7  - Fall Break 
+- [Week 8](/Week8Lecture/index.qmd) - ArcGIS and Network Analysis
+- [Week 9](/Week9Lecture/index.qmd) - NetworkX
+- [Week 10](/Week10Lecture/index.qmd) - Global Security and Network Analysis
+- [Week 11](/Week11Lecture/index.qmd) - Financial and Transaction Networks
+- [Week 12](/Week12Lecture/index.qmd) - Information and Influence Networks
+- [Week 13](/Week13Lecture/index.qmd) - Infrastructure and Physical Networks
+- Week 14 - Thanksgiving Break
+- Week 15 - Project Work
+- Week 16 - Project Presentations and Course Wrap-Up
+
 

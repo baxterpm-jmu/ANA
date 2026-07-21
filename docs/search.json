@@ -767,14 +767,21 @@
     "href": "index.html",
     "title": "IA 480: Applied Network Analysis: Systems, Connections, and Influence",
     "section": "",
-    "text": "Welcome to the course website."
+    "text": "This course introduces students to the principles and applications of network analysis. Network analysis provides a powerful framework for understanding relationships, structures, and interactions within complex systems. Students will explore key network analysis concepts, methodologies, and tools. The course will emphasize practical applications, enabling students to apply network analysis techniques to real-world problems. By the end of the course, students will be equipped with the skills to conduct independent network analyses, critically evaluate network structures, and integrate network methodologies into their research.\n\n\n\nUnderstand the theoretical foundations of network analysis.\nDevelop technical proficiency across multiple analytical platforms.\nApply network analysis methods to substantive intelligence problems.\nExercise sound analytical judgment in measure and tool selection.\nCritically evaluate the limits of network analysis findings.\nCommunicate network findings as professional analytical products.\n\n\n\n\nThis course is organized into weekly modules, each containing lecture materials, readings, and assignments. The following links will take you to the respective week’s materials. Please note that the course is designed to be completed sequentially, and it is recommended to follow the order of the weeks for optimal learning.\n\nWeek 1 - Course Introduction and Overview\nWeek 2 - What is Network Analysis?\nWeek 3 - Graph Theory Basics\nWeek 4 - Centrality and Influence\nWeek 5 - SNA in Intelligence\nWeek 6 - Community Detection and Clustering\nWeek 7 - Fall Break\nWeek 8 - ArcGIS and Network Analysis\nWeek 9 - NetworkX\nWeek 10 - Global Security and Network Analysis\nWeek 11 - Financial and Transaction Networks\nWeek 12 - Information and Influence Networks\nWeek 13 - Infrastructure and Physical Networks\nWeek 14 - Thanksgiving Break\nWeek 15 - Project Work\nWeek 16 - Project Presentations and Course Wrap-Up"
   },
   {
-    "objectID": "index.html#quick-links",
-    "href": "index.html#quick-links",
+    "objectID": "index.html#course-goals",
+    "href": "index.html#course-goals",
     "title": "IA 480: Applied Network Analysis: Systems, Connections, and Influence",
-    "section": "Quick Links",
-    "text": "Quick Links\n\nWeek 1\nWeek 2\nWeek 3\nWeek 4\nWeek 5\nWeek 6\nWeek 7\nWeek 8\nWeek 9\nWeek 10\nWeek 11"
+    "section": "",
+    "text": "Understand the theoretical foundations of network analysis.\nDevelop technical proficiency across multiple analytical platforms.\nApply network analysis methods to substantive intelligence problems.\nExercise sound analytical judgment in measure and tool selection.\nCritically evaluate the limits of network analysis findings.\nCommunicate network findings as professional analytical products."
+  },
+  {
+    "objectID": "index.html#weekly-materials",
+    "href": "index.html#weekly-materials",
+    "title": "IA 480: Applied Network Analysis: Systems, Connections, and Influence",
+    "section": "",
+    "text": "This course is organized into weekly modules, each containing lecture materials, readings, and assignments. The following links will take you to the respective week’s materials. Please note that the course is designed to be completed sequentially, and it is recommended to follow the order of the weeks for optimal learning.\n\nWeek 1 - Course Introduction and Overview\nWeek 2 - What is Network Analysis?\nWeek 3 - Graph Theory Basics\nWeek 4 - Centrality and Influence\nWeek 5 - SNA in Intelligence\nWeek 6 - Community Detection and Clustering\nWeek 7 - Fall Break\nWeek 8 - ArcGIS and Network Analysis\nWeek 9 - NetworkX\nWeek 10 - Global Security and Network Analysis\nWeek 11 - Financial and Transaction Networks\nWeek 12 - Information and Influence Networks\nWeek 13 - Infrastructure and Physical Networks\nWeek 14 - Thanksgiving Break\nWeek 15 - Project Work\nWeek 16 - Project Presentations and Course Wrap-Up"
   },
   {
     "objectID": "Week10Lecture/index.html",
