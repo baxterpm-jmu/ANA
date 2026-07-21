@@ -1,18 +1,16 @@
 ---
 title: "What is Network Analysis?"
 subtitle: "IA 480: Applied Network Analysis — Systems, Connections, and Influence"
+author: "Intelligence Analysis Program, James Madison University"
 date: "Fall 2026"
 ---
-
-```{=html}
-```
 
 ::: {.course-meta}
 | | |
 |:--|:--|
 | Course | IA 480: Applied Network Analysis |
 | Week | 2 of 16 |
-| Instructor | Philip Baxter |
+| Instructor | Prof. Philip Baxter, Intelligence Analysis Program |
 | Term | Fall 2026 |
 :::
 
@@ -520,7 +518,7 @@ The final project integrates all three dimensions: a network intelligence produc
 
 ```{=html}
 <div class="page-footer-custom">
-School of Intelligence Analysis &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
+Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
 </div>
 
 ```

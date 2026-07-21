@@ -1,22 +1,16 @@
 ---
 title: "Financial and Transaction Networks"
 subtitle: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
-author: "School of Intelligence Analysis, James Madison University"
+author: "Intelligence Analysis Program, James Madison University"
 date: "Fall 2026"
 ---
-
-```{=html}
-<div class="uc-banner column-screen">
-UNCLASSIFIED // FOR EDUCATIONAL USE ONLY
-</div>
-```
 
 ::: {.course-meta}
 | | |
 |:--|:--|
 | Course | IA 480: Applied Network Analysis |
-| Week | 11 of 12 |
-| Instructor | School of Intelligence Analysis |
+| Week | 11 of 16 |
+| Instructor | Prof. Philip Baxter, Intelligence Analysis Program |
 | Term | Fall 2026 |
 :::
 
@@ -1135,9 +1129,5 @@ Financial network analysis serves **two distinct functions**: an *intelligence f
 </div>
 
 <div class="page-footer-custom">
-School of Intelligence Analysis &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
+Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
 </div>
-<div class="uc-banner column-screen uc-banner-bottom">
-UNCLASSIFIED // FOR EDUCATIONAL USE ONLY
-</div>
-```

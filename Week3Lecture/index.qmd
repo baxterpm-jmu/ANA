@@ -1,7 +1,7 @@
 ---
 title: "Graph Theory Basics"
 subtitle: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
-author: "School of Intelligence Analysis, James Madison University"
+author: "Intelligence Analysis Program, James Madison University"
 date: "Fall 2026"
 ---
 
@@ -10,7 +10,7 @@ date: "Fall 2026"
 |:--|:--|
 | Course | IA 480: Applied Network Analysis |
 | Week | 3 of 12 |
-| Instructor | School of Intelligence Analysis |
+| Instructor | Prof. Philip Baxter, Intelligence Analysis Program |
 | Term | Fall 2026 |
 :::
 
@@ -794,5 +794,3 @@ Intelligence reporting identifies five individuals ($A$–$E$) attending three m
 <div class="page-footer-custom">
 Intelligence Analysis Program &nbsp;|&nbsp; School of Intelligence Analysis &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
 </div>
-
-```

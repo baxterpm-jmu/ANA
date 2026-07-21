@@ -1,6 +1,8 @@
 ---
 title: "Course Introduction"
 subtitle: "IA 480: Applied Network Analysis — Systems, Connections, and Influence"
+author: "Intelligence Analysis Program, James Madison University"
+date: "Fall 2026"
 ---
 
 
@@ -9,7 +11,7 @@ subtitle: "IA 480: Applied Network Analysis — Systems, Connections, and Influe
 |:--|:--|
 | Course | IA 480: Applied Network Analysis |
 | Week | 1 of 16 |
-| Instructor | Professor Philip Baxter |
+| Instructor | Prof. Philip Baxter, Intelligence Analysis Program |
 | Term | Fall 2026 |
 :::
 

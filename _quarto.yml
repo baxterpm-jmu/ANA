@@ -32,7 +32,10 @@ website:
             text: Week 10 Course Materials
           - href: Week11Lecture/index.qmd
             text: Week 11 Course Materials
-
+          - href: Week12Lecture/index.qmd
+            text: Week 12 Course Materials
+          - href: Week13Lecture/index.qmd
+            text: Week 13 Course Materials
 format:
   html:
     theme: jmu-lecture.css

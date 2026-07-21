@@ -1,7 +1,7 @@
 ---
 title: "Temporal and Dynamic Networks"
 subtitle: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
-author: "School of Intelligence Analysis, James Madison University"
+author: "Intelligence Analysis Program, James Madison University"
 date: "Fall 2026"
 ---
 
@@ -9,8 +9,8 @@ date: "Fall 2026"
 | | |
 |:--|:--|
 | Course | IA 480: Applied Network Analysis |
-| Week | 9 of 12 |
-| Instructor | School of Intelligence Analysis |
+| Week | 9 of 16 |
+| Instructor | Prof. Philip Baxter, Intelligence Analysis Program |
 | Term | Fall 2026 |
 :::
 
@@ -1156,5 +1156,3 @@ spec_dists = [
 <div class="page-footer-custom">
 Intelligence Analysis Program &nbsp;|&nbsp; School of Integrated Sciences &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
 </div>
-
-```
