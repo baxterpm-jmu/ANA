@@ -1,0 +1,1133 @@
+---
+title: "Information and Influence Networks"
+subtitle: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
+author: "School of Intelligence Analysis, James Madison University"
+date: "Fall 2026"
+---
+
+```{=html}
+<div class="uc-banner column-screen">
+UNCLASSIFIED // FOR EDUCATIONAL USE ONLY
+</div>
+```
+
+::: {.course-meta}
+| | |
+|:--|:--|
+| Course | IA 480: Applied Network Analysis |
+| Week | 12 of 12 |
+| Instructor | School of Intelligence Analysis |
+| Term | Fall 2026 |
+:::
+
+::: {.callout-note title="Learning Objectives" icon=false}
+By the end of this lecture, students should be able to:
+
+1. Construct a social media interaction graph from platform data, select the appropriate layer for a given analytical task, and compute cascade metrics (breadth, depth, structural virality).
+2. Identify structural and behavioral signatures of bot accounts and distinguish bot detection from coordinated inauthentic behavior (CIB) detection.
+3. Apply HITS to a retweet network to separate content producers (authority) from amplifiers (hub) and design disruption strategies targeting both layers.
+4. Describe the IRA network structure and explain how its two-cluster community organization served its operational objectives.
+5. Articulate the legal and analytical limits of influence network analysis and produce a properly caveated influence network assessment.
+:::
+
+## Lecture Roadmap
+
+```{=html}
+<div class="roadmap-grid" style="grid-template-columns: repeat(2,1fr)">
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part I — Social Media as Network Data</div>
+    <ul>
+      <li>Platform graph layers: follower, retweet, reply, co-hashtag</li>
+      <li>Reach, virality, and cascade metrics</li>
+      <li>Echo chambers and filter bubbles as community structure</li>
+      <li>The empirics of false information spread</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part II — Detecting Inauthentic Activity</div>
+    <ul>
+      <li>Bot detection: structural and behavioral signatures</li>
+      <li>Coordinated inauthentic behavior (CIB): four signal categories</li>
+      <li>HITS: separating producers from amplifiers</li>
+      <li>Temporal synchrony as a coordination signal</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part III — Narrative and Attribution</div>
+    <ul>
+      <li>Hashtag co-occurrence and narrative networks</li>
+      <li>Disinformation attribution from network signatures</li>
+      <li>Case study: Internet Research Agency (IRA)</li>
+      <li>The firehose of falsehood and reflexive control</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part IV — Counter-Influence and Analytical Limits</div>
+    <ul>
+      <li>Counter-influence operations: a network perspective</li>
+      <li>Platform takedown as network disruption</li>
+      <li>Analytical and legal limits</li>
+      <li>Caveating influence network assessments</li>
+    </ul>
+  </div>
+</div>
+```
+
+# Part I: Social Media as Network Data
+
+## Platform Graph Structures
+
+A single social media platform simultaneously generates several distinct, analytically separable network layers. Each captures a different type of social relationship or content flow, and each answers different analytical questions.^[Soroush Vosoughi, Deb Roy, and Sinan Aral, "The Spread of True and False News Online," *Science* 359, no. 6380 (2018): 1146–1151.]
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Five Platform Graph Layers
+
+**Follower/following graph:** Directed; $A \to B$ means $A$ follows $B$ and $B$'s content appears in $A$'s feed. Static relative to interaction graphs; represents *potential* information exposure, not realized exposure. The structural foundation for audience reach estimation.
+
+**Retweet/share graph:** Directed; $A \to B$ means $A$ amplified $B$'s content. Represents *actual* content propagation — the primary amplification mechanism on most platforms and the most analytically useful layer for tracing disinformation spread. The retweet graph is sparser than the follower graph but structurally more meaningful for influence analysis.
+
+**Reply graph:** Directed; $A \to B$ means $A$ replied to $B$. Represents conversational engagement. Tends to be denser and more reciprocal than the retweet graph. Useful for identifying debate, counter-speech, and targeted harassment campaigns — where the reply structure reveals who is being engaged, not just who is being amplified.
+
+**Mention graph:** $A$ mentioned $B$ in a post without necessarily replying. May or may not indicate a prior relationship. Useful for identifying targeted harassment campaigns and for reconstructing coordination among accounts that do not directly follow each other.
+
+**Co-hashtag graph (bipartite projection):** Two accounts connected if they use the same hashtag within a defined time window. Reveals topical coordination independent of direct account-level interaction — the most powerful layer for detecting coordinated campaigns where operators deliberately avoid direct account-level connections that would be obvious in the retweet graph.
+
+:::
+::: {.column width="45%"}
+
+**Selecting the Right Layer**
+
+| Analytical Task | Graph Layer |
+|:----------------|:------------|
+| Map information spread | Retweet graph |
+| Identify audience reach | Follower graph |
+| Detect coordinated amplification | Co-hashtag + retweet |
+| Find influence leaders | HITS on retweet graph |
+| Detect harassment campaigns | Mention graph |
+| Identify narrative clusters | Hashtag co-occurrence |
+| Find ideological communities | Follower community detection |
+| Attribution to external actor | Temporal + metadata analysis |
+
+::: {.callout-warning title="Post-2023 Platform API Restrictions" icon=false}
+Twitter/X (2023), Meta, and TikTok have severely restricted academic and research access to full interaction graph data. The Twitter Academic Research API — which enabled datasets like the Vosoughi 2018 study — was discontinued in 2023. Analysts must increasingly rely on:
+
+- **Targeted collection** within authorized legal authorities
+- **Platform transparency data releases** (required under EU DSA for very large platforms; voluntary in the US context)
+- **Leaked datasets** obtained by investigative journalists and shared via Stanford Internet Observatory, ICIJ, or DFRLab
+- **Firehose access** available to some government entities through platform trust and safety partnerships
+
+This represents a significant reduction in the ability to conduct the kind of large-scale network analysis that produced the key empirical findings discussed in this lecture.
+:::
+
+:::
+::::
+
+## Reach, Virality, and Cascade Metrics
+
+When content spreads through a network, it generates a **diffusion cascade**: a tree rooted at the original post, with each node an account that shared the content and each edge representing the sharing act.^[Sharad Goel et al., "The Structural Virality of Online Diffusion," *Management Science* 62, no. 1 (2016): 180–196.]
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Five Cascade Metrics
+
+- **Breadth:** maximum number of nodes at any single level of the cascade tree; measures lateral spread — how many people see the content at roughly the same time
+- **Depth:** the longest path from root to leaf; measures the number of propagation steps before the content dies out — how many degrees of separation the content traverses
+- **Size:** total number of unique nodes in the cascade (total unique accounts reached)
+- **Structural virality:** average pairwise distance between all nodes in the cascade tree; distinguishes broadcast (star structure, low structural virality) from viral (chain/tree structure, high structural virality):
+
+$$\bar{d} = \frac{1}{n(n-1)} \sum_{i \neq j} d(i,j)$$
+
+where $d(i,j)$ is the tree distance between cascade nodes $i$ and $j$.
+
+- **Speed:** time from root posting to first reshare; time to reach 1,000 nodes; characterizes diffusion velocity
+
+### Broadcast vs. Viral Diffusion
+
+These two diffusion patterns can produce cascades of identical *size* but with completely different structural virality:
+
+- **Broadcast diffusion** (star): one high-degree account directly reaches many; structural virality is low; typical of celebrity endorsement, media outlet sharing, or sockpuppet amplification from a central hub
+- **Viral diffusion** (chain/tree): content propagates through chains of peer-to-peer sharing; structural virality is high; typical of organic content that resonates across communities
+
+:::
+::: {.column width="45%"}
+
+```{=html}
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Broadcast vs. Viral Cascade Structure
+  </p>
+  <svg viewBox="0 0 420 225" xmlns="http://www.w3.org/2000/svg"
+       style="width:100%;max-width:400px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <defs>
+      <marker id="casc" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L7,3 z" fill="#450084"/>
+      </marker>
+    </defs>
+    <line x1="210" y1="10" x2="210" y2="215" stroke="#D6D6D6" stroke-width="1.2"/>
+
+    <!-- BROADCAST (left panel) -->
+    <text x="105" y="18" text-anchor="middle" font-size="9.5" font-weight="700" fill="#450084">BROADCAST (Star)</text>
+    <text x="105" y="29" text-anchor="middle" font-size="7.5" fill="#595959">structural virality: low · depth: 1</text>
+    <!-- Root -->
+    <circle cx="105" cy="55" r="16" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"/>
+    <text   x="105" y="59" text-anchor="middle" font-size="8" font-weight="700" fill="#333">HUB</text>
+    <!-- 8 direct recipients -->
+    <line x1="92"  y1="68" x2="52"  y2="100" stroke="#450084" stroke-width="1.8" marker-end="url(#casc)"/>
+    <line x1="98"  y1="70" x2="75"  y2="108" stroke="#450084" stroke-width="1.8" marker-end="url(#casc)"/>
+    <line x1="105" y1="71" x2="95"  y2="112" stroke="#450084" stroke-width="1.8" marker-end="url(#casc)"/>
+    <line x1="112" y1="70" x2="120" y2="110" stroke="#450084" stroke-width="1.8" marker-end="url(#casc)"/>
+    <line x1="118" y1="68" x2="148" y2="100" stroke="#450084" stroke-width="1.8" marker-end="url(#casc)"/>
+    <line x1="90"  y1="70" x2="40"  y2="115" stroke="#450084" stroke-width="1.8" marker-end="url(#casc)"/>
+    <line x1="105" y1="71" x2="80"  y2="130" stroke="#450084" stroke-width="1.8" marker-end="url(#casc)"/>
+    <line x1="120" y1="70" x2="165" y2="115" stroke="#450084" stroke-width="1.8" marker-end="url(#casc)"/>
+    <circle cx="40"  cy="122" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="52"  cy="107" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="75"  cy="115" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="80"  cy="137" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="95"  cy="119" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="120" cy="117" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="148" cy="107" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="165" cy="122" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <!-- Annotation -->
+    <rect x="18" y="160" width="180" height="48" rx="3" fill="#F4EFE1" stroke="#CBB677" stroke-width="1"/>
+    <text x="108" y="173" text-anchor="middle" font-size="8" fill="#333" font-weight="700">IO Campaign Pattern</text>
+    <text x="108" y="185" text-anchor="middle" font-size="7.5" fill="#595959">Hub amplifies to many directly;</text>
+    <text x="108" y="196" text-anchor="middle" font-size="7.5" fill="#595959">high breadth, depth=1,</text>
+    <text x="108" y="207" text-anchor="middle" font-size="7.5" fill="#595959">low structural virality</text>
+
+    <!-- VIRAL (right panel) -->
+    <text x="315" y="18" text-anchor="middle" font-size="9.5" font-weight="700" fill="#450084">VIRAL (Tree)</text>
+    <text x="315" y="29" text-anchor="middle" font-size="7.5" fill="#595959">structural virality: high · depth: 4+</text>
+    <!-- Root -->
+    <circle cx="315" cy="48" r="14" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"/>
+    <text   x="315" y="52" text-anchor="middle" font-size="8" font-weight="700" fill="#333">R</text>
+    <!-- Level 1 -->
+    <line x1="307" y1="61" x2="283" y2="85" stroke="#450084" stroke-width="1.8" marker-end="url(#casc)"/>
+    <line x1="323" y1="61" x2="347" y2="85" stroke="#450084" stroke-width="1.8" marker-end="url(#casc)"/>
+    <circle cx="275" cy="92" r="11" fill="#B599CE" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="340" cy="92" r="11" fill="#B599CE" stroke="#450084" stroke-width="1.8"/>
+    <!-- Level 2 -->
+    <line x1="268" y1="102" x2="252" y2="124" stroke="#450084" stroke-width="1.8" marker-end="url(#casc)"/>
+    <line x1="282" y1="102" x2="290" y2="124" stroke="#450084" stroke-width="1.8" marker-end="url(#casc)"/>
+    <line x1="340" y1="103" x2="330" y2="124" stroke="#450084" stroke-width="1.8" marker-end="url(#casc)"/>
+    <line x1="348" y1="102" x2="362" y2="124" stroke="#450084" stroke-width="1.8" marker-end="url(#casc)"/>
+    <circle cx="245" cy="131" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="290" cy="131" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="325" cy="131" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="362" cy="131" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <!-- Level 3 -->
+    <line x1="285" y1="141" x2="278" y2="160" stroke="#450084" stroke-width="1.5" marker-end="url(#casc)"/>
+    <line x1="295" y1="141" x2="305" y2="160" stroke="#450084" stroke-width="1.5" marker-end="url(#casc)"/>
+    <line x1="358" y1="141" x2="350" y2="160" stroke="#450084" stroke-width="1.5" marker-end="url(#casc)"/>
+    <line x1="366" y1="141" x2="375" y2="160" stroke="#450084" stroke-width="1.5" marker-end="url(#casc)"/>
+    <circle cx="273" cy="166" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"/>
+    <circle cx="305" cy="166" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"/>
+    <circle cx="347" cy="166" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"/>
+    <circle cx="375" cy="166" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"/>
+    <!-- Annotation -->
+    <rect x="225" y="182" width="180" height="36" rx="3" fill="#F4EFE1" stroke="#CBB677" stroke-width="1"/>
+    <text x="315" y="196" text-anchor="middle" font-size="8" fill="#333" font-weight="700">Organic Content Pattern</text>
+    <text x="315" y="208" text-anchor="middle" font-size="7.5" fill="#595959">Peer-to-peer propagation; high</text>
+    <text x="315" y="218" text-anchor="middle" font-size="7.5" fill="#595959">depth and structural virality</text>
+  </svg>
+  <figcaption>
+    Both cascades can reach the same number of accounts (size).<br>
+    Structural virality (mean pairwise tree distance) distinguishes them analytically.
+  </figcaption>
+</div>
+```
+
+::: {.callout-note title="Intelligence Relevance of Cascade Structure" icon=false}
+State-linked IO campaigns tend toward **broadcast diffusion** — amplified by sockpuppet hubs or coordinated media accounts directly from a central source. Organic viral content shows deeper, more chain-like cascades reflecting genuine peer-to-peer engagement.
+
+Cascade structure can therefore help distinguish inorganic from organic spread even before any account-level analysis is conducted. A cascade with very high breadth, depth = 1 or 2, and low structural virality is a structural anomaly suggesting hub-driven amplification rather than organic community engagement.
+:::
+
+:::
+::::
+
+## Echo Chambers and Filter Bubbles as Community Structure
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Conceptual Distinction
+
+- **Filter bubble** (Pariser 2011): algorithmically driven. Platforms personalize content feeds, reducing user exposure to cross-ideological content independent of user choice. A *platform design* property — the algorithm creates the bubble around the user without requiring the user's active cooperation.
+- **Echo chamber** (Sunstein 2001): socially driven. Users *preferentially* follow and interact with ideologically similar accounts. A *network structure* property — the community forms because users actively choose to cluster.
+
+Both produce the **same network signature**: high within-community density, low cross-community density, high modularity when community structure is derived from interaction data. Distinguishing them requires behavioral data (is the user exposed to cross-ideological content but choosing not to engage, or is the exposure itself suppressed?).^[Yochai Benkler, Robert Faris, and Hal Roberts, *Network Propaganda: Manipulation, Disinformation, and Radicalization in American Politics* (Oxford: Oxford University Press, 2018), 30–65.]
+
+### Measuring Echo Chamber Intensity
+
+- **Modularity $Q$:** of follower or retweet community structure; higher $Q$ = more isolated communities. Values above 0.5 in political interaction networks indicate strong echo chamber structure.
+- **Cross-community edge ratio** $\rho = E_{\text{cross}} / E_{\text{total}}$: lower $\rho$ = more siloed. For US political Twitter circa 2020, the retweet network cross-community $\rho < 0.05$ — fewer than 5% of retweets crossed the political divide.
+- **Random walk community separation:** probability that a random walker starting in community $A$ remains in $A$ after $k$ steps; high probability = effective isolation
+- **Ideological segregation index:** fraction of retweet edges that are ideologically homophilous; values $> 0.85$ indicate strong echo chamber structure
+
+:::
+::: {.column width="45%"}
+
+```{=html}
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Echo Chamber Community Structure
+  </p>
+  <svg viewBox="0 0 400 255" xmlns="http://www.w3.org/2000/svg"
+       style="width:100%;max-width:380px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <!-- Community ovals -->
+    <ellipse cx="110" cy="125" rx="95" ry="95" fill="rgba(69,0,132,0.08)" stroke="#450084" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <ellipse cx="290" cy="125" rx="95" ry="95" fill="rgba(203,182,119,0.10)" stroke="#AD9C65" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <text x="68"  y="22" text-anchor="middle" font-size="9" font-weight="700" fill="#450084">LEFT COMMUNITY</text>
+    <text x="330" y="22" text-anchor="middle" font-size="9" font-weight="700" fill="#AD9C65">RIGHT COMMUNITY</text>
+
+    <!-- Dense internal edges (left) -->
+    <line x1="58"  y1="80"  x2="95"  y2="68"  stroke="#450084" stroke-width="1.8"/>
+    <line x1="58"  y1="80"  x2="72"  y2="125" stroke="#450084" stroke-width="1.8"/>
+    <line x1="58"  y1="80"  x2="42"  y2="140" stroke="#450084" stroke-width="1.8"/>
+    <line x1="95"  y1="68"  x2="135" y2="82"  stroke="#450084" stroke-width="1.8"/>
+    <line x1="95"  y1="68"  x2="72"  y2="125" stroke="#450084" stroke-width="1.8"/>
+    <line x1="135" y1="82"  x2="155" y2="120" stroke="#450084" stroke-width="1.8"/>
+    <line x1="72"  y1="125" x2="42"  y2="140" stroke="#450084" stroke-width="1.8"/>
+    <line x1="72"  y1="125" x2="85"  y2="170" stroke="#450084" stroke-width="1.8"/>
+    <line x1="42"  y1="140" x2="60"  y2="180" stroke="#450084" stroke-width="1.8"/>
+    <line x1="85"  y1="170" x2="60"  y2="180" stroke="#450084" stroke-width="1.8"/>
+    <line x1="135" y1="82"  x2="72"  y2="125" stroke="#450084" stroke-width="1.5"/>
+    <line x1="155" y1="120" x2="85"  y2="170" stroke="#450084" stroke-width="1.5"/>
+
+    <!-- Left community nodes -->
+    <circle cx="58"  cy="80"  r="12" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="95"  cy="68"  r="12" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="135" cy="82"  r="12" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="155" cy="120" r="12" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="72"  cy="125" r="12" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="42"  cy="140" r="12" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="85"  cy="170" r="12" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="60"  cy="180" r="12" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+
+    <!-- Dense internal edges (right) -->
+    <line x1="340" y1="80"  x2="305" y2="68"  stroke="#AD9C65" stroke-width="1.8"/>
+    <line x1="340" y1="80"  x2="328" y2="125" stroke="#AD9C65" stroke-width="1.8"/>
+    <line x1="340" y1="80"  x2="358" y2="140" stroke="#AD9C65" stroke-width="1.8"/>
+    <line x1="305" y1="68"  x2="265" y2="82"  stroke="#AD9C65" stroke-width="1.8"/>
+    <line x1="305" y1="68"  x2="328" y2="125" stroke="#AD9C65" stroke-width="1.8"/>
+    <line x1="265" y1="82"  x2="245" y2="120" stroke="#AD9C65" stroke-width="1.8"/>
+    <line x1="328" y1="125" x2="358" y2="140" stroke="#AD9C65" stroke-width="1.8"/>
+    <line x1="328" y1="125" x2="315" y2="170" stroke="#AD9C65" stroke-width="1.8"/>
+    <line x1="358" y1="140" x2="340" y2="180" stroke="#AD9C65" stroke-width="1.8"/>
+    <line x1="315" y1="170" x2="340" y2="180" stroke="#AD9C65" stroke-width="1.8"/>
+    <line x1="245" y1="120" x2="315" y2="170" stroke="#AD9C65" stroke-width="1.5"/>
+
+    <!-- Right community nodes -->
+    <circle cx="340" cy="80"  r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <circle cx="305" cy="68"  r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <circle cx="265" cy="82"  r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <circle cx="245" cy="120" r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <circle cx="328" cy="125" r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <circle cx="358" cy="140" r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <circle cx="315" cy="170" r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <circle cx="340" cy="180" r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+
+    <!-- Sparse cross-community edges (dashed) -->
+    <line x1="155" y1="120" x2="245" y2="120" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="6,4"/>
+    <line x1="135" y1="82"  x2="265" y2="82"  stroke="#B2B2B2" stroke-width="1.2" stroke-dasharray="6,4"/>
+
+    <!-- Bridge accounts (center, gold highlight) -->
+    <circle cx="200" cy="120" r="16" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"/>
+    <text   x="200" y="116" text-anchor="middle" font-size="7.5" fill="#333" font-weight="700">BRIDGE</text>
+    <text   x="200" y="128" text-anchor="middle" font-size="7.5" fill="#333" font-weight="700">ACCT</text>
+    <line x1="155" y1="120" x2="184" y2="120" stroke="#595959" stroke-width="1.5"/>
+    <line x1="216" y1="120" x2="245" y2="120" stroke="#595959" stroke-width="1.5"/>
+
+    <!-- Modularity label -->
+    <text x="200" y="237" text-anchor="middle" font-size="8.5" fill="#595959">Both communities produce Q > 0.5 — IO operators</text>
+    <text x="200" y="250" text-anchor="middle" font-size="8.5" fill="#595959">exploit bridge accounts to seed narratives cross-community</text>
+  </svg>
+  <figcaption>
+    Bridge accounts (gold) are the highest-value IO injection points —<br>
+    they reach both communities simultaneously.
+  </figcaption>
+</div>
+```
+
+::: {.callout-warning title="Intelligence Implication" icon=false}
+Echo chamber community structure determines where disinformation is injected for maximum effect. A narrative seeded into an isolated community may spread extensively within it while remaining invisible to the other. A narrative seeded at a bridge account reaches both communities but with lower intensity per community. IO operators who understand the echo chamber topology can select injection points to optimize for either depth (within one community) or breadth (across both communities).
+:::
+
+:::
+::::
+
+## The Empirics of False Information Spread
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Vosoughi, Roy, and Aral (2018) — Science
+
+The most comprehensive empirical study of information diffusion on Twitter, covering all verified true and false news stories (2006–2017): 126,000 stories, 3 million accounts, 4.5 million tweets.^[Vosoughi, Roy, and Aral, "The Spread of True and False News Online," 1146.]
+
+**Key findings (all statistically significant):**
+
+- False news spreads **faster, farther, deeper, and more broadly** than true news across all information categories
+- False news reached 1,500 people approximately **six times faster** than true news
+- True news rarely diffused to more than 1,000 people; the top 1% of false news cascades regularly reached 1,000–100,000 people
+- False news cascades were **deeper** (more propagation steps) and had greater **structural virality** than true news
+- **Humans, not bots, were primarily responsible:** removing all bot activity from the dataset did not significantly change the differential spread
+
+**Mechanism — novelty and emotional arousal:**
+
+- False news stories were rated significantly more novel than true stories by independent human coders
+- False stories elicited higher-arousal emotions: surprise, fear, and disgust; true stories elicited lower-arousal states: anticipation and trust
+- Novelty and arousal drive sharing behavior — emotionally charged false content propagates farther per cascade step because each receiver is more likely to forward it
+
+**Correction cascade asymmetry:** Correction and debunking content spreads significantly less far and less fast than the original false claim. The structural asymmetry between false-claim and correction cascade sizes means that debunking rarely reaches the same audience as the original falsehood. This finding underlies the analytical superiority of **pre-bunking** over post-hoc debunking.
+
+:::
+::: {.column width="45%"}
+
+::: {.callout-note title="Shao et al. (2018) Complement" icon=false}
+Shao et al. found that low-credibility content is shared **earlier** in diffusion cascades — bots accelerate the initial spread in the first hours, giving false content a structural head start before human amplification takes over.^[Chengcheng Shao et al., "The Spread of Low-Credibility Content by Social Bots," *Nature Communications* 9 (2018): 4787.]
+
+This refines the Vosoughi finding: bots are not the primary driver of long-run false news spread (humans are), but they are critical to the **early phase** — injecting false content into trending algorithms during the first hours when momentum is established. Bots function as a catalyst, not the primary propagation mechanism.
+
+**IO application:** this implies that disrupting bot amplification in the first 2–6 hours of a false narrative's life is disproportionately effective. Once the narrative has achieved trending status and organic human sharing has taken over, bot suppression alone cannot reverse the cascade.
+:::
+
+::: {.callout-tip title="Varol et al. (2017): Bot Prevalence" icon=false}
+Varol et al. estimated that **9–15% of active Twitter accounts are bots**, with significant variation by topic area. Political and news topics show higher bot prevalence than personal topics.^[Onur Varol et al., "Online Human-Bot Interactions: Detection, Estimation, and Characterization," *Proceedings of the 11th International AAAI Conference on Web and Social Media* (2017): 280–289.] This means that network centrality metrics computed on platform data are systematically inflated for nodes whose follower and engagement counts include inauthentic activity — a measurement validity concern for all influence network analysis.
+:::
+
+:::
+::::
+
+# Part II: Detecting Inauthentic Activity
+
+## Bot Detection: Structural and Behavioral Signatures
+
+Social bots are automated accounts that simulate human behavior to amplify content, suppress organic discourse, or inflate apparent engagement metrics. A spectrum exists from fully automated to human-assisted ("cyborg") accounts.^[Emilio Ferrara et al., "The Rise of Social Bots," *Communications of the ACM* 59, no. 7 (2016): 96–104.]
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Structural Signatures
+
+- **High out-degree, low in-degree:** bots follow or mention many accounts but attract few organic followers. Follower/following ratio $\ll 1$ — a simple but robust initial filter.
+- **Low clustering coefficient:** bot accounts do not interact with each other's followers; their neighborhoods are not internally connected. Isolated high-degree nodes in the follower graph — connected to many targets but embedded in no community.
+- **Peripheral position in follower community:** bots rarely appear in the dense core of a community; they appear at the periphery, connected only to the accounts they are tasked to amplify. Core-periphery analysis on the follower graph separates organic community members from bot periphery.
+- **Identical or near-identical neighborhoods:** coordinated bot networks follow the same target account set. Community detection on the follower graph clusters them together even when they have no direct connections to each other.
+
+### Behavioral Signatures
+
+- **Posting frequency:** superhuman posting rates ($>50$ posts/day) inconsistent with individual human behavior
+- **Temporal regularity:** bots post at mechanically regular intervals; human posting follows bursty distributions. Burstiness coefficient $B \approx -1$ (highly regular) flags bot-like behavior. (Recall: organic human posting is $B > 0$)
+- **Account creation clustering:** coordinated bot networks are created in batches; clustering of account creation dates in a narrow time window indicates a manufactured campaign
+- **Profile incompleteness:** auto-generated names, default profile images, generic bios; combinable into a bot probability score (Botometer, BotSentinel)
+- **Content duplication:** bots reproduce near-identical content; detectable via cosine similarity of TF-IDF vectors applied to the account's post history
+
+:::
+::: {.column width="45%"}
+
+::: {.callout-tip title="AI-Generated Synthetic Media: Emerging Challenge" icon=false}
+Generative AI (LLMs and image diffusion models) has fundamentally changed the economic calculus of inauthentic behavior. Prior to ~2022, CIB campaigns required significant human labor to produce varied, credible content. Current capabilities enable:
+
+- **Synthetic text generation** at scale, producing content that passes text-similarity detectors (no near-duplicate detection signal)
+- **AI-generated profile images** that defeat reverse-image-search attribution (no stock photo or reuse signal)
+- **Personalized micro-targeted content** tailored to individual audience segments at near-zero marginal cost
+- **Synthetic voice and video deepfakes** of real political figures making statements they did not make
+
+These capabilities systematically defeat the behavioral heuristics developed for the 2016–2020 IO environment. The structural signatures (burstiness, neighborhood patterns) remain partially valid, but content-similarity-based detection is increasingly unreliable against AI-generated CIB.
+:::
+
+::: {.callout-warning title="TikTok: A Different Network Structure" icon=false}
+TikTok's influence architecture differs fundamentally from Twitter/X and Facebook. TikTok's primary content distribution mechanism is a **recommendation algorithm** (For You Page) rather than a social graph. This means:
+
+- Follower networks are less predictive of content reach than on other platforms
+- Social network analysis of the follower graph captures only a fraction of content propagation
+- The algorithm itself is the primary influence vector — and is not publicly analyzable
+- Standard retweet-graph and follower-graph methods developed for Twitter have limited applicability
+
+Influence analysis on TikTok must focus on engagement velocity, hashtag co-occurrence, and content similarity rather than network centrality in the social graph.
+:::
+
+:::
+::::
+
+## Coordinated Inauthentic Behavior (CIB)
+
+**Coordinated Inauthentic Behavior** (Meta's operational term) refers to networks of accounts — human, bot, or hybrid — that work in concert while concealing their coordination to manipulate public discourse. CIB is broader than bot detection: it focuses on *coordination*, not automation.
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Four CIB Detection Signal Categories
+
+**1. Temporal Synchrony**
+
+Accounts post, like, or share the same content within seconds of each other consistently over time. Statistical test: compute pairwise cross-correlation of posting time series for all account pairs; accounts with peak cross-correlation at lag $\approx 0$ are temporally coordinated. Expected background synchrony from organic trending behavior is low; true CIB produces synchrony far above the organic baseline. Temporal synchrony is the most robust single signal — it is difficult for operators to fake organic timing variation at scale.
+
+**2. Content Similarity**
+
+Accounts share near-identical text, image, or link content without evidence of independent generation. Method: compute cosine similarity of TF-IDF vectors across account post histories; cluster accounts by content similarity. Pre-AI: high similarity is a strong CIB signal. Post-AI: must complement with semantic embedding similarity (accounts generating thematically identical content with surface lexical variation).
+
+**3. Network Coordination**
+
+Accounts consistently retweet or like each other's content at rates far above chance; high mutual betweenness within the group. Build a **co-engagement bipartite network**: accounts × content items; project to account-account network; community detection reveals coordinated amplification clusters. Coordinated accounts often follow each other in unusual ways — new accounts following each other before any organic engagement history.
+
+**4. Infrastructure Overlap**
+
+Accounts sharing IP address ranges, phone number prefixes, or account creation timestamp clusters. Profile image reverse-image search reveals reused stock images or AI-generated faces across accounts. Domain registration records linking accounts to common web properties — the highest-confidence signal when available, as it reveals the operational infrastructure directly.
+
+:::
+::: {.column width="45%"}
+
+```{=html}
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    CIB Detection: Four Signal Categories
+  </p>
+  <svg viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg"
+       style="width:100%;max-width:400px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <!-- Grid lines -->
+    <line x1="210" y1="5"   x2="210" y2="235" stroke="#D6D6D6" stroke-width="1.2"/>
+    <line x1="5"   y1="120" x2="415" y2="120" stroke="#D6D6D6" stroke-width="1.2"/>
+
+    <!-- Panel 1: Temporal Synchrony (top-left) -->
+    <text x="105" y="18" text-anchor="middle" font-size="8.5" font-weight="700" fill="#450084">1. TEMPORAL SYNCHRONY</text>
+    <!-- Timeline with 5 synchronized accounts -->
+    <line x1="20" y1="72" x2="200" y2="72" stroke="#B2B2B2" stroke-width="1"/>
+    <line x1="20" y1="85" x2="200" y2="85" stroke="#B2B2B2" stroke-width="1"/>
+    <line x1="20" y1="98" x2="200" y2="98" stroke="#B2B2B2" stroke-width="1"/>
+    <!-- Account labels -->
+    <text x="15" y="76" text-anchor="end" font-size="7" fill="#595959">Acct1</text>
+    <text x="15" y="89" text-anchor="end" font-size="7" fill="#595959">Acct2</text>
+    <text x="15" y="102" text-anchor="end" font-size="7" fill="#595959">Acct3</text>
+    <!-- Synchronized posts at same times -->
+    <line x1="65"  y1="66" x2="65"  y2="78" stroke="#450084" stroke-width="2.5"/>
+    <line x1="65"  y1="79" x2="65"  y2="91" stroke="#450084" stroke-width="2.5"/>
+    <line x1="65"  y1="92" x2="65"  y2="104" stroke="#450084" stroke-width="2.5"/>
+    <line x1="120" y1="66" x2="120" y2="78" stroke="#450084" stroke-width="2.5"/>
+    <line x1="120" y1="79" x2="120" y2="91" stroke="#450084" stroke-width="2.5"/>
+    <line x1="120" y1="92" x2="120" y2="104" stroke="#450084" stroke-width="2.5"/>
+    <line x1="175" y1="66" x2="175" y2="78" stroke="#450084" stroke-width="2.5"/>
+    <line x1="175" y1="79" x2="175" y2="91" stroke="#450084" stroke-width="2.5"/>
+    <line x1="175" y1="92" x2="175" y2="104" stroke="#450084" stroke-width="2.5"/>
+    <text x="105" y="113" text-anchor="middle" font-size="7.5" fill="#cc0000">posts synchronized at lag ≈ 0</text>
+
+    <!-- Panel 2: Content Similarity (top-right) -->
+    <text x="315" y="18" text-anchor="middle" font-size="8.5" font-weight="700" fill="#450084">2. CONTENT SIMILARITY</text>
+    <!-- TF-IDF heatmap squares -->
+    <rect x="232" y="27" width="28" height="28" rx="2" fill="#450084"/>
+    <rect x="263" y="27" width="28" height="28" rx="2" fill="#B599CE"/>
+    <rect x="294" y="27" width="28" height="28" rx="2" fill="#450084"/>
+    <rect x="325" y="27" width="28" height="28" rx="2" fill="#DACCE6"/>
+    <rect x="356" y="27" width="28" height="28" rx="2" fill="#B599CE"/>
+    <rect x="232" y="58" width="28" height="28" rx="2" fill="#B599CE"/>
+    <rect x="263" y="58" width="28" height="28" rx="2" fill="#450084"/>
+    <rect x="294" y="58" width="28" height="28" rx="2" fill="#B599CE"/>
+    <rect x="325" y="58" width="28" height="28" rx="2" fill="#DACCE6"/>
+    <rect x="356" y="58" width="28" height="28" rx="2" fill="#450084"/>
+    <rect x="232" y="89" width="28" height="28" rx="2" fill="#450084"/>
+    <rect x="263" y="89" width="28" height="28" rx="2" fill="#B599CE"/>
+    <rect x="294" y="89" width="28" height="28" rx="2" fill="#450084"/>
+    <rect x="325" y="89" width="28" height="28" rx="2" fill="#B599CE"/>
+    <rect x="356" y="89" width="28" height="28" rx="2" fill="#DACCE6"/>
+    <text x="315" y="113" text-anchor="middle" font-size="7.5" fill="#cc0000">cosine similarity cluster ≈ 1.0</text>
+
+    <!-- Panel 3: Network Coordination (bottom-left) -->
+    <text x="105" y="132" text-anchor="middle" font-size="8.5" font-weight="700" fill="#450084">3. NETWORK COORDINATION</text>
+    <!-- Bipartite: accounts × posts -->
+    <circle cx="40"  cy="165" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="40"  cy="185" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <circle cx="40"  cy="205" r="9" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <rect x="90"  y="158" width="22" height="16" rx="2" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.5"/>
+    <rect x="90"  y="180" width="22" height="16" rx="2" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.5"/>
+    <rect x="90"  y="202" width="22" height="16" rx="2" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.5"/>
+    <!-- All accounts engage all posts -->
+    <line x1="49" y1="163" x2="90" y2="163" stroke="#450084" stroke-width="1.2"/>
+    <line x1="49" y1="163" x2="90" y2="185" stroke="#450084" stroke-width="1.2"/>
+    <line x1="49" y1="163" x2="90" y2="207" stroke="#450084" stroke-width="1.2"/>
+    <line x1="49" y1="183" x2="90" y2="163" stroke="#450084" stroke-width="1.2"/>
+    <line x1="49" y1="183" x2="90" y2="185" stroke="#450084" stroke-width="1.2"/>
+    <line x1="49" y1="183" x2="90" y2="207" stroke="#450084" stroke-width="1.2"/>
+    <line x1="49" y1="205" x2="90" y2="163" stroke="#450084" stroke-width="1.2"/>
+    <line x1="49" y1="205" x2="90" y2="185" stroke="#450084" stroke-width="1.2"/>
+    <line x1="49" y1="205" x2="90" y2="207" stroke="#450084" stroke-width="1.2"/>
+    <text x="20" y="162" text-anchor="middle" font-size="7" fill="#595959">Accts</text>
+    <text x="120" y="162" text-anchor="middle" font-size="7" fill="#595959">Posts</text>
+    <text x="105" y="230" text-anchor="middle" font-size="7.5" fill="#cc0000">all accounts engage same posts</text>
+
+    <!-- Panel 4: Infrastructure Overlap (bottom-right) -->
+    <text x="315" y="132" text-anchor="middle" font-size="8.5" font-weight="700" fill="#450084">4. INFRASTRUCTURE OVERLAP</text>
+    <!-- Shared IP connects multiple accounts -->
+    <rect x="255" y="150" width="118" height="24" rx="3" fill="#fdd" stroke="#cc0000" stroke-width="1.5"/>
+    <text x="314" y="166" text-anchor="middle" font-size="8" fill="#cc0000" font-weight="700">Shared IP: 185.x.x.x</text>
+    <circle cx="265" cy="205" r="13" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text   x="265" y="209" text-anchor="middle" font-size="7.5" fill="#595959">Acct A</text>
+    <circle cx="310" cy="215" r="13" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text   x="310" y="219" text-anchor="middle" font-size="7.5" fill="#595959">Acct B</text>
+    <circle cx="358" cy="205" r="13" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text   x="358" y="209" text-anchor="middle" font-size="7.5" fill="#595959">Acct C</text>
+    <line x1="265" y1="192" x2="280" y2="174" stroke="#cc0000" stroke-width="1.5"/>
+    <line x1="310" y1="202" x2="310" y2="174" stroke="#cc0000" stroke-width="1.5"/>
+    <line x1="358" y1="192" x2="340" y2="174" stroke="#cc0000" stroke-width="1.5"/>
+  </svg>
+  <figcaption>
+    No single signal is sufficient for CIB determination.<br>
+    Attribution confidence requires convergence of ≥2 independent signal categories.
+  </figcaption>
+</div>
+```
+
+::: {.callout-warning title="CIB without Bots" icon=false}
+A sophisticated CIB campaign can be conducted entirely by human operators using multiple accounts — the coordination signal is present even without any automation. Bot detection alone is insufficient for CIB attribution. The key analytical distinction: bots are identified by their *automation*; CIB is identified by its *coordination and concealment*. These overlap but are not equivalent.
+:::
+
+:::
+::::
+
+## HITS in Application: Separating Producers from Amplifiers
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Revisiting HITS for Influence Operations
+
+On a directed retweet network, HITS decomposes each account into two scores:
+
+$$x(v) = \sum_{u:(u,v)\in E} y(u) \qquad \text{(authority score)}$$
+$$y(v) = \sum_{u:(v,u)\in E} x(u) \qquad \text{(hub score)}$$
+
+In the retweet context:
+
+- **Authority score** $x(v)$: receives retweets from many high-scoring hubs. These are the **content producers** — accounts generating content that the amplification network distributes. May be ideological leaders, state media outlets, or high-follower partisan figures.
+- **Hub score** $y(v)$: retweets many high-authority accounts. These are the **amplifiers** — accounts whose primary function is to increase the reach of content they did not originate. Bot and cyborg accounts frequently appear here.
+
+The two roles are structurally distinct; disruption targeting must address **both layers**: removing only hubs leaves content production intact; removing only authorities leaves the amplification infrastructure intact.
+
+:::
+::: {.column width="45%"}
+
+```{=html}
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6;padding:0.8rem">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    HITS Quadrant: Four Account Roles
+  </p>
+  <svg viewBox="0 0 360 310" xmlns="http://www.w3.org/2000/svg"
+       style="width:100%;max-width:340px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <!-- Axes -->
+    <line x1="55" y1="15"  x2="55"  y2="280" stroke="#333" stroke-width="1.5"/>
+    <line x1="55" y1="280" x2="350" y2="280" stroke="#333" stroke-width="1.5"/>
+    <line x1="55" y1="148" x2="350" y2="148" stroke="#D6D6D6" stroke-width="1"/>
+    <line x1="202" y1="15" x2="202" y2="280" stroke="#D6D6D6" stroke-width="1"/>
+    <!-- Axis labels -->
+    <text x="30" y="80"  font-size="9" fill="#595959" font-weight="700" transform="rotate(-90,30,80)">AUTHORITY</text>
+    <text x="30" y="220" font-size="8" fill="#595959" transform="rotate(-90,30,220)">Low</text>
+    <text x="30" y="45"  font-size="8" fill="#595959" transform="rotate(-90,30,45)">High</text>
+    <text x="130" y="295" text-anchor="middle" font-size="8" fill="#595959">Low</text>
+    <text x="275" y="295" text-anchor="middle" font-size="8" fill="#595959">High</text>
+    <text x="202" y="308" text-anchor="middle" font-size="9" fill="#595959" font-weight="700">HUB SCORE</text>
+
+    <!-- TL: High Authority, Low Hub = Content Producer -->
+    <rect x="57" y="17" width="143" height="129" rx="3" fill="rgba(69,0,132,0.07)"/>
+    <text x="128" y="34" text-anchor="middle" font-size="8.5" font-weight="700" fill="#450084">CONTENT PRODUCER</text>
+    <text x="128" y="46" text-anchor="middle" font-size="7.5" fill="#595959">state media, partisan leaders</text>
+    <!-- Mini: one node with in-arrows -->
+    <circle cx="128" cy="100" r="14" fill="#450084" stroke="#450084" stroke-width="2"/>
+    <text   x="128" y="104" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">A</text>
+    <line x1="98"  y1="88"  x2="115" y2="96"  stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <line x1="90"  y1="105" x2="113" y2="102" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <line x1="95"  y1="118" x2="114" y2="109" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <circle cx="93"  cy="86"  r="7" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.2"/>
+    <circle cx="85"  cy="104" r="7" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.2"/>
+    <circle cx="90"  cy="120" r="7" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.2"/>
+    <text x="128" y="132" text-anchor="middle" font-size="7.5" fill="#450084" font-style="italic">Counter-narrative target</text>
+
+    <!-- TR: High Authority, High Hub = Core IO Node -->
+    <rect x="204" y="17" width="144" height="129" rx="3" fill="rgba(69,0,132,0.14)"/>
+    <text x="276" y="34" text-anchor="middle" font-size="8.5" font-weight="700" fill="#450084">CORE IO NODE</text>
+    <text x="276" y="46" text-anchor="middle" font-size="7.5" fill="#595959">produces and amplifies</text>
+    <!-- Mini: bidirectional hub -->
+    <circle cx="276" cy="95" r="14" fill="#450084" stroke="#AD9C65" stroke-width="2.5"/>
+    <text   x="276" y="99" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">IO</text>
+    <line x1="248" y1="87" x2="263" y2="92"  stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <line x1="263" y1="100" x2="256" y2="100" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <line x1="290" y1="92" x2="315" y2="85"  stroke="#450084" stroke-width="1.5"/>
+    <line x1="290" y1="100" x2="320" y2="100" stroke="#450084" stroke-width="1.5"/>
+    <circle cx="242" cy="85"  r="7" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.2"/>
+    <circle cx="248" cy="102" r="7" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.2"/>
+    <circle cx="320" cy="82"  r="7" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.2"/>
+    <circle cx="325" cy="100" r="7" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.2"/>
+    <text x="276" y="132" text-anchor="middle" font-size="7.5" fill="#450084" font-style="italic">Highest-priority disruption target</text>
+
+    <!-- BL: Low Authority, Low Hub = Peripheral -->
+    <rect x="57" y="150" width="143" height="128" rx="3" fill="rgba(89,89,89,0.06)"/>
+    <text x="128" y="167" text-anchor="middle" font-size="8.5" font-weight="700" fill="#595959">PERIPHERAL / ORGANIC</text>
+    <text x="128" y="179" text-anchor="middle" font-size="7.5" fill="#595959">minimal IO role</text>
+    <circle cx="128" cy="225" r="10" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"/>
+    <text   x="128" y="229" text-anchor="middle" font-size="7.5" fill="#595959">org</text>
+    <text x="128" y="262" text-anchor="middle" font-size="7.5" fill="#595959" font-style="italic">Low analytical priority</text>
+
+    <!-- BR: Low Authority, High Hub = Pure Amplifier -->
+    <rect x="204" y="150" width="144" height="128" rx="3" fill="rgba(203,182,119,0.10)"/>
+    <text x="276" y="167" text-anchor="middle" font-size="8.5" font-weight="700" fill="#AD9C65">PURE AMPLIFIER</text>
+    <text x="276" y="179" text-anchor="middle" font-size="7.5" fill="#595959">bot / cyborg behavior</text>
+    <!-- Many out-arrows from hub node -->
+    <circle cx="248" cy="218" r="10" fill="#CBB677" stroke="#AD9C65" stroke-width="2"/>
+    <text   x="248" y="222" text-anchor="middle" font-size="7.5" fill="#333" font-weight="bold">H</text>
+    <line x1="258" y1="215" x2="278" y2="205" stroke="#AD9C65" stroke-width="1.5"/>
+    <line x1="258" y1="218" x2="285" y2="218" stroke="#AD9C65" stroke-width="1.5"/>
+    <line x1="258" y1="222" x2="278" y2="232" stroke="#AD9C65" stroke-width="1.5"/>
+    <circle cx="285" cy="203" r="7" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.5"/>
+    <circle cx="290" cy="218" r="7" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.5"/>
+    <circle cx="285" cy="234" r="7" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.5"/>
+    <text x="276" y="262" text-anchor="middle" font-size="7.5" fill="#AD9C65" font-style="italic">Platform enforcement priority</text>
+  </svg>
+</div>
+```
+
+:::
+::::
+
+# Part III: Narrative and Attribution
+
+## Hashtag Co-Occurrence and Narrative Networks
+
+:::: {.columns}
+::: {.column width="55%"}
+
+**Narrative as a network object:** Political and disinformation narratives are not discrete isolated claims — they form interconnected systems where individual talking points reinforce, reference, and amplify each other.
+
+### Hashtag Co-Occurrence Network
+
+- **Nodes:** hashtags
+- **Edges:** two hashtags connected if they appear in the same post; edge weight = co-occurrence frequency; undirected weighted network
+- **Community detection** reveals *narrative clusters* — groups of hashtags that consistently co-occur, corresponding to coherent thematic frames
+- **Cross-cluster bridge hashtags** are *narrative bridges*: terms appearing across multiple thematic clusters, potentially used to blend frames or introduce a foreign narrative into an established domestic conversation
+
+### Account-Narrative Bipartite Network
+
+$$G = (U, W, E)$$
+
+where $U$ = accounts and $W$ = narrative clusters. Edge $(u, w)$: account $u$ consistently uses hashtags from cluster $w$. Projection to accounts: two accounts connected if they consistently promote the same narrative clusters — reveals coordinated narrative actors even without direct account-level interaction.
+
+### Starbird's Alternative Media Ecosystem
+
+Kate Starbird's research identified a structured **alternative media ecosystem** systematically promoting alternative (often conspiratorial) explanations in the wake of mass casualty events.^[Kate Starbird, "Examining the Alternative Media Ecosystem Through the Production of Alternative Narratives of Mass Shooting Events on Twitter," *Proceedings of the 11th International AAAI Conference on Web and Social Media* (2017): 230–239.]
+
+Russian state media (RT, Sputnik) consistently appear as **high-betweenness bridge nodes** between Western conspiratorial communities and foreign state narratives — functioning as structural amplifiers that connect geographically and ideologically distinct communities around shared alternative frames.
+
+:::
+::: {.column width="45%"}
+
+```{=html}
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Hashtag Co-Occurrence Narrative Network
+  </p>
+  <svg viewBox="0 0 400 265" xmlns="http://www.w3.org/2000/svg"
+       style="width:100%;max-width:380px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <!-- Community ovals -->
+    <ellipse cx="100" cy="85"  rx="82" ry="62" fill="rgba(69,0,132,0.08)" stroke="#450084" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <ellipse cx="290" cy="85"  rx="82" ry="62" fill="rgba(203,182,119,0.10)" stroke="#AD9C65" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <ellipse cx="195" cy="200" rx="75" ry="45" fill="rgba(89,89,89,0.07)" stroke="#595959" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <!-- Cluster labels -->
+    <text x="60"  y="20" text-anchor="middle" font-size="8.5" font-weight="700" fill="#450084">CLUSTER A</text>
+    <text x="60"  y="31" text-anchor="middle" font-size="7.5" fill="#595959">racial/social justice</text>
+    <text x="330" y="20" text-anchor="middle" font-size="8.5" font-weight="700" fill="#AD9C65">CLUSTER B</text>
+    <text x="330" y="31" text-anchor="middle" font-size="7.5" fill="#595959">election integrity</text>
+    <text x="195" y="150" text-anchor="middle" font-size="8.5" font-weight="700" fill="#595959">CLUSTER C</text>
+    <text x="195" y="161" text-anchor="middle" font-size="7.5" fill="#595959">2nd amendment / security</text>
+
+    <!-- Hashtag nodes in Cluster A (purple) -->
+    <circle cx="65"  cy="72"  r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <text   x="65"  cy="72"  y="76"   text-anchor="middle" font-size="7" fill="#450084" font-weight="bold">#BLM</text>
+    <circle cx="108" cy="58"  r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <text   x="108" y="62"   text-anchor="middle" font-size="6.5" fill="#450084" font-weight="bold">#Justice</text>
+    <circle cx="72"  cy="110" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <text   x="72"  y="114"  text-anchor="middle" font-size="6.5" fill="#450084" font-weight="bold">#Police</text>
+    <circle cx="120" cy="98"  r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
+    <text   x="120" y="102"  text-anchor="middle" font-size="6.5" fill="#450084" font-weight="bold">#Racism</text>
+    <!-- Cluster A internal edges -->
+    <line x1="65" y1="72" x2="108" y2="58"  stroke="#450084" stroke-width="2"/>
+    <line x1="65" y1="72" x2="72"  y2="110" stroke="#450084" stroke-width="2"/>
+    <line x1="108" y1="72" x2="120" y2="98" stroke="#450084" stroke-width="1.8"/>
+    <line x1="72"  y1="110" x2="120" y2="98" stroke="#450084" stroke-width="1.8"/>
+
+    <!-- Hashtag nodes in Cluster B (gold) -->
+    <circle cx="255" cy="72"  r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <text   x="255" y="76"   text-anchor="middle" font-size="6.5" fill="#AD9C65" font-weight="bold">#MAGA</text>
+    <circle cx="298" cy="58"  r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <text   x="298" y="62"   text-anchor="middle" font-size="6.5" fill="#AD9C65" font-weight="bold">#StopTheSteal</text>
+    <circle cx="265" cy="108" r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <text   x="265" y="112"  text-anchor="middle" font-size="6.5" fill="#AD9C65" font-weight="bold">#ElectionFraud</text>
+    <circle cx="315" cy="95"  r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
+    <text   x="315" y="99"   text-anchor="middle" font-size="6.5" fill="#AD9C65" font-weight="bold">#DeepState</text>
+    <!-- Cluster B internal edges -->
+    <line x1="255" y1="72" x2="298" y2="58"  stroke="#AD9C65" stroke-width="2"/>
+    <line x1="255" y1="72" x2="265" y2="108" stroke="#AD9C65" stroke-width="2"/>
+    <line x1="298" y1="72" x2="315" y2="95"  stroke="#AD9C65" stroke-width="1.8"/>
+    <line x1="265" y1="108" x2="315" y2="95" stroke="#AD9C65" stroke-width="1.8"/>
+
+    <!-- Cluster C (gray) - security/guns -->
+    <circle cx="155" cy="198" r="13" fill="#D6D6D6" stroke="#595959" stroke-width="2"/>
+    <text   x="155" y="202"  text-anchor="middle" font-size="6.5" fill="#595959" font-weight="bold">#2A</text>
+    <circle cx="198" cy="210" r="13" fill="#D6D6D6" stroke="#595959" stroke-width="2"/>
+    <text   x="198" y="214"  text-anchor="middle" font-size="6.5" fill="#595959" font-weight="bold">#GunRights</text>
+    <circle cx="240" cy="198" r="13" fill="#D6D6D6" stroke="#595959" stroke-width="2"/>
+    <text   x="240" y="202"  text-anchor="middle" font-size="6.5" fill="#595959" font-weight="bold">#2ndAmdt</text>
+    <line x1="155" y1="198" x2="198" y2="210" stroke="#595959" stroke-width="1.8"/>
+    <line x1="198" y1="210" x2="240" y2="198" stroke="#595959" stroke-width="1.8"/>
+
+    <!-- Bridge hashtags (gold border, center) -->
+    <circle cx="195" cy="130" r="18" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"/>
+    <text   x="195" y="127"  text-anchor="middle" font-size="6.5" fill="#333" font-weight="bold">#RiggedSystem</text>
+    <text   x="195" y="138"  text-anchor="middle" font-size="6.5" fill="#333" font-weight="bold">BRIDGE</text>
+    <!-- Bridge edges -->
+    <line x1="120" y1="105" x2="178" y2="128" stroke="#CBB677" stroke-width="2" stroke-dasharray="5,3"/>
+    <line x1="265" y1="108" x2="212" y2="128" stroke="#CBB677" stroke-width="2" stroke-dasharray="5,3"/>
+    <line x1="195" y1="148" x2="180" y2="186" stroke="#CBB677" stroke-width="2" stroke-dasharray="5,3"/>
+
+    <!-- RT/Sputnik as inter-cluster domain bridge -->
+    <rect x="160" y="53" width="68" height="20" rx="3" fill="#fdd" stroke="#cc0000" stroke-width="1.5"/>
+    <text x="194" y="67" text-anchor="middle" font-size="7.5" fill="#cc0000" font-weight="700">RT/Sputnik: max betweenness</text>
+    <line x1="140" y1="80" x2="160" y2="63" stroke="#cc0000" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <line x1="250" y1="80" x2="228" y2="63" stroke="#cc0000" stroke-width="1.5" stroke-dasharray="4,3"/>
+  </svg>
+  <figcaption>
+    Bridge hashtag (#RiggedSystem) spans all three clusters — an IO injection point.<br>
+    RT/Sputnik domain: max betweenness between Western conspiratorial clusters.
+  </figcaption>
+</div>
+```
+
+:::
+::::
+
+## Case Study: The Internet Research Agency Network
+
+:::: {.columns}
+::: {.column width="55%"}
+
+The Internet Research Agency (IRA) is a Russian state-linked organization based in St. Petersburg that conducted large-scale influence operations on U.S. social media from approximately 2013 through at minimum 2017. Twitter released approximately 3,613 IRA-linked accounts and 9 million associated tweets in 2018; Facebook released comparable data. These datasets are available for research through the Stanford Internet Observatory and ICIJ.
+
+### Network Structure
+
+**Persona accounts:** IRA operated high-follower persona accounts presenting as authentic American political voices across the ideological spectrum — @TEN_GOP (pro-Republican, 136,000 followers before suspension), @Blacktivist (pro-Black Lives Matter, 360,000 followers), @Jenn_Abrams (lifestyle + politics, 70,000 followers). These were authority accounts: content producers with genuine organic followings cultivated over years.
+
+**Amplification infrastructure:** lower-follower accounts (often created in batches with account creation date clustering) whose primary function was to retweet, like, and comment on persona content to inflate engagement metrics and trigger platform algorithmic amplification. These were hub accounts — pure amplifiers.
+
+**Cross-platform coordination:** same content narratives distributed simultaneously across Twitter, Facebook, Instagram, and YouTube. Multi-platform community detection reveals coordinated campaigns invisible on any single platform.
+
+**Temporal phases in the IRA operation:**
+
+1. **Phase 1 (2013–2015): Infrastructure building.** Account creation, follower acquisition by engaging trending non-political topics. Building organic-looking follower bases.
+2. **Phase 2 (2015–2016): Activation.** Shift to politically divisive content. Accounts with established follower bases pivot to IO content — temporal analysis shows the pivot point.
+3. **Phase 3 (2016–2017): Operational intensification.** Coordinated campaigns around specific political events; coordination with external actors including direct contacts with the Trump campaign and Russian intelligence.
+
+:::
+::: {.column width="45%"}
+
+```{=html}
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    IRA Network Structure: Layered Hub-and-Spoke
+  </p>
+  <svg viewBox="0 0 400 270" xmlns="http://www.w3.org/2000/svg"
+       style="width:100%;max-width:380px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <!-- IRA Coordination Core (center) -->
+    <circle cx="200" cy="135" r="22" fill="#cc0000" stroke="#cc0000" stroke-width="2"/>
+    <text   x="200" y="131" text-anchor="middle" font-size="8.5" fill="#fff" font-weight="700">IRA</text>
+    <text   x="200" y="143" text-anchor="middle" font-size="7.5" fill="#fff">Coordination</text>
+
+    <!-- Left community: left-targeting persona accounts (purple) -->
+    <ellipse cx="88" cy="105" rx="68" ry="55" fill="rgba(69,0,132,0.08)" stroke="#450084" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <text x="50" y="45" text-anchor="middle" font-size="7.5" font-weight="700" fill="#450084">LEFT-TARGETING</text>
+    <text x="50" y="56" text-anchor="middle" font-size="7" fill="#595959">@Blacktivist</text>
+    <text x="50" y="66" text-anchor="middle" font-size="7" fill="#595959">@LGBT_United</text>
+    <circle cx="52"  cy="78"  r="13" fill="#450084" stroke="#450084" stroke-width="2"/>
+    <text   x="52"  y="82"   text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">A</text>
+    <circle cx="88"  cy="65"  r="13" fill="#450084" stroke="#450084" stroke-width="2"/>
+    <text   x="88"  y="69"   text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">A</text>
+    <circle cx="118" cy="82"  r="13" fill="#450084" stroke="#450084" stroke-width="2"/>
+    <text   x="118" y="86"   text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">A</text>
+    <circle cx="65"  cy="118" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="108" cy="122" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <line x1="52"  y1="78"  x2="88"  y2="65"  stroke="#450084" stroke-width="1.8"/>
+    <line x1="88"  y1="65"  x2="118" y2="82"  stroke="#450084" stroke-width="1.8"/>
+    <line x1="65"  y1="118" x2="52"  y2="90"  stroke="#450084" stroke-width="1.5"/>
+    <line x1="108" y1="122" x2="118" y2="95"  stroke="#450084" stroke-width="1.5"/>
+
+    <!-- Right community: right-targeting persona accounts (gold) -->
+    <ellipse cx="312" cy="105" rx="68" ry="55" fill="rgba(203,182,119,0.10)" stroke="#AD9C65" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <text x="350" y="45" text-anchor="middle" font-size="7.5" font-weight="700" fill="#AD9C65">RIGHT-TARGETING</text>
+    <text x="350" y="56" text-anchor="middle" font-size="7" fill="#595959">@TEN_GOP</text>
+    <text x="350" y="66" text-anchor="middle" font-size="7" fill="#595959">@Jenn_Abrams</text>
+    <circle cx="348" cy="78"  r="13" fill="#CBB677" stroke="#AD9C65" stroke-width="2"/>
+    <text   x="348" y="82"   text-anchor="middle" font-size="8" fill="#333" font-weight="bold">A</text>
+    <circle cx="312" cy="65"  r="13" fill="#CBB677" stroke="#AD9C65" stroke-width="2"/>
+    <text   x="312" y="69"   text-anchor="middle" font-size="8" fill="#333" font-weight="bold">A</text>
+    <circle cx="280" cy="82"  r="13" fill="#CBB677" stroke="#AD9C65" stroke-width="2"/>
+    <text   x="280" y="86"   text-anchor="middle" font-size="8" fill="#333" font-weight="bold">A</text>
+    <circle cx="335" cy="118" r="11" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"/>
+    <circle cx="292" cy="122" r="11" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"/>
+    <line x1="348" y1="78"  x2="312" y2="65"  stroke="#AD9C65" stroke-width="1.8"/>
+    <line x1="312" y1="65"  x2="280" y2="82"  stroke="#AD9C65" stroke-width="1.8"/>
+
+    <!-- Amplification ring (small nodes, outer) -->
+    <text x="200" y="260" text-anchor="middle" font-size="7.5" fill="#595959">H = amplification accounts (hub); A = persona accounts (authority)</text>
+    <!-- Amplification nodes around IRA core -->
+    <circle cx="148" cy="168" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"/>
+    <text   x="148" y="172" text-anchor="middle" font-size="7" fill="#595959">H</text>
+    <circle cx="178" cy="188" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"/>
+    <text   x="178" y="192" text-anchor="middle" font-size="7" fill="#595959">H</text>
+    <circle cx="222" cy="188" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"/>
+    <text   x="222" y="192" text-anchor="middle" font-size="7" fill="#595959">H</text>
+    <circle cx="252" cy="168" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"/>
+    <text   x="252" y="172" text-anchor="middle" font-size="7" fill="#595959">H</text>
+    <circle cx="200" cy="175" r="9" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"/>
+    <text   x="200" y="179" text-anchor="middle" font-size="7" fill="#595959">H</text>
+
+    <!-- Edges from IRA to communities and amplification -->
+    <line x1="180" y1="127" x2="120" y2="97"  stroke="#cc0000" stroke-width="1.8" stroke-dasharray="5,3"/>
+    <line x1="220" y1="127" x2="280" y2="97"  stroke="#cc0000" stroke-width="1.8" stroke-dasharray="5,3"/>
+    <line x1="192" y1="155" x2="155" y2="165" stroke="#B2B2B2" stroke-width="1.2"/>
+    <line x1="200" y1="157" x2="200" y2="166" stroke="#B2B2B2" stroke-width="1.2"/>
+    <line x1="208" y1="155" x2="245" y2="165" stroke="#B2B2B2" stroke-width="1.2"/>
+
+    <!-- Amplifier-to-authority edges -->
+    <line x1="148" y1="159" x2="65"  y2="128" stroke="#450084" stroke-width="1.2" stroke-dasharray="3,2"/>
+    <line x1="252" y1="159" x2="335" y2="128" stroke="#AD9C65" stroke-width="1.2" stroke-dasharray="3,2"/>
+  </svg>
+  <figcaption>
+    Two-cluster structure: left-targeting (purple A) and right-targeting (gold A) persona accounts.<br>
+    Amplification (H) nodes retweet both communities. IRA coordination core = center.
+  </figcaption>
+</div>
+```
+
+### Network Analysis Findings
+
+**Community structure:** community detection on the IRA retweet graph revealed two major clusters — accounts targeting left-leaning audiences and accounts targeting right-leaning audiences. Minimal cross-cluster IRA activity: consistent with a strategy of **deepening existing divisions** rather than converting swing audiences.
+
+**Temporal follower acquisition:** IRA accounts achieved high follower counts by systematically engaging trending non-political topics before switching to IO content. Temporal analysis shows the follower acquisition phase clearly preceding the IO activation phase — a pattern detectable in retrospect via centrality velocity analysis.
+
+**Bridge accounts:** a small number of IRA accounts bridged the left and right targeting communities. These appear to have played a coordination role within the IRA network itself, not just within target audiences.
+
+:::
+::::
+
+## The Firehose of Falsehood and Reflexive Control
+
+:::: {.columns}
+::: {.column width="55%"}
+
+RAND researchers Paul and Matthews (2016) characterized Russian state information operations as a "firehose of falsehood": a high-volume, multichannel propaganda model with distinctive properties that traditional counter-messaging strategies are not designed to defeat.^[Christopher Paul and Miriam Matthews, *The Russian "Firehose of Falsehood" Propaganda Model: Why It Might Work and Options to Counter It* (Santa Monica: RAND Corporation, 2016), 1–12.]
+
+**Four defining properties:**
+
+1. **High volume and multichannel:** saturate the information environment across all platforms simultaneously; no single counter-narrative can match the volume
+2. **Rapid, continuous, and repetitive:** false claims repeated across many sources and time periods; repetition creates familiarity and perceived credibility (the *illusory truth effect* — mere repetition increases rated believability independent of actual accuracy)
+3. **Lacks commitment to consistency:** contradictory narratives circulated simultaneously; the goal is not persuasion toward a single view but *confusion* — eroding confidence in any authoritative source
+4. **Lacks commitment to objective reality:** false claims made without concern for factual accuracy; correction and refutation are outpaced by new false claims before they can reverse the original effect
+
+**Network exploitation:** the model exploits the structural asymmetry documented by Vosoughi et al. — high volume + high novelty + emotional arousal = maximum cascade reach. Simultaneous contradictory narratives exploit echo chamber community structure: left-leaning communities receive one narrative; right-leaning communities receive an incompatible narrative; bridge accounts may receive both.
+
+:::
+::: {.column width="45%"}
+
+### Reflexive Control
+
+**Reflexive control** (Soviet/Russian military doctrine): feeding carefully crafted information to an adversary so that they voluntarily make decisions favorable to your interests. Information is a weapon operating through the *target's own decision-making network* — the adversary's cognitive and organizational network is the medium through which the weapon operates.
+
+Network analytical implication: the goal of an IO campaign operating on reflexive control principles is not to change network structure but to change the *content flowing through the network* such that the network's own amplification and decision processes generate the desired adversary behavior. The network is both the delivery mechanism and the target.
+
+::: {.callout-warning title="Counter-Strategy Network Implication" icon=false}
+The firehose model **cannot be defeated by content moderation alone** — the volume is too high and the correction cascade too slow. Effective counter-strategies must target the *infrastructure*:
+
+- High-hub amplification nodes (platform enforcement)
+- High-authority content producers (account suspension, platform labeling)
+- Cross-platform coordination mechanisms (infrastructure takedown, domain deregistration)
+- **Pre-bunking:** inoculating target audiences against specific narrative frames before they circulate. Psychological inoculation research (Roozenbeek and van der Linden 2019) shows pre-bunking is significantly more effective than post-hoc debunking at reducing susceptibility — consistent with the cascade asymmetry finding.^[Jon Roozenbeek and Sander van der Linden, "Fake News Game Confers Psychological Resistance Against Online Misinformation," *Palgrave Communications* 5 (2019): 65.]
+:::
+
+:::
+::::
+
+# Part IV: Counter-Influence and Analytical Limits
+
+## Counter-Influence Operations: A Network Perspective
+
+Standard network disruption logic applies directly to influence operations: identify and remove structurally critical nodes to fragment the network's effectiveness.
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Five Disruption Strategies
+
+**Authority disruption:** suspend or discredit high-authority content-producing accounts. Reduces content supply entering the amplification network. Most effective when authority accounts have no substitutes — not effective against franchise IO models with many interchangeable authority nodes (exactly the structure the IRA evolved toward after 2018 takedowns).
+
+**Hub disruption:** suspend high-hub amplification accounts. Reduces reach of remaining content. Effect is temporary if hub accounts are easily replaced by new accounts — operational cost to IO operators is low when infrastructure and content templates already exist.
+
+**Infrastructure takedown:** identify and remove the coordination infrastructure — automated scheduling tools, shared IP address ranges, common domain registrations, commercial VPN providers used for account creation. Forces the operator to rebuild from scratch at significantly higher cost.
+
+**Bridge account disruption:** remove cross-community bridge accounts. Fragments the narrative's cross-community penetration. Can *increase* community isolation as a counterproductive side effect — if the goal is counter-radicalization, fragmenting cross-community edges may reduce the flow of counter-narratives as much as the IO narratives.
+
+**Narrative inoculation (pre-bunking):** pre-bunk false narratives before they circulate. Structural research shows pre-bunking is significantly more effective than post-hoc debunking at reducing cascade size — because it intervenes before the cascade achieves momentum and before the correction cascade asymmetry activates.
+
+:::
+::: {.column width="45%"}
+
+### Platform Takedown as Network Disruption Experiment
+
+Major platform takedowns represent the largest real-world disruption experiments on influence networks:
+
+- **IRA 2018 (Twitter/Facebook):** account removal reduced cascade reach for targeted narratives. Post-takedown analysis: surviving and successor accounts partially compensated within 6–12 months. Effect was real but not permanent.
+- **Chinese state IO 2019 (Twitter/Facebook):** 936 accounts removed; linked to operations targeting Hong Kong protests. Infrastructure overlap (shared phone numbers, IP ranges) was the primary detection signal.
+- **Iranian IO 2020 (multiple platforms):** cross-platform coordinated campaign; removal on one platform was compensated by activity on others. Demonstrated the limits of single-platform enforcement.
+
+::: {.callout-tip title="Benkler, Faris, Roberts (2018) Asymmetric Media Finding" icon=false}
+Analysis of 2016 U.S. election media networks found that the **asymmetric structure of right-wing media** — with high network centralization around a small number of outlets (Breitbart, Fox News, Daily Caller) — made it more susceptible to coordinated influence operations than the more distributed left-wing media ecosystem, regardless of external interference.^[Benkler, Faris, and Roberts, *Network Propaganda*, 75–90.]
+
+The network centralization of partisan media ecosystems is an endogenous vulnerability — one that IO operators can exploit without creating the centralization themselves. Understanding the *domestic* media network structure is therefore a prerequisite for assessing IO vulnerability.
+:::
+
+:::
+::::
+
+## Analytical and Legal Limits
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Analytical Limits
+
+**Attribution uncertainty:** network structure identifies coordination patterns but cannot by itself attribute those patterns to a specific state or non-state actor. Attribution requires corroborating intelligence from other streams — infrastructure analysis, financial flows, HUMINT, signals intelligence. Network evidence is necessary but not sufficient.
+
+**False positive risk:** organic political communities exhibit some CIB-like properties — synchronized responses to breaking news events, high content similarity around shared ideology, common hashtag use. Distinguishing CIB from organic political mobilization is analytically difficult and consequential. A false positive — labeling organic political activity as coordinated inauthentic behavior — has significant civil liberties and analytical credibility implications.
+
+**Platform data incompleteness:** analysts only see what platforms share. The full network is invisible. Suspended accounts remove nodes and edges from the observable graph. Post-hoc analysis suffers from survivorship bias — the accounts that remained unsuspended may systematically differ from removed accounts in ways that distort structural conclusions.
+
+**Adversarial adaptation:** IO operators observe platform enforcement actions and adapt. Temporal signatures effective for detection in 2016 are deliberately avoided by 2024 operators. Content duplication patterns visible in the IRA dataset have been replaced by AI-generated content variation. Detection methods have a half-life.
+
+**Measurement validity:** follower counts, retweet counts, and engagement metrics can all be purchased or artificially inflated. Network centrality computed on corrupted engagement data produces misleading rankings — accounts with purchased followers appear more central than their organic influence warrants.
+
+:::
+::: {.column width="45%"}
+
+### Legal and Policy Constraints (U.S. Context)
+
+**First Amendment:** domestic IO activities by U.S. persons, even if coordinated, may constitute protected political speech. Government analysis of domestic social media at scale raises First Amendment concerns independent of the analysis quality.
+
+**Foreign Agents Registration Act (FARA):** foreign-directed IO activities on U.S. audiences may require registration under FARA. FARA applies to agents acting on behalf of foreign principals — not to the platforms distributing the content.
+
+**Intelligence Community restrictions:** IC collection on U.S. persons' social media requires legal authority. Bulk collection of domestic social media interaction data is constrained by EO 12333 and FISA minimization requirements. The distinction between "U.S. person" and "foreign national" data is often ambiguous in social media contexts where both interact in the same networks.
+
+**Covert action authority:** U.S. government counter-IO operations — not just analysis — require a Presidential Finding under the Hughes-Ryan Amendment. The line between analysis (authorized) and action (Finding required) in the information environment is policy-sensitive and evolving.
+
+::: {.callout-warning title="Mandatory Caveating Standard" icon=false}
+Influence network assessments must explicitly state:
+
+1. **Platform and time window** of the collection
+2. **Collection completeness** estimate (fraction of the full interaction graph captured)
+3. **Confidence level** of CIB vs. organic coordination determination, with method disclosed
+4. **Basis for any attribution claim** and corroborating intelligence streams consulted
+5. **Legal authority** for the collection and any U.S. person data handling
+6. **Adversarial adaptation caveat**: detection methods may be rendered obsolete by operator adaptation
+:::
+
+:::
+::::
+
+# Lecture Summary and Course Conclusion
+
+## Key Formulas and Definitions
+
+::: {.key-terms}
+
+**Structural virality**
+: $\bar{d} = \frac{1}{n(n-1)}\sum_{i\neq j}d(i,j)$ for cascade tree; distinguishes broadcast (star, low $\bar{d}$) from viral (chain/tree, high $\bar{d}$) diffusion
+
+**Cascade depth**
+: Longest path from root to leaf in the cascade tree; measures propagation step count
+
+**HITS authority**
+: $x(v) = \sum_{u:(u,v)\in E} y(u)$; on retweet graph = content producer score
+
+**HITS hub**
+: $y(v) = \sum_{u:(v,u)\in E} x(u)$; on retweet graph = amplifier score
+
+**Echo chamber modularity**
+: $Q > 0.5$ on follower/retweet community structure indicates strong ideological echo chamber
+
+**Cross-community edge ratio**
+: $\rho = E_{\text{cross}}/E_{\text{total}}$; low $\rho$ = siloed communities; US political Twitter retweet network $\rho < 0.05$
+
+**CIB detection threshold**
+: Convergence of $\geq 2$ independent signal categories (temporal synchrony, content similarity, network coordination, infrastructure overlap)
+
+**Burstiness bot indicator**
+: $B \approx -1$ (highly regular posting) = bot-like behavior; $B > 0$ (bursty) = organic human-like behavior
+
+:::
+
+## Course-Level Synthesis
+
+This lecture brings the course full circle. Across twelve weeks, we have built a complete toolkit for analyzing networks in intelligence contexts:
+
+- **Weeks 2–4** established the mathematical foundations: graph theory, centrality measures, and the structural metrics that underlie all subsequent domain-specific applications
+- **Weeks 5–6** introduced relational thinking in social contexts and community detection — the methods for finding structure in large, unstructured network data
+- **Weeks 7–8** extended the framework to geographic space and multiple relationship layers simultaneously, handling the physical and institutional complexity of real-world intelligence problems
+- **Weeks 9–10** introduced time as an analytical dimension and applied the full toolkit to global security domains — terrorism, proliferation, alliance systems
+- **Weeks 11–12** addressed two highly specialized domains where network analysis produces intelligence value not obtainable by other methods: financial intelligence and influence operations
+
+**The unifying insight across all twelve weeks:** structural position in a network — whether measured by betweenness, eigenvector centrality, modularity, edge overlap, or HITS scores — encodes information about an actor's *functional role* that is not visible from any individual attribute or behavior alone. Network analysis translates relational data into actionable structural intelligence.
+
+## Key Analytical Takeaways
+
+1. Each social media platform layer answers different analytical questions. Choose the layer based on the specific intelligence question — not data availability.
+
+2. Echo chambers and filter bubbles produce the same network signature (high modularity) through different mechanisms. The mechanism matters for counter-strategy design: algorithmic filter bubbles require platform-level intervention; echo chambers require social-level engagement.
+
+3. CIB detection requires four independent signal categories. No single signal is sufficient; attribution confidence requires convergence.
+
+4. The firehose model exploits structural information asymmetries that content moderation alone cannot defeat. Infrastructure disruption and pre-bunking are more structurally appropriate counter-strategies than post-hoc debunking.
+
+5. Attribution requires corroborating intelligence beyond network structure. Network evidence is necessary but not sufficient for attributing an IO campaign to a specific state actor.
+
+6. U.S. domestic influence network analysis faces significant legal constraints. Caveating is mandatory. The First Amendment and IC collection authorities constrain what analysis is permissible, not just what disruption is permissible.
+
+```{=html}
+<div style="margin-top:2.5rem">
+  <ul class="course-sequence">
+    <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> What is Network Analysis?</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Graph Theory Basics</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Centrality and Influence</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Social Network Analysis in Intelligence</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Community Detection and Clustering</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Geospatial and Multi-Layer Networks</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> [Week 8]</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Temporal and Dynamic Networks</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Global Security and Network Analysis</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Financial and Transaction Networks</li>
+    <li class="seq-active"><span class="seq-icon">▶</span> <strong>Information and Influence Networks</strong> (this lecture)</li>
+  </ul>
+</div>
+
+<div style="margin-top:1.5rem;padding:1.2rem;background:rgba(69,0,132,0.06);border:1px solid #450084;border-radius:4px">
+  <p style="font-size:1rem;font-weight:700;color:#450084;margin:0 0 0.4rem">IA 480 Complete</p>
+  <p style="font-size:0.88rem;color:#333;margin:0">
+    The analytical toolkit built across this course — graph representation, centrality, community detection, multilayer and temporal analysis, and domain-specific applications in global security, finance, and information — constitutes a foundational capability set for network-informed intelligence analysis. The structural patterns documented here recur across domains because network analysis captures something fundamental about how power, information, and resources move through human systems.
+  </p>
+</div>
+
+<div class="page-footer-custom">
+School of Intelligence Analysis &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
+</div>
+<div class="uc-banner column-screen uc-banner-bottom">
+UNCLASSIFIED // FOR EDUCATIONAL USE ONLY
+</div>
+```

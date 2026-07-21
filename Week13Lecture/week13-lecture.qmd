@@ -1,0 +1,1091 @@
+---
+title: "Infrastructure and Physical Networks"
+subtitle: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
+author: "School of Intelligence Analysis, James Madison University"
+date: "Fall 2026"
+---
+
+```{=html}
+<div class="uc-banner column-screen">
+UNCLASSIFIED // FOR EDUCATIONAL USE ONLY
+</div>
+```
+
+::: {.course-meta}
+| | |
+|:--|:--|
+| Course | IA 480: Applied Network Analysis |
+| Week | 13 of 14 |
+| Instructor | School of Intelligence Analysis |
+| Term | Fall 2026 |
+:::
+
+::: {.callout-note title="Learning Objectives" icon=false}
+By the end of this lecture, students should be able to:
+
+1. Describe the network properties of at least three critical infrastructure types (power grid, aviation, maritime, internet) and identify the structural basis of their vulnerability.
+2. Apply percolation theory to predict the giant component threshold under random failure and targeted attack.
+3. Compute critical node indicators — betweenness, articulation points, efficiency loss — and rank nodes by combined vulnerability.
+4. Simulate random and targeted attack sequences in NetworkX and produce a vulnerability curve.
+5. Produce a structured infrastructure vulnerability assessment meeting the product requirements specified in this lecture.
+:::
+
+## Lecture Roadmap
+
+```{=html}
+<div class="roadmap-grid" style="grid-template-columns: repeat(3,1fr)">
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part I — Critical Infrastructure as Networks</div>
+    <ul>
+      <li>CISA's 16 critical infrastructure sectors</li>
+      <li>Shared properties of infrastructure networks</li>
+      <li>Error and attack tolerance: random vs. targeted</li>
+      <li>Percolation theory and the giant component threshold</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part II — Power Grid Networks</div>
+    <ul>
+      <li>Power grid structure and small-world properties</li>
+      <li>Cascading failure: mechanism and Motter-Lai model</li>
+      <li>Vulnerability analysis and cascade mitigation</li>
+      <li>Case: Ukraine grid cyberattacks 2015–2016</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part III — Transportation Networks</div>
+    <ul>
+      <li>Aviation: the global airport network</li>
+      <li>Maritime networks and chokepoints</li>
+      <li>Undersea cable networks and landing stations</li>
+    </ul>
+  </div>
+</div>
+<div class="roadmap-grid" style="grid-template-columns: 1fr 1fr;margin-top:0.6rem">
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part IV — Telecommunications and Internet</div>
+    <ul>
+      <li>Autonomous Systems and BGP routing topology</li>
+      <li>Internet Exchange Points as critical nodes</li>
+      <li>BGP route hijacking as a graph-level attack</li>
+      <li>RPKI as structural mitigation</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part V — Resilience, Recovery, and Intelligence Applications</div>
+    <ul>
+      <li>Critical node identification: four methods</li>
+      <li>Resilience metrics and recovery analysis</li>
+      <li>Attack simulation in NetworkX</li>
+      <li>Infrastructure vulnerability assessment workflow</li>
+    </ul>
+  </div>
+</div>
+```
+
+# Part I: Critical Infrastructure as Networks
+
+## CISA Critical Infrastructure Sectors and Network Taxonomy
+
+CISA (Cybersecurity and Infrastructure Security Agency) designates 16 critical infrastructure sectors whose incapacity or destruction would have a debilitating effect on national security, public health, or economic security.^[Steven M. Rinaldi, James P. Peerenboom, and Terri K. Kelly, "Identifying, Understanding, and Analyzing Critical Infrastructure Interdependencies," *IEEE Control Systems Magazine* 21, no. 6 (2001): 11–25.]
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### 16 CISA Sectors
+
+Chemical · Commercial Facilities · Communications · Critical Manufacturing · Dams · Defense Industrial Base · Emergency Services · Energy · Financial Services · Food and Agriculture · Government Facilities · Healthcare and Public Health · Information Technology · Nuclear · Transportation Systems · Water and Wastewater
+
+### Network Modeling Priority
+
+Not all sectors are equally amenable to network analysis. Sectors with well-defined physical nodes and edges are most directly modeled:
+
+- **Directly modelable (physical network):** Energy (power grids, pipelines), Transportation (aviation, maritime, rail, road), Communications (internet, undersea cables), Water (treatment plants and mains)
+- **Indirectly modelable (institutional network):** Financial Services (correspondent banking), Healthcare (hospital referral networks), Defense Industrial Base (supply chain network)
+
+### Shared Properties of Infrastructure Networks
+
+- **Physical embedding:** nodes and edges are constrained by geography; planar or near-planar topology limits maximum degree; betweenness is driven by geographic necessity rather than organizational design — chokepoints arise from terrain, not choice
+- **Capacity constraints:** edges have finite throughput (transmission capacity MW, lane capacity vehicles/hour, bandwidth Gbps); flow networks with capacity limits rather than simple binary-edge graphs
+- **Redundancy by design:** engineered infrastructure includes deliberate redundancy; this redundancy is often geographically uneven — dense in urban cores, thin in rural corridors
+- **Interdependency:** all 16 sectors are mutually dependent; failure in one cascades into others (Week 7 multilayer cascade models apply directly here)
+- **Long asset lifetimes:** infrastructure built decades ago was not designed for current threat models; older networks often have lower redundancy, simpler topology, and weaker cybersecurity
+
+:::
+::: {.column width="45%"}
+
+::: {.callout-note title="The Interdependency Graph as an Analytical Object" icon=false}
+The 16 CISA sectors are themselves nodes in a **sector-level interdependency network** — a graph in which sectors are connected by dependency relationships. Edge $(A, B)$ indicates that sector $A$ depends on sector $B$: Energy depends on IT (for SCADA control), Transportation depends on Energy (for fuel and signals), Water depends on Energy (for pumping), and so on.
+
+Community detection on this interdependency graph reveals tight dependency clusters: Energy-IT-Communications form the most densely interconnected cluster. A failure that propagates through this cluster has the widest cross-sector cascade footprint.
+
+This is exactly the multilayer interdependency analysis introduced in Week 7 (Buldyrev et al. 2010) applied at the policy sector level rather than the individual node level.
+:::
+
+::: {.callout-warning title="Key Distinction: Topology vs. Operations" icon=false}
+Graph-theoretic vulnerability analysis identifies *topological* vulnerabilities — nodes and edges whose removal degrades network structure. This is distinct from *operational* vulnerability assessment, which accounts for protection levels, redundant systems, operator responses, and time-to-restore estimates.
+
+Network analysis provides the structural foundation; operational context determines actionable priority. The two must be combined in any complete infrastructure vulnerability intelligence product.
+:::
+
+:::
+::::
+
+## Error and Attack Tolerance: Random vs. Targeted Failure
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Albert, Jeong, and Barabási (2000) — Nature
+
+The foundational study of infrastructure network vulnerability demonstrated a fundamental asymmetry in how scale-free networks respond to two failure modes.^[Réka Albert, Hawoong Jeong, and Albert-László Barabási, "Error and Attack Tolerance of Complex Networks," *Nature* 406 (2000): 378–382.]
+
+**Random Failure (Errors)**
+
+Nodes fail randomly with equal probability — equipment malfunction, natural disaster affecting random locations. Scale-free networks are **highly robust to random failure**: because most nodes are low-degree, random removal is unlikely to hit the rare high-degree hubs. The giant component remains intact through removal of up to ~80% of nodes. The power law degree distribution provides an extraordinary buffer against accidents.
+
+**Targeted Attack**
+
+Nodes are removed in decreasing order of degree or betweenness — an adversary who knows the network structure. Scale-free networks are **catastrophically fragile to targeted attack**: removing as few as 5–10% of nodes (the hubs) causes rapid collapse of the giant component and network fragmentation. Exponential (Erdős-Rényi) networks degrade similarly under targeted and random attacks — neither as robust nor as fragile as scale-free networks at the extremes.
+
+### The Achilles' Heel
+
+Albert et al. identified what they called the "Achilles' heel" of scale-free networks: the same property — the presence of high-degree hubs — that makes them robust to accidents makes them uniquely vulnerable to deliberate attack by an adversary who knows the network topology.
+
+**Infrastructure design implication:** most physical infrastructure networks (internet, aviation, power grids) were *not* designed to have scale-free topology; this property emerged from organic growth processes. The topology's vulnerability to targeted attack was not a design choice — but it is a structural reality that adversaries can exploit.
+
+:::
+::: {.column width="45%"}
+
+```{=html}
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Vulnerability Curves: Random vs. Targeted Attack on Scale-Free Network
+  </p>
+  <svg viewBox="0 0 460 240" xmlns="http://www.w3.org/2000/svg"
+       style="width:100%;max-width:440px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <!-- Axes -->
+    <line x1="55" y1="15"  x2="55"  y2="205" stroke="#333" stroke-width="1.5"/>
+    <line x1="55" y1="205" x2="430" y2="205" stroke="#333" stroke-width="1.5"/>
+    <!-- Gridlines -->
+    <line x1="55" y1="15"  x2="430" y2="15"  stroke="#E0E0E0" stroke-width="0.8"/>
+    <line x1="55" y1="68"  x2="430" y2="68"  stroke="#E0E0E0" stroke-width="0.8"/>
+    <line x1="55" y1="110" x2="430" y2="110" stroke="#E0E0E0" stroke-width="0.8"/>
+    <line x1="55" y1="157" x2="430" y2="157" stroke="#E0E0E0" stroke-width="0.8"/>
+    <!-- Y axis labels -->
+    <text x="50" y="19"  text-anchor="end" font-size="8.5" fill="#595959">1.0</text>
+    <text x="50" y="72"  text-anchor="end" font-size="8.5" fill="#595959">0.75</text>
+    <text x="50" y="114" text-anchor="end" font-size="8.5" fill="#595959">0.50</text>
+    <text x="50" y="161" text-anchor="end" font-size="8.5" fill="#595959">0.25</text>
+    <text x="50" y="205" text-anchor="end" font-size="8.5" fill="#595959">0</text>
+    <text x="18" y="110" text-anchor="middle" font-size="8.5" fill="#595959" transform="rotate(-90,18,110)">Giant component S</text>
+    <!-- X axis labels -->
+    <text x="55"  y="218" text-anchor="middle" font-size="8.5" fill="#595959">0</text>
+    <text x="167" y="218" text-anchor="middle" font-size="8.5" fill="#595959">0.3</text>
+    <text x="280" y="218" text-anchor="middle" font-size="8.5" fill="#595959">0.6</text>
+    <text x="392" y="218" text-anchor="middle" font-size="8.5" fill="#595959">0.9</text>
+    <text x="242" y="232" text-anchor="middle" font-size="8.5" fill="#595959">Fraction of nodes removed</text>
+
+    <!-- RANDOM REMOVAL (purple) — slow graceful degradation -->
+    <!-- Scale: x = 55 + fraction * 370; y = 205 - S * 190 -->
+    <polyline
+      points="55,15 93,18 130,24 167,36 205,53 242,75 280,105 317,139 355,177 392,200 430,205"
+      fill="none" stroke="#450084" stroke-width="2.5"/>
+
+    <!-- TARGETED ATTACK (gold dashed) — rapid collapse -->
+    <polyline
+      points="55,15 66,42 78,82 89,122 100,169 112,200 130,205 430,205"
+      fill="none" stroke="#CBB677" stroke-width="2.5" stroke-dasharray="9,5"/>
+
+    <!-- f_c markers -->
+    <!-- f_c targeted at ~0.08: x=55+0.08*370=84.6≈85, y=110 (S≈0.5) -->
+    <line x1="90" y1="15" x2="90" y2="205" stroke="#AD9C65" stroke-width="1.2" stroke-dasharray="4,3"/>
+    <text x="92" y="36" font-size="8" fill="#AD9C65" font-weight="700">f_c^target</text>
+    <text x="92" y="47" font-size="7.5" fill="#AD9C65">≈ 0.09</text>
+
+    <!-- f_c random at ~0.65: x=55+0.65*370=295.5≈296, y=110 (S≈0.5) -->
+    <line x1="296" y1="15" x2="296" y2="205" stroke="#595959" stroke-width="1.2" stroke-dasharray="4,3"/>
+    <text x="298" y="36" font-size="8" fill="#595959" font-weight="700">f_c^random</text>
+    <text x="298" y="47" font-size="7.5" fill="#595959">≈ 0.65</text>
+
+    <!-- Legend -->
+    <line x1="68" y1="226" x2="95" y2="226" stroke="#450084" stroke-width="2.5"/>
+    <text x="100" y="229" font-size="8.5" fill="#333">Random failure (robust)</text>
+    <line x1="240" y1="226" x2="267" y2="226" stroke="#CBB677" stroke-width="2.5" stroke-dasharray="9,5"/>
+    <text x="272" y="229" font-size="8.5" fill="#333">Targeted attack (fragile)</text>
+  </svg>
+  <figcaption>
+    Same scale-free network; two failure sequences.<br>
+    Targeted hub removal collapses the giant component after only ~9% of nodes removed.
+  </figcaption>
+</div>
+```
+
+:::
+::::
+
+## Percolation Theory and the Giant Component Threshold
+
+:::: {.columns}
+::: {.column width="55%"}
+
+Percolation theory studies the behavior of connected clusters as nodes or edges are randomly added to or removed from a network. Applied to infrastructure failure, it predicts when a network undergoes a **percolation transition** — a sudden collapse from a connected giant component to a fragmented set of small components.^[Reuven Cohen et al., "Resilience of the Internet to Random Breakdowns," *Physical Review Letters* 85, no. 21 (2000): 4626–4628.]
+
+**Bond percolation (edge failure):** each edge fails independently with probability $1 - p$. What fraction of edges must survive to maintain giant component connectivity?
+
+**Site percolation (node failure):** each node fails independently with probability $1 - p$. What fraction of nodes must survive?
+
+**Critical threshold $p_c$ for random graphs $G(n,p)$:**
+
+$$p_c = \frac{1}{\langle k \rangle}$$
+
+Below $p_c$: only small disconnected clusters remain. Above $p_c$: a giant component spanning a finite fraction of nodes exists.
+
+**Scale-free networks ($\gamma \leq 3$):** $p_c \to 0$ for random failure. The network maintains a giant component for any finite fraction of surviving nodes — extraordinary robustness to accidents.
+
+**Targeted attack threshold** (Cohen et al. 2001):^[Reuven Cohen et al., "Breakdown of the Internet Under Intentional Attack," *Physical Review Letters* 86, no. 16 (2001): 3682–3685.]
+
+$$p_c^{\text{targeted}} \approx \frac{1}{\kappa - 1} \quad \text{where} \quad \kappa = \frac{\langle k^2 \rangle}{\langle k \rangle}$$
+
+For scale-free networks, $\langle k^2 \rangle$ diverges with system size (due to hubs), making $\kappa \gg 1$ and $p_c^{\text{targeted}}$ extremely small. Only a tiny fraction of targeted hub removals is needed to collapse the network.
+
+:::
+::: {.column width="45%"}
+
+**Percolation Thresholds by Network Type**
+
+| Network Type | $p_c$ (random) | $p_c$ (targeted) |
+|:-------------|:--------------:|:----------------:|
+| Random (ER), $\langle k \rangle = 3$ | 0.33 | ~0.33 |
+| Scale-free, $\gamma = 3$ | $\to 0$ | ~0.04 |
+| Power grid (sparse, $\langle k \rangle = 2.7$) | ~0.37 | ~0.10 |
+| Internet AS graph | $\to 0$ | ~0.03 |
+| Road network (planar) | ~0.40 | ~0.25 |
+
+::: {.callout-warning title="Infrastructure Policy Implication" icon=false}
+Critical infrastructure networks with scale-free degree distributions are **extremely fragile to intentional targeted attack** even though they are resilient to accidents. Security investment should be radically unequal — concentrated at high-degree and high-betweenness nodes, not distributed uniformly across the network.
+
+Equal per-node security investment is the analytically wrong policy for a scale-free infrastructure. It provides near-uniform protection against the least likely failure mode (targeted removal of low-degree nodes) while under-protecting against the most likely adversary strategy (targeted removal of high-degree hubs).
+:::
+
+::: {.callout-note title="The Percolation Transition is Discontinuous" icon=false}
+For **interdependent** multilayer networks (Week 7, Buldyrev et al. 2010), the percolation transition changes character: it becomes **first-order** (abrupt, discontinuous) rather than the gradual second-order transition of single-layer networks. The system can appear stable until a sudden catastrophic collapse — with no early warning from gradual degradation signals. This makes monitoring interdependent infrastructure fundamentally harder than monitoring a single-layer network.
+:::
+
+:::
+::::
+
+# Part II: Power Grid Networks
+
+## Power Grid Structure and Small-World Properties
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Power Grid as a Network
+
+- **Nodes:** generators (power plants), substations (voltage transformation and switching), transformers, and load centers (industrial consumers, distribution networks)
+- **Edges:** high-voltage transmission lines; weighted by voltage rating (kV) and power capacity (MW)
+- **Directed or undirected?** Power flows bidirectionally on AC lines in normal operation; edges are typically undirected in topology analysis, but directed in power flow (DC approximation) analysis
+- Power grids are **near-planar** (transmission lines generally cannot cross) but not perfectly planar (overhead lines in different layers may physically cross)
+- Average degree is low: **$\langle k \rangle \approx 2.7$** for the U.S. Western grid — highly sparse; average substation has only 2–3 connections
+
+### Small-World Properties
+
+Power grids exhibit **small-world properties**: high clustering coefficient relative to a random graph with the same degree sequence, but relatively short average path length. This was demonstrated by Watts and Strogatz (1998) using the U.S. Western power grid as one of their three canonical examples:^[Duncan J. Watts and Steven H. Strogatz, "Collective Dynamics of 'Small-World' Networks," *Nature* 393 (1998): 440–442.]
+
+| Metric | Western U.S. Grid | Random Equivalent |
+|:-------|:-----------------:|:-----------------:|
+| Clustering $C$ | 0.080 | 0.005 |
+| Path length $L$ | 18.7 hops | 12.4 hops |
+
+The high clustering relative to a random graph reflects the geographic clustering of generation and load: substations in the same region are highly interconnected; inter-regional connections are sparse.
+
+:::
+::: {.column width="45%"}
+
+### Holmgren (2006): Swedish Grid Vulnerability
+
+Äj Holmgren applied graph-theoretic vulnerability analysis to the Swedish transmission network:^[Äj Holmgren, "Using Graph Models to Analyze the Vulnerability of Electric Power Networks," *Risk Analysis* 26, no. 4 (2006): 955–969.]
+
+- Average path length increased **exponentially** as high-betweenness substations were removed; degree-based targeting was significantly less effective — **betweenness, not degree, is the correct targeting criterion for power grids**
+- A small number of "super-substations" (high betweenness, moderate degree) were responsible for more than 60% of overall network connectivity; their removal fragmented the grid into isolated components
+- Redundancy was geographically uneven: urban core nodes had multiple alternative paths; rural transmission corridors were single-path with articulation points
+
+::: {.callout-warning title="Power Flow vs. Graph-Theoretic Analysis" icon=false}
+Graph-theoretic analysis (this course) identifies *topological* vulnerabilities — nodes and edges whose removal degrades connectivity structure. Full power engineering analysis uses **power flow equations** (AC or DC approximation) to model actual electrical physics: voltage stability, reactive power, frequency regulation, and generator dispatch.
+
+The two approaches are complementary. Graph-theoretic analysis is faster, requires less data, and identifies structural vulnerabilities. Power flow analysis is required for operational assessment of specific failure scenarios. Intelligence products use the graph approach for priority ranking and the power flow approach (when operational data is available) for confirmation.
+:::
+
+:::
+::::
+
+## Cascading Failure: Mechanism and Modeling
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### The Cascade Mechanism
+
+Cascading failures in power grids follow a specific sequence:^[Sergey V. Buldyrev et al., "Catastrophic Cascade of Failures in Interdependent Networks," *Nature* 464 (2010): 1025–1028.]
+
+1. **Initial failure event** removes one or more nodes or edges (equipment fault, extreme weather, deliberate attack, cyberattack on SCADA)
+2. **Load redistribution:** load previously carried by the failed component is redistributed to surviving components according to the network's flow dynamics
+3. **Overload cascade:** components receiving excess redistributed load may exceed their capacity thresholds and fail in turn
+4. **Iterative cascade:** each failure triggers another round of load redistribution; continues until the network reaches a new stable state or fully collapses
+5. **Cross-layer propagation:** in interdependent infrastructure (grid × SCADA communications), cascade crosses system boundaries — power failure causes communication failures, which prevent operators from responding to the power failure
+
+### Motter-Lai Model (2002)
+
+Each node $i$ has capacity $C_i = (1+\alpha)L_i^0$ where $L_i^0$ is initial load (proportional to betweenness) and $\alpha$ is the **tolerance parameter** — the fraction of excess capacity above the initial load. If $\alpha$ is small, small perturbations trigger large cascades.
+
+**Cascade parameters:**
+
+- **Load proxy:** betweenness centrality is used as a proxy for load (flows travel along shortest paths); in practice, power flow requires DC or AC power flow solvers
+- **Redistribution rule:** after a node fails, its load is distributed to neighboring nodes proportionally by their remaining capacity
+- **Cascade termination:** simulation ends when no further failures occur or the giant component collapses
+
+**Schneider et al. (2011) mitigation finding:** Selectively increasing the capacity of high-betweenness nodes (rather than uniform capacity increases) provides the most cost-effective cascade resistance. A targeted 5% capacity increase at the top 10% of betweenness nodes reduced cascading loss by 25%.^[Christian M. Schneider et al., "Mitigation of Malicious Attacks on Networks," *Proceedings of the National Academy of Sciences* 108, no. 10 (2011): 3838–3841.]
+
+:::
+::: {.column width="45%"}
+
+```{=html}
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Power Grid Cascade: Attack and Propagation
+  </p>
+  <svg viewBox="0 0 460 245" xmlns="http://www.w3.org/2000/svg"
+       style="width:100%;max-width:440px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <line x1="228" y1="5" x2="228" y2="235" stroke="#D6D6D6" stroke-width="1.5"/>
+    <text x="114" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">INTACT NETWORK</text>
+    <text x="342" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#cc0000">CASCADE AFTERMATH</text>
+
+    <!-- LEFT: Intact grid -->
+    <!-- Generator nodes (green tint) -->
+    <circle cx="35"  cy="55"  r="12" fill="#e8f5e9" stroke="#388e3c" stroke-width="2"/>
+    <text   x="35"  y="59"   text-anchor="middle" font-size="7.5" fill="#388e3c" font-weight="bold">Gen</text>
+    <circle cx="155" cy="50"  r="12" fill="#e8f5e9" stroke="#388e3c" stroke-width="2"/>
+    <text   x="155" y="54"   text-anchor="middle" font-size="7.5" fill="#388e3c" font-weight="bold">Gen</text>
+
+    <!-- Transmission network edges -->
+    <line x1="47"  y1="55"  x2="70"  y2="78"  stroke="#450084" stroke-width="1.8"/>
+    <line x1="155" y1="62"  x2="145" y2="80"  stroke="#450084" stroke-width="1.8"/>
+    <line x1="82"  y1="85"  x2="115" y2="85"  stroke="#450084" stroke-width="1.8"/>
+    <line x1="82"  y1="85"  x2="70"  y2="120" stroke="#450084" stroke-width="1.8"/>
+    <line x1="130" y1="90"  x2="145" y2="115" stroke="#450084" stroke-width="1.8"/>
+    <line x1="82"  y1="95"  x2="65"  y2="145" stroke="#450084" stroke-width="1.8"/>
+    <line x1="130" y1="95"  x2="145" y2="115" stroke="#450084" stroke-width="1.8"/>
+    <line x1="70"  y1="130" x2="100" y2="170" stroke="#450084" stroke-width="1.8"/>
+    <line x1="155" y1="120" x2="125" y2="170" stroke="#450084" stroke-width="1.8"/>
+    <line x1="65"  y1="155" x2="35"  y2="190" stroke="#450084" stroke-width="1.8"/>
+    <line x1="100" y1="180" x2="125" y2="175" stroke="#450084" stroke-width="1.8"/>
+    <line x1="35"  y1="190" x2="100" y2="180" stroke="#450084" stroke-width="1.8"/>
+
+    <!-- Super-substation (gold, high betweenness) -->
+    <circle cx="107" cy="85"  r="18" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"/>
+    <text   x="107" y="82"   text-anchor="middle" font-size="8" fill="#333" font-weight="bold">SUPER-</text>
+    <text   x="107" y="93"   text-anchor="middle" font-size="8" fill="#333" font-weight="bold">SUB</text>
+
+    <!-- Regular substations -->
+    <circle cx="70"  cy="78"  r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="145" cy="80"  r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="70"  cy="130" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="155" cy="120" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="65"  cy="155" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="100" cy="175" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="125" cy="175" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <circle cx="35"  cy="190" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+
+    <rect x="22" y="210" width="200" height="22" rx="3" fill="#F4EFE1" stroke="#CBB677" stroke-width="1"/>
+    <text x="122" y="225" text-anchor="middle" font-size="8" fill="#333" font-weight="600">Gold = super-substation: high betweenness, moderate degree</text>
+
+    <!-- RIGHT: After cascade -->
+    <!-- Generators -->
+    <circle cx="260" cy="55"  r="12" fill="#e8f5e9" stroke="#388e3c" stroke-width="2"/>
+    <text   x="260" y="59"   text-anchor="middle" font-size="7.5" fill="#388e3c" font-weight="bold">Gen</text>
+    <circle cx="385" cy="50"  r="12" fill="#e8f5e9" stroke="#388e3c" stroke-width="2"/>
+    <text   x="385" y="54"   text-anchor="middle" font-size="7.5" fill="#388e3c" font-weight="bold">Gen</text>
+
+    <!-- Super-substation: ATTACKED (red X) -->
+    <circle cx="332" cy="85" r="18" fill="#fdd" stroke="#cc0000" stroke-width="2.5" stroke-dasharray="5,2"/>
+    <line x1="320" y1="73" x2="344" y2="97" stroke="#cc0000" stroke-width="3"/>
+    <line x1="344" y1="73" x2="320" y2="97" stroke="#cc0000" stroke-width="3"/>
+
+    <!-- Cascade-failed nodes (red) -->
+    <circle cx="295" cy="78"  r="11" fill="#fdd" stroke="#cc0000" stroke-width="1.8" stroke-dasharray="4,2"/>
+    <text   x="295" y="82"   text-anchor="middle" font-size="9" fill="#cc0000">✕</text>
+    <circle cx="370" cy="80"  r="11" fill="#fdd" stroke="#cc0000" stroke-width="1.8" stroke-dasharray="4,2"/>
+    <text   x="370" y="84"   text-anchor="middle" font-size="9" fill="#cc0000">✕</text>
+    <circle cx="295" cy="130" r="11" fill="#fdd" stroke="#cc0000" stroke-width="1.8" stroke-dasharray="4,2"/>
+    <text   x="295" y="134"  text-anchor="middle" font-size="9" fill="#cc0000">✕</text>
+    <circle cx="375" cy="120" r="11" fill="#fdd" stroke="#cc0000" stroke-width="1.8" stroke-dasharray="4,2"/>
+    <text   x="375" y="124"  text-anchor="middle" font-size="9" fill="#cc0000">✕</text>
+
+    <!-- Surviving nodes (isolated) -->
+    <circle cx="290" cy="155" r="11" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"/>
+    <circle cx="325" cy="175" r="11" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"/>
+    <circle cx="350" cy="175" r="11" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"/>
+    <circle cx="260" cy="190" r="11" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"/>
+
+    <!-- Remaining edges (sparse) -->
+    <line x1="272" y1="55" x2="295" y2="78" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <line x1="385" y1="62" x2="375" y2="80" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+    <rect x="248" y="210" width="200" height="22" rx="3" fill="#fdd" stroke="#cc0000" stroke-width="1"/>
+    <text x="348" y="225" text-anchor="middle" font-size="8" fill="#cc0000" font-weight="600">1 attack → 4 cascade failures → 4 isolated nodes</text>
+  </svg>
+  <figcaption>
+    Super-substation removal (red X) triggers overload cascade across 4 adjacent nodes.<br>
+    Surviving nodes are disconnected from generators — effective total failure.
+  </figcaption>
+</div>
+```
+
+::: {.callout-tip title="Ukraine Power Grid Attacks 2015–2016" icon=false}
+The December 2015 and December 2016 Ukrainian power grid attacks (attributed to Russia's Sandworm/GRU) were the first confirmed cyberattacks to cause electric power outages to civilian populations.
+
+**2015 attack:** Coordinated spear-phishing gained access to three regional distribution companies' SCADA systems; operators remotely opened circuit breakers at 30 substations; ~230,000 customers lost power for 1–6 hours. Attackers also deployed BlackEnergy malware to overwrite firmware on serial-to-Ethernet converters — preventing remote restoration and requiring manual intervention at each substation.
+
+**Network analysis implication:** the attackers did *not* need to identify the highest-betweenness substations to cause significant disruption. Targeting 30 mid-level distribution substations produced regional outages. The graph-theoretic model correctly predicts that betweenness-targeted attacks produce maximum fragmentation; but operational disruption (not maximum fragmentation) can be achieved with much lower-betweenness targeting in a distribution network where end-nodes (residential customers) have no redundancy.
+:::
+
+:::
+::::
+
+# Part III: Transportation Networks
+
+## Aviation: The Global Airport Network
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### World Airport Network (WAN)
+
+- **Nodes:** commercial airports (~3,880 worldwide with scheduled service)
+- **Edges:** direct scheduled flight routes; undirected (routes are bidirectional); weighted by weekly seat capacity or flight frequency
+- **Highly scale-free:** degree distribution follows a power law; a small number of major hub airports (Atlanta, Dubai, London Heathrow, Beijing, Chicago O'Hare) handle a disproportionate share of all connections
+- **Small-world structure:** average path length between any two airports is approximately 4.4 hops; most airports can reach any other airport within 2 connections via a major hub
+- **Weighted strength centrality:** for epidemiological and flow analysis, use strength (sum of edge weights = total seat capacity) rather than degree; airports with many low-frequency routes have different analytical significance than those with fewer high-frequency routes
+
+### Community Structure of the WAN
+
+Community detection on the WAN produces geographically coherent communities: North American, European, East Asian, Middle Eastern, African, and Latin American clusters.
+
+**Inter-community bridge airports** (Dubai DXB, London LHR, Singapore SIN, Istanbul IST) have extreme betweenness centrality — the structural chokepoints for global air travel. Disrupting Dubai or London Heathrow would fragment the global aviation network into largely disconnected regional clusters, consistent with scale-free network attack tolerance predictions.
+
+**COVID-19 natural experiment:** The near-complete collapse of international routes in March–April 2020 produced an unplanned natural experiment. The WAN's giant component collapsed rapidly under the equivalent of targeted hub removal — hub airports saw the largest traffic reductions first, consistent with scale-free attack predictions. Regional clusters became nearly isolated, reachable only through infrequent remaining inter-community edges.
+
+:::
+::: {.column width="45%"}
+
+```{=html}
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Global Airport Network: Hub Communities and Inter-Community Bridges
+  </p>
+  <svg viewBox="0 0 420 270" xmlns="http://www.w3.org/2000/svg"
+       style="width:100%;max-width:400px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <!-- Community ovals -->
+    <ellipse cx="88"  cy="100" rx="75" ry="60" fill="rgba(69,0,132,0.08)" stroke="#450084" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <ellipse cx="250" cy="80"  rx="75" ry="60" fill="rgba(203,182,119,0.10)" stroke="#AD9C65" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <ellipse cx="340" cy="185" rx="65" ry="55" fill="rgba(89,89,89,0.07)" stroke="#595959" stroke-width="1.2" stroke-dasharray="5,3"/>
+    <ellipse cx="95"  cy="210" rx="65" ry="45" fill="rgba(69,0,132,0.05)" stroke="#B599CE" stroke-width="1.2" stroke-dasharray="5,3"/>
+
+    <!-- Labels -->
+    <text x="52"  y="38" text-anchor="middle" font-size="8.5" font-weight="700" fill="#450084">NORTH AMERICA</text>
+    <text x="250" y="17" text-anchor="middle" font-size="8.5" font-weight="700" fill="#AD9C65">EUROPE</text>
+    <text x="358" y="128" text-anchor="middle" font-size="8.5" font-weight="700" fill="#595959">ASIA-PACIFIC</text>
+    <text x="55"  y="257" text-anchor="middle" font-size="8.5" font-weight="700" fill="#B599CE">LAT. AMERICA</text>
+
+    <!-- North America hubs -->
+    <circle cx="65"  cy="88"  r="18" fill="#450084" stroke="#450084" stroke-width="2"/>
+    <text   x="65"  y="85"   text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">ATL</text>
+    <text   x="65"  y="96"   text-anchor="middle" font-size="7" fill="#DACCE6">hub</text>
+    <circle cx="105" cy="70"  r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <text   x="105" y="74"   text-anchor="middle" font-size="7.5" fill="#450084" font-weight="bold">ORD</text>
+    <circle cx="55"  cy="120" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <text   x="55"  y="124"  text-anchor="middle" font-size="7.5" fill="#450084" font-weight="bold">JFK</text>
+    <circle cx="100" cy="115" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"/>
+    <text   x="100" y="119"  text-anchor="middle" font-size="7.5" fill="#450084" font-weight="bold">LAX</text>
+    <!-- NA internal edges -->
+    <line x1="65" y1="88" x2="105" y2="70"  stroke="#450084" stroke-width="2"/>
+    <line x1="65" y1="88" x2="55"  y2="120" stroke="#450084" stroke-width="2"/>
+    <line x1="65" y1="88" x2="100" y2="115" stroke="#450084" stroke-width="2"/>
+    <line x1="105" y1="70" x2="100" y2="115" stroke="#450084" stroke-width="1.5"/>
+
+    <!-- Europe hubs -->
+    <circle cx="228" cy="72"  r="18" fill="#CBB677" stroke="#AD9C65" stroke-width="2"/>
+    <text   x="228" cy="72"  y="69"   text-anchor="middle" font-size="8" fill="#333" font-weight="bold">LHR</text>
+    <text   x="228" y="80"   text-anchor="middle" font-size="7" fill="#595959">hub</text>
+    <circle cx="268" cy="58"  r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"/>
+    <text   x="268" y="62"   text-anchor="middle" font-size="7.5" fill="#AD9C65" font-weight="bold">FRA</text>
+    <circle cx="222" cy="100" r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"/>
+    <text   x="222" y="104"  text-anchor="middle" font-size="7.5" fill="#AD9C65" font-weight="bold">AMS</text>
+    <circle cx="265" cy="95"  r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"/>
+    <text   x="265" y="99"   text-anchor="middle" font-size="7.5" fill="#AD9C65" font-weight="bold">CDG</text>
+    <!-- EU internal edges -->
+    <line x1="228" y1="72" x2="268" y2="58"  stroke="#AD9C65" stroke-width="2"/>
+    <line x1="228" y1="72" x2="222" y2="100" stroke="#AD9C65" stroke-width="2"/>
+    <line x1="228" y1="72" x2="265" y2="95"  stroke="#AD9C65" stroke-width="2"/>
+    <line x1="268" y1="58" x2="265" y2="95"  stroke="#AD9C65" stroke-width="1.5"/>
+
+    <!-- Asia-Pacific hubs -->
+    <circle cx="338" cy="178" r="16" fill="#595959" stroke="#595959" stroke-width="2"/>
+    <text   x="338" cy="178" y="175"  text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">PVG</text>
+    <text   x="338" y="186"  text-anchor="middle" font-size="7" fill="#D6D6D6">hub</text>
+    <circle cx="368" cy="158" r="12" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text   x="368" y="162"  text-anchor="middle" font-size="7.5" fill="#595959" font-weight="bold">NRT</text>
+    <circle cx="372" cy="205" r="12" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text   x="372" y="209"  text-anchor="middle" font-size="7.5" fill="#595959" font-weight="bold">SYD</text>
+    <line x1="338" y1="178" x2="368" y2="158" stroke="#595959" stroke-width="2"/>
+    <line x1="338" y1="178" x2="372" y2="205" stroke="#595959" stroke-width="2"/>
+
+    <!-- INTER-COMMUNITY BRIDGE: DXB (Dubai) -->
+    <circle cx="208" cy="178" r="22" fill="#cc0000" stroke="#cc0000" stroke-width="2.5"/>
+    <text   x="208" cy="178" y="175"  text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">DXB</text>
+    <text   x="208" y="186"  text-anchor="middle" font-size="7.5" fill="#fdd">bridge</text>
+    <text   x="208" y="204"  text-anchor="middle" font-size="7.5" fill="#cc0000" font-weight="700">max betweenness</text>
+
+    <!-- Bridge edges DXB → all communities -->
+    <line x1="190" y1="165" x2="83"  y2="116" stroke="#cc0000" stroke-width="2" stroke-dasharray="6,4"/>
+    <line x1="208" y1="156" x2="228" y2="118" stroke="#cc0000" stroke-width="2" stroke-dasharray="6,4"/>
+    <line x1="225" y1="172" x2="325" y2="178" stroke="#cc0000" stroke-width="2" stroke-dasharray="6,4"/>
+    <line x1="195" y1="195" x2="122" y2="210" stroke="#cc0000" stroke-width="2" stroke-dasharray="6,4"/>
+
+    <!-- Lat Am internal -->
+    <circle cx="65"  cy="200" r="11" fill="#DACCE6" stroke="#B599CE" stroke-width="1.8"/>
+    <text   x="65"  y="204"  text-anchor="middle" font-size="7" fill="#B599CE">GRU</text>
+    <circle cx="105" cy="220" r="11" fill="#DACCE6" stroke="#B599CE" stroke-width="1.8"/>
+    <text   x="105" y="224"  text-anchor="middle" font-size="7" fill="#B599CE">BOG</text>
+    <line x1="65" y1="200" x2="105" y2="220" stroke="#B599CE" stroke-width="1.8"/>
+    <line x1="65" y1="200" x2="55"  y2="128" stroke="#450084" stroke-width="1.5" stroke-dasharray="4,3"/>
+  </svg>
+  <figcaption>
+    DXB (Dubai, red) is the maximum-betweenness inter-community bridge.<br>
+    Its removal fragments the network into disconnected geographic clusters.
+  </figcaption>
+</div>
+```
+
+:::
+::::
+
+::: {.callout-tip title="Intelligence Application: Fugitive Travel Route Analysis" icon=false}
+The scale-free hub structure of the WAN enables a specific intelligence analytical task: identifying **evasive travel routes** — paths from origin to destination that minimize exposure to major hub airports under allied jurisdiction (where law enforcement cooperation and biometric systems are most likely to intercept).
+
+An adversary traveling from City A to City B while avoiding US, UK, EU, and Australian airports is constrained to routes through non-Western hubs. The network analysis task: compute all shortest paths between A and B; filter to paths that avoid designated jurisdiction airports; rank by number of hops and layover duration; identify which non-Western hub airports appear most frequently on feasible evasive routes — these are the airports most likely used for sensitive travel and the highest-priority collection points.
+
+The scale-free WAN structure means few alternative paths exist when major Western hubs are removed — constraining evasive routes to a small number of non-allied hub airports (Dubai, Istanbul, Doha, Kuala Lumpur, Beijing).
+:::
+
+## Maritime Networks and Undersea Infrastructure
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Global Maritime Network
+
+- **Nodes:** ports, anchorages, and maritime waypoints
+- **Edges:** shipping routes derived from AIS (Automatic Identification System) vessel tracking data; weighted by vessel frequency and cargo tonnage
+- Chokepoints are geographic features (straits, canals) that appear as **high-betweenness edges** in the maritime spatial network; their closure forces cargo along dramatically longer alternative routes
+
+**Key Maritime Chokepoints (updated):**
+
+| Chokepoint | Approx. Trade Share | Alternative Route | Added Distance |
+|:-----------|:-------------------:|:------------------|:--------------|
+| Strait of Malacca | ~40% global volume | Sunda/Lombok Straits | 1,000–2,000 km |
+| Suez Canal | 12–15% global | Cape of Good Hope | 7,000+ km |
+| Strait of Hormuz | ~20% oil (EIA 2023) | No viable alternative | — |
+| Panama Canal | ~5% global | Cape Horn | 10,000+ km |
+
+**Panama Canal 2023–24 drought:** Reduced water levels in Gatún Lake forced the Panama Canal Authority to reduce daily transits from 36–38 to 18–22 vessels and impose draft restrictions. This effectively halved the canal's throughput — a naturally-induced capacity constraint equivalent to partial bridge removal in a graph model. Container shipping costs on key Asia–East Coast routes increased 80%+ within 90 days, demonstrating the economic impact of even partial chokepoint disruption.
+
+:::
+::: {.column width="45%"}
+
+### Undersea Cable Networks
+
+Undersea fiber-optic cables carry approximately 95–99% of international internet traffic; satellite carries less than 5% and at higher latency.
+
+**Network structure:**
+
+- **Cable Landing Stations (CLS):** fixed, physically located, publicly identified nodes. The CLS are the critical infrastructure — not the cables themselves, which are hardened and deep
+- **Geographic concentration:** CLS are geographically clustered (Egypt/Suez zone, Strait of Malacca, UK west coast, US East and West Coasts); a single extreme event at a cluster can disrupt multiple cables simultaneously
+- **Articulation points:** several single-CLS nodes in the cable network have no alternative routing — their failure permanently severs connectivity for the region they serve
+
+::: {.callout-warning title="Nord Stream and Red Sea Precedents" icon=false}
+The September 2022 sabotage of Nord Stream 1 and 2 (attributed to state actors by EU investigations) demonstrated that undersea infrastructure — previously considered physically secure due to depth and remoteness — is a viable target for covert operations.
+
+The February 2024 Houthi/Yemen-linked damage to three undersea cables in the Red Sea (Seacom, TGN-Eurasia/India, EIG cables) disrupted approximately 25% of internet traffic between Asia, Europe, and East Africa. Cable repair ships require months for deep-water repairs, and repair operations in contested maritime zones require naval escort. The Red Sea incidents represent the first documented case of conflict-zone undersea cable interdiction affecting global internet infrastructure.
+:::
+
+:::
+::::
+
+# Part IV: Telecommunications and Internet
+
+## Internet Topology: Autonomous Systems and BGP
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### The Internet as a Network of Networks
+
+- **Nodes:** Autonomous Systems (ASes) — independently administered routing domains, each with a unique AS number (ASN). Approximately 80,000 active globally.
+- **Edges:** BGP (Border Gateway Protocol) peering relationships; an edge exists if two ASes exchange routing announcements; directionality reflects customer/provider vs. peer relationships
+- **Scale-free topology:** AS degree distribution follows a power law. A small number of **Tier 1 carriers** (AT&T, Lumen, NTT, Telia, Cogent) have global reach and peer with all others; most ASes are stub networks (leaf nodes) attached to one or a few providers
+
+**Internet Exchange Points (IXPs):** Physical facilities where multiple ASes interconnect and exchange traffic; operated by neutral third parties. High-traffic IXPs (AMS-IX Amsterdam, DE-CIX Frankfurt, LINX London, Equinix NY, MSK-IX Moscow) are the internet's most critical betweenness nodes. Disrupting a major IXP would affect internet connectivity for an entire region.
+
+### BGP as an Attack Surface
+
+BGP was designed for trust between network operators — it has no cryptographic authentication of route origin. **BGP route hijacking:** an AS announces routes for IP prefixes it does not legitimately own; other ASes may prefer the hijacked route and direct traffic through the attacker's infrastructure.
+
+This is a **graph-level attack**: a node claims control of edges it does not own; the attack succeeds when other nodes update their routing tables to prefer the false claim — a vote-based manipulation of the network's routing state.
+
+**High-profile incidents:**
+
+- **Pakistan Telecom 2008:** accidentally announced routes for YouTube's IP prefixes; global YouTube outage for ~2 hours as traffic routed to Pakistan and dropped
+- **Rostelecom 2020:** announced routes for Amazon, Google, and major financial institutions' prefixes; traffic briefly redirected through Russia — affecting financial system communications
+
+:::
+::: {.column width="45%"}
+
+```{=html}
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    BGP/AS Topology: Scale-Free Three-Tier Structure
+  </p>
+  <svg viewBox="0 0 400 285" xmlns="http://www.w3.org/2000/svg"
+       style="width:100%;max-width:380px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <!-- Tier labels -->
+    <text x="200" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">TIER 1 CARRIERS</text>
+    <text x="200" y="110" text-anchor="middle" font-size="9" font-weight="700" fill="#AD9C65">IXPs (max betweenness)</text>
+    <text x="200" y="185" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">TIER 2 PROVIDERS</text>
+    <text x="200" y="255" text-anchor="middle" font-size="9" font-weight="700" fill="#B2B2B2">STUB NETWORKS (leaf nodes)</text>
+    <!-- Dividers -->
+    <line x1="15" y1="90"  x2="385" y2="90"  stroke="#E0E0E0" stroke-width="1"/>
+    <line x1="15" y1="165" x2="385" y2="165" stroke="#E0E0E0" stroke-width="1"/>
+    <line x1="15" y1="235" x2="385" y2="235" stroke="#E0E0E0" stroke-width="1"/>
+
+    <!-- Tier 1: AT&T, Lumen, NTT (large purple) -->
+    <circle cx="120" cy="52" r="22" fill="#450084" stroke="#450084" stroke-width="2"/>
+    <text   x="120" y="49"  text-anchor="middle" font-size="8.5" fill="#fff" font-weight="bold">AT&amp;T</text>
+    <text   x="120" y="61"  text-anchor="middle" font-size="7" fill="#DACCE6">Tier 1</text>
+    <circle cx="200" cy="52" r="22" fill="#450084" stroke="#450084" stroke-width="2"/>
+    <text   x="200" y="49"  text-anchor="middle" font-size="8.5" fill="#fff" font-weight="bold">Lumen</text>
+    <text   x="200" y="61"  text-anchor="middle" font-size="7" fill="#DACCE6">Tier 1</text>
+    <circle cx="280" cy="52" r="22" fill="#450084" stroke="#450084" stroke-width="2"/>
+    <text   x="280" y="49"  text-anchor="middle" font-size="8.5" fill="#fff" font-weight="bold">NTT</text>
+    <text   x="280" y="61"  text-anchor="middle" font-size="7" fill="#DACCE6">Tier 1</text>
+    <!-- Tier 1 full mesh -->
+    <line x1="142" y1="52" x2="178" y2="52" stroke="#450084" stroke-width="2.5"/>
+    <line x1="222" y1="52" x2="258" y2="52" stroke="#450084" stroke-width="2.5"/>
+    <line x1="136" y1="67" x2="265" y2="67" stroke="#450084" stroke-width="2.5"/>
+
+    <!-- IXPs (gold, high betweenness) -->
+    <circle cx="115" cy="125" r="18" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"/>
+    <text   x="115" y="122"  text-anchor="middle" font-size="8" fill="#333" font-weight="bold">DE-CIX</text>
+    <text   x="115" y="133"  text-anchor="middle" font-size="7" fill="#595959">IXP</text>
+    <circle cx="200" cy="125" r="18" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"/>
+    <text   x="200" y="122"  text-anchor="middle" font-size="8" fill="#333" font-weight="bold">AMS-IX</text>
+    <text   x="200" y="133"  text-anchor="middle" font-size="7" fill="#595959">IXP</text>
+    <circle cx="285" cy="125" r="18" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"/>
+    <text   x="285" y="122"  text-anchor="middle" font-size="8" fill="#333" font-weight="bold">LINX</text>
+    <text   x="285" y="133"  text-anchor="middle" font-size="7" fill="#595959">IXP</text>
+    <!-- Tier1 to IXP edges -->
+    <line x1="110" y1="73" x2="112" y2="107" stroke="#595959" stroke-width="1.8"/>
+    <line x1="130" y1="73" x2="155" y2="110" stroke="#595959" stroke-width="1.8"/>
+    <line x1="192" y1="73" x2="180" y2="108" stroke="#595959" stroke-width="1.8"/>
+    <line x1="208" y1="73" x2="220" y2="108" stroke="#595959" stroke-width="1.8"/>
+    <line x1="270" y1="73" x2="250" y2="110" stroke="#595959" stroke-width="1.8"/>
+    <line x1="285" y1="73" x2="285" y2="107" stroke="#595959" stroke-width="1.8"/>
+    <!-- IXP to IXP -->
+    <line x1="133" y1="125" x2="182" y2="125" stroke="#AD9C65" stroke-width="1.8"/>
+    <line x1="218" y1="125" x2="267" y2="125" stroke="#AD9C65" stroke-width="1.8"/>
+
+    <!-- Tier 2 providers -->
+    <circle cx="65"  cy="200" r="13" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text   x="65"  y="204"  text-anchor="middle" font-size="7.5" fill="#595959">ISP-A</text>
+    <circle cx="150" cy="200" r="13" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text   x="150" y="204"  text-anchor="middle" font-size="7.5" fill="#595959">ISP-B</text>
+    <circle cx="250" cy="200" r="13" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text   x="250" y="204"  text-anchor="middle" font-size="7.5" fill="#595959">ISP-C</text>
+    <circle cx="340" cy="200" r="13" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"/>
+    <text   x="340" y="204"  text-anchor="middle" font-size="7.5" fill="#595959">ISP-D</text>
+    <!-- IXP to Tier 2 -->
+    <line x1="102" y1="136" x2="68"  y2="188" stroke="#595959" stroke-width="1.5"/>
+    <line x1="120" y1="143" x2="148" y2="188" stroke="#595959" stroke-width="1.5"/>
+    <line x1="200" y1="143" x2="200" y2="188" stroke="#595959" stroke-width="1.5"/>
+    <line x1="218" y1="140" x2="248" y2="188" stroke="#595959" stroke-width="1.5"/>
+    <line x1="285" y1="143" x2="340" y2="188" stroke="#595959" stroke-width="1.5"/>
+
+    <!-- Stub networks (tiny) -->
+    <circle cx="45"  cy="260" r="8" fill="#E0E0E0" stroke="#B2B2B2" stroke-width="1.2"/>
+    <circle cx="75"  cy="268" r="8" fill="#E0E0E0" stroke="#B2B2B2" stroke-width="1.2"/>
+    <circle cx="130" cy="260" r="8" fill="#E0E0E0" stroke="#B2B2B2" stroke-width="1.2"/>
+    <circle cx="162" cy="268" r="8" fill="#E0E0E0" stroke="#B2B2B2" stroke-width="1.2"/>
+    <circle cx="230" cy="260" r="8" fill="#E0E0E0" stroke="#B2B2B2" stroke-width="1.2"/>
+    <circle cx="262" cy="268" r="8" fill="#E0E0E0" stroke="#B2B2B2" stroke-width="1.2"/>
+    <circle cx="320" cy="260" r="8" fill="#E0E0E0" stroke="#B2B2B2" stroke-width="1.2"/>
+    <circle cx="355" cy="268" r="8" fill="#E0E0E0" stroke="#B2B2B2" stroke-width="1.2"/>
+    <line x1="65" y1="213" x2="48" y2="252" stroke="#B2B2B2" stroke-width="1.2"/>
+    <line x1="65" y1="213" x2="75" y2="260" stroke="#B2B2B2" stroke-width="1.2"/>
+    <line x1="150" y1="213" x2="132" y2="252" stroke="#B2B2B2" stroke-width="1.2"/>
+    <line x1="150" y1="213" x2="162" y2="260" stroke="#B2B2B2" stroke-width="1.2"/>
+    <line x1="250" y1="213" x2="232" y2="252" stroke="#B2B2B2" stroke-width="1.2"/>
+    <line x1="250" y1="213" x2="262" y2="260" stroke="#B2B2B2" stroke-width="1.2"/>
+    <line x1="340" y1="213" x2="322" y2="252" stroke="#B2B2B2" stroke-width="1.2"/>
+    <line x1="340" y1="213" x2="355" y2="260" stroke="#B2B2B2" stroke-width="1.2"/>
+  </svg>
+  <figcaption>
+    Tier 1 carriers: full-mesh peering. IXPs (gold): maximum betweenness between Tier 2 providers.<br>
+    Most stub networks have a single Tier 2 uplink — leaf nodes with no redundancy.
+  </figcaption>
+</div>
+```
+
+::: {.callout-note title="RPKI: Structural Mitigation for BGP Hijacking" icon=false}
+Resource Public Key Infrastructure (RPKI) is the cryptographic framework that allows IP address holders to create Route Origin Authorizations (ROAs) — signed certificates stating which ASes are authorized to announce specific prefixes.
+
+Network analysis of RPKI adoption shows it as a **network property, not a node property**: the effectiveness of RPKI depends on the fraction of AS paths that include at least one RPKI-validating router. An AS that validates RPKI but receives routing announcements from non-validating peers is not protected. This is a network percolation problem: RPKI provides protection only when the network has enough adopting nodes to constitute a connected validation path from source to destination.
+
+As of 2025, approximately 40% of global BGP routes have valid RPKI certificates — sufficient for meaningful protection on major transit paths but inadequate for comprehensive protection of edge networks.
+:::
+
+:::
+::::
+
+# Part V: Resilience, Recovery, and Intelligence Applications
+
+## Critical Node Identification: Four Methods
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Beyond Single-Metric Ranking
+
+Identifying critical nodes in infrastructure networks requires multiple complementary methods. The most important node depends on the adversary's goal and the failure scenario being modeled.
+
+**Method 1: Betweenness Centrality**
+
+Identifies nodes controlling the most shortest paths; most relevant for flow disruption. Appropriate when: the adversary's goal is to disrupt commodity flow through the network and the network operates on shortest-path routing. **Limitation:** does not account for capacity or flow redistribution; may underestimate articulation point importance in sparse grids where betweenness is distributed.
+
+**Method 2: Articulation Point Analysis**
+
+Identifies nodes whose removal disconnects the graph — absolute fragmentation, not just path lengthening. Computable in linear time $O(V + E)$ via depth-first search. Appropriate when: the adversary's goal is complete disconnection of network segments; physical infrastructure where alternative paths do not exist.
+
+**Method 3: Targeted Attack Simulation**
+
+Sequentially remove nodes by a selected criterion (degree, betweenness, or iterative betweenness recomputed after each removal); measure giant component size after each step. Produces a **vulnerability curve**: plots giant component fraction $S$ vs. fraction of nodes removed $f$; steeper drop = more fragile. The **area under the vulnerability curve** is a scalar resilience index: smaller area = more fragile.
+
+**Method 4: Network Efficiency Loss**
+
+$$\Delta E(v) = \frac{E(G) - E(G \setminus v)}{E(G)} \quad \text{where} \quad E(G) = \frac{1}{n(n-1)}\sum_{i \neq j} \frac{1}{d_{ij}}$$
+
+Rank nodes by the efficiency loss their removal causes. Captures both fragmentation and path lengthening effects simultaneously — more complete than betweenness alone.
+
+:::
+::: {.column width="45%"}
+
+**Critical Node Method Comparison**
+
+| Method | What It Captures | Computational Cost |
+|:-------|:----------------|:------------------:|
+| Betweenness | Flow control | $O(VE)$ |
+| Articulation points | Absolute disconnection | $O(V+E)$ |
+| Targeted simulation | Sequential vulnerability | $O(V^2 E)$ iterative |
+| Efficiency loss $\Delta E$ | Flow + fragmentation | $O(V \cdot VE)$ |
+
+::: {.callout-tip title="Multi-Metric Combination" icon=false}
+No single metric captures all aspects of infrastructure vulnerability. Standard practice for an intelligence vulnerability assessment:
+
+1. Run all four methods on the same network
+2. Produce four ranked node lists
+3. Compute a **combined rank** — the average rank position across all four methods
+4. Nodes appearing in the top-10 across all four methods are the highest-confidence critical nodes
+5. Nodes appearing in the top-10 of only one method should be flagged for the specific failure scenario that method models — they may be important in that scenario and unimportant in others
+
+Articulation points should always be included regardless of their rank on other metrics — their removal guarantees disconnection, a qualitatively different failure than betweenness degradation.
+:::
+
+:::
+::::
+
+## Resilience Metrics and Recovery Analysis
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Network Resilience: A Tripartite Framework^[Rinaldi, Peerenboom, and Kelly, "Identifying, Understanding, and Analyzing Critical Infrastructure Interdependencies," 16–19.]
+
+- **Resistance:** ability to absorb a disturbance without significant degradation; measured by the critical fraction $f_c$ — how much of the network must be removed before the giant component collapses; determined by network topology and redundancy
+- **Robustness:** ability to maintain function during degradation; measured by the fraction of normal capacity maintained under partial failure; depends on capacity margins, alternate routing, and operator response
+- **Recovery:** speed and completeness of restoration after failure; measured by time to restore connectivity and fraction of pre-failure functionality recovered; depends on repair logistics, spare part availability, and restoration sequencing
+
+### Quantitative Resilience Metrics
+
+- **Vulnerability curve area:** $\int_0^1 S(f) \, df$ where $S(f)$ is giant component fraction after removing fraction $f$ of nodes; smaller area = less resilient
+- **Critical fraction** $f_c$: the fraction of node removals at which the giant component first falls below 50% of its original size
+- **Recovery rate:** slope of the giant component growth curve during restoration; steeper = faster
+- **Redundancy index:** $R = |E| / (|V| - 1)$ — ratio of actual edges to the minimum required for connectivity (spanning tree); $R > 2$ indicates meaningful redundancy; $R = 1$ means the network is a tree — zero tolerance for any single edge failure
+- **Average node connectivity:** minimum number of nodes that must be removed to disconnect any pair of nodes; a global minimum cut metric
+
+:::
+::: {.column width="45%"}
+
+### Optimal Recovery Sequencing
+
+Restoration is itself a network optimization problem: which nodes should be restored first to maximize network functionality at each step?
+
+**Optimal restoration heuristic:** restore nodes in decreasing order of degree in the *original* (pre-failure) graph. High-degree nodes, when restored, immediately reconnect more components and contribute more to giant component growth per restoration action.
+
+This is the inverse of the targeted attack sequence — but applied in reverse. The asymmetry is important: the *order* of restoration matters as much as which nodes are restored, because early restoration of well-connected nodes creates paths that make subsequent restorations more effective.
+
+::: {.callout-tip title="Puerto Rico 2017: Recovery as a Network Problem" icon=false}
+Hurricane Maria (September 2017) destroyed approximately 80% of Puerto Rico's transmission infrastructure — effectively a near-complete targeted attack on the power grid. The subsequent 11-month restoration (the longest in U.S. history for a major grid) illustrates the restoration sequencing problem:
+
+Early restoration efforts prioritized high-population areas (high degree in the service area network) rather than high-betweenness transmission nodes. Post-hoc analysis showed that restoring key transmission substations earlier — even if they served fewer end-users directly — would have accelerated downstream residential restoration by enabling full voltage delivery to distribution networks. The betweenness-first restoration heuristic would have outperformed the population-first heuristic used in practice.
+:::
+
+:::
+::::
+
+## Attack Simulation in NetworkX
+
+:::: {.columns}
+::: {.column width="50%"}
+
+### Random vs. Targeted Attack Functions
+
+```python
+import networkx as nx
+import numpy as np
+
+def giant_fraction(G):
+    if len(G) == 0:
+        return 0.0
+    gcc = max(nx.connected_components(G), key=len)
+    return len(gcc) / len(G)
+
+def targeted_attack(G_orig, criterion='betweenness'):
+    """Sequential node removal by centrality criterion."""
+    G = G_orig.copy()
+    n = len(G)
+    fracs = [giant_fraction(G)]
+    for _ in range(n - 1):
+        if criterion == 'betweenness':
+            # Recompute after each removal (most realistic)
+            scores = nx.betweenness_centrality(G)
+        elif criterion == 'degree':
+            scores = dict(G.degree())
+        top = max(scores, key=scores.get)
+        G.remove_node(top)
+        fracs.append(giant_fraction(G))
+    return fracs
+
+def random_attack(G_orig, n_trials=20):
+    """Average over random removal sequences."""
+    n = len(G_orig)
+    all_fracs = []
+    for _ in range(n_trials):
+        G = G_orig.copy()
+        nodes = list(G.nodes())
+        np.random.shuffle(nodes)
+        trial_fracs = [giant_fraction(G)]
+        for nd in nodes[:-1]:
+            G.remove_node(nd)
+            trial_fracs.append(giant_fraction(G))
+        all_fracs.append(trial_fracs)
+    return np.mean(all_fracs, axis=0)
+
+# Vulnerability curve area (resilience index)
+def resilience_index(fracs):
+    return np.trapz(fracs) / len(fracs)
+```
+
+:::
+::: {.column width="50%"}
+
+### Articulation Points, Bridges, and Efficiency
+
+```python
+# Find articulation points (absolute critical nodes)
+cut_nodes = list(nx.articulation_points(G))
+bridges   = list(nx.bridges(G))
+
+# Efficiency loss per node removal
+def network_efficiency(G):
+    n = len(G)
+    if n < 2:
+        return 0.0
+    lengths = dict(
+        nx.all_pairs_shortest_path_length(G)
+    )
+    total = sum(
+        1.0 / lengths[u][v]
+        for u in G for v in G
+        if u != v and v in lengths[u]
+    )
+    return total / (n * (n - 1))
+
+E0 = network_efficiency(G)
+loss = {}
+for v in G.nodes():
+    Gv = G.copy()
+    Gv.remove_node(v)
+    loss[v] = (E0 - network_efficiency(Gv)) / E0
+
+# Combined critical node ranking
+import pandas as pd
+
+btw    = nx.betweenness_centrality(G, normalized=True)
+deg    = dict(G.degree())
+eff_loss = loss
+
+df = pd.DataFrame({
+    'betweenness': btw,
+    'degree': deg,
+    'efficiency_loss': eff_loss
+})
+# Rank each metric (lower rank = more critical)
+for col in df.columns:
+    df[f'rank_{col}'] = df[col].rank(
+        ascending=False).astype(int)
+
+rank_cols = [c for c in df.columns if c.startswith('rank')]
+df['combined_rank'] = df[rank_cols].mean(axis=1)
+df_sorted = df.sort_values('combined_rank')
+```
+
+:::
+::::
+
+## Intelligence Applications: Infrastructure Vulnerability Assessment
+
+:::: {.columns}
+::: {.column width="55%"}
+
+### Vulnerability Assessment Workflow
+
+A structured infrastructure network vulnerability assessment for intelligence purposes follows this six-step workflow:
+
+1. **Network reconstruction:** build the infrastructure network from open-source data — facility maps, regulatory filings (FERC for power grids, FCC for communications), satellite imagery (GEOINT), geospatial databases, AIS/ADS-B tracking data for maritime/aviation. Verify topology with imagery analysis. Document confidence level for each node and edge.
+
+2. **Baseline metric computation:** compute degree, betweenness, closeness, articulation points, bridges, network efficiency, giant component size, average path length, and redundancy index. Produce a node-level attribute table with all metrics.
+
+3. **Targeted attack simulation:** run sequential node removal by degree, betweenness, and iterative betweenness; produce vulnerability curves for each criterion; identify $f_c$ for each. Rank nodes by combined vulnerability score.
+
+4. **Cascade simulation:** apply Motter-Lai model if load data is available; identify cascade trigger nodes (low $\alpha$, high betweenness) and cascade footprint (which nodes fail downstream of each trigger).
+
+5. **Interdependency analysis:** map physical dependencies to other infrastructure sectors; identify cross-sector failure pathways using the sector interdependency graph.
+
+6. **Prioritization:** rank nodes by combined vulnerability score; map to geographic and collection context; identify known protection measures and restoration time estimates.
+
+:::
+::: {.column width="45%"}
+
+### Product Requirements
+
+An infrastructure vulnerability intelligence product must include:
+
+- Identification of the **five to ten nodes** whose removal would maximally degrade network function; ranked by each vulnerability metric and combined ranking
+- For each critical node: geographic location, physical description, known security posture, redundancy assessment, estimated restoration time
+- **Network diagram** with nodes sized/colored by vulnerability rank; community structure overlay showing which geographic areas lose service under each failure scenario
+- **Vulnerability curves** for random and targeted attack, with $f_c$ marked
+- **Caveat section** addressing: completeness of the network reconstruction; nodes or edges that could not be verified from open sources; confidence level for each component; distinction between topological and operational vulnerability assessment
+
+::: {.callout-warning title="Legal and Policy Note" icon=false}
+Infrastructure vulnerability assessment for intelligence purposes is authorized under Title 50 (National Security Act) and the National Infrastructure Protection Plan. **Domestic infrastructure analysis** by IC elements requires coordination with the relevant Sector Risk Management Agencies (SRMAs) designated under CISA authority.
+
+Publication or dissemination of specific vulnerability findings — even in unclassified form — is subject to CUI (Controlled Unclassified Information) handling requirements. The specific nodes identified as critical infrastructure vulnerabilities are themselves sensitive information that should not be disseminated without proper need-to-know controls, regardless of whether the underlying data was open-source.
+:::
+
+:::
+::::
+
+# Lecture Summary
+
+## Key Formulas and Results
+
+::: {.key-terms}
+
+**Random failure robustness (scale-free)**
+: Giant component survives until $f_c^{\text{random}} \approx 0.65+$ — extraordinary robustness to accidents due to low-degree node abundance
+
+**Targeted attack fragility (scale-free)**
+: $p_c^{\text{targeted}} \approx 1/(\kappa - 1)$; for scale-free networks $\kappa \gg 1$, so $p_c^{\text{targeted}} \ll 1$ — collapses after 5–10% hub removal
+
+**Percolation threshold (random graph)**
+: $p_c = 1/\langle k \rangle$; below this, only small disconnected clusters; above, a giant component exists
+
+**Power grid average degree**
+: $\langle k \rangle \approx 2.7$ for U.S. Western grid; near-planar; small-world ($C = 0.080$, $L = 18.7$)
+
+**Motter-Lai capacity**
+: $C_i = (1+\alpha)L_i^0$; $\alpha$ = tolerance parameter; small $\alpha$ → cascade sensitivity; betweenness-weighted capacity upgrade is optimal mitigation
+
+**Network efficiency loss**
+: $\Delta E(v) = [E(G) - E(G \setminus v)] / E(G)$; captures fragmentation and path-lengthening simultaneously
+
+**Redundancy index**
+: $R = |E| / (|V|-1)$; $R = 1$ = tree (zero fault tolerance); $R > 2$ = meaningful redundancy
+
+**WAN average path length**
+: 4.4 hops; most airports within 2 connections of any other via a major hub
+
+**Undersea cable share**
+: ~95–99% of international internet traffic; satellite carries $< 5\%$ at higher latency
+
+**BGP AS count**
+: ~80,000 active globally; scale-free degree distribution; Tier 1 carriers form a full-mesh core
+
+:::
+
+## Key Analytical Takeaways
+
+1. Scale-free infrastructure networks are simultaneously robust to random failure and catastrophically fragile to targeted hub removal. The same structural property — high-degree hubs — produces both. Security investment must be radically unequal, concentrated at hubs, to address the targeted attack vulnerability.
+
+2. Power grids are near-planar, sparse ($\langle k \rangle \approx 2.7$), and small-world. Their critical nodes are best identified by betweenness, not degree. Cascading failure follows load redistribution dynamics; Motter-Lai model captures this with the tolerance parameter $\alpha$.
+
+3. Aviation networks are highly scale-free; hub airports have extreme betweenness; inter-community bridge airports (DXB, LHR, SIN) are chokepoints for global connectivity. COVID-19 confirmed scale-free attack vulnerability predictions empirically.
+
+4. Undersea cable landing stations are articulation points in the global internet infrastructure. Their geographic clustering means that extreme events — including deliberate sabotage — can simultaneously disrupt multiple cable systems at cluster locations.
+
+5. BGP route hijacking is a graph-level attack: a node falsely claims edges it does not own. RPKI provides structural mitigation but requires sufficient network-level adoption to constitute a connected validation path — a percolation problem in itself.
+
+6. Critical node identification requires multiple complementary methods. Combine betweenness, articulation points, targeted attack simulation, and efficiency loss into a combined ranking. Articulation points are always included regardless of other metric rankings — their removal guarantees disconnection.
+
+::: {.callout-note title="Next and Final Session" icon=false}
+The final two class sessions are **project workshop hours and final project presentations**. Bring your network data, your vulnerability assessment framework, and your intelligence product. The structured vulnerability assessment workflow from this lecture is the template for the final project deliverable.
+:::
+
+```{=html}
+<div style="margin-top:2rem">
+  <ul class="course-sequence">
+    <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> What is Network Analysis?</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Graph Theory Basics</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Centrality and Influence</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Social Network Analysis in Intelligence</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Community Detection and Clustering</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Geospatial and Multi-Layer Networks</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> [Week 8]</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Temporal and Dynamic Networks</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Global Security and Network Analysis</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Financial and Transaction Networks</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Information and Influence Networks</li>
+    <li class="seq-active"><span class="seq-icon">▶</span> <strong>Infrastructure and Physical Networks</strong> (this lecture)</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Final Project Presentations</li>
+  </ul>
+</div>
+
+<div class="page-footer-custom">
+School of Intelligence Analysis &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
+</div>
+<div class="uc-banner column-screen uc-banner-bottom">
+UNCLASSIFIED // FOR EDUCATIONAL USE ONLY
+</div>
+```

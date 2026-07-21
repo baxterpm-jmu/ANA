@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="School of Intelligence Analysis, James Madison University">
+<meta name="dcterms.date" content="2026-01-01">
+
+<title>Infrastructure and Physical Networks – IA 480: Applied Network Analysis: Systems, Connections, and Influence</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-d6fbb5bfb24a4f1906c428146fc3bdde.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-e760e3cc12f432ce2f7738f265f63a05.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">IA 480: Applied Network Analysis: Systems, Connections, and Influence</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-weekly-materials" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Weekly Materials</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-weekly-materials">    
+        <li>
+    <a class="dropdown-item" href="../Week1Lecture/index.html">
+ <span class="dropdown-text">Week 1 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Week2Lecture/index.html">
+ <span class="dropdown-text">Week 2 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Week3Lecture/index.html">
+ <span class="dropdown-text">Week 3 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Week4Lecture/index.html">
+ <span class="dropdown-text">Week 4 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Week5Lecture/index.html">
+ <span class="dropdown-text">Week 5 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Week6Lecture/index.html">
+ <span class="dropdown-text">Week 6 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Week8Lecture/index.html">
+ <span class="dropdown-text">Week 8 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Week9Lecture/index.html">
+ <span class="dropdown-text">Week 9 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Week10Lecture/index.html">
+ <span class="dropdown-text">Week 10 Course Materials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Week11Lecture/index.html">
+ <span class="dropdown-text">Week 11 Course Materials</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#lecture-roadmap" id="toc-lecture-roadmap" class="nav-link active" data-scroll-target="#lecture-roadmap">Lecture Roadmap</a></li>
+  <li><a href="#part-i-critical-infrastructure-as-networks" id="toc-part-i-critical-infrastructure-as-networks" class="nav-link" data-scroll-target="#part-i-critical-infrastructure-as-networks">Part I: Critical Infrastructure as Networks</a>
+  <ul class="collapse">
+  <li><a href="#cisa-critical-infrastructure-sectors-and-network-taxonomy" id="toc-cisa-critical-infrastructure-sectors-and-network-taxonomy" class="nav-link" data-scroll-target="#cisa-critical-infrastructure-sectors-and-network-taxonomy">CISA Critical Infrastructure Sectors and Network Taxonomy</a></li>
+  <li><a href="#error-and-attack-tolerance-random-vs.-targeted-failure" id="toc-error-and-attack-tolerance-random-vs.-targeted-failure" class="nav-link" data-scroll-target="#error-and-attack-tolerance-random-vs.-targeted-failure">Error and Attack Tolerance: Random vs.&nbsp;Targeted Failure</a></li>
+  <li><a href="#percolation-theory-and-the-giant-component-threshold" id="toc-percolation-theory-and-the-giant-component-threshold" class="nav-link" data-scroll-target="#percolation-theory-and-the-giant-component-threshold">Percolation Theory and the Giant Component Threshold</a></li>
+  </ul></li>
+  <li><a href="#part-ii-power-grid-networks" id="toc-part-ii-power-grid-networks" class="nav-link" data-scroll-target="#part-ii-power-grid-networks">Part II: Power Grid Networks</a>
+  <ul class="collapse">
+  <li><a href="#power-grid-structure-and-small-world-properties" id="toc-power-grid-structure-and-small-world-properties" class="nav-link" data-scroll-target="#power-grid-structure-and-small-world-properties">Power Grid Structure and Small-World Properties</a></li>
+  <li><a href="#cascading-failure-mechanism-and-modeling" id="toc-cascading-failure-mechanism-and-modeling" class="nav-link" data-scroll-target="#cascading-failure-mechanism-and-modeling">Cascading Failure: Mechanism and Modeling</a></li>
+  </ul></li>
+  <li><a href="#part-iii-transportation-networks" id="toc-part-iii-transportation-networks" class="nav-link" data-scroll-target="#part-iii-transportation-networks">Part III: Transportation Networks</a>
+  <ul class="collapse">
+  <li><a href="#aviation-the-global-airport-network" id="toc-aviation-the-global-airport-network" class="nav-link" data-scroll-target="#aviation-the-global-airport-network">Aviation: The Global Airport Network</a></li>
+  <li><a href="#maritime-networks-and-undersea-infrastructure" id="toc-maritime-networks-and-undersea-infrastructure" class="nav-link" data-scroll-target="#maritime-networks-and-undersea-infrastructure">Maritime Networks and Undersea Infrastructure</a></li>
+  </ul></li>
+  <li><a href="#part-iv-telecommunications-and-internet" id="toc-part-iv-telecommunications-and-internet" class="nav-link" data-scroll-target="#part-iv-telecommunications-and-internet">Part IV: Telecommunications and Internet</a>
+  <ul class="collapse">
+  <li><a href="#internet-topology-autonomous-systems-and-bgp" id="toc-internet-topology-autonomous-systems-and-bgp" class="nav-link" data-scroll-target="#internet-topology-autonomous-systems-and-bgp">Internet Topology: Autonomous Systems and BGP</a></li>
+  </ul></li>
+  <li><a href="#part-v-resilience-recovery-and-intelligence-applications" id="toc-part-v-resilience-recovery-and-intelligence-applications" class="nav-link" data-scroll-target="#part-v-resilience-recovery-and-intelligence-applications">Part V: Resilience, Recovery, and Intelligence Applications</a>
+  <ul class="collapse">
+  <li><a href="#critical-node-identification-four-methods" id="toc-critical-node-identification-four-methods" class="nav-link" data-scroll-target="#critical-node-identification-four-methods">Critical Node Identification: Four Methods</a></li>
+  <li><a href="#resilience-metrics-and-recovery-analysis" id="toc-resilience-metrics-and-recovery-analysis" class="nav-link" data-scroll-target="#resilience-metrics-and-recovery-analysis">Resilience Metrics and Recovery Analysis</a></li>
+  <li><a href="#attack-simulation-in-networkx" id="toc-attack-simulation-in-networkx" class="nav-link" data-scroll-target="#attack-simulation-in-networkx">Attack Simulation in NetworkX</a></li>
+  <li><a href="#intelligence-applications-infrastructure-vulnerability-assessment" id="toc-intelligence-applications-infrastructure-vulnerability-assessment" class="nav-link" data-scroll-target="#intelligence-applications-infrastructure-vulnerability-assessment">Intelligence Applications: Infrastructure Vulnerability Assessment</a></li>
+  </ul></li>
+  <li><a href="#lecture-summary" id="toc-lecture-summary" class="nav-link" data-scroll-target="#lecture-summary">Lecture Summary</a>
+  <ul class="collapse">
+  <li><a href="#key-formulas-and-results" id="toc-key-formulas-and-results" class="nav-link" data-scroll-target="#key-formulas-and-results">Key Formulas and Results</a></li>
+  <li><a href="#key-analytical-takeaways" id="toc-key-analytical-takeaways" class="nav-link" data-scroll-target="#key-analytical-takeaways">Key Analytical Takeaways</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Infrastructure and Physical Networks</h1>
+<p class="subtitle lead">IA 480: Applied Network Analysis: Systems, Connections, and Influence</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>School of Intelligence Analysis, James Madison University </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 1, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="uc-banner column-screen">
+UNCLASSIFIED // FOR EDUCATIONAL USE ONLY
+</div>
+<div class="course-meta">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Course</td>
+<td style="text-align: left;">IA 480: Applied Network Analysis</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Week</td>
+<td style="text-align: left;">13 of 14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Instructor</td>
+<td style="text-align: left;">School of Intelligence Analysis</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Term</td>
+<td style="text-align: left;">Fall 2026</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of this lecture, students should be able to:</p>
+<ol type="1">
+<li>Describe the network properties of at least three critical infrastructure types (power grid, aviation, maritime, internet) and identify the structural basis of their vulnerability.</li>
+<li>Apply percolation theory to predict the giant component threshold under random failure and targeted attack.</li>
+<li>Compute critical node indicators — betweenness, articulation points, efficiency loss — and rank nodes by combined vulnerability.</li>
+<li>Simulate random and targeted attack sequences in NetworkX and produce a vulnerability curve.</li>
+<li>Produce a structured infrastructure vulnerability assessment meeting the product requirements specified in this lecture.</li>
+</ol>
+</div>
+</div>
+<section id="lecture-roadmap" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-roadmap">Lecture Roadmap</h2>
+<div class="roadmap-grid" style="grid-template-columns: repeat(3,1fr)">
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part I — Critical Infrastructure as Networks</div>
+    <ul>
+      <li>CISA's 16 critical infrastructure sectors</li>
+      <li>Shared properties of infrastructure networks</li>
+      <li>Error and attack tolerance: random vs. targeted</li>
+      <li>Percolation theory and the giant component threshold</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part II — Power Grid Networks</div>
+    <ul>
+      <li>Power grid structure and small-world properties</li>
+      <li>Cascading failure: mechanism and Motter-Lai model</li>
+      <li>Vulnerability analysis and cascade mitigation</li>
+      <li>Case: Ukraine grid cyberattacks 2015–2016</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part III — Transportation Networks</div>
+    <ul>
+      <li>Aviation: the global airport network</li>
+      <li>Maritime networks and chokepoints</li>
+      <li>Undersea cable networks and landing stations</li>
+    </ul>
+  </div>
+</div>
+<div class="roadmap-grid" style="grid-template-columns: 1fr 1fr;margin-top:0.6rem">
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part IV — Telecommunications and Internet</div>
+    <ul>
+      <li>Autonomous Systems and BGP routing topology</li>
+      <li>Internet Exchange Points as critical nodes</li>
+      <li>BGP route hijacking as a graph-level attack</li>
+      <li>RPKI as structural mitigation</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part V — Resilience, Recovery, and Intelligence Applications</div>
+    <ul>
+      <li>Critical node identification: four methods</li>
+      <li>Resilience metrics and recovery analysis</li>
+      <li>Attack simulation in NetworkX</li>
+      <li>Infrastructure vulnerability assessment workflow</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section id="part-i-critical-infrastructure-as-networks" class="level1">
+<h1>Part I: Critical Infrastructure as Networks</h1>
+<section id="cisa-critical-infrastructure-sectors-and-network-taxonomy" class="level2">
+<h2 class="anchored" data-anchor-id="cisa-critical-infrastructure-sectors-and-network-taxonomy">CISA Critical Infrastructure Sectors and Network Taxonomy</h2>
+<p>CISA (Cybersecurity and Infrastructure Security Agency) designates 16 critical infrastructure sectors whose incapacity or destruction would have a debilitating effect on national security, public health, or economic security.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="cisa-sectors" class="level3">
+<h3 class="anchored" data-anchor-id="cisa-sectors">16 CISA Sectors</h3>
+<p>Chemical · Commercial Facilities · Communications · Critical Manufacturing · Dams · Defense Industrial Base · Emergency Services · Energy · Financial Services · Food and Agriculture · Government Facilities · Healthcare and Public Health · Information Technology · Nuclear · Transportation Systems · Water and Wastewater</p>
+</section>
+<section id="network-modeling-priority" class="level3">
+<h3 class="anchored" data-anchor-id="network-modeling-priority">Network Modeling Priority</h3>
+<p>Not all sectors are equally amenable to network analysis. Sectors with well-defined physical nodes and edges are most directly modeled:</p>
+<ul>
+<li><strong>Directly modelable (physical network):</strong> Energy (power grids, pipelines), Transportation (aviation, maritime, rail, road), Communications (internet, undersea cables), Water (treatment plants and mains)</li>
+<li><strong>Indirectly modelable (institutional network):</strong> Financial Services (correspondent banking), Healthcare (hospital referral networks), Defense Industrial Base (supply chain network)</li>
+</ul>
+</section>
+<section id="shared-properties-of-infrastructure-networks" class="level3">
+<h3 class="anchored" data-anchor-id="shared-properties-of-infrastructure-networks">Shared Properties of Infrastructure Networks</h3>
+<ul>
+<li><strong>Physical embedding:</strong> nodes and edges are constrained by geography; planar or near-planar topology limits maximum degree; betweenness is driven by geographic necessity rather than organizational design — chokepoints arise from terrain, not choice</li>
+<li><strong>Capacity constraints:</strong> edges have finite throughput (transmission capacity MW, lane capacity vehicles/hour, bandwidth Gbps); flow networks with capacity limits rather than simple binary-edge graphs</li>
+<li><strong>Redundancy by design:</strong> engineered infrastructure includes deliberate redundancy; this redundancy is often geographically uneven — dense in urban cores, thin in rural corridors</li>
+<li><strong>Interdependency:</strong> all 16 sectors are mutually dependent; failure in one cascades into others (Week 7 multilayer cascade models apply directly here)</li>
+<li><strong>Long asset lifetimes:</strong> infrastructure built decades ago was not designed for current threat models; older networks often have lower redundancy, simpler topology, and weaker cybersecurity</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="The Interdependency Graph as an Analytical Object">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The Interdependency Graph as an Analytical Object
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The 16 CISA sectors are themselves nodes in a <strong>sector-level interdependency network</strong> — a graph in which sectors are connected by dependency relationships. Edge <span class="math inline">\((A, B)\)</span> indicates that sector <span class="math inline">\(A\)</span> depends on sector <span class="math inline">\(B\)</span>: Energy depends on IT (for SCADA control), Transportation depends on Energy (for fuel and signals), Water depends on Energy (for pumping), and so on.</p>
+<p>Community detection on this interdependency graph reveals tight dependency clusters: Energy-IT-Communications form the most densely interconnected cluster. A failure that propagates through this cluster has the widest cross-sector cascade footprint.</p>
+<p>This is exactly the multilayer interdependency analysis introduced in Week 7 (Buldyrev et al.&nbsp;2010) applied at the policy sector level rather than the individual node level.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Key Distinction: Topology vs. Operations">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Key Distinction: Topology vs.&nbsp;Operations
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Graph-theoretic vulnerability analysis identifies <em>topological</em> vulnerabilities — nodes and edges whose removal degrades network structure. This is distinct from <em>operational</em> vulnerability assessment, which accounts for protection levels, redundant systems, operator responses, and time-to-restore estimates.</p>
+<p>Network analysis provides the structural foundation; operational context determines actionable priority. The two must be combined in any complete infrastructure vulnerability intelligence product.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="error-and-attack-tolerance-random-vs.-targeted-failure" class="level2">
+<h2 class="anchored" data-anchor-id="error-and-attack-tolerance-random-vs.-targeted-failure">Error and Attack Tolerance: Random vs.&nbsp;Targeted Failure</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="albert-jeong-and-barabási-2000-nature" class="level3">
+<h3 class="anchored" data-anchor-id="albert-jeong-and-barabási-2000-nature">Albert, Jeong, and Barabási (2000) — Nature</h3>
+<p>The foundational study of infrastructure network vulnerability demonstrated a fundamental asymmetry in how scale-free networks respond to two failure modes.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p><strong>Random Failure (Errors)</strong></p>
+<p>Nodes fail randomly with equal probability — equipment malfunction, natural disaster affecting random locations. Scale-free networks are <strong>highly robust to random failure</strong>: because most nodes are low-degree, random removal is unlikely to hit the rare high-degree hubs. The giant component remains intact through removal of up to ~80% of nodes. The power law degree distribution provides an extraordinary buffer against accidents.</p>
+<p><strong>Targeted Attack</strong></p>
+<p>Nodes are removed in decreasing order of degree or betweenness — an adversary who knows the network structure. Scale-free networks are <strong>catastrophically fragile to targeted attack</strong>: removing as few as 5–10% of nodes (the hubs) causes rapid collapse of the giant component and network fragmentation. Exponential (Erdős-Rényi) networks degrade similarly under targeted and random attacks — neither as robust nor as fragile as scale-free networks at the extremes.</p>
+</section>
+<section id="the-achilles-heel" class="level3">
+<h3 class="anchored" data-anchor-id="the-achilles-heel">The Achilles’ Heel</h3>
+<p>Albert et al.&nbsp;identified what they called the “Achilles’ heel” of scale-free networks: the same property — the presence of high-degree hubs — that makes them robust to accidents makes them uniquely vulnerable to deliberate attack by an adversary who knows the network topology.</p>
+<p><strong>Infrastructure design implication:</strong> most physical infrastructure networks (internet, aviation, power grids) were <em>not</em> designed to have scale-free topology; this property emerged from organic growth processes. The topology’s vulnerability to targeted attack was not a design choice — but it is a structural reality that adversaries can exploit.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Vulnerability Curves: Random vs. Targeted Attack on Scale-Free Network
+  </p>
+  <svg viewbox="0 0 460 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <!-- Axes -->
+    <line x1="55" y1="15" x2="55" y2="205" stroke="#333" stroke-width="1.5"></line>
+    <line x1="55" y1="205" x2="430" y2="205" stroke="#333" stroke-width="1.5"></line>
+    <!-- Gridlines -->
+    <line x1="55" y1="15" x2="430" y2="15" stroke="#E0E0E0" stroke-width="0.8"></line>
+    <line x1="55" y1="68" x2="430" y2="68" stroke="#E0E0E0" stroke-width="0.8"></line>
+    <line x1="55" y1="110" x2="430" y2="110" stroke="#E0E0E0" stroke-width="0.8"></line>
+    <line x1="55" y1="157" x2="430" y2="157" stroke="#E0E0E0" stroke-width="0.8"></line>
+    <!-- Y axis labels -->
+    <text x="50" y="19" text-anchor="end" font-size="8.5" fill="#595959">1.0</text>
+    <text x="50" y="72" text-anchor="end" font-size="8.5" fill="#595959">0.75</text>
+    <text x="50" y="114" text-anchor="end" font-size="8.5" fill="#595959">0.50</text>
+    <text x="50" y="161" text-anchor="end" font-size="8.5" fill="#595959">0.25</text>
+    <text x="50" y="205" text-anchor="end" font-size="8.5" fill="#595959">0</text>
+    <text x="18" y="110" text-anchor="middle" font-size="8.5" fill="#595959" transform="rotate(-90,18,110)">Giant component S</text>
+    <!-- X axis labels -->
+    <text x="55" y="218" text-anchor="middle" font-size="8.5" fill="#595959">0</text>
+    <text x="167" y="218" text-anchor="middle" font-size="8.5" fill="#595959">0.3</text>
+    <text x="280" y="218" text-anchor="middle" font-size="8.5" fill="#595959">0.6</text>
+    <text x="392" y="218" text-anchor="middle" font-size="8.5" fill="#595959">0.9</text>
+    <text x="242" y="232" text-anchor="middle" font-size="8.5" fill="#595959">Fraction of nodes removed</text>
+
+    <!-- RANDOM REMOVAL (purple) — slow graceful degradation -->
+    <!-- Scale: x = 55 + fraction * 370; y = 205 - S * 190 -->
+    <polyline points="55,15 93,18 130,24 167,36 205,53 242,75 280,105 317,139 355,177 392,200 430,205" fill="none" stroke="#450084" stroke-width="2.5"></polyline>
+
+    <!-- TARGETED ATTACK (gold dashed) — rapid collapse -->
+    <polyline points="55,15 66,42 78,82 89,122 100,169 112,200 130,205 430,205" fill="none" stroke="#CBB677" stroke-width="2.5" stroke-dasharray="9,5"></polyline>
+
+    <!-- f_c markers -->
+    <!-- f_c targeted at ~0.08: x=55+0.08*370=84.6≈85, y=110 (S≈0.5) -->
+    <line x1="90" y1="15" x2="90" y2="205" stroke="#AD9C65" stroke-width="1.2" stroke-dasharray="4,3"></line>
+    <text x="92" y="36" font-size="8" fill="#AD9C65" font-weight="700">f_c^target</text>
+    <text x="92" y="47" font-size="7.5" fill="#AD9C65">≈ 0.09</text>
+
+    <!-- f_c random at ~0.65: x=55+0.65*370=295.5≈296, y=110 (S≈0.5) -->
+    <line x1="296" y1="15" x2="296" y2="205" stroke="#595959" stroke-width="1.2" stroke-dasharray="4,3"></line>
+    <text x="298" y="36" font-size="8" fill="#595959" font-weight="700">f_c^random</text>
+    <text x="298" y="47" font-size="7.5" fill="#595959">≈ 0.65</text>
+
+    <!-- Legend -->
+    <line x1="68" y1="226" x2="95" y2="226" stroke="#450084" stroke-width="2.5"></line>
+    <text x="100" y="229" font-size="8.5" fill="#333">Random failure (robust)</text>
+    <line x1="240" y1="226" x2="267" y2="226" stroke="#CBB677" stroke-width="2.5" stroke-dasharray="9,5"></line>
+    <text x="272" y="229" font-size="8.5" fill="#333">Targeted attack (fragile)</text>
+  </svg>
+  <figcaption>
+    Same scale-free network; two failure sequences.<br>
+    Targeted hub removal collapses the giant component after only ~9% of nodes removed.
+  </figcaption>
+</div>
+</div>
+</div>
+</section>
+<section id="percolation-theory-and-the-giant-component-threshold" class="level2">
+<h2 class="anchored" data-anchor-id="percolation-theory-and-the-giant-component-threshold">Percolation Theory and the Giant Component Threshold</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<p>Percolation theory studies the behavior of connected clusters as nodes or edges are randomly added to or removed from a network. Applied to infrastructure failure, it predicts when a network undergoes a <strong>percolation transition</strong> — a sudden collapse from a connected giant component to a fragmented set of small components.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<p><strong>Bond percolation (edge failure):</strong> each edge fails independently with probability <span class="math inline">\(1 - p\)</span>. What fraction of edges must survive to maintain giant component connectivity?</p>
+<p><strong>Site percolation (node failure):</strong> each node fails independently with probability <span class="math inline">\(1 - p\)</span>. What fraction of nodes must survive?</p>
+<p><strong>Critical threshold <span class="math inline">\(p_c\)</span> for random graphs <span class="math inline">\(G(n,p)\)</span>:</strong></p>
+<p><span class="math display">\[p_c = \frac{1}{\langle k \rangle}\]</span></p>
+<p>Below <span class="math inline">\(p_c\)</span>: only small disconnected clusters remain. Above <span class="math inline">\(p_c\)</span>: a giant component spanning a finite fraction of nodes exists.</p>
+<p><strong>Scale-free networks (<span class="math inline">\(\gamma \leq 3\)</span>):</strong> <span class="math inline">\(p_c \to 0\)</span> for random failure. The network maintains a giant component for any finite fraction of surviving nodes — extraordinary robustness to accidents.</p>
+<p><strong>Targeted attack threshold</strong> (Cohen et al.&nbsp;2001):<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<p><span class="math display">\[p_c^{\text{targeted}} \approx \frac{1}{\kappa - 1} \quad \text{where} \quad \kappa = \frac{\langle k^2 \rangle}{\langle k \rangle}\]</span></p>
+<p>For scale-free networks, <span class="math inline">\(\langle k^2 \rangle\)</span> diverges with system size (due to hubs), making <span class="math inline">\(\kappa \gg 1\)</span> and <span class="math inline">\(p_c^{\text{targeted}}\)</span> extremely small. Only a tiny fraction of targeted hub removals is needed to collapse the network.</p>
+</div><div class="column" style="width:45%;">
+<p><strong>Percolation Thresholds by Network Type</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Network Type</th>
+<th style="text-align: center;"><span class="math inline">\(p_c\)</span> (random)</th>
+<th style="text-align: center;"><span class="math inline">\(p_c\)</span> (targeted)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Random (ER), <span class="math inline">\(\langle k \rangle = 3\)</span></td>
+<td style="text-align: center;">0.33</td>
+<td style="text-align: center;">~0.33</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Scale-free, <span class="math inline">\(\gamma = 3\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\to 0\)</span></td>
+<td style="text-align: center;">~0.04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Power grid (sparse, <span class="math inline">\(\langle k \rangle = 2.7\)</span>)</td>
+<td style="text-align: center;">~0.37</td>
+<td style="text-align: center;">~0.10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Internet AS graph</td>
+<td style="text-align: center;"><span class="math inline">\(\to 0\)</span></td>
+<td style="text-align: center;">~0.03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Road network (planar)</td>
+<td style="text-align: center;">~0.40</td>
+<td style="text-align: center;">~0.25</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Infrastructure Policy Implication">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Infrastructure Policy Implication
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Critical infrastructure networks with scale-free degree distributions are <strong>extremely fragile to intentional targeted attack</strong> even though they are resilient to accidents. Security investment should be radically unequal — concentrated at high-degree and high-betweenness nodes, not distributed uniformly across the network.</p>
+<p>Equal per-node security investment is the analytically wrong policy for a scale-free infrastructure. It provides near-uniform protection against the least likely failure mode (targeted removal of low-degree nodes) while under-protecting against the most likely adversary strategy (targeted removal of high-degree hubs).</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="The Percolation Transition is Discontinuous">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The Percolation Transition is Discontinuous
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For <strong>interdependent</strong> multilayer networks (Week 7, Buldyrev et al.&nbsp;2010), the percolation transition changes character: it becomes <strong>first-order</strong> (abrupt, discontinuous) rather than the gradual second-order transition of single-layer networks. The system can appear stable until a sudden catastrophic collapse — with no early warning from gradual degradation signals. This makes monitoring interdependent infrastructure fundamentally harder than monitoring a single-layer network.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-ii-power-grid-networks" class="level1">
+<h1>Part II: Power Grid Networks</h1>
+<section id="power-grid-structure-and-small-world-properties" class="level2">
+<h2 class="anchored" data-anchor-id="power-grid-structure-and-small-world-properties">Power Grid Structure and Small-World Properties</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="power-grid-as-a-network" class="level3">
+<h3 class="anchored" data-anchor-id="power-grid-as-a-network">Power Grid as a Network</h3>
+<ul>
+<li><strong>Nodes:</strong> generators (power plants), substations (voltage transformation and switching), transformers, and load centers (industrial consumers, distribution networks)</li>
+<li><strong>Edges:</strong> high-voltage transmission lines; weighted by voltage rating (kV) and power capacity (MW)</li>
+<li><strong>Directed or undirected?</strong> Power flows bidirectionally on AC lines in normal operation; edges are typically undirected in topology analysis, but directed in power flow (DC approximation) analysis</li>
+<li>Power grids are <strong>near-planar</strong> (transmission lines generally cannot cross) but not perfectly planar (overhead lines in different layers may physically cross)</li>
+<li>Average degree is low: <strong><span class="math inline">\(\langle k \rangle \approx 2.7\)</span></strong> for the U.S. Western grid — highly sparse; average substation has only 2–3 connections</li>
+</ul>
+</section>
+<section id="small-world-properties" class="level3">
+<h3 class="anchored" data-anchor-id="small-world-properties">Small-World Properties</h3>
+<p>Power grids exhibit <strong>small-world properties</strong>: high clustering coefficient relative to a random graph with the same degree sequence, but relatively short average path length. This was demonstrated by Watts and Strogatz (1998) using the U.S. Western power grid as one of their three canonical examples:<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Metric</th>
+<th style="text-align: center;">Western U.S. Grid</th>
+<th style="text-align: center;">Random Equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Clustering <span class="math inline">\(C\)</span></td>
+<td style="text-align: center;">0.080</td>
+<td style="text-align: center;">0.005</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Path length <span class="math inline">\(L\)</span></td>
+<td style="text-align: center;">18.7 hops</td>
+<td style="text-align: center;">12.4 hops</td>
+</tr>
+</tbody>
+</table>
+<p>The high clustering relative to a random graph reflects the geographic clustering of generation and load: substations in the same region are highly interconnected; inter-regional connections are sparse.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="holmgren-2006-swedish-grid-vulnerability" class="level3">
+<h3 class="anchored" data-anchor-id="holmgren-2006-swedish-grid-vulnerability">Holmgren (2006): Swedish Grid Vulnerability</h3>
+<p>Äj Holmgren applied graph-theoretic vulnerability analysis to the Swedish transmission network:<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+<ul>
+<li>Average path length increased <strong>exponentially</strong> as high-betweenness substations were removed; degree-based targeting was significantly less effective — <strong>betweenness, not degree, is the correct targeting criterion for power grids</strong></li>
+<li>A small number of “super-substations” (high betweenness, moderate degree) were responsible for more than 60% of overall network connectivity; their removal fragmented the grid into isolated components</li>
+<li>Redundancy was geographically uneven: urban core nodes had multiple alternative paths; rural transmission corridors were single-path with articulation points</li>
+</ul>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Power Flow vs. Graph-Theoretic Analysis">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Power Flow vs.&nbsp;Graph-Theoretic Analysis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Graph-theoretic analysis (this course) identifies <em>topological</em> vulnerabilities — nodes and edges whose removal degrades connectivity structure. Full power engineering analysis uses <strong>power flow equations</strong> (AC or DC approximation) to model actual electrical physics: voltage stability, reactive power, frequency regulation, and generator dispatch.</p>
+<p>The two approaches are complementary. Graph-theoretic analysis is faster, requires less data, and identifies structural vulnerabilities. Power flow analysis is required for operational assessment of specific failure scenarios. Intelligence products use the graph approach for priority ranking and the power flow approach (when operational data is available) for confirmation.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+<section id="cascading-failure-mechanism-and-modeling" class="level2">
+<h2 class="anchored" data-anchor-id="cascading-failure-mechanism-and-modeling">Cascading Failure: Mechanism and Modeling</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="the-cascade-mechanism" class="level3">
+<h3 class="anchored" data-anchor-id="the-cascade-mechanism">The Cascade Mechanism</h3>
+<p>Cascading failures in power grids follow a specific sequence:<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></p>
+<ol type="1">
+<li><strong>Initial failure event</strong> removes one or more nodes or edges (equipment fault, extreme weather, deliberate attack, cyberattack on SCADA)</li>
+<li><strong>Load redistribution:</strong> load previously carried by the failed component is redistributed to surviving components according to the network’s flow dynamics</li>
+<li><strong>Overload cascade:</strong> components receiving excess redistributed load may exceed their capacity thresholds and fail in turn</li>
+<li><strong>Iterative cascade:</strong> each failure triggers another round of load redistribution; continues until the network reaches a new stable state or fully collapses</li>
+<li><strong>Cross-layer propagation:</strong> in interdependent infrastructure (grid × SCADA communications), cascade crosses system boundaries — power failure causes communication failures, which prevent operators from responding to the power failure</li>
+</ol>
+</section>
+<section id="motter-lai-model-2002" class="level3">
+<h3 class="anchored" data-anchor-id="motter-lai-model-2002">Motter-Lai Model (2002)</h3>
+<p>Each node <span class="math inline">\(i\)</span> has capacity <span class="math inline">\(C_i = (1+\alpha)L_i^0\)</span> where <span class="math inline">\(L_i^0\)</span> is initial load (proportional to betweenness) and <span class="math inline">\(\alpha\)</span> is the <strong>tolerance parameter</strong> — the fraction of excess capacity above the initial load. If <span class="math inline">\(\alpha\)</span> is small, small perturbations trigger large cascades.</p>
+<p><strong>Cascade parameters:</strong></p>
+<ul>
+<li><strong>Load proxy:</strong> betweenness centrality is used as a proxy for load (flows travel along shortest paths); in practice, power flow requires DC or AC power flow solvers</li>
+<li><strong>Redistribution rule:</strong> after a node fails, its load is distributed to neighboring nodes proportionally by their remaining capacity</li>
+<li><strong>Cascade termination:</strong> simulation ends when no further failures occur or the giant component collapses</li>
+</ul>
+<p><strong>Schneider et al.&nbsp;(2011) mitigation finding:</strong> Selectively increasing the capacity of high-betweenness nodes (rather than uniform capacity increases) provides the most cost-effective cascade resistance. A targeted 5% capacity increase at the top 10% of betweenness nodes reduced cascading loss by 25%.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Power Grid Cascade: Attack and Propagation
+  </p>
+  <svg viewbox="0 0 460 245" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:440px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <line x1="228" y1="5" x2="228" y2="235" stroke="#D6D6D6" stroke-width="1.5"></line>
+    <text x="114" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">INTACT NETWORK</text>
+    <text x="342" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#cc0000">CASCADE AFTERMATH</text>
+
+    <!-- LEFT: Intact grid -->
+    <!-- Generator nodes (green tint) -->
+    <circle cx="35" cy="55" r="12" fill="#e8f5e9" stroke="#388e3c" stroke-width="2"></circle>
+    <text x="35" y="59" text-anchor="middle" font-size="7.5" fill="#388e3c" font-weight="bold">Gen</text>
+    <circle cx="155" cy="50" r="12" fill="#e8f5e9" stroke="#388e3c" stroke-width="2"></circle>
+    <text x="155" y="54" text-anchor="middle" font-size="7.5" fill="#388e3c" font-weight="bold">Gen</text>
+
+    <!-- Transmission network edges -->
+    <line x1="47" y1="55" x2="70" y2="78" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="155" y1="62" x2="145" y2="80" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="82" y1="85" x2="115" y2="85" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="82" y1="85" x2="70" y2="120" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="130" y1="90" x2="145" y2="115" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="82" y1="95" x2="65" y2="145" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="130" y1="95" x2="145" y2="115" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="70" y1="130" x2="100" y2="170" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="155" y1="120" x2="125" y2="170" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="65" y1="155" x2="35" y2="190" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="100" y1="180" x2="125" y2="175" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="35" y1="190" x2="100" y2="180" stroke="#450084" stroke-width="1.8"></line>
+
+    <!-- Super-substation (gold, high betweenness) -->
+    <circle cx="107" cy="85" r="18" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"></circle>
+    <text x="107" y="82" text-anchor="middle" font-size="8" fill="#333" font-weight="bold">SUPER-</text>
+    <text x="107" y="93" text-anchor="middle" font-size="8" fill="#333" font-weight="bold">SUB</text>
+
+    <!-- Regular substations -->
+    <circle cx="70" cy="78" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="145" cy="80" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="70" cy="130" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="155" cy="120" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="65" cy="155" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="100" cy="175" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="125" cy="175" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="35" cy="190" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+
+    <rect x="22" y="210" width="200" height="22" rx="3" fill="#F4EFE1" stroke="#CBB677" stroke-width="1"></rect>
+    <text x="122" y="225" text-anchor="middle" font-size="8" fill="#333" font-weight="600">Gold = super-substation: high betweenness, moderate degree</text>
+
+    <!-- RIGHT: After cascade -->
+    <!-- Generators -->
+    <circle cx="260" cy="55" r="12" fill="#e8f5e9" stroke="#388e3c" stroke-width="2"></circle>
+    <text x="260" y="59" text-anchor="middle" font-size="7.5" fill="#388e3c" font-weight="bold">Gen</text>
+    <circle cx="385" cy="50" r="12" fill="#e8f5e9" stroke="#388e3c" stroke-width="2"></circle>
+    <text x="385" y="54" text-anchor="middle" font-size="7.5" fill="#388e3c" font-weight="bold">Gen</text>
+
+    <!-- Super-substation: ATTACKED (red X) -->
+    <circle cx="332" cy="85" r="18" fill="#fdd" stroke="#cc0000" stroke-width="2.5" stroke-dasharray="5,2"></circle>
+    <line x1="320" y1="73" x2="344" y2="97" stroke="#cc0000" stroke-width="3"></line>
+    <line x1="344" y1="73" x2="320" y2="97" stroke="#cc0000" stroke-width="3"></line>
+
+    <!-- Cascade-failed nodes (red) -->
+    <circle cx="295" cy="78" r="11" fill="#fdd" stroke="#cc0000" stroke-width="1.8" stroke-dasharray="4,2"></circle>
+    <text x="295" y="82" text-anchor="middle" font-size="9" fill="#cc0000">✕</text>
+    <circle cx="370" cy="80" r="11" fill="#fdd" stroke="#cc0000" stroke-width="1.8" stroke-dasharray="4,2"></circle>
+    <text x="370" y="84" text-anchor="middle" font-size="9" fill="#cc0000">✕</text>
+    <circle cx="295" cy="130" r="11" fill="#fdd" stroke="#cc0000" stroke-width="1.8" stroke-dasharray="4,2"></circle>
+    <text x="295" y="134" text-anchor="middle" font-size="9" fill="#cc0000">✕</text>
+    <circle cx="375" cy="120" r="11" fill="#fdd" stroke="#cc0000" stroke-width="1.8" stroke-dasharray="4,2"></circle>
+    <text x="375" y="124" text-anchor="middle" font-size="9" fill="#cc0000">✕</text>
+
+    <!-- Surviving nodes (isolated) -->
+    <circle cx="290" cy="155" r="11" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <circle cx="325" cy="175" r="11" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <circle cx="350" cy="175" r="11" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+    <circle cx="260" cy="190" r="11" fill="#D6D6D6" stroke="#B2B2B2" stroke-width="1.5"></circle>
+
+    <!-- Remaining edges (sparse) -->
+    <line x1="272" y1="55" x2="295" y2="78" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="4,3"></line>
+    <line x1="385" y1="62" x2="375" y2="80" stroke="#B2B2B2" stroke-width="1.5" stroke-dasharray="4,3"></line>
+
+    <rect x="248" y="210" width="200" height="22" rx="3" fill="#fdd" stroke="#cc0000" stroke-width="1"></rect>
+    <text x="348" y="225" text-anchor="middle" font-size="8" fill="#cc0000" font-weight="600">1 attack → 4 cascade failures → 4 isolated nodes</text>
+  </svg>
+  <figcaption>
+    Super-substation removal (red X) triggers overload cascade across 4 adjacent nodes.<br>
+    Surviving nodes are disconnected from generators — effective total failure.
+  </figcaption>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Ukraine Power Grid Attacks 2015–2016">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ukraine Power Grid Attacks 2015–2016
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The December 2015 and December 2016 Ukrainian power grid attacks (attributed to Russia’s Sandworm/GRU) were the first confirmed cyberattacks to cause electric power outages to civilian populations.</p>
+<p><strong>2015 attack:</strong> Coordinated spear-phishing gained access to three regional distribution companies’ SCADA systems; operators remotely opened circuit breakers at 30 substations; ~230,000 customers lost power for 1–6 hours. Attackers also deployed BlackEnergy malware to overwrite firmware on serial-to-Ethernet converters — preventing remote restoration and requiring manual intervention at each substation.</p>
+<p><strong>Network analysis implication:</strong> the attackers did <em>not</em> need to identify the highest-betweenness substations to cause significant disruption. Targeting 30 mid-level distribution substations produced regional outages. The graph-theoretic model correctly predicts that betweenness-targeted attacks produce maximum fragmentation; but operational disruption (not maximum fragmentation) can be achieved with much lower-betweenness targeting in a distribution network where end-nodes (residential customers) have no redundancy.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-iii-transportation-networks" class="level1">
+<h1>Part III: Transportation Networks</h1>
+<section id="aviation-the-global-airport-network" class="level2">
+<h2 class="anchored" data-anchor-id="aviation-the-global-airport-network">Aviation: The Global Airport Network</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="world-airport-network-wan" class="level3">
+<h3 class="anchored" data-anchor-id="world-airport-network-wan">World Airport Network (WAN)</h3>
+<ul>
+<li><strong>Nodes:</strong> commercial airports (~3,880 worldwide with scheduled service)</li>
+<li><strong>Edges:</strong> direct scheduled flight routes; undirected (routes are bidirectional); weighted by weekly seat capacity or flight frequency</li>
+<li><strong>Highly scale-free:</strong> degree distribution follows a power law; a small number of major hub airports (Atlanta, Dubai, London Heathrow, Beijing, Chicago O’Hare) handle a disproportionate share of all connections</li>
+<li><strong>Small-world structure:</strong> average path length between any two airports is approximately 4.4 hops; most airports can reach any other airport within 2 connections via a major hub</li>
+<li><strong>Weighted strength centrality:</strong> for epidemiological and flow analysis, use strength (sum of edge weights = total seat capacity) rather than degree; airports with many low-frequency routes have different analytical significance than those with fewer high-frequency routes</li>
+</ul>
+</section>
+<section id="community-structure-of-the-wan" class="level3">
+<h3 class="anchored" data-anchor-id="community-structure-of-the-wan">Community Structure of the WAN</h3>
+<p>Community detection on the WAN produces geographically coherent communities: North American, European, East Asian, Middle Eastern, African, and Latin American clusters.</p>
+<p><strong>Inter-community bridge airports</strong> (Dubai DXB, London LHR, Singapore SIN, Istanbul IST) have extreme betweenness centrality — the structural chokepoints for global air travel. Disrupting Dubai or London Heathrow would fragment the global aviation network into largely disconnected regional clusters, consistent with scale-free network attack tolerance predictions.</p>
+<p><strong>COVID-19 natural experiment:</strong> The near-complete collapse of international routes in March–April 2020 produced an unplanned natural experiment. The WAN’s giant component collapsed rapidly under the equivalent of targeted hub removal — hub airports saw the largest traffic reductions first, consistent with scale-free attack predictions. Regional clusters became nearly isolated, reachable only through infrequent remaining inter-community edges.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    Global Airport Network: Hub Communities and Inter-Community Bridges
+  </p>
+  <svg viewbox="0 0 420 270" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:400px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <!-- Community ovals -->
+    <ellipse cx="88" cy="100" rx="75" ry="60" fill="rgba(69,0,132,0.08)" stroke="#450084" stroke-width="1.2" stroke-dasharray="5,3"></ellipse>
+    <ellipse cx="250" cy="80" rx="75" ry="60" fill="rgba(203,182,119,0.10)" stroke="#AD9C65" stroke-width="1.2" stroke-dasharray="5,3"></ellipse>
+    <ellipse cx="340" cy="185" rx="65" ry="55" fill="rgba(89,89,89,0.07)" stroke="#595959" stroke-width="1.2" stroke-dasharray="5,3"></ellipse>
+    <ellipse cx="95" cy="210" rx="65" ry="45" fill="rgba(69,0,132,0.05)" stroke="#B599CE" stroke-width="1.2" stroke-dasharray="5,3"></ellipse>
+
+    <!-- Labels -->
+    <text x="52" y="38" text-anchor="middle" font-size="8.5" font-weight="700" fill="#450084">NORTH AMERICA</text>
+    <text x="250" y="17" text-anchor="middle" font-size="8.5" font-weight="700" fill="#AD9C65">EUROPE</text>
+    <text x="358" y="128" text-anchor="middle" font-size="8.5" font-weight="700" fill="#595959">ASIA-PACIFIC</text>
+    <text x="55" y="257" text-anchor="middle" font-size="8.5" font-weight="700" fill="#B599CE">LAT. AMERICA</text>
+
+    <!-- North America hubs -->
+    <circle cx="65" cy="88" r="18" fill="#450084" stroke="#450084" stroke-width="2"></circle>
+    <text x="65" y="85" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">ATL</text>
+    <text x="65" y="96" text-anchor="middle" font-size="7" fill="#DACCE6">hub</text>
+    <circle cx="105" cy="70" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <text x="105" y="74" text-anchor="middle" font-size="7.5" fill="#450084" font-weight="bold">ORD</text>
+    <circle cx="55" cy="120" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <text x="55" y="124" text-anchor="middle" font-size="7.5" fill="#450084" font-weight="bold">JFK</text>
+    <circle cx="100" cy="115" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <text x="100" y="119" text-anchor="middle" font-size="7.5" fill="#450084" font-weight="bold">LAX</text>
+    <!-- NA internal edges -->
+    <line x1="65" y1="88" x2="105" y2="70" stroke="#450084" stroke-width="2"></line>
+    <line x1="65" y1="88" x2="55" y2="120" stroke="#450084" stroke-width="2"></line>
+    <line x1="65" y1="88" x2="100" y2="115" stroke="#450084" stroke-width="2"></line>
+    <line x1="105" y1="70" x2="100" y2="115" stroke="#450084" stroke-width="1.5"></line>
+
+    <!-- Europe hubs -->
+    <circle cx="228" cy="72" r="18" fill="#CBB677" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="228" cy="72" y="69" text-anchor="middle" font-size="8" fill="#333" font-weight="bold">LHR</text>
+    <text x="228" y="80" text-anchor="middle" font-size="7" fill="#595959">hub</text>
+    <circle cx="268" cy="58" r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"></circle>
+    <text x="268" y="62" text-anchor="middle" font-size="7.5" fill="#AD9C65" font-weight="bold">FRA</text>
+    <circle cx="222" cy="100" r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"></circle>
+    <text x="222" y="104" text-anchor="middle" font-size="7.5" fill="#AD9C65" font-weight="bold">AMS</text>
+    <circle cx="265" cy="95" r="12" fill="#F4EFE1" stroke="#AD9C65" stroke-width="1.8"></circle>
+    <text x="265" y="99" text-anchor="middle" font-size="7.5" fill="#AD9C65" font-weight="bold">CDG</text>
+    <!-- EU internal edges -->
+    <line x1="228" y1="72" x2="268" y2="58" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="228" y1="72" x2="222" y2="100" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="228" y1="72" x2="265" y2="95" stroke="#AD9C65" stroke-width="2"></line>
+    <line x1="268" y1="58" x2="265" y2="95" stroke="#AD9C65" stroke-width="1.5"></line>
+
+    <!-- Asia-Pacific hubs -->
+    <circle cx="338" cy="178" r="16" fill="#595959" stroke="#595959" stroke-width="2"></circle>
+    <text x="338" cy="178" y="175" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">PVG</text>
+    <text x="338" y="186" text-anchor="middle" font-size="7" fill="#D6D6D6">hub</text>
+    <circle cx="368" cy="158" r="12" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"></circle>
+    <text x="368" y="162" text-anchor="middle" font-size="7.5" fill="#595959" font-weight="bold">NRT</text>
+    <circle cx="372" cy="205" r="12" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"></circle>
+    <text x="372" y="209" text-anchor="middle" font-size="7.5" fill="#595959" font-weight="bold">SYD</text>
+    <line x1="338" y1="178" x2="368" y2="158" stroke="#595959" stroke-width="2"></line>
+    <line x1="338" y1="178" x2="372" y2="205" stroke="#595959" stroke-width="2"></line>
+
+    <!-- INTER-COMMUNITY BRIDGE: DXB (Dubai) -->
+    <circle cx="208" cy="178" r="22" fill="#cc0000" stroke="#cc0000" stroke-width="2.5"></circle>
+    <text x="208" cy="178" y="175" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">DXB</text>
+    <text x="208" y="186" text-anchor="middle" font-size="7.5" fill="#fdd">bridge</text>
+    <text x="208" y="204" text-anchor="middle" font-size="7.5" fill="#cc0000" font-weight="700">max betweenness</text>
+
+    <!-- Bridge edges DXB → all communities -->
+    <line x1="190" y1="165" x2="83" y2="116" stroke="#cc0000" stroke-width="2" stroke-dasharray="6,4"></line>
+    <line x1="208" y1="156" x2="228" y2="118" stroke="#cc0000" stroke-width="2" stroke-dasharray="6,4"></line>
+    <line x1="225" y1="172" x2="325" y2="178" stroke="#cc0000" stroke-width="2" stroke-dasharray="6,4"></line>
+    <line x1="195" y1="195" x2="122" y2="210" stroke="#cc0000" stroke-width="2" stroke-dasharray="6,4"></line>
+
+    <!-- Lat Am internal -->
+    <circle cx="65" cy="200" r="11" fill="#DACCE6" stroke="#B599CE" stroke-width="1.8"></circle>
+    <text x="65" y="204" text-anchor="middle" font-size="7" fill="#B599CE">GRU</text>
+    <circle cx="105" cy="220" r="11" fill="#DACCE6" stroke="#B599CE" stroke-width="1.8"></circle>
+    <text x="105" y="224" text-anchor="middle" font-size="7" fill="#B599CE">BOG</text>
+    <line x1="65" y1="200" x2="105" y2="220" stroke="#B599CE" stroke-width="1.8"></line>
+    <line x1="65" y1="200" x2="55" y2="128" stroke="#450084" stroke-width="1.5" stroke-dasharray="4,3"></line>
+  </svg>
+  <figcaption>
+    DXB (Dubai, red) is the maximum-betweenness inter-community bridge.<br>
+    Its removal fragments the network into disconnected geographic clusters.
+  </figcaption>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Intelligence Application: Fugitive Travel Route Analysis">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Intelligence Application: Fugitive Travel Route Analysis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The scale-free hub structure of the WAN enables a specific intelligence analytical task: identifying <strong>evasive travel routes</strong> — paths from origin to destination that minimize exposure to major hub airports under allied jurisdiction (where law enforcement cooperation and biometric systems are most likely to intercept).</p>
+<p>An adversary traveling from City A to City B while avoiding US, UK, EU, and Australian airports is constrained to routes through non-Western hubs. The network analysis task: compute all shortest paths between A and B; filter to paths that avoid designated jurisdiction airports; rank by number of hops and layover duration; identify which non-Western hub airports appear most frequently on feasible evasive routes — these are the airports most likely used for sensitive travel and the highest-priority collection points.</p>
+<p>The scale-free WAN structure means few alternative paths exist when major Western hubs are removed — constraining evasive routes to a small number of non-allied hub airports (Dubai, Istanbul, Doha, Kuala Lumpur, Beijing).</p>
+</div>
+</div>
+</section>
+<section id="maritime-networks-and-undersea-infrastructure" class="level2">
+<h2 class="anchored" data-anchor-id="maritime-networks-and-undersea-infrastructure">Maritime Networks and Undersea Infrastructure</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="global-maritime-network" class="level3">
+<h3 class="anchored" data-anchor-id="global-maritime-network">Global Maritime Network</h3>
+<ul>
+<li><strong>Nodes:</strong> ports, anchorages, and maritime waypoints</li>
+<li><strong>Edges:</strong> shipping routes derived from AIS (Automatic Identification System) vessel tracking data; weighted by vessel frequency and cargo tonnage</li>
+<li>Chokepoints are geographic features (straits, canals) that appear as <strong>high-betweenness edges</strong> in the maritime spatial network; their closure forces cargo along dramatically longer alternative routes</li>
+</ul>
+<p><strong>Key Maritime Chokepoints (updated):</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 31%">
+<col style="width: 28%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Chokepoint</th>
+<th style="text-align: center;">Approx. Trade Share</th>
+<th style="text-align: left;">Alternative Route</th>
+<th style="text-align: left;">Added Distance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Strait of Malacca</td>
+<td style="text-align: center;">~40% global volume</td>
+<td style="text-align: left;">Sunda/Lombok Straits</td>
+<td style="text-align: left;">1,000–2,000 km</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Suez Canal</td>
+<td style="text-align: center;">12–15% global</td>
+<td style="text-align: left;">Cape of Good Hope</td>
+<td style="text-align: left;">7,000+ km</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Strait of Hormuz</td>
+<td style="text-align: center;">~20% oil (EIA 2023)</td>
+<td style="text-align: left;">No viable alternative</td>
+<td style="text-align: left;">—</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Panama Canal</td>
+<td style="text-align: center;">~5% global</td>
+<td style="text-align: left;">Cape Horn</td>
+<td style="text-align: left;">10,000+ km</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Panama Canal 2023–24 drought:</strong> Reduced water levels in Gatún Lake forced the Panama Canal Authority to reduce daily transits from 36–38 to 18–22 vessels and impose draft restrictions. This effectively halved the canal’s throughput — a naturally-induced capacity constraint equivalent to partial bridge removal in a graph model. Container shipping costs on key Asia–East Coast routes increased 80%+ within 90 days, demonstrating the economic impact of even partial chokepoint disruption.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="undersea-cable-networks" class="level3">
+<h3 class="anchored" data-anchor-id="undersea-cable-networks">Undersea Cable Networks</h3>
+<p>Undersea fiber-optic cables carry approximately 95–99% of international internet traffic; satellite carries less than 5% and at higher latency.</p>
+<p><strong>Network structure:</strong></p>
+<ul>
+<li><strong>Cable Landing Stations (CLS):</strong> fixed, physically located, publicly identified nodes. The CLS are the critical infrastructure — not the cables themselves, which are hardened and deep</li>
+<li><strong>Geographic concentration:</strong> CLS are geographically clustered (Egypt/Suez zone, Strait of Malacca, UK west coast, US East and West Coasts); a single extreme event at a cluster can disrupt multiple cables simultaneously</li>
+<li><strong>Articulation points:</strong> several single-CLS nodes in the cable network have no alternative routing — their failure permanently severs connectivity for the region they serve</li>
+</ul>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Nord Stream and Red Sea Precedents">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Nord Stream and Red Sea Precedents
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The September 2022 sabotage of Nord Stream 1 and 2 (attributed to state actors by EU investigations) demonstrated that undersea infrastructure — previously considered physically secure due to depth and remoteness — is a viable target for covert operations.</p>
+<p>The February 2024 Houthi/Yemen-linked damage to three undersea cables in the Red Sea (Seacom, TGN-Eurasia/India, EIG cables) disrupted approximately 25% of internet traffic between Asia, Europe, and East Africa. Cable repair ships require months for deep-water repairs, and repair operations in contested maritime zones require naval escort. The Red Sea incidents represent the first documented case of conflict-zone undersea cable interdiction affecting global internet infrastructure.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+</section>
+<section id="part-iv-telecommunications-and-internet" class="level1">
+<h1>Part IV: Telecommunications and Internet</h1>
+<section id="internet-topology-autonomous-systems-and-bgp" class="level2">
+<h2 class="anchored" data-anchor-id="internet-topology-autonomous-systems-and-bgp">Internet Topology: Autonomous Systems and BGP</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="the-internet-as-a-network-of-networks" class="level3">
+<h3 class="anchored" data-anchor-id="the-internet-as-a-network-of-networks">The Internet as a Network of Networks</h3>
+<ul>
+<li><strong>Nodes:</strong> Autonomous Systems (ASes) — independently administered routing domains, each with a unique AS number (ASN). Approximately 80,000 active globally.</li>
+<li><strong>Edges:</strong> BGP (Border Gateway Protocol) peering relationships; an edge exists if two ASes exchange routing announcements; directionality reflects customer/provider vs.&nbsp;peer relationships</li>
+<li><strong>Scale-free topology:</strong> AS degree distribution follows a power law. A small number of <strong>Tier 1 carriers</strong> (AT&amp;T, Lumen, NTT, Telia, Cogent) have global reach and peer with all others; most ASes are stub networks (leaf nodes) attached to one or a few providers</li>
+</ul>
+<p><strong>Internet Exchange Points (IXPs):</strong> Physical facilities where multiple ASes interconnect and exchange traffic; operated by neutral third parties. High-traffic IXPs (AMS-IX Amsterdam, DE-CIX Frankfurt, LINX London, Equinix NY, MSK-IX Moscow) are the internet’s most critical betweenness nodes. Disrupting a major IXP would affect internet connectivity for an entire region.</p>
+</section>
+<section id="bgp-as-an-attack-surface" class="level3">
+<h3 class="anchored" data-anchor-id="bgp-as-an-attack-surface">BGP as an Attack Surface</h3>
+<p>BGP was designed for trust between network operators — it has no cryptographic authentication of route origin. <strong>BGP route hijacking:</strong> an AS announces routes for IP prefixes it does not legitimately own; other ASes may prefer the hijacked route and direct traffic through the attacker’s infrastructure.</p>
+<p>This is a <strong>graph-level attack</strong>: a node claims control of edges it does not own; the attack succeeds when other nodes update their routing tables to prefer the false claim — a vote-based manipulation of the network’s routing state.</p>
+<p><strong>High-profile incidents:</strong></p>
+<ul>
+<li><strong>Pakistan Telecom 2008:</strong> accidentally announced routes for YouTube’s IP prefixes; global YouTube outage for ~2 hours as traffic routed to Pakistan and dropped</li>
+<li><strong>Rostelecom 2020:</strong> announced routes for Amazon, Google, and major financial institutions’ prefixes; traffic briefly redirected through Russia — affecting financial system communications</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">
+    BGP/AS Topology: Scale-Free Three-Tier Structure
+  </p>
+  <svg viewbox="0 0 400 285" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:380px;display:block;font-family:IBM Plex Sans,sans-serif">
+    <!-- Tier labels -->
+    <text x="200" y="18" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">TIER 1 CARRIERS</text>
+    <text x="200" y="110" text-anchor="middle" font-size="9" font-weight="700" fill="#AD9C65">IXPs (max betweenness)</text>
+    <text x="200" y="185" text-anchor="middle" font-size="9" font-weight="700" fill="#595959">TIER 2 PROVIDERS</text>
+    <text x="200" y="255" text-anchor="middle" font-size="9" font-weight="700" fill="#B2B2B2">STUB NETWORKS (leaf nodes)</text>
+    <!-- Dividers -->
+    <line x1="15" y1="90" x2="385" y2="90" stroke="#E0E0E0" stroke-width="1"></line>
+    <line x1="15" y1="165" x2="385" y2="165" stroke="#E0E0E0" stroke-width="1"></line>
+    <line x1="15" y1="235" x2="385" y2="235" stroke="#E0E0E0" stroke-width="1"></line>
+
+    <!-- Tier 1: AT&T, Lumen, NTT (large purple) -->
+    <circle cx="120" cy="52" r="22" fill="#450084" stroke="#450084" stroke-width="2"></circle>
+    <text x="120" y="49" text-anchor="middle" font-size="8.5" fill="#fff" font-weight="bold">AT&amp;T</text>
+    <text x="120" y="61" text-anchor="middle" font-size="7" fill="#DACCE6">Tier 1</text>
+    <circle cx="200" cy="52" r="22" fill="#450084" stroke="#450084" stroke-width="2"></circle>
+    <text x="200" y="49" text-anchor="middle" font-size="8.5" fill="#fff" font-weight="bold">Lumen</text>
+    <text x="200" y="61" text-anchor="middle" font-size="7" fill="#DACCE6">Tier 1</text>
+    <circle cx="280" cy="52" r="22" fill="#450084" stroke="#450084" stroke-width="2"></circle>
+    <text x="280" y="49" text-anchor="middle" font-size="8.5" fill="#fff" font-weight="bold">NTT</text>
+    <text x="280" y="61" text-anchor="middle" font-size="7" fill="#DACCE6">Tier 1</text>
+    <!-- Tier 1 full mesh -->
+    <line x1="142" y1="52" x2="178" y2="52" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="222" y1="52" x2="258" y2="52" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="136" y1="67" x2="265" y2="67" stroke="#450084" stroke-width="2.5"></line>
+
+    <!-- IXPs (gold, high betweenness) -->
+    <circle cx="115" cy="125" r="18" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"></circle>
+    <text x="115" y="122" text-anchor="middle" font-size="8" fill="#333" font-weight="bold">DE-CIX</text>
+    <text x="115" y="133" text-anchor="middle" font-size="7" fill="#595959">IXP</text>
+    <circle cx="200" cy="125" r="18" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"></circle>
+    <text x="200" y="122" text-anchor="middle" font-size="8" fill="#333" font-weight="bold">AMS-IX</text>
+    <text x="200" y="133" text-anchor="middle" font-size="7" fill="#595959">IXP</text>
+    <circle cx="285" cy="125" r="18" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"></circle>
+    <text x="285" y="122" text-anchor="middle" font-size="8" fill="#333" font-weight="bold">LINX</text>
+    <text x="285" y="133" text-anchor="middle" font-size="7" fill="#595959">IXP</text>
+    <!-- Tier1 to IXP edges -->
+    <line x1="110" y1="73" x2="112" y2="107" stroke="#595959" stroke-width="1.8"></line>
+    <line x1="130" y1="73" x2="155" y2="110" stroke="#595959" stroke-width="1.8"></line>
+    <line x1="192" y1="73" x2="180" y2="108" stroke="#595959" stroke-width="1.8"></line>
+    <line x1="208" y1="73" x2="220" y2="108" stroke="#595959" stroke-width="1.8"></line>
+    <line x1="270" y1="73" x2="250" y2="110" stroke="#595959" stroke-width="1.8"></line>
+    <line x1="285" y1="73" x2="285" y2="107" stroke="#595959" stroke-width="1.8"></line>
+    <!-- IXP to IXP -->
+    <line x1="133" y1="125" x2="182" y2="125" stroke="#AD9C65" stroke-width="1.8"></line>
+    <line x1="218" y1="125" x2="267" y2="125" stroke="#AD9C65" stroke-width="1.8"></line>
+
+    <!-- Tier 2 providers -->
+    <circle cx="65" cy="200" r="13" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"></circle>
+    <text x="65" y="204" text-anchor="middle" font-size="7.5" fill="#595959">ISP-A</text>
+    <circle cx="150" cy="200" r="13" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"></circle>
+    <text x="150" y="204" text-anchor="middle" font-size="7.5" fill="#595959">ISP-B</text>
+    <circle cx="250" cy="200" r="13" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"></circle>
+    <text x="250" y="204" text-anchor="middle" font-size="7.5" fill="#595959">ISP-C</text>
+    <circle cx="340" cy="200" r="13" fill="#D6D6D6" stroke="#595959" stroke-width="1.8"></circle>
+    <text x="340" y="204" text-anchor="middle" font-size="7.5" fill="#595959">ISP-D</text>
+    <!-- IXP to Tier 2 -->
+    <line x1="102" y1="136" x2="68" y2="188" stroke="#595959" stroke-width="1.5"></line>
+    <line x1="120" y1="143" x2="148" y2="188" stroke="#595959" stroke-width="1.5"></line>
+    <line x1="200" y1="143" x2="200" y2="188" stroke="#595959" stroke-width="1.5"></line>
+    <line x1="218" y1="140" x2="248" y2="188" stroke="#595959" stroke-width="1.5"></line>
+    <line x1="285" y1="143" x2="340" y2="188" stroke="#595959" stroke-width="1.5"></line>
+
+    <!-- Stub networks (tiny) -->
+    <circle cx="45" cy="260" r="8" fill="#E0E0E0" stroke="#B2B2B2" stroke-width="1.2"></circle>
+    <circle cx="75" cy="268" r="8" fill="#E0E0E0" stroke="#B2B2B2" stroke-width="1.2"></circle>
+    <circle cx="130" cy="260" r="8" fill="#E0E0E0" stroke="#B2B2B2" stroke-width="1.2"></circle>
+    <circle cx="162" cy="268" r="8" fill="#E0E0E0" stroke="#B2B2B2" stroke-width="1.2"></circle>
+    <circle cx="230" cy="260" r="8" fill="#E0E0E0" stroke="#B2B2B2" stroke-width="1.2"></circle>
+    <circle cx="262" cy="268" r="8" fill="#E0E0E0" stroke="#B2B2B2" stroke-width="1.2"></circle>
+    <circle cx="320" cy="260" r="8" fill="#E0E0E0" stroke="#B2B2B2" stroke-width="1.2"></circle>
+    <circle cx="355" cy="268" r="8" fill="#E0E0E0" stroke="#B2B2B2" stroke-width="1.2"></circle>
+    <line x1="65" y1="213" x2="48" y2="252" stroke="#B2B2B2" stroke-width="1.2"></line>
+    <line x1="65" y1="213" x2="75" y2="260" stroke="#B2B2B2" stroke-width="1.2"></line>
+    <line x1="150" y1="213" x2="132" y2="252" stroke="#B2B2B2" stroke-width="1.2"></line>
+    <line x1="150" y1="213" x2="162" y2="260" stroke="#B2B2B2" stroke-width="1.2"></line>
+    <line x1="250" y1="213" x2="232" y2="252" stroke="#B2B2B2" stroke-width="1.2"></line>
+    <line x1="250" y1="213" x2="262" y2="260" stroke="#B2B2B2" stroke-width="1.2"></line>
+    <line x1="340" y1="213" x2="322" y2="252" stroke="#B2B2B2" stroke-width="1.2"></line>
+    <line x1="340" y1="213" x2="355" y2="260" stroke="#B2B2B2" stroke-width="1.2"></line>
+  </svg>
+  <figcaption>
+    Tier 1 carriers: full-mesh peering. IXPs (gold): maximum betweenness between Tier 2 providers.<br>
+    Most stub networks have a single Tier 2 uplink — leaf nodes with no redundancy.
+  </figcaption>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="RPKI: Structural Mitigation for BGP Hijacking">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>RPKI: Structural Mitigation for BGP Hijacking
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Resource Public Key Infrastructure (RPKI) is the cryptographic framework that allows IP address holders to create Route Origin Authorizations (ROAs) — signed certificates stating which ASes are authorized to announce specific prefixes.</p>
+<p>Network analysis of RPKI adoption shows it as a <strong>network property, not a node property</strong>: the effectiveness of RPKI depends on the fraction of AS paths that include at least one RPKI-validating router. An AS that validates RPKI but receives routing announcements from non-validating peers is not protected. This is a network percolation problem: RPKI provides protection only when the network has enough adopting nodes to constitute a connected validation path from source to destination.</p>
+<p>As of 2025, approximately 40% of global BGP routes have valid RPKI certificates — sufficient for meaningful protection on major transit paths but inadequate for comprehensive protection of edge networks.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-v-resilience-recovery-and-intelligence-applications" class="level1">
+<h1>Part V: Resilience, Recovery, and Intelligence Applications</h1>
+<section id="critical-node-identification-four-methods" class="level2">
+<h2 class="anchored" data-anchor-id="critical-node-identification-four-methods">Critical Node Identification: Four Methods</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="beyond-single-metric-ranking" class="level3">
+<h3 class="anchored" data-anchor-id="beyond-single-metric-ranking">Beyond Single-Metric Ranking</h3>
+<p>Identifying critical nodes in infrastructure networks requires multiple complementary methods. The most important node depends on the adversary’s goal and the failure scenario being modeled.</p>
+<p><strong>Method 1: Betweenness Centrality</strong></p>
+<p>Identifies nodes controlling the most shortest paths; most relevant for flow disruption. Appropriate when: the adversary’s goal is to disrupt commodity flow through the network and the network operates on shortest-path routing. <strong>Limitation:</strong> does not account for capacity or flow redistribution; may underestimate articulation point importance in sparse grids where betweenness is distributed.</p>
+<p><strong>Method 2: Articulation Point Analysis</strong></p>
+<p>Identifies nodes whose removal disconnects the graph — absolute fragmentation, not just path lengthening. Computable in linear time <span class="math inline">\(O(V + E)\)</span> via depth-first search. Appropriate when: the adversary’s goal is complete disconnection of network segments; physical infrastructure where alternative paths do not exist.</p>
+<p><strong>Method 3: Targeted Attack Simulation</strong></p>
+<p>Sequentially remove nodes by a selected criterion (degree, betweenness, or iterative betweenness recomputed after each removal); measure giant component size after each step. Produces a <strong>vulnerability curve</strong>: plots giant component fraction <span class="math inline">\(S\)</span> vs.&nbsp;fraction of nodes removed <span class="math inline">\(f\)</span>; steeper drop = more fragile. The <strong>area under the vulnerability curve</strong> is a scalar resilience index: smaller area = more fragile.</p>
+<p><strong>Method 4: Network Efficiency Loss</strong></p>
+<p><span class="math display">\[\Delta E(v) = \frac{E(G) - E(G \setminus v)}{E(G)} \quad \text{where} \quad E(G) = \frac{1}{n(n-1)}\sum_{i \neq j} \frac{1}{d_{ij}}\]</span></p>
+<p>Rank nodes by the efficiency loss their removal causes. Captures both fragmentation and path lengthening effects simultaneously — more complete than betweenness alone.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<p><strong>Critical Node Method Comparison</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 37%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Method</th>
+<th style="text-align: left;">What It Captures</th>
+<th style="text-align: center;">Computational Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Betweenness</td>
+<td style="text-align: left;">Flow control</td>
+<td style="text-align: center;"><span class="math inline">\(O(VE)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Articulation points</td>
+<td style="text-align: left;">Absolute disconnection</td>
+<td style="text-align: center;"><span class="math inline">\(O(V+E)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Targeted simulation</td>
+<td style="text-align: left;">Sequential vulnerability</td>
+<td style="text-align: center;"><span class="math inline">\(O(V^2 E)\)</span> iterative</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Efficiency loss <span class="math inline">\(\Delta E\)</span></td>
+<td style="text-align: left;">Flow + fragmentation</td>
+<td style="text-align: center;"><span class="math inline">\(O(V \cdot VE)\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Multi-Metric Combination">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Multi-Metric Combination
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>No single metric captures all aspects of infrastructure vulnerability. Standard practice for an intelligence vulnerability assessment:</p>
+<ol type="1">
+<li>Run all four methods on the same network</li>
+<li>Produce four ranked node lists</li>
+<li>Compute a <strong>combined rank</strong> — the average rank position across all four methods</li>
+<li>Nodes appearing in the top-10 across all four methods are the highest-confidence critical nodes</li>
+<li>Nodes appearing in the top-10 of only one method should be flagged for the specific failure scenario that method models — they may be important in that scenario and unimportant in others</li>
+</ol>
+<p>Articulation points should always be included regardless of their rank on other metrics — their removal guarantees disconnection, a qualitatively different failure than betweenness degradation.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="resilience-metrics-and-recovery-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="resilience-metrics-and-recovery-analysis">Resilience Metrics and Recovery Analysis</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="network-resilience-a-tripartite-framework" class="level3">
+<h3 class="anchored" data-anchor-id="network-resilience-a-tripartite-framework">Network Resilience: A Tripartite Framework<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></h3>
+<ul>
+<li><strong>Resistance:</strong> ability to absorb a disturbance without significant degradation; measured by the critical fraction <span class="math inline">\(f_c\)</span> — how much of the network must be removed before the giant component collapses; determined by network topology and redundancy</li>
+<li><strong>Robustness:</strong> ability to maintain function during degradation; measured by the fraction of normal capacity maintained under partial failure; depends on capacity margins, alternate routing, and operator response</li>
+<li><strong>Recovery:</strong> speed and completeness of restoration after failure; measured by time to restore connectivity and fraction of pre-failure functionality recovered; depends on repair logistics, spare part availability, and restoration sequencing</li>
+</ul>
+</section>
+<section id="quantitative-resilience-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="quantitative-resilience-metrics">Quantitative Resilience Metrics</h3>
+<ul>
+<li><strong>Vulnerability curve area:</strong> <span class="math inline">\(\int_0^1 S(f) \, df\)</span> where <span class="math inline">\(S(f)\)</span> is giant component fraction after removing fraction <span class="math inline">\(f\)</span> of nodes; smaller area = less resilient</li>
+<li><strong>Critical fraction</strong> <span class="math inline">\(f_c\)</span>: the fraction of node removals at which the giant component first falls below 50% of its original size</li>
+<li><strong>Recovery rate:</strong> slope of the giant component growth curve during restoration; steeper = faster</li>
+<li><strong>Redundancy index:</strong> <span class="math inline">\(R = |E| / (|V| - 1)\)</span> — ratio of actual edges to the minimum required for connectivity (spanning tree); <span class="math inline">\(R &gt; 2\)</span> indicates meaningful redundancy; <span class="math inline">\(R = 1\)</span> means the network is a tree — zero tolerance for any single edge failure</li>
+<li><strong>Average node connectivity:</strong> minimum number of nodes that must be removed to disconnect any pair of nodes; a global minimum cut metric</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="optimal-recovery-sequencing" class="level3">
+<h3 class="anchored" data-anchor-id="optimal-recovery-sequencing">Optimal Recovery Sequencing</h3>
+<p>Restoration is itself a network optimization problem: which nodes should be restored first to maximize network functionality at each step?</p>
+<p><strong>Optimal restoration heuristic:</strong> restore nodes in decreasing order of degree in the <em>original</em> (pre-failure) graph. High-degree nodes, when restored, immediately reconnect more components and contribute more to giant component growth per restoration action.</p>
+<p>This is the inverse of the targeted attack sequence — but applied in reverse. The asymmetry is important: the <em>order</em> of restoration matters as much as which nodes are restored, because early restoration of well-connected nodes creates paths that make subsequent restorations more effective.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Puerto Rico 2017: Recovery as a Network Problem">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Puerto Rico 2017: Recovery as a Network Problem
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Hurricane Maria (September 2017) destroyed approximately 80% of Puerto Rico’s transmission infrastructure — effectively a near-complete targeted attack on the power grid. The subsequent 11-month restoration (the longest in U.S. history for a major grid) illustrates the restoration sequencing problem:</p>
+<p>Early restoration efforts prioritized high-population areas (high degree in the service area network) rather than high-betweenness transmission nodes. Post-hoc analysis showed that restoring key transmission substations earlier — even if they served fewer end-users directly — would have accelerated downstream residential restoration by enabling full voltage delivery to distribution networks. The betweenness-first restoration heuristic would have outperformed the population-first heuristic used in practice.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+<section id="attack-simulation-in-networkx" class="level2">
+<h2 class="anchored" data-anchor-id="attack-simulation-in-networkx">Attack Simulation in NetworkX</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<section id="random-vs.-targeted-attack-functions" class="level3">
+<h3 class="anchored" data-anchor-id="random-vs.-targeted-attack-functions">Random vs.&nbsp;Targeted Attack Functions</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> giant_fraction(G):</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(G) <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="fl">0.0</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    gcc <span class="op">=</span> <span class="bu">max</span>(nx.connected_components(G), key<span class="op">=</span><span class="bu">len</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">len</span>(gcc) <span class="op">/</span> <span class="bu">len</span>(G)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> targeted_attack(G_orig, criterion<span class="op">=</span><span class="st">'betweenness'</span>):</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Sequential node removal by centrality criterion."""</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> G_orig.copy()</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">len</span>(G)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    fracs <span class="op">=</span> [giant_fraction(G)]</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n <span class="op">-</span> <span class="dv">1</span>):</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> criterion <span class="op">==</span> <span class="st">'betweenness'</span>:</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Recompute after each removal (most realistic)</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>            scores <span class="op">=</span> nx.betweenness_centrality(G)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> criterion <span class="op">==</span> <span class="st">'degree'</span>:</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>            scores <span class="op">=</span> <span class="bu">dict</span>(G.degree())</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        top <span class="op">=</span> <span class="bu">max</span>(scores, key<span class="op">=</span>scores.get)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        G.remove_node(top)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        fracs.append(giant_fraction(G))</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fracs</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> random_attack(G_orig, n_trials<span class="op">=</span><span class="dv">20</span>):</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Average over random removal sequences."""</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">len</span>(G_orig)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    all_fracs <span class="op">=</span> []</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n_trials):</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        G <span class="op">=</span> G_orig.copy()</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        nodes <span class="op">=</span> <span class="bu">list</span>(G.nodes())</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        np.random.shuffle(nodes)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>        trial_fracs <span class="op">=</span> [giant_fraction(G)]</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> nd <span class="kw">in</span> nodes[:<span class="op">-</span><span class="dv">1</span>]:</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>            G.remove_node(nd)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>            trial_fracs.append(giant_fraction(G))</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        all_fracs.append(trial_fracs)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.mean(all_fracs, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Vulnerability curve area (resilience index)</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> resilience_index(fracs):</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.trapz(fracs) <span class="op">/</span> <span class="bu">len</span>(fracs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</div><div class="column" style="width:50%;">
+<section id="articulation-points-bridges-and-efficiency" class="level3">
+<h3 class="anchored" data-anchor-id="articulation-points-bridges-and-efficiency">Articulation Points, Bridges, and Efficiency</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find articulation points (absolute critical nodes)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>cut_nodes <span class="op">=</span> <span class="bu">list</span>(nx.articulation_points(G))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>bridges   <span class="op">=</span> <span class="bu">list</span>(nx.bridges(G))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Efficiency loss per node removal</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> network_efficiency(G):</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">len</span>(G)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">&lt;</span> <span class="dv">2</span>:</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="fl">0.0</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    lengths <span class="op">=</span> <span class="bu">dict</span>(</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        nx.all_pairs_shortest_path_length(G)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    total <span class="op">=</span> <span class="bu">sum</span>(</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="fl">1.0</span> <span class="op">/</span> lengths[u][v]</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> u <span class="kw">in</span> G <span class="cf">for</span> v <span class="kw">in</span> G</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> u <span class="op">!=</span> v <span class="kw">and</span> v <span class="kw">in</span> lengths[u]</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total <span class="op">/</span> (n <span class="op">*</span> (n <span class="op">-</span> <span class="dv">1</span>))</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>E0 <span class="op">=</span> network_efficiency(G)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> {}</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> v <span class="kw">in</span> G.nodes():</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    Gv <span class="op">=</span> G.copy()</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    Gv.remove_node(v)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    loss[v] <span class="op">=</span> (E0 <span class="op">-</span> network_efficiency(Gv)) <span class="op">/</span> E0</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Combined critical node ranking</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>btw    <span class="op">=</span> nx.betweenness_centrality(G, normalized<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>deg    <span class="op">=</span> <span class="bu">dict</span>(G.degree())</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>eff_loss <span class="op">=</span> loss</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">'betweenness'</span>: btw,</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">'degree'</span>: deg,</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">'efficiency_loss'</span>: eff_loss</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Rank each metric (lower rank = more critical)</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> df.columns:</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    df[<span class="ss">f'rank_</span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">'</span>] <span class="op">=</span> df[col].rank(</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        ascending<span class="op">=</span><span class="va">False</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>rank_cols <span class="op">=</span> [c <span class="cf">for</span> c <span class="kw">in</span> df.columns <span class="cf">if</span> c.startswith(<span class="st">'rank'</span>)]</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'combined_rank'</span>] <span class="op">=</span> df[rank_cols].mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>df_sorted <span class="op">=</span> df.sort_values(<span class="st">'combined_rank'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</div>
+</div>
+</section>
+<section id="intelligence-applications-infrastructure-vulnerability-assessment" class="level2">
+<h2 class="anchored" data-anchor-id="intelligence-applications-infrastructure-vulnerability-assessment">Intelligence Applications: Infrastructure Vulnerability Assessment</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="vulnerability-assessment-workflow" class="level3">
+<h3 class="anchored" data-anchor-id="vulnerability-assessment-workflow">Vulnerability Assessment Workflow</h3>
+<p>A structured infrastructure network vulnerability assessment for intelligence purposes follows this six-step workflow:</p>
+<ol type="1">
+<li><p><strong>Network reconstruction:</strong> build the infrastructure network from open-source data — facility maps, regulatory filings (FERC for power grids, FCC for communications), satellite imagery (GEOINT), geospatial databases, AIS/ADS-B tracking data for maritime/aviation. Verify topology with imagery analysis. Document confidence level for each node and edge.</p></li>
+<li><p><strong>Baseline metric computation:</strong> compute degree, betweenness, closeness, articulation points, bridges, network efficiency, giant component size, average path length, and redundancy index. Produce a node-level attribute table with all metrics.</p></li>
+<li><p><strong>Targeted attack simulation:</strong> run sequential node removal by degree, betweenness, and iterative betweenness; produce vulnerability curves for each criterion; identify <span class="math inline">\(f_c\)</span> for each. Rank nodes by combined vulnerability score.</p></li>
+<li><p><strong>Cascade simulation:</strong> apply Motter-Lai model if load data is available; identify cascade trigger nodes (low <span class="math inline">\(\alpha\)</span>, high betweenness) and cascade footprint (which nodes fail downstream of each trigger).</p></li>
+<li><p><strong>Interdependency analysis:</strong> map physical dependencies to other infrastructure sectors; identify cross-sector failure pathways using the sector interdependency graph.</p></li>
+<li><p><strong>Prioritization:</strong> rank nodes by combined vulnerability score; map to geographic and collection context; identify known protection measures and restoration time estimates.</p></li>
+</ol>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="product-requirements" class="level3">
+<h3 class="anchored" data-anchor-id="product-requirements">Product Requirements</h3>
+<p>An infrastructure vulnerability intelligence product must include:</p>
+<ul>
+<li>Identification of the <strong>five to ten nodes</strong> whose removal would maximally degrade network function; ranked by each vulnerability metric and combined ranking</li>
+<li>For each critical node: geographic location, physical description, known security posture, redundancy assessment, estimated restoration time</li>
+<li><strong>Network diagram</strong> with nodes sized/colored by vulnerability rank; community structure overlay showing which geographic areas lose service under each failure scenario</li>
+<li><strong>Vulnerability curves</strong> for random and targeted attack, with <span class="math inline">\(f_c\)</span> marked</li>
+<li><strong>Caveat section</strong> addressing: completeness of the network reconstruction; nodes or edges that could not be verified from open sources; confidence level for each component; distinction between topological and operational vulnerability assessment</li>
+</ul>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Legal and Policy Note">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Legal and Policy Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Infrastructure vulnerability assessment for intelligence purposes is authorized under Title 50 (National Security Act) and the National Infrastructure Protection Plan. <strong>Domestic infrastructure analysis</strong> by IC elements requires coordination with the relevant Sector Risk Management Agencies (SRMAs) designated under CISA authority.</p>
+<p>Publication or dissemination of specific vulnerability findings — even in unclassified form — is subject to CUI (Controlled Unclassified Information) handling requirements. The specific nodes identified as critical infrastructure vulnerabilities are themselves sensitive information that should not be disseminated without proper need-to-know controls, regardless of whether the underlying data was open-source.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+</section>
+<section id="lecture-summary" class="level1 page-columns page-full">
+<h1>Lecture Summary</h1>
+<section id="key-formulas-and-results" class="level2">
+<h2 class="anchored" data-anchor-id="key-formulas-and-results">Key Formulas and Results</h2>
+<div class="key-terms">
+<dl>
+<dt><strong>Random failure robustness (scale-free)</strong></dt>
+<dd>
+Giant component survives until <span class="math inline">\(f_c^{\text{random}} \approx 0.65+\)</span> — extraordinary robustness to accidents due to low-degree node abundance
+</dd>
+<dt><strong>Targeted attack fragility (scale-free)</strong></dt>
+<dd>
+<span class="math inline">\(p_c^{\text{targeted}} \approx 1/(\kappa - 1)\)</span>; for scale-free networks <span class="math inline">\(\kappa \gg 1\)</span>, so <span class="math inline">\(p_c^{\text{targeted}} \ll 1\)</span> — collapses after 5–10% hub removal
+</dd>
+<dt><strong>Percolation threshold (random graph)</strong></dt>
+<dd>
+<span class="math inline">\(p_c = 1/\langle k \rangle\)</span>; below this, only small disconnected clusters; above, a giant component exists
+</dd>
+<dt><strong>Power grid average degree</strong></dt>
+<dd>
+<span class="math inline">\(\langle k \rangle \approx 2.7\)</span> for U.S. Western grid; near-planar; small-world (<span class="math inline">\(C = 0.080\)</span>, <span class="math inline">\(L = 18.7\)</span>)
+</dd>
+<dt><strong>Motter-Lai capacity</strong></dt>
+<dd>
+<span class="math inline">\(C_i = (1+\alpha)L_i^0\)</span>; <span class="math inline">\(\alpha\)</span> = tolerance parameter; small <span class="math inline">\(\alpha\)</span> → cascade sensitivity; betweenness-weighted capacity upgrade is optimal mitigation
+</dd>
+<dt><strong>Network efficiency loss</strong></dt>
+<dd>
+<span class="math inline">\(\Delta E(v) = [E(G) - E(G \setminus v)] / E(G)\)</span>; captures fragmentation and path-lengthening simultaneously
+</dd>
+<dt><strong>Redundancy index</strong></dt>
+<dd>
+<span class="math inline">\(R = |E| / (|V|-1)\)</span>; <span class="math inline">\(R = 1\)</span> = tree (zero fault tolerance); <span class="math inline">\(R &gt; 2\)</span> = meaningful redundancy
+</dd>
+<dt><strong>WAN average path length</strong></dt>
+<dd>
+4.4 hops; most airports within 2 connections of any other via a major hub
+</dd>
+<dt><strong>Undersea cable share</strong></dt>
+<dd>
+~95–99% of international internet traffic; satellite carries <span class="math inline">\(&lt; 5\%\)</span> at higher latency
+</dd>
+<dt><strong>BGP AS count</strong></dt>
+<dd>
+~80,000 active globally; scale-free degree distribution; Tier 1 carriers form a full-mesh core
+</dd>
+</dl>
+</div>
+</section>
+<section id="key-analytical-takeaways" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="key-analytical-takeaways">Key Analytical Takeaways</h2>
+<ol type="1">
+<li><p>Scale-free infrastructure networks are simultaneously robust to random failure and catastrophically fragile to targeted hub removal. The same structural property — high-degree hubs — produces both. Security investment must be radically unequal, concentrated at hubs, to address the targeted attack vulnerability.</p></li>
+<li><p>Power grids are near-planar, sparse (<span class="math inline">\(\langle k \rangle \approx 2.7\)</span>), and small-world. Their critical nodes are best identified by betweenness, not degree. Cascading failure follows load redistribution dynamics; Motter-Lai model captures this with the tolerance parameter <span class="math inline">\(\alpha\)</span>.</p></li>
+<li><p>Aviation networks are highly scale-free; hub airports have extreme betweenness; inter-community bridge airports (DXB, LHR, SIN) are chokepoints for global connectivity. COVID-19 confirmed scale-free attack vulnerability predictions empirically.</p></li>
+<li><p>Undersea cable landing stations are articulation points in the global internet infrastructure. Their geographic clustering means that extreme events — including deliberate sabotage — can simultaneously disrupt multiple cable systems at cluster locations.</p></li>
+<li><p>BGP route hijacking is a graph-level attack: a node falsely claims edges it does not own. RPKI provides structural mitigation but requires sufficient network-level adoption to constitute a connected validation path — a percolation problem in itself.</p></li>
+<li><p>Critical node identification requires multiple complementary methods. Combine betweenness, articulation points, targeted attack simulation, and efficiency loss into a combined ranking. Articulation points are always included regardless of other metric rankings — their removal guarantees disconnection.</p></li>
+</ol>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Next and Final Session">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Next and Final Session
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The final two class sessions are <strong>project workshop hours and final project presentations</strong>. Bring your network data, your vulnerability assessment framework, and your intelligence product. The structured vulnerability assessment workflow from this lecture is the template for the final project deliverable.</p>
+</div>
+</div>
+<div style="margin-top:2rem">
+  <ul class="course-sequence">
+    <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> What is Network Analysis?</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Graph Theory Basics</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Centrality and Influence</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Social Network Analysis in Intelligence</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Community Detection and Clustering</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Geospatial and Multi-Layer Networks</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> [Week 8]</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Temporal and Dynamic Networks</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Global Security and Network Analysis</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Financial and Transaction Networks</li>
+    <li class="seq-done"><span class="seq-icon">✓</span> Information and Influence Networks</li>
+    <li class="seq-active"><span class="seq-icon">▶</span> <strong>Infrastructure and Physical Networks</strong> (this lecture)</li>
+    <li class="seq-todo"><span class="seq-icon">○</span> Final Project Presentations</li>
+  </ul>
+</div>
+
+<div class="page-footer-custom">
+School of Intelligence Analysis &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
+</div>
+<div class="uc-banner column-screen uc-banner-bottom">
+UNCLASSIFIED // FOR EDUCATIONAL USE ONLY
+</div>
+
+
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Steven M. Rinaldi, James P. Peerenboom, and Terri K. Kelly, “Identifying, Understanding, and Analyzing Critical Infrastructure Interdependencies,” <em>IEEE Control Systems Magazine</em> 21, no. 6 (2001): 11–25.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Réka Albert, Hawoong Jeong, and Albert-László Barabási, “Error and Attack Tolerance of Complex Networks,” <em>Nature</em> 406 (2000): 378–382.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Reuven Cohen et al., “Resilience of the Internet to Random Breakdowns,” <em>Physical Review Letters</em> 85, no. 21 (2000): 4626–4628.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Reuven Cohen et al., “Breakdown of the Internet Under Intentional Attack,” <em>Physical Review Letters</em> 86, no. 16 (2001): 3682–3685.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Duncan J. Watts and Steven H. Strogatz, “Collective Dynamics of ‘Small-World’ Networks,” <em>Nature</em> 393 (1998): 440–442.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Äj Holmgren, “Using Graph Models to Analyze the Vulnerability of Electric Power Networks,” <em>Risk Analysis</em> 26, no. 4 (2006): 955–969.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Sergey V. Buldyrev et al., “Catastrophic Cascade of Failures in Interdependent Networks,” <em>Nature</em> 464 (2010): 1025–1028.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>Christian M. Schneider et al., “Mitigation of Malicious Attacks on Networks,” <em>Proceedings of the National Academy of Sciences</em> 108, no. 10 (2011): 3838–3841.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>Rinaldi, Peerenboom, and Kelly, “Identifying, Understanding, and Analyzing Critical Infrastructure Interdependencies,” 16–19.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -5,30 +5,32 @@ project:
 website:
   title: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
   navbar:
+    background: "#450084"
+    foreground: "#ffffff"
     left:
       - href: index.qmd
         text: Home
       - text: Weekly Materials
         menu:
-          - href: /Week1Lecture/index.qmd
+          - href: Week1Lecture/index.qmd
             text: Week 1 Course Materials
-          - href: /Week2Lecture/index.qmd
+          - href: Week2Lecture/index.qmd
             text: Week 2 Course Materials
-          - href: /Week3Lecture/index.qmd
+          - href: Week3Lecture/index.qmd
             text: Week 3 Course Materials
-          - href: /Week4Lecture/index.qmd
+          - href: Week4Lecture/index.qmd
             text: Week 4 Course Materials
-          - href: /Week5Lecture/index.qmd
+          - href: Week5Lecture/index.qmd
             text: Week 5 Course Materials
-          - href: /Week6Lecture/index.qmd
+          - href: Week6Lecture/index.qmd
             text: Week 6 Course Materials
-          - href: /Week8Lecture/index.qmd
+          - href: Week8Lecture/index.qmd
             text: Week 8 Course Materials
-          - href: /Week9Lecture/index.qmd
+          - href: Week9Lecture/index.qmd
             text: Week 9 Course Materials
-          - href: /Week10Lecture/index.qmd
+          - href: Week10Lecture/index.qmd
             text: Week 10 Course Materials
-          - href: /Week11Lecture/index.qmd
+          - href: Week11Lecture/index.qmd
             text: Week 11 Course Materials
 
 format:
