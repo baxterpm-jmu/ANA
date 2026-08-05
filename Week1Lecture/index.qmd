@@ -15,18 +15,62 @@ date: "Fall 2026"
 | Term | Fall 2026 |
 :::
 
-::: {.callout-note title="Learning Objectives" icon=false}
-By the end of this lecture, students should be able to:
-
-1. To be updated. 
-:::
-
-
 
 # Part I: Course Overview 
 
+This course introduces students to the principles and applications of network analysis. Network analysis provides a powerful framework for understanding relationships, structures, and interactions within complex systems. Students will explore key network analysis concepts, methodologies, and tools. The course will emphasize practical applications, enabling students to apply network analysis techniques to real-world problems. By the end of the course, students will be equipped with the skills to conduct independent network analyses, critically evaluate network structures, and integrate network methodologies into their research.
+
+### Course Goals
+
+* Understand the theoretical foundations of network analysis.
+* Develop technical proficiency across multiple analytical platforms.
+* Apply network analysis methods to substantive intelligence problems.
+* Exercise sound analytical judgment in measure and tool selection.
+* Critically evaluate the limits of network analysis findings.
+* Communicate network findings as professional analytical products.
+
+### Method of Instruction
+
+This course uses the following methods of instruction:
+
+* **Attendance and Participation:** Each week you will participate in two in-person sessions to further your understanding of the material and application of data analytics. This is an applied technology course, not a lecture course. Students will be expected to be actively engaged in the course material and classroom activities.
+* **In-class Activities and Exercises:** Students will complete exercises related to the content in order to gain applied, practical knowledge and skills in network analysis. These activities will build off of the lectures and will be applied in nature, as such, students must be actively engaged with the course material to succeed.
+* **Class Project:** Students will complete one project during this course which will require them to apply the network analysis techniques from class to a problem set of their choosing. This will provide students with the opportunity to expand and apply their knowledge and skills in network analysis and research design focused on data.
+* **Asynchronous Materials:** In addition to classroom instruction, materials and exercises will be posted to the course website, including examples, additional readings, and other for each module that will provide further guidance and instruction on various aspects of the material for that module, as well as practice prompts. Most of these materials will be optional and are posted to enable you to explore areas of interest or bolster weak spots in your skills.
+
+### Reference Material:
+
+The following books are available via the JMU library and offer additional insights into the usage of network analysis. They vary in their complexity, but all offer useful information and tutorials on different ways to leverage network analysis in your work.
+
+* Freeman, L. C., White, D., Romney, A. K., & University of California, Irvine. R. P. in S. N. A. (2017). Research methods in social network analysis. Routledge, Taylor and Francis Group. https://search.lib.jmu.edu/permalink/01JMU_INST/ivktej/alma991016778908506271
+
+* M., K. P., Mohan, A., & Srinivasa, K. G. (2018). Practical social network analysis with Python. Springer. https://search.lib.jmu.edu/permalink/01JMU_INST/ivktej/alma991016580145606271
+
+* McClain, B. P. (2022). Python for Geospatial Data Analysis : theory, tools, and practice for location intelligence. O’Reilly Media, Inc. https://search.lib.jmu.edu/permalink/01JMU_INST/ivktej/alma991016502135706271
+
+While I will probably not be assigning readings directly from these books, they are excellent resources for you to explore and learn more about network analysis or if might provide assistance if you are looking for additional information on a topic or concept. I encourage you to explore these resources and use them to supplement your learning in this course.
 
 # Part II: Network Analysis Activity 
+
+Rather than immediately bore you with the theory and history of network analysis, we will start with a hands-on activity to introduce you to the concepts and applications of network analysis. This activity will provide a practical understanding of how networks are structured and how they can be analyzed.
+
+### Your Inner Circle
+
+For the remainder of the class meeting, you will be asked to create a network of your inner circle. This will include people you interact with regularly, such as friends, family, colleagues, and acquaintances. 
+
+On a sheet of paper, write your name in the center and draw a circle around it. Then, draw lines connecting your name to the names of the people in your soscial circle. For each person, write their name and a one-word description of your relationship with them (e.g., friend, classmate, coworker, family member). Put as many people as you can think of. 
+
+Next, draw lines connecting the people in your social circle to one another, indicating their relationships. Use different colors or line styles to represent different types of relationships (e.g., solid lines for family, dashed lines for friends, dotted lines for acquaintances). You choose the formatting that works best for you, but be sure to include a legend to explain your choices. 
+
+Finally, on a scale of 1-10, rate the strength of your relationships with each person in your social circle. Use a scale of 1-10, where 1 represents a weak relationship and 10 represents a strong relationship. Write this number on the line connecting all the people in your social circle. 
+
+#### Reflection Questions
+
+1. What patterns do you notice in your social circle? Are there any clusters or groups of people who are more closely connected to each other than to others?
+2. How do the strength of your relationships vary across your social circle? Are there any relationships that stand out as particularly strong or weak?
+3. How might your social circle change over time? Are there any relationships that you would like to strengthen or weaken?
+4. Think about your circle before joining JMU. How has your social circle changed since you joined the university? Are there any new connections that you have made, or any old connections that you have lost?
+
 
 ```{=html}
 <div class="page-footer-custom">
