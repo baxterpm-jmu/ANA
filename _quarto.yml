@@ -36,6 +36,32 @@ website:
             text: Week 12 Course Materials
           - href: Week13Lecture/index.qmd
             text: Week 13 Course Materials
+      - text: Weekly Activities
+        menu:
+          - href: Activities/Week1Activity/index.qmd
+            text: Week 1 Activity
+          - href: Activities/Week2Activity/index.qmd
+            text: Week 2 Activity
+          - href: Activities/Week3Activity/index.qmd
+            text: Week 3 Activity
+          - href: Activities/Week4Activity/index.qmd
+            text: Week 4 Activity
+          - href: Activities/Week5Activity/index.qmd
+            text: Week 5 Activity
+          - href: Activities/Week6Activity/index.qmd
+            text: Week 6 Activity
+          - href: Activities/Week8Activity/index.qmd
+            text: Week 8 Activity
+          - href: Activities/Week9Activity/index.qmd
+            text: Week 9 Activity
+          - href: Activities/Week10Activity/index.qmd
+            text: Week 10 Activity
+          - href: Activities/Week11Activity/index.qmd
+            text: Week 11 Activity
+          - href: Activities/Week12Activity/index.qmd
+            text: Week 12 Activity
+          - href: Activities/Week13Activity/index.qmd
+            text: Week 13 Activity
 format:
   html:
     theme: jmu-lecture.css

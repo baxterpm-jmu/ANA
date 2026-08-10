@@ -1,8 +1,7 @@
 ---
 title: "What is Network Analysis?"
 subtitle: "IA 480: Applied Network Analysis — Systems, Connections, and Influence"
-author: "Intelligence Analysis Program, James Madison University"
-date: "Fall 2026"
+author: "Dr. Philip Baxter, Intelligence Analysis Program, James Madison University"
 ---
 
 ::: {.course-meta}
@@ -13,6 +12,15 @@ date: "Fall 2026"
 | Instructor | Prof. Philip Baxter, Intelligence Analysis Program |
 | Term | Fall 2026 |
 :::
+
+::: {.callout-important}
+## Required Reading Before Tuesday Class
+
+* Easley, D. and Kleinberg, J. (2010). Networks, Crowds, and Markets. Chapters 2. https://www.cs.cornell.edu/home/kleinber/networks-book/
+* Albert, R., Jeong, H., and Barabási, A.L. (2000). "Error and attack tolerance of complex networks." Nature, 406: 378–382.
+https://search.lib.jmu.edu/permalink/01JMU_INST/lvvpvt/cdi_crossref_primary_10_1038_35019019
+:::
+
 
 ::: {.callout-note title="Learning Objectives" icon=false}
 By the end of this lecture, students should be able to:

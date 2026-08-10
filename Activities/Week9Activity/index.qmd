@@ -1,0 +1,2237 @@
+---
+title: "Course Introduction"
+subtitle: "IA 480: Applied Network Analysis — Systems, Connections, and Influence"
+author: "Dr. Philip Baxter, Intelligence Analysis Program, James Madison University"
+date: "Fall 2026"
+---
+
+There are multiple ways to complete this activity. You may use NetworkX in Python, Gephi, or i2 Analyst Notebook. You can jump to your approach of choice. 
+
+- [Use NetworkX to complete the activity](#sec-networkx)
+- [Use Gephi to complete the activity](#sec-gephi)
+- [Use i2 Analyst Notebook to complete the activity](#sec-i2)
+
+---
+
+# Using NetworkX {#sec-networkx}
+
+::: {.conceptbox}
+**Dataset:**
+The Twitch Streamer Social Network (MUSAE) was collected and published by
+Benedek Rozemberczki, Carl Allen, and Rik Sarkar (2021). It consists of mutual
+friendship graphs among Twitch streamers in multiple language communities, with
+node attributes including total channel views, days active, partnership status,
+and a mature content flag. Published in: Rozemberczki, B., Allen, C., and Sarkar,
+R. (2021). "Multi-Scale Attributed Node Embedding." *Journal of Complex Networks*,
+9(2).
+
+**Download:**
+Navigate to the MUSAE GitHub repository:
+<https://github.com/benedekrozemberczki/MUSAE>. Under `input/dataset/`, download
+three files for the English-language community: `musae_ENGB_edges.csv`,
+`musae_ENGB_features.json`, and `musae_ENGB_target.csv`. Save all three to your
+working directory.
+
+**Analytical focus:**
+This session treats the Twitch friendship network as a model information
+environment. Streamers are actors; friendships are the channels through which
+trends, content, and influence flow. The central questions are: *who* can spread
+information most effectively, *how far* does information travel from different
+starting points, and *what structural features* — community membership, bridge
+positions, attribute wealth — best predict influence capacity.
+
+**Deliverable:**
+This completed worksheet plus one exported figure. Due at end of class.
+:::
+
+## Setup (complete before Part 1)
+
+```python
+import pandas as pd
+import networkx as nx
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+import numpy as np
+import json
+import random
+from collections import defaultdict
+
+random.seed(42)
+np.random.seed(42)
+
+print("NetworkX version:", nx.__version__)
+```
+
+## Part 1 (10 min) · Load Data and Build the Graph
+
+::: {.conceptbox}
+**Goal:**
+Load the English-language Twitch streamer network and attach node attributes.
+Understand what each attribute means before computing any metrics — the
+attributes are your ground-truth measures of real-world influence against which
+structural measures will be compared.
+:::
+
+### Step 1 — Load Edges and Features
+
+```python
+# Load edge list
+edges = pd.read_csv('musae_ENGB_edges.csv')
+print("Edge file columns:", edges.columns.tolist())
+print("Edges:", len(edges))
+
+# Load node features
+with open('musae_ENGB_features.json', 'r') as f:
+    features_raw = json.load(f)
+
+# Load target file (views, partner, mature, days_active)
+target = pd.read_csv('musae_ENGB_target.csv')
+print("\nTarget file columns:", target.columns.tolist())
+print("Nodes:", len(target))
+print(target.head())
+```
+
+Total edges: []{.blank}
+&nbsp;&nbsp; Total nodes: []{.blank}
+&nbsp;&nbsp; Target columns: []{.blank style="min-width:8cm"}
+
+### Step 2 — Build the NetworkX Graph with Attributes
+
+```python
+# Build undirected graph
+G = nx.from_pandas_edgelist(edges, source='from', target='to')
+
+# Attach node attributes from target file
+# Typical columns: id, views, mature, partner, new_id, days, language
+for _, row in target.iterrows():
+    node_id = int(row['new_id']) if 'new_id' in target.columns \
+              else int(row['id'])
+    if G.has_node(node_id):
+        G.nodes[node_id]['views']    = int(row.get('views', 0))
+        G.nodes[node_id]['partner']  = int(row.get('partner', 0))
+        G.nodes[node_id]['mature']   = int(row.get('mature', 0))
+        G.nodes[node_id]['days']     = int(row.get('days', 0))
+
+print(f"Nodes: {G.number_of_nodes()}")
+print(f"Edges: {G.number_of_edges()}")
+print(f"Connected: {nx.is_connected(G)}")
+print(f"Components: {nx.number_connected_components(G)}")
+print(f"Density: {nx.density(G):.6f}")
+```
+
+| Metric | Value | Interpretation |
+|--------|-------|----------------|
+| Nodes | | |
+| Edges | | |
+| Connected? | | |
+| Components | | |
+| Density | | |
+
+### Step 3 — Attribute Summary
+
+```python
+views_all    = [G.nodes[n].get('views', 0) for n in G.nodes()]
+partner_all  = [G.nodes[n].get('partner', 0) for n in G.nodes()]
+mature_all   = [G.nodes[n].get('mature', 0) for n in G.nodes()]
+
+print(f"View count range:   {min(views_all):,} -- {max(views_all):,}")
+print(f"Median views:       {int(np.median(views_all)):,}")
+print(f"Partnered streamers:{sum(partner_all)} "
+      f"({100*sum(partner_all)/len(partner_all):.1f}%)")
+print(f"Mature channels:    {sum(mature_all)} "
+      f"({100*sum(mature_all)/len(mature_all):.1f}%)")
+```
+
+Percentage of partnered streamers: []{.blank}
+&nbsp;&nbsp; Median views: []{.blank style="min-width:3cm"}
+
+[Q1.1]{.qlabel}
+Twitch partnership requires a streamer to meet minimum thresholds for audience
+size and streaming consistency. If partnership status is a proxy for established
+influence, what fraction of this network consists of *established* influencers
+vs. peripheral participants? Does this fraction surprise you?
+
+::: {.answerspace}
+:::
+
+## Part 2 (12 min) · Structural Influence Measures
+
+::: {.conceptbox}
+**Goal:**
+Compute three structural measures that proxy different dimensions of influence
+capacity: degree (direct reach), PageRank (recursive influence — being connected
+to influential streamers), and k-core number (being embedded in the densely
+connected influential core). Then test whether these structural measures agree
+with the ground-truth view count attribute.
+:::
+
+### Step 4 — Degree Distribution and Top Actors
+
+```python
+degrees = dict(G.degree())
+deg_values = list(degrees.values())
+
+fig, axes = plt.subplots(1, 2, figsize=(13, 4))
+
+# Log-log degree distribution
+axes[0].loglog(sorted(deg_values, reverse=True),
+               range(1, len(deg_values)+1),
+               'o', ms=2, alpha=0.5, color='#450084')
+axes[0].set_xlabel("Degree (log scale)")
+axes[0].set_ylabel("Rank (log scale)")
+axes[0].set_title("Degree Rank Plot (log-log)")
+axes[0].grid(True, alpha=0.3)
+
+# Histogram of degree
+axes[1].hist(deg_values, bins=60, color='#450084', edgecolor='white')
+axes[1].set_xlabel("Degree")
+axes[1].set_ylabel("Count")
+axes[1].set_title("Degree Distribution")
+axes[1].set_yscale('log')
+
+plt.tight_layout()
+plt.savefig("twitch_degree_dist.png", dpi=150, bbox_inches='tight')
+plt.show()
+
+# Top 10 by degree
+top10_deg = sorted(degrees.items(), key=lambda x: x[1], reverse=True)[:10]
+print(f"\n{'Rank':<5} {'Node':>8} {'Degree':>8} "
+      f"{'Views':>12} {'Partner':>9}")
+print('-' * 50)
+for rank, (node, deg) in enumerate(top10_deg, 1):
+    v = G.nodes[node].get('views', 0)
+    p = 'Yes' if G.nodes[node].get('partner', 0) else 'No'
+    print(f"{rank:<5} {node:>8} {deg:>8} {v:>12,} {p:>9}")
+```
+
+Does the degree distribution appear to follow a power law (approximately linear
+on the log-log plot)? []{.blank style="min-width:1.2cm"}
+
+What fraction of the top-10 degree nodes are Twitch partners? []{.blank}
+
+### Step 5 — PageRank as Recursive Influence
+
+```python
+pr = nx.pagerank(G, alpha=0.85)
+top10_pr = sorted(pr.items(), key=lambda x: x[1], reverse=True)[:10]
+
+print(f"\n{'Rank':<5} {'Node':>8} {'PageRank':>12} "
+      f"{'Degree':>8} {'Views':>12} {'Partner':>9}")
+print('-' * 60)
+for rank, (node, score) in enumerate(top10_pr, 1):
+    d = degrees[node]
+    v = G.nodes[node].get('views', 0)
+    p = 'Yes' if G.nodes[node].get('partner', 0) else 'No'
+    print(f"{rank:<5} {node:>8} {score:>12.6f} {d:>8} {v:>12,} {p:>9}")
+```
+
+[Q5.1]{.qlabel}
+Compare the top-10 by degree vs. the top-10 by PageRank. Are the lists identical,
+overlapping, or divergent? What structural explanation accounts for any nodes
+that rank higher on PageRank than on degree?
+
+::: {.answerspace}
+:::
+
+### Step 6 — K-Core Decomposition: The Influential Core
+
+```python
+core_numbers = nx.core_number(G)
+max_core = max(core_numbers.values())
+
+print(f"Maximum k-core number: {max_core}")
+print(f"\nCore level breakdown:")
+for k in range(1, max_core + 1, max(1, max_core // 10)):
+    nodes_at_k = sum(1 for v in core_numbers.values() if v >= k)
+    print(f"  k >= {k:3d}: {nodes_at_k:5d} nodes "
+          f"({100*nodes_at_k/G.number_of_nodes():.1f}% of network)")
+
+# Inner core: nodes at the maximum k-core level
+inner_core = [n for n, k in core_numbers.items() if k == max_core]
+inner_views   = [G.nodes[n].get('views', 0) for n in inner_core]
+inner_partner = [G.nodes[n].get('partner', 0) for n in inner_core]
+overall_views = [G.nodes[n].get('views', 0) for n in G.nodes()]
+
+print(f"\nInner core ({max_core}-core): {len(inner_core)} nodes")
+print(f"  Median views (inner core):   {int(np.median(inner_views)):,}")
+print(f"  Median views (full network): {int(np.median(overall_views)):,}")
+print(f"  Partner rate (inner core):   "
+      f"{100*sum(inner_partner)/len(inner_core):.1f}%")
+```
+
+Maximum k-core: []{.blank style="min-width:1.5cm"}
+&nbsp;&nbsp; Size of inner core: []{.blank}
+&nbsp;&nbsp; Partner rate in inner core: []{.blank}
+
+[Q6.1]{.qlabel}
+The inner k-core contains the most mutually interconnected streamers. Is the
+partner rate in the inner core higher or lower than the platform-wide partner
+rate computed in Step 3? What does this suggest about the relationship between
+structural embeddedness and real-world platform recognition?
+
+::: {.answerspace}
+:::
+
+### Step 7 — Correlation: Structure vs. Ground Truth
+
+```python
+# Build comparison dataframe
+nodes_list = list(G.nodes())
+comp = pd.DataFrame({
+    'node':       nodes_list,
+    'degree':     [degrees[n]      for n in nodes_list],
+    'pagerank':   [pr[n]           for n in nodes_list],
+    'core':       [core_numbers[n] for n in nodes_list],
+    'views':      [G.nodes[n].get('views', 0)   for n in nodes_list],
+    'partner':    [G.nodes[n].get('partner', 0) for n in nodes_list],
+})
+
+# Log-transform views to reduce skew
+comp['log_views'] = np.log1p(comp['views'])
+
+print("Pearson correlations with log(views):")
+for col in ['degree', 'pagerank', 'core']:
+    r = comp[col].corr(comp['log_views'])
+    print(f"  {col:12s}: r = {r:.4f}")
+
+print("\nPartner vs. non-partner structural comparison:")
+for col in ['degree', 'pagerank', 'core']:
+    p_mean = comp[comp['partner']==1][col].mean()
+    n_mean = comp[comp['partner']==0][col].mean()
+    print(f"  {col:12s}: partner={p_mean:.4f}, "
+          f"non-partner={n_mean:.4f}, ratio={p_mean/n_mean:.2f}x")
+```
+
+Which structural measure correlates most strongly with log(views)?
+[]{.blank style="min-width:3cm"} ($r =$ []{.blank style="min-width:1.5cm"})
+
+Are partnered streamers structurally more central by all three measures?
+[]{.blank style="min-width:1.2cm"}
+
+[Q7.1]{.qlabel}
+In an information operations context, the structural measure most correlated with
+real-world influence is the most useful targeting criterion for either amplifying
+or suppressing a narrative. Based on your results, which measure would you
+prioritize, and why does the correlation (or lack thereof) matter for targeting
+decisions?
+
+::: {.answerspace}
+:::
+
+## Part 3 (12 min) · Information Diffusion Simulation
+
+::: {.conceptbox}
+**Goal:**
+Simulate how information spreads through the Twitch friendship network using the
+Independent Cascade (IC) model. In the IC model, each infected node has one
+chance to infect each uninfected neighbor with probability $p$. Compare the
+spread from strategically selected seed nodes (high structural influence) vs.
+randomly selected seeds. This operationalizes the influence maximization problem:
+given a fixed number of "seeds" (initial spreaders), which actors should you
+activate to maximize total reach?
+:::
+
+### Step 8 — Implement the Independent Cascade Model
+
+```python
+def independent_cascade(G, seeds, p=0.05, n_trials=200):
+    """
+    Simulate the Independent Cascade model.
+
+    Parameters
+    ----------
+    G       : NetworkX graph
+    seeds   : list of seed nodes (initially infected)
+    p       : transmission probability per edge
+    n_trials: number of Monte Carlo trials to average
+
+    Returns
+    -------
+    mean_infected : average total nodes infected across trials
+    std_infected  : standard deviation
+    """
+    trial_results = []
+    for _ in range(n_trials):
+        infected    = set(seeds)
+        frontier    = set(seeds)
+        while frontier:
+            new_frontier = set()
+            for node in frontier:
+                for neighbor in G.neighbors(node):
+                    if neighbor not in infected:
+                        if random.random() < p:
+                            new_frontier.add(neighbor)
+            infected  |= new_frontier
+            frontier   = new_frontier
+        trial_results.append(len(infected))
+    return np.mean(trial_results), np.std(trial_results)
+
+
+# Test with a single high-degree node
+top_node = top10_deg[0][0]
+mean_inf, std_inf = independent_cascade(G, seeds=[top_node], p=0.05)
+print(f"Single seed (top degree node {top_node}):")
+print(f"  Mean infected: {mean_inf:.1f} / {G.number_of_nodes()} nodes")
+print(f"  Spread rate:   {100*mean_inf/G.number_of_nodes():.2f}%")
+```
+
+Mean infected from top degree node: []{.blank}
+([]{.blank}% of network)
+
+### Step 9 — Compare Seeding Strategies
+
+```python
+# Work on the largest connected component for cleaner results
+lcc_nodes = max(nx.connected_components(G), key=len)
+G_lcc     = G.subgraph(lcc_nodes).copy()
+print(f"LCC size: {G_lcc.number_of_nodes()} nodes, "
+      f"{G_lcc.number_of_edges()} edges")
+
+N_SEEDS = 10   # number of initial spreaders
+P_TRANS = 0.05 # transmission probability
+
+# Recompute measures on LCC
+deg_lcc  = dict(G_lcc.degree())
+pr_lcc   = nx.pagerank(G_lcc, alpha=0.85)
+core_lcc = nx.core_number(G_lcc)
+
+# Select seeds by each strategy (top-N nodes)
+seeds_deg  = [n for n, _ in sorted(deg_lcc.items(),
+               key=lambda x: x[1], reverse=True)[:N_SEEDS]]
+seeds_pr   = [n for n, _ in sorted(pr_lcc.items(),
+               key=lambda x: x[1], reverse=True)[:N_SEEDS]]
+seeds_core = sorted(core_lcc, key=core_lcc.get,
+                    reverse=True)[:N_SEEDS]
+seeds_rand = random.sample(list(G_lcc.nodes()), N_SEEDS)
+
+strategies = {
+    'Degree (top-10)':    seeds_deg,
+    'PageRank (top-10)':  seeds_pr,
+    'K-core (top-10)':    seeds_core,
+    'Random (10 nodes)':  seeds_rand,
+}
+
+print(f"\n{'Strategy':<25} {'Mean infected':>14} {'Std':>8} "
+      f"{'% of LCC':>10}")
+print('-' * 62)
+results = {}
+for name, seeds in strategies.items():
+    mean, std = independent_cascade(G_lcc, seeds, p=P_TRANS)
+    pct = 100 * mean / G_lcc.number_of_nodes()
+    results[name] = (mean, std, pct)
+    print(f"{name:<25} {mean:>14.1f} {std:>8.1f} {pct:>9.2f}%")
+```
+
+Record the spread results:
+
+| Strategy | Mean infected | Std | % of LCC | Rank |
+|----------|---------------|-----|----------|------|
+| Degree (top-10) | | | | |
+| PageRank (top-10) | | | | |
+| K-core (top-10) | | | | |
+| Random (10 nodes) | | | | |
+
+### Step 10 — Visualize the Spread Comparison
+
+```python
+fig, ax = plt.subplots(figsize=(9, 5))
+names   = list(results.keys())
+means   = [results[n][0] for n in names]
+stds    = [results[n][1] for n in names]
+colors  = ['#450084', '#CBB677', '#1B5E20', '#AAAAAA']
+
+bars = ax.bar(names, means, yerr=stds, capsize=5,
+              color=colors, edgecolor='white', alpha=0.9)
+ax.axhline(G_lcc.number_of_nodes(), color='red',
+           linewidth=1.2, linestyle='--', label='Full LCC size')
+ax.set_ylabel("Mean nodes infected")
+ax.set_title(f"IC Model: Mean Spread by Seeding Strategy\n"
+             f"(p={P_TRANS}, {N_SEEDS} seeds, 200 trials each)")
+ax.legend()
+ax.set_xticks(range(len(names)))
+ax.set_xticklabels(names, rotation=12, fontsize=9)
+plt.tight_layout()
+plt.savefig("twitch_diffusion.png", dpi=150, bbox_inches='tight')
+plt.show()
+```
+
+[Q10.1]{.qlabel}
+Which seeding strategy produces the largest mean spread? What structural property
+explains its superior performance over the other strategies?
+
+::: {.answerspace}
+:::
+
+[Q10.2]{.qlabel}
+How much larger is the best strategic spread compared to random seeding? Express
+this as a multiplier (e.g., "strategic seeding reaches 2.3$\times$ more nodes than
+random"). In an influence operations context, what does this multiplier represent?
+
+::: {.answerspace}
+:::
+
+### Step 11 — Sensitivity to Transmission Probability
+
+```python
+p_values   = [0.01, 0.02, 0.05, 0.08, 0.10, 0.15, 0.20]
+spread_deg = []
+spread_rnd = []
+
+for p in p_values:
+    m_d, _ = independent_cascade(G_lcc, seeds_deg, p=p, n_trials=100)
+    m_r, _ = independent_cascade(G_lcc, seeds_rand, p=p, n_trials=100)
+    spread_deg.append(m_d / G_lcc.number_of_nodes() * 100)
+    spread_rnd.append(m_r / G_lcc.number_of_nodes() * 100)
+
+fig, ax = plt.subplots(figsize=(9, 5))
+ax.plot(p_values, spread_deg, 'o-', color='#450084',
+        linewidth=2, label='Degree seeds')
+ax.plot(p_values, spread_rnd, 's--', color='#AAAAAA',
+        linewidth=2, label='Random seeds')
+ax.set_xlabel("Transmission probability p")
+ax.set_ylabel("Mean spread (% of LCC)")
+ax.set_title("Information Spread vs. Transmission Probability")
+ax.legend()
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+[Q11.1]{.qlabel}
+At what transmission probability does information essentially reach the entire
+network regardless of seed strategy? What does this threshold suggest about how
+"viral" a message must be before seed selection stops mattering?
+
+::: {.answerspace}
+:::
+
+## Part 4 (8 min) · Community Structure and Influence Containment
+
+::: {.conceptbox}
+**Goal:**
+Detect communities in the Twitch network and assess whether community structure
+acts as a *containment barrier* for information flow — trapping cascades within
+communities — or a *highway* that accelerates intra-community spread. In
+information operations, strong community structure implies that narratives may be
+highly effective within a target community but fail to cross into adjacent ones
+without specific bridge actors.
+:::
+
+### Step 12 — Detect Communities
+
+```python
+from networkx.algorithms import community
+
+comms = list(community.greedy_modularity_communities(G_lcc))
+comms.sort(key=len, reverse=True)
+
+mod = nx.community.modularity(G_lcc, comms)
+print(f"Communities found: {len(comms)}")
+print(f"Modularity: {mod:.4f}")
+print()
+
+# Assign community IDs
+node_comm = {}
+for i, comm in enumerate(comms):
+    for n in comm:
+        node_comm[n] = i
+
+print(f"{'Comm':>5} {'Size':>7} {'Avg degree':>12} "
+      f"{'Partner rate':>13} {'Median views':>14}")
+print('-' * 58)
+for i, comm in enumerate(comms[:8]):
+    comm = list(comm)
+    avg_d  = np.mean([deg_lcc.get(n, 0) for n in comm])
+    p_rate = np.mean([G_lcc.nodes[n].get('partner', 0) for n in comm])
+    m_view = int(np.median([G_lcc.nodes[n].get('views', 0) for n in comm]))
+    print(f"{i+1:5d} {len(comm):7d} {avg_d:12.2f} "
+          f"{p_rate:13.3f} {m_view:14,}")
+```
+
+Communities found: []{.blank}
+&nbsp;&nbsp; Modularity: []{.blank}
+
+### Step 13 — Intra-Community vs. Cross-Community Spread
+
+```python
+def cascade_community_breakdown(G, seeds, node_comm, p=0.05,
+                                n_trials=100):
+    """
+    Run IC model and report fraction of infections that land
+    within the same community as the seeds vs. in other communities.
+    """
+    seed_comm = set(node_comm.get(s, -1) for s in seeds)
+    within, outside = [], []
+
+    for _ in range(n_trials):
+        infected = set(seeds)
+        frontier = set(seeds)
+        while frontier:
+            new_f = set()
+            for node in frontier:
+                for nb in G.neighbors(node):
+                    if nb not in infected and random.random() < p:
+                        new_f.add(nb)
+            infected |= new_f
+            frontier  = new_f
+
+        w = sum(1 for n in infected
+                if node_comm.get(n, -1) in seed_comm)
+        o = len(infected) - w
+        within.append(w)
+        outside.append(o)
+
+    return np.mean(within), np.mean(outside)
+
+
+# Use top-3 community's top-degree node as seed
+comm0_nodes = [n for n, c in node_comm.items() if c == 0]
+seed_intra  = [max(comm0_nodes, key=lambda n: deg_lcc.get(n, 0))]
+
+w, o = cascade_community_breakdown(G_lcc, seed_intra, node_comm)
+total = w + o
+print(f"Seed community: Community 1 (largest)")
+print(f"Mean within-community infections: {w:.1f} ({100*w/total:.1f}%)")
+print(f"Mean cross-community infections:  {o:.1f} ({100*o/total:.1f}%)")
+```
+
+Within-community infections: []{.blank}
+([]{.blank}%)
+&nbsp;&nbsp; Cross-community: []{.blank} ([]{.blank}%)
+
+[Q13.1]{.qlabel}
+Does information mostly stay within the seed community, or does it cross community
+boundaries frequently? What does this tell an analyst attempting to *target a
+specific audience* without spilling over into unintended communities?
+
+::: {.answerspace}
+:::
+
+[Q13.2]{.qlabel}
+Identify the bridge actors that connect your seed community to the second-largest
+community. Use the code below, then name one structural property that makes them
+disproportionately important for cross-community spread:
+
+```python
+# Find bridge nodes: connected to both comm 0 and comm 1
+bridges = []
+for node in G_lcc.nodes():
+    neighbors = list(G_lcc.neighbors(node))
+    comm_set = set(node_comm.get(nb, -1) for nb in neighbors)
+    if 0 in comm_set and 1 in comm_set:
+        bridges.append((node, deg_lcc.get(node, 0),
+                        pr_lcc.get(node, 0)))
+
+bridges.sort(key=lambda x: x[1], reverse=True)
+print(f"Bridge nodes between communities 1 and 2: {len(bridges)}")
+print(f"\n{'Node':>8} {'Degree':>8} {'PageRank':>12}")
+print('-' * 35)
+for node, d, p in bridges[:10]:
+    print(f"{node:>8} {d:>8} {p:>12.6f}")
+```
+
+Number of bridge nodes: []{.blank}
+&nbsp;&nbsp; Top bridge node: []{.blank}
+
+## Written Assessment (remaining time; complete as homework)
+
+::: {.intelbox}
+Write approximately 350–450 words addressing all four points.
+
+1. **Influence measure selection:** You computed three structural influence
+   measures (degree, PageRank, k-core). Based on their correlations with view
+   counts and their performance in the diffusion simulation, which measure would
+   you recommend as the primary influence targeting criterion for an analyst
+   trying to seed a narrative through this network? Justify your answer with
+   reference to specific numbers.
+
+2. **Strategic vs. random seeding:** Quantify the advantage of strategic seed
+   selection over random selection. Under what real-world conditions would this
+   advantage be most operationally significant? Are there conditions under which
+   random seeding might actually be preferable?
+
+3. **Community containment:** Describe how community structure affects information
+   spread based on your cascade community breakdown results. What does this imply
+   for an influence operation targeting a specific streaming community? What
+   collection action would you recommend to identify the bridge actors most
+   capable of carrying a narrative across community boundaries?
+
+4. **Transfer to real networks:** The Twitch friendship network is a social
+   platform network with accurate ground-truth data. Identify two ways in which a
+   real intelligence target network — such as a covert organization or an
+   influence network — would differ from this dataset, and explain how each
+   difference would complicate the analytical approach you used today.
+
+**Submit:** Written assessment plus `twitch_diffusion.png`.
+:::
+
+---
+
+# Using Gephi{#sec-gephi}
+
+::: {.conceptbox}
+**Dataset:**
+The Twitch Streamer Social Network (MUSAE) records mutual friendship ties among
+English-language Twitch streamers, with node-level attributes including total
+channel views, days active on the platform, partnership status, and a mature
+content flag. Published by Rozemberczki, B., Allen, C., and Sarkar, R. (2021).
+"Multi-Scale Attributed Node Embedding." *Journal of Complex Networks*, 9(2).
+
+**Download:**
+Navigate to the MUSAE GitHub repository:
+<https://github.com/benedekrozemberczki/MUSAE>
+
+Under `input/dataset/`, download:
+
+- `musae_ENGB_edges.csv` — friendship edge list
+- `musae_ENGB_target.csv` — node attributes (views, partner, etc.)
+
+Save both files to your working directory.
+
+**Analytical focus:**
+This session treats the Twitch friendship network as a model information
+environment where friendships are the channels through which trends, audiences,
+and influence flow. You will use Gephi to map the structure of influence,
+identify which actors control information pathways, detect communities that
+represent distinct influence clusters, and assess whether network structure
+predicts real-world audience reach.
+
+**Deliverable:**
+Two exported PNG maps (one styled by influence measure, one by community) plus a
+written assessment. Due at end of class.
+:::
+
+## Data Reference
+
+::: {.databox}
+**Edge file** (`musae_ENGB_edges.csv`):
+Two columns, `from` and `to`, each containing integer node IDs. Each row is a
+mutual friendship between two streamers. Total: approximately 35,324 edges among
+7,126 nodes.
+
+**Target file** (`musae_ENGB_target.csv`):
+One row per streamer. Key columns:
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `new_id` / `id` | Integer | Streamer node ID (matches edge file) |
+| `views` | Integer | Cumulative channel view count |
+| `partner` | 0 / 1 | Twitch Partner status (1 = partnered) |
+| `mature` | 0 / 1 | Mature content flag (1 = adult content) |
+| `days` | Integer | Days account has been active |
+
+**Intelligence framing:**
+Treat `views` as a ground-truth measure of real-world reach. Treat `partner` as
+a proxy for established influence (Twitch partners have met verified audience
+thresholds). Your goal is to determine how well structural network position
+predicts these real-world influence measures.
+:::
+
+## Part 1 (12 min) · Import Data into Gephi
+
+::: {.conceptbox}
+**Goal:**
+Build the Twitch network in Gephi by importing the edge list, then enriching each
+node with the attribute data from the target file. Unlike formats such as GEXF, a
+raw CSV edge list carries no node attributes — they must be imported separately
+and joined in the Data Laboratory. This two-step import mirrors the workflow for
+any real intelligence dataset where relational data and attribute data arrive
+from different sources.
+:::
+
+### Step 1 — Create a New Project
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+[File]{.menupath} → [New Project]{.menupath}
+
+Save immediately: [File]{.menupath} → [Save As]{.menupath} →
+`[LastName]_Twitch_Influence.gephi`
+:::
+
+### Step 2 — Import the Edge List
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+[File]{.menupath} → [Import Spreadsheet]{.menupath} → select
+`musae_ENGB_edges.csv`
+
+In the Import Spreadsheet wizard:
+
+1. **General options step:**
+   - Import as: **Edges table**
+   - Separator: **Comma**
+   - Check: "Has headers" (the file has `from`, `to` headers)
+2. **Column assignment:**
+   - `from` → Source
+   - `to` → Target
+3. **Import settings:** Graph type: **Undirected**
+4. → [Finish]{.menupath}
+
+In the Import Report dialog, confirm approximately 7,126 nodes and 35,324 edges.
+Click [OK]{.menupath}.
+:::
+
+Nodes imported: []{.blank}
+&nbsp;&nbsp; Edges imported: []{.blank}
+&nbsp;&nbsp; Directed? []{.blank style="min-width:1.5cm"}
+
+### Step 3 — Import Node Attributes
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+Switch to the **Data Laboratory** tab.
+
+[Import Spreadsheet]{.menupath} (button at top of Data Laboratory) → select
+`musae_ENGB_target.csv`
+
+1. Import as: **Nodes table**
+2. Separator: Comma; check "Has headers"
+3. Column assignment:
+   - `new_id` (or `id`) → Id *(this links attributes to nodes by ID)*
+   - `views` → Column: Views (Integer)
+   - `partner` → Column: Partner (Integer)
+   - `mature` → Column: Mature (Integer)
+   - `days` → Column: Days (Integer)
+4. Check: **Force nodes to be created as new nodes: NO** — you want to update
+   existing nodes, not create duplicates.
+
+→ [Finish]{.menupath} → [OK]{.menupath}
+:::
+
+### Step 4 — Verify the Import
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+In the **Nodes** table of Data Laboratory: confirm that `Views`, `Partner`,
+`Mature`, and `Days` columns are populated for most nodes.
+
+Click the `Views` column header to sort descending. Record the top-5 nodes by
+view count.
+
+Return to the [Overview]{.menupath} tab.
+:::
+
+Top 3 nodes by views (ID and view count):
+
+| Rank | Node ID | Views |
+|------|---------|-------|
+| 1 | | |
+| 2 | | |
+| 3 | | |
+
+## Part 2 (10 min) · Layout: Revealing Network Structure
+
+::: {.conceptbox}
+**Goal:**
+Apply a force-directed layout that spatially organizes streamers so that those
+with more mutual friends are drawn together. In a network framed around
+information flow, spatial proximity in a force-directed layout approximates
+structural proximity — nodes that are close together are likely to exchange
+information quickly and frequently. The layout is therefore not just cosmetic: it
+encodes analytical meaning.
+:::
+
+### Step 5 — Apply ForceAtlas2
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+**Layout** panel (left sidebar) → select [ForceAtlas 2]{.menupath}
+
+Recommended settings for this network size (7,126 nodes):
+
+- Enable **LinLog mode**: produces cleaner cluster separation at the cost of more
+  runtime
+- Enable **Dissuade Hubs**: pushes high-degree nodes toward their cluster
+  periphery, making hub structure more visible
+- Scaling: `10.0`
+- Gravity: `1.0`
+- Approximate repulsion: enabled (faster on large graphs)
+
+Click [Run]{.menupath}. Allow 90–120 seconds for the layout to converge. Watch
+the Overview canvas — the network should resolve from a compressed ball into
+distinct clusters. Click [Stop]{.menupath} when movement slows.
+:::
+
+### Step 6 — Prevent Overlap
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+After ForceAtlas2 stabilizes:
+
+Switch layout to [Noverlap]{.menupath} → click [Run]{.menupath} briefly
+(5 seconds) → [Stop]{.menupath}
+
+This separates any node labels that overlap without disrupting the global cluster
+positions established by ForceAtlas2.
+:::
+
+### Step 7 — First Visual Impression
+
+::: {.observebox}
+Before configuring any appearance settings, look at the layout and answer from
+visual inspection only.
+
+Approximately how many distinct spatial clusters are visible? []{.blank}
+
+Does the network have a clear dense core with a sparse periphery (core-periphery
+structure), or do clusters appear roughly equal in density?
+[]{.blank style="min-width:5cm"}
+
+Are there any visible "bridges" — thin chains of nodes connecting otherwise
+separate clusters? []{.blank}
+
+In one sentence, describe the overall spatial impression of this network:
+
+::: {.answerspace}
+:::
+:::
+
+## Part 3 (10 min) · Compute Influence Statistics
+
+::: {.conceptbox}
+**Goal:**
+Run Gephi's built-in statistics to compute network-level metrics and node-level
+influence scores. Run them in the order listed below. Each statistic adds a new
+column to the node table in Data Laboratory, which is then available for visual
+styling.
+
+**Note on betweenness:**
+Betweenness centrality is computationally expensive for a 7,000-node network.
+Gephi uses a probabilistic approximation; set it running in the background while
+you work through other steps. The approximation is accurate enough for ranking
+purposes.
+:::
+
+### Step 8 — Run Statistics (in order)
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+**Statistics** panel (right sidebar). Click [Run]{.menupath} next to each item
+and close the report window after recording the result.
+
+1. [Average Degree]{.menupath} → records result in status bar and adds `Degree`
+   column.
+2. [Network Diameter]{.menupath} → computes diameter, average path length, and
+   adds `Betweenness Centrality` and `Closeness Centrality` to the node table.
+   **This will take 1–3 minutes.** Start it and proceed to Step 9 while it runs.
+3. [PageRank]{.menupath} → adds `PageRank` column. In the PageRank settings, set
+   probability: `0.85`. Fast (seconds).
+4. [Graph Density]{.menupath} → records density in the report.
+5. [Connected Components]{.menupath} → reports number of components.
+:::
+
+### Step 9 — Record Network-Level Results
+
+| Metric | Gephi value | Interpretation |
+|--------|-------------|----------------|
+| Average degree | | |
+| Network diameter | | |
+| Avg path length | | |
+| Graph density | | |
+| Connected components | | |
+
+[Q9.1]{.qlabel}
+The average path length tells you how many hops separate any two streamers on
+average. What does a short average path length imply for *how quickly* a trend or
+narrative could spread through this network if each person passes it to all their
+friends?
+
+::: {.answerspace}
+:::
+
+### Step 10 — Verify Node-Level Statistics
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+**Data Laboratory** → **Nodes** table.
+
+Confirm these columns are now populated: `Degree`, `Betweenness Centrality`,
+`Closeness Centrality`, `PageRank`.
+
+Sort by `PageRank` descending. Record the top-5 nodes by PageRank alongside their
+degree and views:
+:::
+
+| Rank | Node ID | PageRank | Degree | Views |
+|------|---------|----------|--------|-------|
+| 1 | | | | |
+| 2 | | | | |
+| 3 | | | | |
+| 4 | | | | |
+| 5 | | | | |
+
+Now sort by `Degree` descending. Does the top-5 by degree match the top-5 by
+PageRank? []{.blank style="min-width:1.2cm"}
+
+If they differ, name one node that ranks higher on PageRank than on degree and
+explain what structural property produces that discrepancy:
+
+::: {.answerspace}
+:::
+
+## Part 4 (12 min) · Visual Styling for Influence
+
+::: {.conceptbox}
+**Goal:**
+Encode analytical findings visually using Gephi's Appearance panel. You will build
+two versions of the map:
+
+**Map A — Structural influence:** Node size = PageRank (recursive influence score).
+Node color = degree centrality (direct reach). This map answers: *who is
+structurally most important for spreading information?*
+
+**Map B — Ground-truth influence:** Node size = views (actual audience reach).
+Node color = partner status (platform recognition). This map answers: *where is
+real-world influence concentrated, and does it match structural position?*
+
+Comparing Maps A and B visually reveals whether structural importance and
+real-world influence are aligned or divergent — a core analytical question for
+any influence network.
+:::
+
+### Step 11 — Map A: Size by PageRank
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+**Appearance** panel (top-left of Overview) → **Nodes** tab → **Size** icon
+(three circles):
+
+- Select [Ranking]{.menupath} → attribute: `PageRank`
+- Minimum size: `1` &nbsp; Maximum size: `20`
+
+→ [Apply]{.menupath}
+
+Nodes now scale with their recursive influence score. The largest nodes are the
+most important hubs for network-wide information diffusion.
+:::
+
+### Step 12 — Map A: Color by Degree
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+**Appearance** → **Nodes** → **Color** icon:
+
+- Select [Ranking]{.menupath} → attribute: `Degree`
+- Color palette: light blue (low) → dark purple (high) *(click the palette to
+  customize; suggested: min `#D4C5F0`, max `#450084`)*
+- Classification: **Spline** interpolation (handles the skewed degree distribution
+  better than linear)
+
+→ [Apply]{.menupath}
+:::
+
+### Step 13 — Map A: Edge Styling
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+**Appearance** → **Edges** → **Color**:
+
+- Select [Unique]{.menupath} → light grey (`#CCCCCC`)
+- Opacity: 20% (the network is dense; transparency reduces clutter)
+
+→ [Apply]{.menupath}
+:::
+
+### Step 14 — Export Map A
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+[Preview]{.menupath} workspace → configure:
+
+- Node label: visible only for nodes with PageRank in the top 1% (apply via the
+  Label panel size settings)
+- Edge opacity: 15%
+- Curved edges: No (reduces visual noise)
+
+→ [Refresh]{.menupath}
+
+Add a text annotation: *"Node size = PageRank (recursive influence). Node color =
+Degree (direct connections, purple = highest)."*
+
+[Export]{.menupath} → PNG, 3000 × 2000 px → `[LastName]_Twitch_MapA_Structural.png`
+:::
+
+### Step 15 — Map B: Size by Views, Color by Partner Status
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+Return to [Overview]{.menupath}.
+
+**Appearance** → **Nodes** → **Size**:
+
+- Select [Ranking]{.menupath} → attribute: `Views`
+- Minimum: `1` &nbsp; Maximum: `25`
+- Interpolation: **Spline** (views are heavily skewed; spline prevents most nodes
+  from collapsing to minimum size)
+
+→ [Apply]{.menupath}
+
+**Appearance** → **Nodes** → **Color**:
+
+- Select [Partition]{.menupath} → attribute: `Partner`
+- 0 (not partnered): grey (`#AAAAAA`)
+- 1 (partnered): gold (`#CBB677`)
+
+→ [Apply]{.menupath}
+:::
+
+### Step 16 — Export Map B
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+[Preview]{.menupath} → [Refresh]{.menupath}
+
+Add annotation: *"Node size = total channel views (real-world reach). Gold nodes =
+Twitch Partners (platform-verified influencers)."*
+
+[Export]{.menupath} → PNG, 3000 × 2000 px → `[LastName]_Twitch_MapB_RealWorld.png`
+:::
+
+After producing both maps, answer the following:
+
+::: {.observebox}
+**Map comparison:**
+In Map A (structural), where are the largest nodes located — in the dense core of
+the network or scattered across the periphery?
+
+::: {.answerspace}
+:::
+
+In Map B (real-world), do the largest nodes (most views) occupy the same spatial
+positions as the largest nodes in Map A? Are high-view streamers (large nodes)
+concentrated in communities with many gold (partner) nodes nearby?
+
+::: {.answerspace .tall}
+:::
+
+Name one node that appears large in Map A (structurally central) but small in Map
+B (low views), and one that appears large in Map B but small in Map A. What does
+each discrepancy imply analytically?
+
+::: {.answerspace .tall}
+:::
+:::
+
+## Part 5 (8 min) · Community Detection and Influence Clusters
+
+::: {.conceptbox}
+**Goal:**
+Detect communities using the Louvain modularity algorithm and assess whether
+communities correspond to distinct influence clusters — groups of streamers who
+are mutually embedded and whose audiences likely overlap. In information flow
+terms, a high-modularity community structure implies that information tends to
+circulate within communities before crossing to others — a finding with direct
+implications for targeted narrative operations.
+:::
+
+### Step 17 — Run Modularity
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+**Statistics** panel → [Modularity]{.menupath} → [Run]{.menupath}
+
+In the Modularity settings dialog:
+
+- Check: **Randomize**
+- Resolution: `1.0`
+- Uncheck: "Use weights" (edges are unweighted)
+
+→ [OK]{.menupath}
+
+Record from the report window:
+:::
+
+Modularity score: []{.blank}
+&nbsp;&nbsp; Communities found: []{.blank}
+
+A modularity score above 0.4 indicates strong community structure. How does the
+Twitch network compare? []{.blank style="min-width:5cm"}
+
+### Step 18 — Color Nodes by Community
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+**Appearance** → **Nodes** → **Color** → [Partition]{.menupath} → attribute:
+`Modularity Class` → [Apply]{.menupath}
+
+Each community is now assigned a distinct color. Keep node size from Map A
+(PageRank-based) for structural context.
+:::
+
+### Step 19 — Characterize Communities
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+**Data Laboratory** → **Nodes** table.
+
+Group by `Modularity Class` (click the column header). For the five largest
+communities, note the average views and partner rate by selecting rows within
+each class.
+
+Alternatively: use [Statistics]{.menupath} → **Average Clustering Coefficient** to
+generate per-community averages if your Gephi version supports it.
+:::
+
+Fill in for the five largest communities:
+
+| Comm. ID | Size | Approx. partner rate | Top node by degree | Likely audience type |
+|----------|------|----------------------|--------------------|----------------------|
+| | | | | |
+| | | | | |
+| | | | | |
+| | | | | |
+| | | | | |
+
+[Q19.1]{.qlabel}
+Do communities differ systematically in their partner rate? Is there a community
+that contains a disproportionate share of Twitch partners relative to its size?
+What does this suggest about how influence is distributed across the community
+structure?
+
+::: {.answerspace .tall}
+:::
+
+### Step 20 — Export Community Map
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+[Preview]{.menupath} → [Refresh]{.menupath}
+
+Add annotation: *"Node color = community (Louvain, modularity = [your score]).
+Node size = PageRank. Gold borders on nodes with Partner status."*
+
+[Export]{.menupath} → PNG, 3000 × 2000 px → `[LastName]_Twitch_MapC_Communities.png`
+:::
+
+## Part 6 (5 min) · Broker Identification: Bridges Between Communities
+
+::: {.conceptbox}
+**Goal:**
+Identify the broker actors — nodes that connect otherwise separate communities and
+therefore control inter-community information flow. In influence network analysis,
+brokers are the actors most capable of carrying a narrative from one audience
+cluster to another. They are often more strategically valuable than pure hubs: a
+hub amplifies within its community, but a broker determines whether amplification
+crosses community boundaries.
+:::
+
+### Step 21 — Identify High-Betweenness Bridge Actors
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+**Data Laboratory** → **Nodes** table.
+
+Sort by `Betweenness Centrality` descending. (If the Network Diameter computation
+from Step 8 has not yet completed, wait for it to finish before proceeding.)
+
+Note the top-10 nodes by betweenness alongside their community assignment
+(`Modularity Class`) and views.
+:::
+
+| Rank | Node ID | Betweenness | Community | Degree | Views |
+|------|---------|-------------|-----------|--------|-------|
+| 1 | | | | | |
+| 2 | | | | | |
+| 3 | | | | | |
+| 4 | | | | | |
+| 5 | | | | | |
+| 6 | | | | | |
+| 7 | | | | | |
+| 8 | | | | | |
+| 9 | | | | | |
+| 10 | | | | | |
+
+### Step 22 — Visualize Broker Position
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+Return to [Overview]{.menupath}. Use the **Find** panel or [Edit]{.menupath} →
+[Select by Attributes]{.menupath} to locate and select the top-5 betweenness nodes
+on the canvas.
+
+Observe their spatial positions in the layout: are they located at cluster
+boundaries (between communities) or embedded within a single community's dense
+core?
+:::
+
+::: {.observebox}
+Where are the top-5 betweenness nodes positioned in the layout? (At cluster
+boundaries / embedded in a single community / scattered)
+
+::: {.answerspace}
+:::
+
+Do the top-5 betweenness nodes have high views (Map B large) or are they
+structurally important but not audience-prominent?
+
+::: {.answerspace}
+:::
+
+[Q22.1]{.qlabel}
+In an influence operation targeting the Twitch English-language streaming
+community, why would you prioritize recruiting or monitoring a high-betweenness
+node over a high-degree node, even if the high-degree node has a larger audience?
+
+::: {.answerspace .tall}
+:::
+:::
+
+## Part 7 (3 min) · Final Map Assembly
+
+### Step 23 — Assemble a Final Annotated Layout
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+Apply a final visual configuration for your most analytically informative map:
+
+- Node size: `PageRank` (structural influence)
+- Node color: `Modularity Class` (community membership)
+- Node border color: `Partner` status — manually set a gold border on all partner
+  nodes using [Appearance]{.menupath} → [Nodes]{.menupath} → [Border Color]{.menupath}
+  → [Partition]{.menupath} → `Partner`: 0 = no border, 1 = gold (`#CBB677`)
+- Edge color: grey, opacity 20%
+- Labels: visible for top 30 nodes by `Betweenness Centrality` only
+:::
+
+### Step 24 — Add Map Elements and Export
+
+::: {.gephibox}
+::: {.box-title}
+Gephi
+:::
+[Preview]{.menupath} → configure and [Refresh]{.menupath}
+
+In the Preview workspace, add text boxes:
+
+- Title: "Twitch ENGB Streamer Influence Network"
+- Legend: Node size = PageRank (structural influence); Color = community; Gold
+  border = Twitch Partner
+- Source: "MUSAE dataset, Rozemberczki et al. (2021). Modularity = [your score],
+  [N] communities."
+
+[File]{.menupath} → [Export Layout]{.menupath} → PNG, 3000 × 2000 px →
+`[LastName]_Twitch_Final.png`
+
+Also save the Gephi project: [File]{.menupath} → [Save]{.menupath}
+:::
+
+### Step 25 — Write a Map Caption
+
+Write a 4–6 sentence caption for your final exported map. A professional product
+caption states what the map shows, how to read each visual encoding, the key
+structural finding it communicates, and any important caveats about the data or
+methodology.
+
+::: {.answerspace .tall}
+:::
+
+## Written Assessment (remaining time; complete as homework)
+
+::: {.intelbox}
+Write approximately 350–450 words addressing all four points.
+
+1. **Structure vs. real-world influence:** Based on your comparison of Maps A and
+   B, does structural network position (PageRank, degree) predict real-world
+   audience reach (views, partner status)? Identify at least one specific node
+   where the two diverge significantly and explain what could account for the
+   divergence. What does this tell an analyst who wants to use structural data as
+   a proxy for real-world influence when ground-truth data is unavailable?
+
+2. **Community structure and information containment:** With a modularity score of
+   [your value] and [N] communities, describe the community structure you found.
+   Do communities appear to represent distinct influence clusters (e.g., groups of
+   streamers with overlapping audiences)? Based on the modularity score, would you
+   expect information to circulate primarily within communities before crossing to
+   others, or would cross-community diffusion be frequent?
+
+3. **Broker actors:** Using your betweenness analysis, identify the role of broker
+   actors in this influence network. Are the top-betweenness nodes also the
+   top-degree or top-PageRank nodes, or is there a distinct set of structurally
+   important brokers? In an influence operation, would you prioritize seeding a
+   narrative through hubs (high degree/PageRank) or brokers (high betweenness)?
+   Justify your answer with reference to what each measure captures.
+
+4. **Visual encoding critique:** Evaluate the visual design choices you made across
+   your three maps. Which encoding (size/color combination) produced the most
+   analytically informative map, and why? Is there an attribute or structural
+   measure you computed that you did not visually encode but should have? What one
+   change to your final map would most improve its utility as a product for a
+   non-technical senior analyst?
+
+**Submit:** Written assessment plus `[LastName]_Twitch_MapA_Structural.png`,
+`[LastName]_Twitch_MapB_RealWorld.png`, `[LastName]_Twitch_Final.png`, and
+`[LastName]_Twitch_Influence.gephi`.
+:::
+
+---
+
+# Using i2 Analyst Notebook{#sec-i2}
+
+::: {.conceptbox}
+**Dataset:**
+The Twitch Streamer Social Network (MUSAE) records mutual friendship ties among
+English-language Twitch streamers, with node-level attributes including total
+channel views, platform partnership status, mature content flag, and account
+longevity (days active). Published by Rozemberczki, B., Allen, C., and Sarkar, R.
+(2021). "Multi-Scale Attributed Node Embedding." *Journal of Complex Networks*,
+9(2).
+
+**Files provided:**
+`twitch_top200_entities.csv` and `twitch_top200_links.csv`. These files contain
+the 200 most degree-central streamers in the English-language network and all
+friendship links between them — a subgraph that preserves the network's core
+structure at a size appropriate for i2 Analyst Notebook.
+
+**Analytical focus:**
+This session treats the Twitch friendship network as a model information
+environment and uses i2 to answer an influence mapping question: *among the
+platform's most connected streamers, who controls information pathways, who has
+genuine audience reach, and do those two populations overlap?* You will build a
+link chart, classify streamers by influence tier, run structural analysis, and
+produce a briefable product identifying the network's most analytically
+significant actors.
+
+**Deliverable:**
+One exported annotated i2 chart image, one saved ego network chart, and a written
+assessment. All due at end of class.
+:::
+
+## Data Reference
+
+| File | Column | Description |
+|------|--------|-------------|
+| `entities.csv` | `label` | Display label formatted as "Streamer [ID]" |
+| | `node_id` | Integer node identifier |
+| | `views` | Cumulative total channel view count |
+| | `partner` | Twitch Partner status: 1 = partnered, 0 = not |
+| | `mature` | Mature content flag: 1 = adult content |
+| | `days` | Days since account creation |
+| | `degree` | Number of friendships in the full network |
+| | `tier` | Influence tier: "Mega" ($>$1M views), "Established" (100K–1M), "Emerging" ($<$100K) |
+| `links.csv` | `source` | Source streamer label (e.g., "Streamer 42") |
+| | `target` | Target streamer label |
+| | `link_type` | Always "Friendship" (mutual, undirected) |
+
+**Influence tier thresholds:**
+
+::: {.tierbox}
+**Mega-influencers ($>$ 1,000,000 views):** Large icon, gold fill. Established
+audience; likely recognizable within the platform community.
+:::
+
+::: {.partnerbox}
+**Established streamers (100,000 – 1,000,000 views):** Medium icon, green fill.
+Significant but not platform-dominant audience.
+:::
+
+::: {.conceptbox}
+**Emerging streamers ($<$ 100,000 views):** Small icon, grey fill. Structurally
+well-connected (they appear in this dataset because of their high degree) but with
+limited current audience reach.
+:::
+
+## Part 1 (10 min) · Import and Verify the Network
+
+::: {.conceptbox}
+**Goal:**
+Import the pre-prepared streamer entity table and friendship link table into i2
+Analyst Notebook and confirm the network is correctly assembled. The 200-node
+subgraph represents the most structurally central streamers in the
+English-language Twitch community — the actors most likely to facilitate
+information flow across the platform.
+:::
+
+### Step 1 — Create a New Chart and Save
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+[File]{.menupath} → [New]{.menupath} → [Analyst Notebook Chart]{.menupath}
+
+Save immediately: [File]{.menupath} → [Save As]{.menupath} →
+`[LastName]_Twitch_Influence.anb`
+:::
+
+### Step 2 — Import the Entity Table
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+[Home]{.menupath} ribbon → [Import]{.menupath} → [Import from Spreadsheet]{.menupath}
+→ select `twitch_top200_entities.csv` → [Open]{.menupath}
+
+In the Import Specification Wizard:
+
+1. **Data Type step:** select **Entities**
+2. **Column mapping step:**
+   - `label` → Entity Label *(must exactly match what the link file uses)*
+   - `node_id` → Attribute: Node ID
+   - `views` → Attribute: Views
+   - `partner` → Attribute: Partner
+   - `mature` → Attribute: Mature
+   - `days` → Attribute: Days Active
+   - `degree` → Attribute: Network Degree
+   - `tier` → Attribute: Influence Tier
+3. **Entity Class step:** Create or select a class called **Streamer**. Assign a
+   person icon.
+
+→ [Finish]{.menupath}
+
+200 entity boxes appear on the canvas.
+:::
+
+Entities on canvas after import: []{.blank}
+&nbsp;&nbsp; Any duplicates? []{.blank style="min-width:1.2cm"}
+
+### Step 3 — Import the Link Table
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+[Home]{.menupath} → [Import]{.menupath} → [Import from Spreadsheet]{.menupath} →
+select `twitch_top200_links.csv` → [Open]{.menupath}
+
+1. **Data Type step:** select **Links**
+2. **Column mapping step:**
+   - `source` → Link End 1 (Entity Label)
+   - `target` → Link End 2 (Entity Label)
+   - `link_type` → Link Type
+3. Confirm: "Match to existing entities" is selected
+
+→ [Finish]{.menupath}
+:::
+
+Links imported: []{.blank}
+&nbsp;&nbsp; Unmatched (floating) links? []{.blank style="min-width:1.2cm"}
+
+If unmatched links appear, see the Instructor Notes regarding label-matching
+between entity and link files before proceeding.
+
+### Step 4 — Verify in Data Panel
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+[Analyze]{.menupath} → [Social Network Analysis]{.menupath} to confirm the SNA
+module recognizes all entities and links.
+
+Confirm in the status bar: 200 entities, expected links, one link class
+(Friendship).
+:::
+
+SNA module accessible? []{.blank style="min-width:1.2cm"}
+&nbsp;&nbsp; Link class "Friendship" present? []{.blank style="min-width:1.2cm"}
+
+## Part 2 (10 min) · Configure Influence Tier Appearance
+
+::: {.conceptbox}
+**Goal:**
+Apply a visual encoding that communicates three distinct pieces of analytical
+information simultaneously: audience reach (entity size tier), platform
+recognition (entity fill color), and content classification (entity border style).
+When all three channels are configured consistently, a reader can assess an
+actor's influence profile at a glance without reading individual attribute values.
+:::
+
+### Step 5 — Classify Entities by Influence Tier
+
+Use [Select by Attributes]{.menupath} to identify and size each tier separately.
+Tier assignments come from the `Influence Tier` attribute imported in Step 2.
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+**Tier 1 — Mega-influencers (Views $>$ 1,000,000):**
+
+[Edit]{.menupath} → [Select by Attributes]{.menupath} → Attribute:
+`Influence Tier`; Value: **Mega** → [Select]{.menupath}
+
+Right-click selected entities → [Format Entities]{.menupath}:
+
+- Icon size: **Large**
+- Fill color: gold (`#B8860B`)
+- Border: solid, dark gold, 2 pt
+
+→ [OK]{.menupath}
+
+**Tier 2 — Established (100,000 – 1,000,000 views):**
+
+[Select by Attributes]{.menupath} → `Influence Tier` = **Established** →
+[Format Entities]{.menupath}:
+
+- Icon size: **Medium**
+- Fill color: green (`#2E7D32`)
+- Border: solid, dark green, 1.5 pt
+
+→ [OK]{.menupath}
+
+**Tier 3 — Emerging ($<$ 100,000 views):**
+
+[Select by Attributes]{.menupath} → `Influence Tier` = **Emerging** →
+[Format Entities]{.menupath}:
+
+- Icon size: **Small**
+- Fill color: grey (`#9E9E9E`)
+- Border: solid, dark grey, 1 pt
+
+→ [OK]{.menupath}
+:::
+
+Count of entities in each tier:
+
+| Tier | Threshold | Count |
+|------|-----------|-------|
+| Mega-influencer | $>$ 1,000,000 views | |
+| Established | 100,000–1,000,000 | |
+| Emerging | $<$ 100,000 views | |
+
+### Step 6 — Highlight Twitch Partners
+
+Twitch Partners have verified audience thresholds and are formally recognized by
+the platform. Use a distinctive border to mark them separately from the tier-based
+fill color, so partner status is visible regardless of which tier a streamer
+occupies.
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+[Select by Attributes]{.menupath} → Attribute: `Partner`; Value: **1** →
+[Select]{.menupath}
+
+Right-click selected entities → [Format Entities]{.menupath}:
+
+- Border color: bright purple (`#6441A4`)
+- Border style: **Double** or heavy
+- Border width: 3 pt
+
+→ [OK]{.menupath}
+:::
+
+Partners among the top-200 by degree: []{.blank}
+([]{.blank}% of the subgraph)
+
+[Q6.1]{.qlabel}
+Compare the partner rate in this top-200 degree subgraph to the platform-wide
+partner rate (approximately 8–12% of all streamers). Is it higher, lower, or
+similar? What does this tell you about the relationship between structural
+centrality (high degree in the friendship network) and formal platform
+recognition?
+
+::: {.answerspace}
+:::
+
+### Step 7 — Style Friendship Links
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+[Settings]{.menupath} → [Link Class Manager]{.menupath} → select **Friendship**:
+
+- Line style: Solid
+- Color: light purple (`#B39DDB`), opacity 40%
+- Width: 1 pt
+- Arrow: None (undirected)
+
+→ [Apply]{.menupath} → [Close]{.menupath}
+:::
+
+## Part 3 (10 min) · Layout and Structural Analysis
+
+::: {.conceptbox}
+**Goal:**
+Apply an automatic layout and run i2's Social Network Analysis module to compute
+structural influence metrics. Record the results, then compare the structural
+rankings to the influence tier classifications from Part 2. The key analytical
+question is whether the most structurally central actors are the same actors with
+the largest audiences — and where the two diverge.
+:::
+
+### Step 8 — Apply Layout
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+[Arrange]{.menupath} ribbon → [Layout]{.menupath} →
+[Social Network Analysis Layout]{.menupath}
+
+Allow the layout to run. If entities overlap heavily after layout:
+[Arrange]{.menupath} → [Expand]{.menupath} to increase spacing.
+
+The SNA layout positions high-degree nodes toward the center and low-degree nodes
+toward the periphery — meaning the large gold (Mega) entities should cluster near
+the center if structural centrality and audience reach are aligned.
+:::
+
+::: {.observebox}
+After the layout runs, record your initial observations before computing any
+metrics:
+
+Are the largest (gold, Mega-tier) entities positioned near the center or scattered
+throughout the canvas? []{.blank style="min-width:4cm"}
+
+Are the smallest (grey, Emerging-tier) entities predominantly at the periphery, or
+do some appear near the center? []{.blank}
+
+Estimate how many visible clusters exist: []{.blank}
+
+In one sentence, describe the overall spatial structure:
+
+::: {.answerspace}
+:::
+:::
+
+### Step 9 — Run the SNA Module
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+[Analyze]{.menupath} ribbon → [Social Network Analysis]{.menupath}
+
+Select the following measures:
+
+- **Degree Centrality** — direct connection count
+- **Betweenness Centrality** — control over shortest paths
+- **Closeness Centrality** — efficiency of information reach
+
+→ [Calculate]{.menupath}
+
+Results appear in a ranked table in the SNA panel. To size nodes by betweenness:
+[Visualize Results]{.menupath} → [Size by Betweenness Centrality]{.menupath}
+:::
+
+### Step 10 — Record Centrality Results
+
+Transfer the top results from the SNA panel to the tables below:
+
+| Rank | Streamer | Degree centrality | Influence tier |
+|------|----------|-------------------|----------------|
+| 1 | | | |
+| 2 | | | |
+| 3 | | | |
+| 4 | | | |
+| 5 | | | |
+
+| Rank | Streamer | Betweenness centrality | Influence tier |
+|------|----------|------------------------|----------------|
+| 1 | | | |
+| 2 | | | |
+| 3 | | | |
+| 4 | | | |
+| 5 | | | |
+
+[Q10.1]{.qlabel}
+Are the top-5 by degree and the top-5 by betweenness the same actors? Name any
+streamer who ranks significantly higher on betweenness than on degree. What
+structural role does this actor play, and why does betweenness reveal it while
+degree does not?
+
+::: {.answerspace .tall}
+:::
+
+[Q10.2]{.qlabel}
+Do the top-5 structurally central actors (by either measure) belong primarily to
+the Mega, Established, or Emerging tier? What does this finding suggest about
+whether platform structural position predicts audience size in this network?
+
+::: {.answerspace}
+:::
+
+## Part 4 (8 min) · Influence Cluster Mapping
+
+::: {.conceptbox}
+**Goal:**
+Use i2's filtering and grouping tools to identify distinct influence clusters
+within the streamer network. An influence cluster is a group of streamers who are
+mutually connected and share a structural position relative to the platform's
+information flow. Identifying and labeling these clusters produces an analytical
+product that answers: *where is influence concentrated, and what are the
+information pathways between concentrations?*
+:::
+
+### Step 11 — Filter to Partner Streamers Only
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+[Edit]{.menupath} → [Select by Attributes]{.menupath} → Attribute: `Partner`;
+Value: **1** → [Select]{.menupath}
+
+[Edit]{.menupath} → [Invert Selection]{.menupath}
+
+[Right-click]{.menupath} the now-selected non-partner entities → [Hide]{.menupath}
+
+Only Twitch Partners remain visible. The friendship links between partners also
+remain visible.
+:::
+
+Partner streamers visible: []{.blank}
+&nbsp;&nbsp; Links among partners (approximate): []{.blank}
+
+::: {.observebox}
+With only partners visible, describe the subgraph structure:
+
+Are the partners densely interconnected (many links among them), or are they
+spread across the canvas with few mutual connections?
+[]{.blank style="min-width:6cm"}
+
+Do partners cluster together spatially, or are they distributed throughout the
+positions established by the full-network layout? []{.blank style="min-width:6cm"}
+
+Is there any visible core of highly-connected partner streamers? If so, how many
+entities appear in it approximately? []{.blank}
+:::
+
+### Step 12 — Restore All Entities
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+[Edit]{.menupath} → [Select All]{.menupath} → [Right-click]{.menupath} →
+[Show All]{.menupath}
+
+All 200 entities and their links are restored.
+:::
+
+### Step 13 — Manually Demarcate Influence Clusters
+
+Examine the layout and identify 3–5 groups of entities that appear spatially
+concentrated and mutually connected. Draw zone boundaries around each group:
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+[Insert]{.menupath} → [Zone]{.menupath} (or [Drawing]{.menupath} →
+[Rectangle]{.menupath})
+
+Draw a lightly shaded rectangle around each cluster. Right-click each zone →
+[Properties]{.menupath} → set a semi-transparent fill color and add a descriptive
+label.
+
+Suggested label format: *"Cluster A — [N] streamers, [M] partners, avg tier:
+[Mega/Established/Emerging]"*
+:::
+
+Complete the cluster characterization table:
+
+| Zone | Size | Partners | Dominant tier | Top streamer (highest betweenness in zone) |
+|------|------|----------|---------------|--------------------------------------------|
+| A | | | | |
+| B | | | | |
+| C | | | | |
+| D | | | | |
+| E | | | | |
+
+[Q13.1]{.qlabel}
+Identify the two clusters that appear most weakly connected to each other (fewest
+links crossing their boundary). Name the streamer(s) who provide the primary
+bridge between them. In an information flow context, what analytical significance
+does the existence of this bridge have?
+
+::: {.answerspace .tall}
+:::
+
+### Step 14 — Annotate Bridge Actors
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+For each actor who bridges two or more zones, add a text annotation adjacent to
+their entity:
+
+[Insert]{.menupath} → [Text Box]{.menupath}
+
+Include: Streamer ID, betweenness rank, influence tier, and a one-phrase
+structural role description (e.g., "Cross-cluster broker", "Intra-cluster hub",
+"Peripheral anchor").
+:::
+
+## Part 5 (8 min) · Ego Network: The Top Structural Influencer
+
+::: {.conceptbox}
+**Goal:**
+Create a focused ego network chart for the streamer with the highest betweenness
+centrality in the subgraph. High betweenness in a friendship network means this
+actor sits on the shortest path between many pairs of other streamers — making
+them a critical conduit for information flowing across the platform. The ego
+network reveals who this actor connects to directly, what tiers those connections
+represent, and whether any high-audience streamers are reachable through them
+alone.
+:::
+
+### Step 15 — Identify the Top Betweenness Actor
+
+From your SNA results in Step 10, record:
+
+Top betweenness actor: []{.blank style="min-width:5cm"}
+&nbsp;&nbsp; Betweenness score: []{.blank}
+
+Influence tier: []{.blank style="min-width:3cm"}
+&nbsp;&nbsp; Partner status: []{.blank}
+
+### Step 16 — Select and Extract the Ego Network
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+Click on the top betweenness entity to select it.
+
+[Edit]{.menupath} → [Select Linked]{.menupath} → [1 Degree]{.menupath}
+
+This selects the entity and all directly connected entities, along with all
+friendship links between them.
+
+[File]{.menupath} → [New from Selection]{.menupath}
+
+A new chart window opens containing only the ego network. Save it:
+[File]{.menupath} → [Save As]{.menupath} → `[LastName]_Twitch_EgoNet.anb`
+:::
+
+### Step 17 — Apply Circular Layout to Ego Network
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+[Arrange]{.menupath} → [Circular Layout]{.menupath}
+
+The central entity (your top betweenness actor) should be positioned in the
+center. If it is not, drag it to the center manually.
+
+Confirm the appearance settings from Part 2 are preserved — entity sizes and
+colors should carry over from the main chart. If not, reapply the tier
+classifications as described in Steps 5 and 6.
+:::
+
+### Step 18 — Analyze the Ego Network
+
+Fill in from the ego network chart:
+
+| Metric | Value | Interpretation |
+|--------|-------|----------------|
+| Total nodes in ego network (including ego) | | |
+| Mega-tier alters (gold) | | |
+| Established-tier alters (green) | | |
+| Emerging-tier alters (grey) | | |
+| Partner alters (purple border) | | |
+| Links between alters (alter-to-alter) | | |
+
+[Q18.1]{.qlabel}
+Is this actor's ego network primarily composed of Mega-tier streamers, or does it
+span multiple tiers? What does the tier diversity of their alters imply about
+their role as a conduit between different audience-size segments of the platform?
+
+::: {.answerspace}
+:::
+
+[Q18.2]{.qlabel}
+Examine the alter-to-alter links in the ego network. Are the ego's alters densely
+connected to each other (suggesting the ego is embedded in a cohesive group), or
+are many alters isolated from each other (suggesting the ego is a true bridge
+between otherwise separate actors)? Name the structural pattern this represents
+(*hub* vs. *broker*) and explain the difference in information flow implications.
+
+::: {.answerspace .tall}
+:::
+
+[Q18.3]{.qlabel}
+Does the top betweenness actor have a higher or lower view count than the
+top-degree actor identified in Step 10? What does this discrepancy (if any) tell
+an analyst who is trying to use structural network data as a proxy for real-world
+influence?
+
+::: {.answerspace}
+:::
+
+## Part 6 (4 min) · Export and Final Annotation
+
+### Step 19 — Finalize the Full Chart
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+Return to the full 200-entity chart (`[LastName]_Twitch_Influence.anb`).
+
+Add the following text boxes using [Insert]{.menupath} → [Text Box]{.menupath}:
+
+**Chart title:** "Twitch English-Language Streamer Influence Network (Top 200 by
+Structural Degree)"
+
+**Legend:**
+
+- Large gold entity = Mega-influencer ($>$1M views)
+- Medium green entity = Established streamer (100K–1M views)
+- Small grey entity = Emerging streamer ($<$100K views)
+- Purple double border = Twitch Partner (platform-verified)
+- Purple light line = Mutual friendship link
+- Entity size also reflects betweenness centrality (from i2 SNA visualization)
+
+**Analytical note:** "[N] Mega-influencers, [M] Twitch Partners identified among
+top-200 degree nodes. Top structural actor by betweenness: [Streamer ID], [tier],
+betweenness = [score]."
+
+**Data source note:** "Source: MUSAE Twitch ENGB Dataset, Rozemberczki et al.
+(2021). Subgraph: top 200 streamers by network degree; pre-processed from
+musae_ENGB_edges.csv and musae_ENGB_target.csv."
+:::
+
+### Step 20 — Export the Chart
+
+::: {.toolbox}
+::: {.box-title}
+i2 Analyst Notebook
+:::
+[File]{.menupath} → [Export]{.menupath} → [Image]{.menupath} (PNG, high
+resolution) → `[LastName]_Twitch_i2.png`
+
+Save the project: [File]{.menupath} → [Save]{.menupath}
+:::
+
+### Step 21 — Write a Map Caption
+
+Write a 4–6 sentence professional caption for your exported chart. State what the
+chart shows, how to read the visual encoding, the key analytical finding it
+communicates, and one data caveat.
+
+::: {.answerspace .tall}
+:::
+
+## Written Assessment (remaining time; complete as homework)
+
+::: {.intelbox}
+Write approximately 350–450 words addressing all four points.
+
+1. **Structure vs. audience reach:** Based on your SNA results and the influence
+   tier classifications, does structural centrality in the friendship network
+   predict real-world audience size (views)? Identify at least one specific
+   streamer where the two measures strongly agree and one where they diverge. What
+   does the divergence case reveal about the limits of structural network data as
+   a proxy for influence in this context?
+
+2. **Broker vs. hub roles:** You identified actors with high degree (hubs) and
+   actors with high betweenness (brokers). Based on your ego network analysis and
+   cluster mapping, describe the functional difference between these two structural
+   roles in the context of information flow. In an influence monitoring scenario,
+   which role would you prioritize for collection and why?
+
+3. **Cluster structure and influence targeting:** Describe the cluster structure
+   you identified. Are high-influence streamers (Mega-tier, partnered) concentrated
+   in specific clusters, or distributed across the subgraph? What does the answer
+   imply for an analyst trying to target a narrative to a specific audience segment
+   on the platform — is it sufficient to reach the top structural actors, or does
+   effective targeting require penetrating specific clusters?
+
+4. **i2 for influence analysis:** Evaluate i2 Analyst Notebook as a tool for this
+   specific analytical task (mapping influence in an online social network). What
+   did i2 handle well compared to a computational tool like Python? What analytical
+   capability was most limited or absent? Identify one specific feature of this
+   dataset (an attribute, a relationship type, or a temporal dimension) that i2
+   could not fully exploit given its design constraints.
+
+**Submit by end of class or as homework:**
+
+- Written assessment
+- `[LastName]_Twitch_i2.png`
+- `[LastName]_Twitch_EgoNet.anb`
+- `[LastName]_Twitch_Influence.anb`
+:::
+
+::: {.instructorbox}
+::: {.box-title}
+INSTRUCTOR NOTES — Not for student distribution
+:::
+
+**Data Preparation (Complete Before Class)**
+
+Run the following Python script to generate the two CSV files students need.
+Requires `pandas` and the two raw MUSAE files (`musae_ENGB_edges.csv` and
+`musae_ENGB_target.csv`) downloaded from the MUSAE GitHub repository.
+
+```python
+import pandas as pd
+import numpy as np
+
+edges  = pd.read_csv('musae_ENGB_edges.csv')
+target = pd.read_csv('musae_ENGB_target.csv')
+
+# Standardise node ID column name
+id_col = 'new_id' if 'new_id' in target.columns else 'id'
+target = target.rename(columns={id_col: 'node_id'})
+
+# Compute degree in full network
+from collections import Counter
+deg = Counter()
+for _, row in edges.iterrows():
+    deg[row['from']] += 1
+    deg[row['to']]   += 1
+target['degree'] = target['node_id'].map(deg).fillna(0).astype(int)
+
+# Select top 200 by degree
+top200 = target.nlargest(200, 'degree')['node_id'].tolist()
+
+# Assign influence tiers
+def tier(v):
+    if v > 1_000_000: return 'Mega'
+    if v > 100_000:   return 'Established'
+    return 'Emerging'
+target['tier'] = target['views'].apply(tier)
+
+# Build entity file
+entities = target[target['node_id'].isin(top200)].copy()
+entities['label'] = 'Streamer ' + entities['node_id'].astype(str)
+entities[['label','node_id','views','partner',
+          'mature','days','degree','tier']].to_csv(
+    'twitch_top200_entities.csv', index=False)
+
+# Build link file: only edges where both endpoints in top200
+top200_set = set(top200)
+links = edges[(edges['from'].isin(top200_set)) &
+              (edges['to'].isin(top200_set))].copy()
+links['source'] = 'Streamer ' + links['from'].astype(str)
+links['target'] = 'Streamer ' + links['to'].astype(str)
+links['link_type'] = 'Friendship'
+links[['source','target','link_type']].to_csv(
+    'twitch_top200_links.csv', index=False)
+
+print(f"Entities: {len(entities)}")
+print(f"Links:    {len(links)}")
+```
+
+**Test before class.** Open the two CSV files in i2 following Steps 2 and 3 and
+verify that all links match existing entities (no floating endpoints).
+
+**Expected Values**
+
+*Subgraph size:* 200 entities; typically 1,800–3,200 links in the top-200 subgraph
+(approximately 9–16 average connections per entity within the subgraph, noting
+that these 200 nodes were selected by full-network degree so they are mutually
+well-connected).
+
+*Influence tier distribution (approximate):* Mega ($>$1M views): 15–30 nodes.
+Established (100K–1M): 60–90 nodes. Emerging ($<$100K): 90–120 nodes. Note: many
+high-degree streamers have not converted structural centrality into large
+audiences — this is the key analytical tension.
+
+*Partner rate in top-200 subgraph:* Approximately 25–40%, substantially higher
+than the platform-wide 8–12%. Structural centrality and partnership co-occur more
+often than chance, but the relationship is far from deterministic.
+
+*Top betweenness actor:* In most dataset versions, the top-betweenness actor in
+the top-200 subgraph belongs to the Established tier (not the Mega tier). This is
+the primary analytical teaching moment: the actor with the largest structural
+control over information flow is not the one with the largest audience.
+
+*Cluster count:* Students will typically identify 4–7 clusters visually. The
+actual Louvain community count (computed in Gephi, not available natively in i2) is
+approximately 8–15. Expect student zone counts to be lower because i2's manual
+grouping merges small communities.
+
+**Label-Matching Issue**
+
+The critical pre-class check: the `source` and `target` columns in the link CSV use
+the format "Streamer 42", and the `label` column in the entity CSV uses the same
+format. If these do not match exactly (case, space, format), links will be
+unmatched. Verify by importing both files into i2 before class and checking the
+status bar for unmatched link count.
+
+**Common i2 Errors**
+
+*"Select by Attributes" not finding Tier values:* Occurs when the `tier` column was
+not mapped to an attribute during entity import (mapped to "Ignore" instead). Fix:
+clear all entities and re-import with correct column mapping.
+
+*SNA module giving zero values:* Occurs when the chart has no links (link import
+failed or mismatched). Check: right-click any entity and see if any links appear in
+the context menu. If not, re-import links with correct label matching.
+
+*"New from Selection" not preserving appearance:* Some i2 versions do not carry
+appearance settings to the new chart. Instruct students to reapply tier colors in
+the ego network chart if this occurs — it takes 2–3 minutes with the
+select-by-attribute method from Part 2.
+
+**Analytical Discussion Anchors**
+
+*The Emerging-tier broker phenomenon:* In most network configurations, the
+top-betweenness actor in the top-200 subgraph has substantially fewer views than
+the top-degree actor. Ask: *"If you were an information operations analyst trying
+to seed a narrative, would you approach the actor with the most followers or the
+actor with the highest betweenness? What is the difference in what each type of
+actor can do for you?"*
+
+*Partner status as ground truth:* Partner status represents formal platform
+recognition that a streamer has met audience thresholds. It is therefore more
+reliable than raw view counts (which can include bot views, viral one-time events,
+etc.). Ask: *"Do the top structural actors have partner status? If not, what does
+it mean that the platform has not formally recognized the structurally most
+important actors in this network?"*
+
+*i2 limitations for this dataset:* The Twitch dataset has no temporal edge data
+(friendship timestamps are not available in MUSAE). Students will note that i2's
+timeline integration — one of its primary advantages — cannot be used here. This
+is a productive constraint: it shows students when i2 is and is not the right tool.
+The "days active" attribute can be used as a rough account-longevity proxy, but it
+is a node attribute, not an edge timestamp.
+
+*Scalability limitation:* The full 7,126-node Twitch ENGB network cannot be
+practically analyzed in i2 (too many entities for the chart canvas and SNA
+module). This motivates the top-200 subgraph approach and illustrates why Python
+and Gephi are necessary for large-scale network analysis — i2 is an *analyst tool*,
+not a *computational* one. This distinction is worth stating explicitly.
+:::
