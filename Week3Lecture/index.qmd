@@ -1,8 +1,6 @@
 ---
 title: "Graph Theory Basics"
 subtitle: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
-author: "Intelligence Analysis Program, James Madison University"
-date: "Fall 2026"
 ---
 
 ::: {.course-meta}
@@ -389,6 +387,35 @@ Key analytic tasks:
 :::
 ::::
 
+## Network Density and Sparsity
+
+**Density** $\Delta$ measures how many edges actually exist relative to the maximum number possible:
+
+$$\Delta = \frac{|E|}{|V|(|V|-1)/2} \quad \text{(undirected)}$$
+
+$$\Delta = \frac{|E|}{|V|(|V|-1)} \quad \text{(directed)}$$
+
+A $\Delta$ of 1.0 is a complete graph (every node connected to every other); $\Delta = 0.0$ is an empty graph. Most real-world networks — especially illicit ones — are **sparse**, with $\Delta \ll 0.1$.
+
+::: {.callout-tip title="Worked Example" icon=false}
+A network with $|V| = 10$ nodes and $|E| = 12$ edges (undirected):
+
+$$\Delta = \frac{12}{10 \cdot 9 / 2} = \frac{12}{45} \approx 0.267$$
+
+About 27% of all possible connections exist — moderately sparse. For comparison, the 9/11 hijacker network had density $\approx 0.16$.^[Krebs, "Mapping Networks of Terrorist Cells," 45.]
+:::
+
+### Intelligence Implications of Density
+
+- **Dense networks** have high redundancy, strong group cohesion, and are harder to disrupt — removing any single node changes the network structure relatively little.
+- **Sparse networks** rely on key connectors (nodes with high betweenness centrality); removal of those nodes can fragment the network. Compartmentalized illicit networks are deliberately sparse for operational security.^[Jorg Raab and H. Brinton Milward, "Dark Networks as Problems," *Journal of Public Administration Research and Theory* 13, no. 4 (2003): 413–439.]
+
+::: {.callout-warning title="Key Point" icon=false}
+Density alone does not identify *which* connections matter — centrality measures do that. Density is a global network property; analyst targeting requires node-level structural metrics.
+:::
+
+
+
 ## Geodesic Distance, Diameter, and Average Path Length
 
 :::: {.columns}
@@ -773,24 +800,7 @@ Intelligence reporting identifies five individuals ($A$–$E$) attending three m
 **Centrality and Influence** — degree, betweenness, closeness, eigenvector, and PageRank centrality: what each measure captures structurally, how to compute it efficiently, and how to translate centrality scores into intelligence targeting and collection prioritization decisions.
 :::
 
-```{=html}
-<div class="course-sequence" style="margin-top:2rem">
-  <ul class="course-sequence">
-    <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> What is Network Analysis?</li>
-    <li class="seq-active"><span class="seq-icon">▶</span> <strong>Graph Theory Basics</strong> (this lecture)</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Centrality and Influence</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> SNA in Intelligence</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Community Detection</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Geospatial / Multi-Layer Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Temporal / Dynamic Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Global Security Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Financial Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Information / Influence Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Infrastructure Networks</li>
-  </ul>
-</div>
 
 <div class="page-footer-custom">
-Intelligence Analysis Program &nbsp;|&nbsp; School of Intelligence Analysis &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
+Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
 </div>

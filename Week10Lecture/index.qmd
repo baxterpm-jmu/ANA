@@ -1,8 +1,6 @@
 ---
 title: "Global Security and Network Analysis"
 subtitle: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
-author: "Intelligence Analysis Program, James Madison University"
-date: "Fall 2026"
 ---
 
 ::: {.course-meta}
@@ -161,9 +159,6 @@ The evolution of terrorist organizational form reflects adaptive response to sta
 </div>
 ```
 
-:::: {.columns}
-::: {.column width="55%"}
-
 ### The Three Generations
 
 **First generation (hierarchical):** Centralized command with clear org chart and formal membership. Examples: early PLO, Red Brigades, IRA Army Council. High organizational efficiency; high decapitation vulnerability. Traditional HUMINT penetration and leadership targeting is the analytically appropriate disruption approach.
@@ -172,8 +167,6 @@ The evolution of terrorist organizational form reflects adaptive response to sta
 
 **Third generation (networked/leaderless):** Franchise and inspiration model. No formal membership; local groups self-organize around shared ideology via online communities. Examples: post-2004 al-Qaeda affiliates, ISIS post-2019, accelerationist movements.^[Marc Sageman, *Leaderless Jihad: Terror Networks in the Twenty-First Century* (Philadelphia: University of Pennsylvania Press, 2008), 48--72.] Removing any node has minimal structural effect. Strategy must shift from structural targeting to **counter-narrative and online community disruption**.
 
-:::
-::: {.column width="45%"}
 
 ::: {.callout-warning title="Match Strategy to Form" icon=false}
 The critical first step is characterizing the target network's organizational generation before selecting metrics and disruption models.
@@ -187,8 +180,6 @@ A betweenness-targeting strategy effective against second-generation cellular ne
 3. Is there a clear degree hierarchy? → First generation; decapitation is viable.
 :::
 
-:::
-::::
 
 ## ISIS: Network Evolution and Territorial Control
 
@@ -294,7 +285,11 @@ Terrorist organizations form cooperation ties for training, financing, weapons, 
 ::: {.callout-tip title="Iran's Proxy Network as Multilayer Structure" icon=false}
 Iran's sponsorship illustrates inter-group cooperation as interlayer coupling. One layer: inter-group operational ties (Hezbollah--Hamas--PIJ--Iraqi militias). A second layer: state-group support (IRGC-QF as the hub connecting all groups to Iran).
 
-Coupling strength varies by group: **Hezbollah** (maximum coupling — strategic direction, financial subsidy ~$700M/year, weapons, training infrastructure); **Hamas** (moderate — financial support, some weapons; strategic autonomy maintained); **PIJ** (strong — more financially dependent than Hamas); **PMF/Kata'ib Hezbollah** (strong operational coupling for regional force projection).
+Coupling strength varies by group: 
+* **Hezbollah:** maximum coupling — strategic direction, financial subsidy ~$700M/year, weapons, training infrastructure; 
+* **Hamas:** moderate — financial support, some weapons; strategic autonomy maintained; 
+* **PIJ:** strong — more financially dependent than Hamas; 
+* **PMF/Kata'ib Hezbollah:** strong operational coupling for regional force projection.
 
 The interlayer coupling identifies which groups receive Iranian strategic direction vs. merely logistical support — a distinction that predicts group behavior on issues where Iranian and group interests diverge.
 :::
@@ -305,10 +300,7 @@ Russia's Wagner Group (until 2023) and successor structures operated as **interl
 
 ## Staniland's Network Theory of Insurgency
 
-Paul Staniland's *Networks of Rebellion* (2014) argues that pre-war social networks of leaders and fighters — not battlefield strategy — determine insurgent organizational structure and cohesion.^[Paul Staniland, *Networks of Rebellion: Explaining Insurgent Cohesion and Collapse* (Ithaca: Cornell University Press, 2014), 12--50.]
-
-:::: {.columns}
-::: {.column width="50%"}
+Paul Staniland's *Networks of Rebellion* (2014) argues that pre-war social networks of leaders and fighters — not battlefield strategy — determine insurgent organizational structure and cohesion.^[Paul Staniland, *Networks of Rebellion: Explaining Insurgent Cohesion and Collapse* (Ithaca: Cornell University Press, 2014).]
 
 **Two network dimensions:**
 
@@ -325,13 +317,11 @@ Paul Staniland's *Networks of Rebellion* (2014) argues that pre-war social netwo
 | Modularity | High = parochial clusters |
 | Vertical path length | Short = effective command |
 
-:::
-::: {.column width="50%"}
 
 ```{=html}
 <div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6;padding:0.8rem">
   <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.4rem">Staniland's 2x2 Insurgency Typology</p>
-  <svg viewBox="0 0 380 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:360px;display:block;font-family:IBM Plex Sans,sans-serif">
+  <svg viewBox="0 0 380 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:100%;display:block;font-family:IBM Plex Sans,sans-serif">
     <line x1="60" y1="18" x2="60" y2="295" stroke="#333" stroke-width="1.5"/>
     <line x1="60" y1="295" x2="375" y2="295" stroke="#333" stroke-width="1.5"/>
     <line x1="60" y1="156" x2="375" y2="156" stroke="#D6D6D6" stroke-width="1"/>
@@ -414,18 +404,34 @@ Paul Staniland's *Networks of Rebellion* (2014) argues that pre-war social netwo
 </div>
 ```
 
-:::
-::::
+**Disruption Strategy by Quadrant**
 
-::: {.callout-warning title="Disruption Strategy by Quadrant" icon=false}
-**Vanguard:** decapitation is highly effective — high vertical centralization means leadership removal severs command to all subordinate levels. **Parochial:** decapitation is ineffective (no vertical structure to sever); disrupt horizontal ties between local commander networks. **Integrated:** hardest to disrupt; requires sustained simultaneous pressure on both horizontal and vertical ties; neither decapitation nor local disruption alone is sufficient. **Fragmented:** least operationally capable, but also lowest disruption return — internal conflict already limits effectiveness; political accommodation may be more effective than security operations.
+* **Vanguard:** decapitation is highly effective — high vertical centralization means leadership removal severs command to all subordinate levels. 
+* **Parochial:** decapitation is ineffective (no vertical structure to sever); disrupt horizontal ties between local commander networks. 
+* **Integrated:** hardest to disrupt; requires sustained simultaneous pressure on both horizontal and vertical ties; neither decapitation nor local disruption alone is sufficient. 
+* **Fragmented:** least operationally capable, but also lowest disruption return — internal conflict already limits effectiveness; political accommodation may be more effective than security operations.
+
+::: {.callout-warning title="For Discussion" icon=false}
+
+- How does Staniland's typology help explain the Taliban's ability to survive the 2001 invasion and return to power in 2021?
+- How does this typology impact counterinsurgency strategy? What are the implications for decapitation vs. local disruption?
+- What other domains might this typology apply to? Could it be used to analyze criminal networks, companies, political parties, or other organizations? What are the limitations of this typology?
 :::
 
 # Part II: Arms Trafficking and Proliferation
 
+Arms trafficking is defined as the illicit transfer of conventional weapons, ammunition, and related materials across international borders. It is a key enabler of conflict, terrorism, and organized crime. The global arms trade is a complex network of legal and illegal actors, including state suppliers, non-state armed groups, private military companies, and criminal organizations. Understanding the structure and dynamics of arms transfer networks is essential for developing effective counter-proliferation strategies.
+
+Proliferation is defined as the spread of something, in this context, weapons and related technologies, to actors who are not authorized to possess them. Proliferation can occur through legal arms transfers, illicit trafficking, or the diversion of weapons from legal channels. The proliferation of arms can destabilize regions, fuel conflicts, and empower non-state actors. Here, we conceptualize proliferation as the spread of weapons and related technologies to new actors, and we analyze the network structures that facilitate or hinder this spread.
+
 ## Formal Arms Transfer Networks
 
-**Structure:** Directed, weighted network. Nodes: nation-states. Edges: documented transfers, directed supplier-to-recipient, weighted by SIPRI Trend Indicator Value (TIV). **Data:** SIPRI Arms Transfers Database (annual since 1950, publicly available); UN Comtrade; ATT annual reports; UN Panel of Experts reports.
+**Quick Overview:**
+
+* **Structure:** Directed, weighted network. 
+* **Nodes:** nation-states. 
+* **Edges:** documented transfers, directed supplier-to-recipient, weighted by SIPRI Trend Indicator Value (TIV). 
+* **Data Sources:** SIPRI Arms Transfers Database (annual since 1950, publicly available); UN Comtrade; ATT annual reports; UN Panel of Experts reports.
 
 :::: {.columns}
 ::: {.column width="55%"}
@@ -435,7 +441,7 @@ Paul Staniland's *Networks of Rebellion* (2014) argues that pre-war social netwo
 - Highly skewed degree distribution: a small number of major exporters (US, Russia, France, Germany, UK, China, Israel) have very high out-degree; most states are recipient-only
 - Dense within alliance blocs: NATO members primarily receive from NATO exporters; SCO/CSTO members from Russia and China
 - Community structure maps to geopolitical alignment: US-supplier and Russia-supplier communities show minimal overlap
-- **Supplier dependency creates coercive leverage:** recipient states captive to a single supplier for spare parts and maintenance face significant coercive vulnerability if the supplier threatens to withhold support
+- Supplier dependency creates coercive leverage: recipient states captive to a single supplier for spare parts and maintenance face significant coercive vulnerability if the supplier threatens to withhold support
 
 :::
 ::: {.column width="45%"}
@@ -512,9 +518,6 @@ Illicit arms trafficking violates UN arms embargoes and supplies non-state actor
 
 The A.Q. Khan network (approximately 1987--2004) transferred centrifuge designs, uranium enrichment technology, and weapons design information to Libya, Iran, North Korea, and others.^[David Albright, *Peddling Peril: How the Secret Nuclear Trade Arms America's Enemies* (New York: Free Press, 2010), 55--120.] Its multilayer structure:
 
-:::: {.columns}
-::: {.column width="55%"}
-
 **Layer 1 — Commercial:** Front companies in UAE (SMB Computers), Malaysia (SCOPE), South Africa, Switzerland, and UK provided legitimate business cover.
 
 **Layer 2 — Technical:** Nuclear scientists and engineers from Pakistan, Netherlands, Germany, and South Africa transferred centrifuge designs and enrichment expertise.
@@ -522,9 +525,6 @@ The A.Q. Khan network (approximately 1987--2004) transferred centrifuge designs,
 **Layer 3 — Financial:** Payments routed through Dubai banks; commissions distributed to intermediaries; proceeds partially reinvested in Pakistan's nuclear program.
 
 **Layer 4 — Political protection:** ISI and senior Pakistani government relationships provided operational cover and insulated the network from interdiction until 2003.^[Gordon Corera, *Shopping for Bombs* (Oxford: Oxford University Press, 2006), 88--145.]
-
-:::
-::: {.column width="45%"}
 
 **Layer-specific centrality:**
 
@@ -538,19 +538,28 @@ The A.Q. Khan network (approximately 1987--2004) transferred centrifuge designs,
 **Key lesson:** aggregate centrality analysis would have deprioritized Tahir relative to Khan — but Tahir occupied the critical chokepoint in the commercial layer. Layer-specific analysis was necessary to identify the correct operational target.
 
 ::: {.callout-warning title="Interdiction Failure" icon=false}
-The network persisted for 16 years partly because Western intelligence focused on state-level proliferation monitoring rather than the non-state commercial layer. The front company structure was largely invisible to traditional GEOINT and SIGINT collection. SNA of commercial registry data, export control violations, and financial transactions — all available open-source — would have revealed the commercial layer earlier.
+The network persisted for 16 years partly because Western intelligence focused on state-level proliferation monitoring rather than the non-state commercial layer. The front company structure was largely invisible to traditional GEOINT and SIGINT collection. SNA of commercial registry data, export control violations, and financial transactions — all available open-source — could have revealed the commercial layer earlier.
 :::
-
-:::
-::::
 
 ## Dual-Use Supply Chains as Bipartite Networks
 
-**Bipartite model:** Node set $U$ = controlled items; Node set $W$ = procurement entities. Edges = documented or suspected procurement. Projection to $W$: two entities connected if they procured the same item — reveals co-procurement communities. Projection to $U$: two items connected if procured by the same entity — identifies item clusters revealing weapon-system Bills of Materials.
+**The problem.** "Dual-use" goods have both legitimate civilian and military applications — high-speed centrifuges, precision machine tools, maraging steel, specialized electronics. A proliferator rarely buys a finished weapon; it assembles one from individually innocuous, legally traded components sourced from many suppliers across many countries. No single purchase looks alarming, which is precisely what makes the procurement effort hard to detect. The analytic task is to reconstruct, from scattered export and transaction records, which entities are acquiring which controlled items — and whether those purchases, taken together, add up to a weapons program.
 
-**Analytical indicators:** *Item clustering* — a BOM-consistent combination of controlled items is a strong program indicator even if no single item is conclusive. *Entity betweenness* — an entity connecting multiple item types from multiple supplier countries is a likely central broker. *Geographic clustering* — sudden concentration of controlled-item exports to a third country indicates transshipment. *Temporal acceleration* — accelerating procurement pace signals a program approaching a critical test or production milestone.
+**Why model it as a bipartite network.** This is naturally a two-mode problem. There are two distinct kinds of node — the *entities* doing the buying and the *items* being bought — and every edge runs between the two kinds, never within them. An entity links to an item if it procured (or attempted to procure) that item; entities are never tied directly to entities, nor items to items. Representing procurement this way lets us perform the analytically useful move of collapsing the two-mode graph onto one mode at a time, so that each projection surfaces a different signal.
 
-**Data sources:** U.S. Commerce Department Entity List, EU dual-use control lists (Council Regulation 2021/821), UN Security Council sanctions lists, export control violation records.
+**Formal model.** Let $U$ be the set of controlled items and $W$ the set of procurement entities. An edge $(u, w)$ records a documented or suspected procurement of item $u$ by entity $w$. The two one-mode projections are then read as follows:
+
+- **Projection onto $W$ (entities):** connect two entities when they procured the same item. Dense clusters are **co-procurement communities** — groups sourcing the same controlled goods, a signature of a shared program or supply chain.
+- **Projection onto $U$ (items):** connect two items when the same entity procured both. The resulting item clusters approximate a weapon system’s **Bill of Materials (BOM)** — the combination of components a given platform requires.
+
+**Analytical indicators:** 
+
+* *Item clustering* — a BOM-consistent combination of controlled items is a strong program indicator even if no single item is conclusive. 
+* *Entity betweenness* — an entity connecting multiple item types from multiple supplier countries is a likely central broker. 
+* *Geographic clustering* — sudden concentration of controlled-item exports to a third country indicates transshipment. 
+* *Temporal acceleration* — accelerating procurement pace signals a program approaching a critical test or production milestone.
+
+***Data sources:*** *U.S. Commerce Department Entity List, EU dual-use control lists (Council Regulation 2021/821), UN Security Council sanctions lists, export control violation records.*
 
 # Part III: Sanctions Evasion and State Sponsorship
 
@@ -662,13 +671,24 @@ The Russia-Western bloc voting similarity showed the mirror pattern — steady d
 
 ## Arms Transfer Networks and Political Alignment
 
-Arms transfers create structural dependencies: recipient states must maintain supplier relationships for spare parts, training, and upgrades — giving suppliers coercive leverage.
+Arms transfers create structural dependencies: recipient states must maintain supplier relationships for spare parts, training, upgrades, etc., giving suppliers coercive leverage. As such, these networks are directed in-nature, with one state (the supplier) *directing* the relationship at the other (the recipient). 
 
 - **Community structure maps to alignment:** US-supplier and Russia-supplier recipient communities show minimal overlap; the Cold War alignment pattern persists in modified form post-1991
 - **Multi-source recipients** (India, Egypt) source from multiple suppliers, gaining structural independence not visible from bilateral relationship assessments
 - **Supplier switches signal alignment shifts:** a state switching its primary arms supplier is a major alignment event; temporal analysis of the arms transfer network detects these early
 
-**SIPRI data application:** using SIPRI TIV data, construct a directed weighted arms transfer network for 2010--2024. Apply community detection to identify supplier-recipient communities. Compute supplier betweenness: which exporters bridge otherwise disconnected recipient communities? Identify high-in-degree from multiple suppliers — these have structural independence not visible in bilateral assessments.
+::: {.callout-tip title="Vietnam to Purchase Weapons from the US" icon=false}
+
+Vietnam is the clearest live example of a supplier switch in progress. SIPRI data show that Russia — and the Soviet Union before it — supplied more than 80 percent of Vietnam's arms imports from 1995 through 2023, a dependency that placed Hanoi deep inside the Russia-supplier recipient community.^[Stockholm International Peace Research Institute, *Arms Transfers Database*, figures cited in "US, European, Chinese Firms Seek to Draw Vietnam Arms Deals from Russia," Agence France-Presse via *The Defense Post*, December 19, 2024, https://thedefensepost.com/2024/12/19/us-vietnam-arms-deals/.] Two shocks loosened that tie. The 2016 removal of the U.S. lethal-arms embargo opened a legal channel, and Russia's 2022 invasion of Ukraine — with the sanctions exposure and production strain that followed — turned continued reliance on Moscow for spare parts, upgrades, and new platforms into a strategic vulnerability. The 2023 U.S.–Vietnam Comprehensive Strategic Partnership, signed during President Biden's visit to Hanoi, built the diplomatic scaffolding for a realignment, and by April 2025 defense reporting indicated Vietnam had agreed in principle to purchase at least two dozen Lockheed Martin F-16 fighters.^["Vietnam Agrees to Buy US F-16 Fighters, Defense Website Says," Radio Free Asia, April 21, 2025, https://www.rfa.org/english/vietnam/2025/04/21/us-f16-fighter-jet-sale/.]
+
+- How did the network structure of the arms transfer network create a structural dependency that constrained Vietnam's options?
+- What network metrics would you use to detect the early stages of a supplier switch, and how would you apply them to the SIPRI TIV data?
+- What are the implications of a supplier switch for the recipient state's alignment and for the supplier's leverage?
+:::
+
+::: {.callout-note title="Practice Activity" icon=false}
+**SIPRI data application:** Using SIPRI TIV data, construct a directed weighted arms transfer network for 2010--2024. Apply community detection to identify supplier-recipient communities. Compute supplier betweenness: which exporters bridge otherwise disconnected recipient communities? Identify high-in-degree from multiple suppliers — these have structural independence not visible in bilateral assessments.
+:::
 
 ## Intelligence Cooperation Networks
 
@@ -678,51 +698,13 @@ Arms transfers create structural dependencies: recipient states must maintain su
 
 **US structural position:** with bilateral intelligence agreements with more than 70 countries, the US has the highest degree and betweenness in the intelligence cooperation network — a structural hub that also functions as broker between otherwise disconnected bilateral communities.
 
-::: {.callout-warning title="Classification Note" icon=false}
-Most intelligence cooperation network data is classified. Open-source analysis relies on treaty texts, official statements, liaison officer presence (inferrable from diplomatic mission staffing), and investigative journalism. All open-source assessments should be treated as highly incomplete — the gap between what is knowable from open sources and the actual cooperation topology is larger for this network than for any other covered in this course.
+::: {.callout-warning title="For Discussion" icon=false}
+In the above, you will notice that there are different network configurations and positions in those networks that the US holds. How does network position impact these intelligence sharing relationships?
 :::
 
-**Byman's State Sponsorship Typology:** states sponsor terrorist groups across a spectrum from direct command (Iran → Hezbollah) to tacit tolerance.^[Daniel Byman, *Deadly Connections: States That Sponsor Terrorism* (Cambridge: Cambridge University Press, 2005), 1--30.] Each tier implies a different interlayer coupling strength $\omega$ in a multiplex state-group model — from $\omega pprox 0.8$ (direct command) to $\omega pprox 0.1$ (tacit tolerance).
+**Byman's State Sponsorship Typology:** states sponsor terrorist groups across a spectrum from direct command (Iran → Hezbollah) to tacit tolerance.^[Daniel Byman, *Deadly Connections: States That Sponsor Terrorism* (Cambridge: Cambridge University Press, 2005).] Each tier implies a different interlayer coupling strength $\omega$ in a multiplex state-group model — from $\omega$ approx 0.8$ (direct command) to $\omega$ approx 0.1$ (tacit tolerance).
 
-# Lecture Summary
-
-## Key Findings by Domain
-
-::: {.key-terms}
-
-**Three terrorist generations**
-: Hierarchical (decapitation), Cellular (cutout targeting), Leaderless (counter-narrative); organizational form must be characterized before selecting metrics or disruption strategy
-
-**ISIS structural transformation**
-: Territorial state (density 0.14, Q 0.22) → Geographic franchise (density 0.04, Q 0.58); betweenness decentralized; decapitation replaced by online/counter-narrative operations as primary tool
-
-**Phillips (2014)**
-: Groups with more inter-group cooperation ties significantly more likely to survive; state sponsors are high-degree hubs; ideology and geography predict tie formation
-
-**Staniland typology**
-: Integrated (dense H + V = hardest to disrupt); Vanguard (dense V = decapitation effective); Parochial (dense H = disrupt horizontal ties); Fragmented (sparse both = low disruption return)
-
-**Khan network layer centrality**
-: Commercial: B.S.A. Tahir (betweenness); Technical: Khan (eigenvector); aggregate view incorrectly deprioritizes Tahir; layer-specific analysis is required
-
-**Dual-use bipartite indicators**
-: Item clustering → BOM inference; entity betweenness → broker; geographic clustering → transshipment hub; temporal acceleration → program milestone
-
-**Sanctions evasion minimum cut**
-: Minimum vertex cut between sanctioned entity and financial system = optimal simultaneous designation targets; ICIJ Offshore Leaks provides open-source beneficial ownership edge data
-
-**UN voting similarity**
-: Revealed-preference alignment leading indicator; temporal drift predicts policy change before formal announcement; Russia-China convergence visible from 2000 in UNGA data
-
-**Arms transfer dependency**
-: Multi-source recipients (India, Egypt) have structural independence; supplier switches signal major alignment shifts; supplier betweenness identifies bridges between otherwise disconnected recipient communities
-
-**Intelligence cooperation structure**
-: Five Eyes = dense all-channel core; US = global hub (70+ bilateral agreements); NATO alliance density exceeds NATO intelligence-sharing density
-
-:::
-
-## Key Analytical Takeaways
+# Key Analytical Takeaways
 
 1. Organizational generation determines appropriate disruption strategy — characterize the network form *before* selecting metrics or disruption models. Applying decapitation logic to a third-generation leaderless network wastes resources.
 
@@ -740,23 +722,6 @@ Most intelligence cooperation network data is classified. Open-source analysis r
 **Financial and Transaction Networks** --- money laundering network structure, hawala informal transfer systems, cryptocurrency transaction graphs, shell company financial networks, FinCEN Suspicious Activity Report data, and the full methodological toolkit for financial intelligence network analysis.
 :::
 
-```{=html}
-<div style="margin-top:2rem">
-  <ul class="course-sequence">
-    <li class="seq-done"><span class="seq-icon">&#10003;</span> Course Introduction</li>
-    <li class="seq-done"><span class="seq-icon">&#10003;</span> What is Network Analysis?</li>
-    <li class="seq-done"><span class="seq-icon">&#10003;</span> Graph Theory Basics</li>
-    <li class="seq-done"><span class="seq-icon">&#10003;</span> Centrality and Influence</li>
-    <li class="seq-done"><span class="seq-icon">&#10003;</span> Social Network Analysis in Intelligence</li>
-    <li class="seq-done"><span class="seq-icon">&#10003;</span> Community Detection and Clustering</li>
-    <li class="seq-done"><span class="seq-icon">&#10003;</span> Geospatial and Multi-Layer Networks</li>
-    <li class="seq-done"><span class="seq-icon">&#10003;</span> [Week 8]</li>
-    <li class="seq-done"><span class="seq-icon">&#10003;</span> Temporal and Dynamic Networks</li>
-    <li class="seq-active"><span class="seq-icon">&#9658;</span> <strong>Global Security and Network Analysis</strong> (this lecture)</li>
-    <li class="seq-todo"><span class="seq-icon">&#9675;</span> Financial and Transaction Networks</li>
-    <li class="seq-todo"><span class="seq-icon">&#9675;</span> Information / Influence Networks</li>
-  </ul>
-</div>
 <div class="page-footer-custom">
 Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
 </div>

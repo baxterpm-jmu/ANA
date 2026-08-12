@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Dr.&nbsp;Philip Baxter, Intelligence Analysis Program, James Madison University">
 
 <title>What is Network Analysis? – IA 480: Applied Network Analysis: Systems, Connections, and Influence</title>
 <style>
@@ -266,10 +265,6 @@ window.Quarto = {
   <li><a href="#by-edge-weight" id="toc-by-edge-weight" class="nav-link" data-scroll-target="#by-edge-weight">By Edge Weight</a></li>
   <li><a href="#by-node-type" id="toc-by-node-type" class="nav-link" data-scroll-target="#by-node-type">By Node Type</a></li>
   </ul></li>
-  <li><a href="#network-density-and-sparsity" id="toc-network-density-and-sparsity" class="nav-link" data-scroll-target="#network-density-and-sparsity">Network Density and Sparsity</a>
-  <ul class="collapse">
-  <li><a href="#intelligence-implications-of-density" id="toc-intelligence-implications-of-density" class="nav-link" data-scroll-target="#intelligence-implications-of-density">Intelligence Implications of Density</a></li>
-  </ul></li>
   </ul></li>
   <li><a href="#part-ii-networks-in-the-real-world" id="toc-part-ii-networks-in-the-real-world" class="nav-link" data-scroll-target="#part-ii-networks-in-the-real-world">Part II: Networks in the Real World</a>
   <ul class="collapse">
@@ -317,12 +312,6 @@ window.Quarto = {
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Dr.&nbsp;Philip Baxter, Intelligence Analysis Program, James Madison University </p>
-          </div>
-  </div>
     
   
     
@@ -610,48 +599,6 @@ Following the September 11 attacks, Krebs mapped the hijacker network and demons
 </ul>
 </section>
 </section>
-<section id="network-density-and-sparsity" class="level2">
-<h2 class="anchored" data-anchor-id="network-density-and-sparsity">Network Density and Sparsity</h2>
-<p><strong>Density</strong> <span class="math inline">\(\Delta\)</span> measures how many edges actually exist relative to the maximum number possible:</p>
-<p><span class="math display">\[\Delta = \frac{|E|}{|V|(|V|-1)/2} \quad \text{(undirected)}\]</span></p>
-<p><span class="math display">\[\Delta = \frac{|E|}{|V|(|V|-1)} \quad \text{(directed)}\]</span></p>
-<p>A <span class="math inline">\(\Delta\)</span> of 1.0 is a complete graph (every node connected to every other); <span class="math inline">\(\Delta = 0.0\)</span> is an empty graph. Most real-world networks — especially illicit ones — are <strong>sparse</strong>, with <span class="math inline">\(\Delta \ll 0.1\)</span>.</p>
-<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Worked Example">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Worked Example
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>A network with <span class="math inline">\(|V| = 10\)</span> nodes and <span class="math inline">\(|E| = 12\)</span> edges (undirected):</p>
-<p><span class="math display">\[\Delta = \frac{12}{10 \cdot 9 / 2} = \frac{12}{45} \approx 0.267\]</span></p>
-<p>About 27% of all possible connections exist — moderately sparse. For comparison, the 9/11 hijacker network had density <span class="math inline">\(\approx 0.16\)</span>.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></p>
-</div>
-</div>
-<section id="intelligence-implications-of-density" class="level3">
-<h3 class="anchored" data-anchor-id="intelligence-implications-of-density">Intelligence Implications of Density</h3>
-<ul>
-<li><strong>Dense networks</strong> have high redundancy, strong group cohesion, and are harder to disrupt — removing any single node changes the network structure relatively little.</li>
-<li><strong>Sparse networks</strong> rely on key connectors (nodes with high betweenness centrality); removal of those nodes can fragment the network. Compartmentalized illicit networks are deliberately sparse for operational security.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a></li>
-</ul>
-<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Key Point">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Key Point
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Density alone does not identify <em>which</em> connections matter — centrality measures do that. Density is a global network property; analyst targeting requires node-level structural metrics.</p>
-</div>
-</div>
-</section>
-</section>
 </section>
 <section id="part-ii-networks-in-the-real-world" class="level1">
 <h1>Part II: Networks in the Real World</h1>
@@ -739,19 +686,19 @@ Following the September 11 attacks, Krebs mapped the hijacker network and demons
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Informal value transfer systems (hawala) operate as sparse, trust-based networks connecting brokers (<em>hawaladars</em>) across jurisdictions. No physical currency crosses borders — debts are settled through reciprocal book-keeping between brokers. Network analysis identifies broker communities, geographic reach, settlement patterns, and high-betweenness brokers who connect otherwise separate regional clusters.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
+<p>Informal value transfer systems (hawala) operate as sparse, trust-based networks connecting brokers (<em>hawaladars</em>) across jurisdictions. No physical currency crosses borders — debts are settled through reciprocal book-keeping between brokers. Network analysis identifies broker communities, geographic reach, settlement patterns, and high-betweenness brokers who connect otherwise separate regional clusters.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></p>
 </div>
 </div>
 <p><strong>Key data sources:</strong> FinCEN Suspicious Activity Reports, SWIFT transaction data, corporate registry filings, beneficial ownership databases, Panama/Pandora Papers.</p>
 </section>
 <section id="dark-networks-illicit-and-covert-systems" class="level2">
 <h2 class="anchored" data-anchor-id="dark-networks-illicit-and-covert-systems">Dark Networks: Illicit and Covert Systems</h2>
-<p>Dark networks are clandestine, trust-based networks that operate outside legal or institutional frameworks. They include terrorist organizations, drug trafficking networks, proliferation supply chains, and criminal enterprises.<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a> Their structural properties differ systematically from legal organizations — and those differences are analytically exploitable.</p>
+<p>Dark networks are clandestine, trust-based networks that operate outside legal or institutional frameworks. They include terrorist organizations, drug trafficking networks, proliferation supply chains, and criminal enterprises.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> Their structural properties differ systematically from legal organizations — and those differences are analytically exploitable.</p>
 <section id="distinctive-properties" class="level3">
 <h3 class="anchored" data-anchor-id="distinctive-properties">Distinctive Properties</h3>
 <ul>
 <li><strong>Operational security constraints:</strong> Actors deliberately limit connectivity to reduce exposure. The result is sparse, compartmentalized structure with few ties crossing cell boundaries.</li>
-<li><strong>Secrecy-efficiency tradeoff:</strong> More connected networks are more efficient operationally but more vulnerable to infiltration and decapitation.<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a> The optimal balance depends on the threat environment.</li>
+<li><strong>Secrecy-efficiency tradeoff:</strong> More connected networks are more efficient operationally but more vulnerable to infiltration and decapitation.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a> The optimal balance depends on the threat environment.</li>
 <li><strong>Trust substitutes for formal structure:</strong> Kinship, shared ethnicity, and shared criminal history replace bureaucratic coordination — relationships that are harder to disrupt than formal authority structures.</li>
 <li><strong>Adaptive reorganization:</strong> Networks restructure after disruption. Static analysis understates resilience; temporal analysis is required to assess how a network responds to intervention.</li>
 </ul>
@@ -783,7 +730,7 @@ Following the September 11 attacks, Krebs mapped the hijacker network and demons
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Analysis of 43 terrorist networks found an average density of 0.047 — far sparser than equivalent legal organizations operating at similar scale.<a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a></p>
+<p>Analysis of 43 terrorist networks found an average density of 0.047 — far sparser than equivalent legal organizations operating at similar scale.<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a></p>
 </div>
 </div>
 </section>
@@ -809,7 +756,7 @@ Following the September 11 attacks, Krebs mapped the hijacker network and demons
 <li><strong>Structural discovery:</strong> Identifies roles not evident from individual profiles — gatekeepers, brokers, isolates, and peripheral recruiters</li>
 <li><strong>Comparative assessment:</strong> Compare network states over time or across cases to identify change</li>
 <li><strong>Targeting prioritization:</strong> Rank nodes by structural criticality, not just profile prominence or seniority</li>
-<li><strong>Effect prediction:</strong> Model the consequences of node or edge removal <em>before</em> action is taken<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a></li>
+<li><strong>Effect prediction:</strong> Model the consequences of node or edge removal <em>before</em> action is taken<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a></li>
 </ul>
 <div class="callout callout-style-default callout-note no-icon callout-titled" title="The Analytical Value Proposition">
 <div class="callout-header d-flex align-content-center">
@@ -865,7 +812,7 @@ Following the September 11 attacks, Krebs mapped the hijacker network and demons
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Network analysis is a <strong>tool</strong>, not a conclusion. Structural findings must be interpreted in context, caveated for data incompleteness, and integrated with all-source analysis before appearing in any intelligence product.<a href="#fn16" class="footnote-ref" id="fnref16" role="doc-noteref"><sup>16</sup></a></p>
+<p>Network analysis is a <strong>tool</strong>, not a conclusion. Structural findings must be interpreted in context, caveated for data incompleteness, and integrated with all-source analysis before appearing in any intelligence product.<a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a></p>
 </div>
 </div>
 </section>
@@ -940,7 +887,7 @@ Following the September 11 attacks, Krebs mapped the hijacker network and demons
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>All network data in intelligence contexts is <strong>incomplete</strong>. Clandestine actors evade collection. Analysts must reason carefully about what is <em>missing</em> and how gaps affect structural conclusions. A high-betweenness score may reflect genuine structural importance — or simply reflect the portion of the network that was collected.<a href="#fn17" class="footnote-ref" id="fnref17" role="doc-noteref"><sup>17</sup></a></p>
+<p>All network data in intelligence contexts is <strong>incomplete</strong>. Clandestine actors evade collection. Analysts must reason carefully about what is <em>missing</em> and how gaps affect structural conclusions. A high-betweenness score may reflect genuine structural importance — or simply reflect the portion of the network that was collected.<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a></p>
 </div>
 </div>
 </section>
@@ -1066,15 +1013,13 @@ Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbs
 <li id="fn6"><p>Albert-László Barabási and Réka Albert, “Emergence of Scaling in Random Networks,” <em>Science</em> 286, no. 5439 (1999): 509–512.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn7"><p>Valdis Krebs, “Mapping Networks of Terrorist Cells,” <em>Connections</em> 24, no. 3 (2002): 43–52.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn8"><p>Stanley Wasserman and Katherine Faust, <em>Social Network Analysis: Methods and Applications</em> (Cambridge: Cambridge University Press, 1994), 29–35.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn9"><p>Krebs, “Mapping Networks of Terrorist Cells,” 45.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn10"><p>Jorg Raab and H. Brinton Milward, “Dark Networks as Problems,” <em>Journal of Public Administration Research and Theory</em> 13, no. 4 (2003): 413–439.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn11"><p>Patrick Jost and Harjit Singh Sandhu, “The Hawala Alternative Remittance System and Its Role in Money Laundering,” Interpol General Secretariat (2000).<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn12"><p>Raab and Milward, “Dark Networks as Problems,” 413.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn13"><p>Valdis Krebs, “Uncloaking Terrorist Networks,” <em>First Monday</em> 7, no. 4 (2002).<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn14"><p>Kathleen Carley et al., “Destabilizing Networks,” <em>Connections</em> 24, no. 3 (2002): 31–34.<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn15"><p>Sean F. Everton, <em>Disrupting Dark Networks</em> (Cambridge: Cambridge University Press, 2012), 10–25.<a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn16"><p>Nancy Roberts and Sean Everton, “Strategies for Combating Dark Networks,” <em>Journal of Social Structure</em> 12 (2011): 1–32.<a href="#fnref16" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn17"><p>Everton, <em>Disrupting Dark Networks</em>, 37–42.<a href="#fnref17" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>Patrick Jost and Harjit Singh Sandhu, “The Hawala Alternative Remittance System and Its Role in Money Laundering,” Interpol General Secretariat (2000).<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>Raab and Milward, “Dark Networks as Problems,” 413.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>Valdis Krebs, “Uncloaking Terrorist Networks,” <em>First Monday</em> 7, no. 4 (2002).<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p>Kathleen Carley et al., “Destabilizing Networks,” <em>Connections</em> 24, no. 3 (2002): 31–34.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p>Sean F. Everton, <em>Disrupting Dark Networks</em> (Cambridge: Cambridge University Press, 2012), 10–25.<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn14"><p>Nancy Roberts and Sean Everton, “Strategies for Combating Dark Networks,” <em>Journal of Social Structure</em> 12 (2011): 1–32.<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn15"><p>Everton, <em>Disrupting Dark Networks</em>, 37–42.<a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

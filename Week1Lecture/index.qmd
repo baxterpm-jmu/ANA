@@ -1,8 +1,6 @@
 ---
 title: "Course Introduction"
 subtitle: "IA 480: Applied Network Analysis — Systems, Connections, and Influence"
-author: "Dr. Philip Baxter, Intelligence Analysis Program, James Madison University"
-date: "Fall 2026"
 ---
 
 
@@ -20,7 +18,7 @@ date: "Fall 2026"
 
 This course introduces students to the principles and applications of network analysis. Network analysis provides a powerful framework for understanding relationships, structures, and interactions within complex systems. Students will explore key network analysis concepts, methodologies, and tools. The course will emphasize practical applications, enabling students to apply network analysis techniques to real-world problems. By the end of the course, students will be equipped with the skills to conduct independent network analyses, critically evaluate network structures, and integrate network methodologies into their research.
 
-### Course Goals
+## Course Goals
 
 * Understand the theoretical foundations of network analysis.
 * Develop technical proficiency across multiple analytical platforms.
@@ -29,7 +27,7 @@ This course introduces students to the principles and applications of network an
 * Critically evaluate the limits of network analysis findings.
 * Communicate network findings as professional analytical products.
 
-### Method of Instruction
+## Method of Instruction
 
 This course uses the following methods of instruction:
 
@@ -38,7 +36,7 @@ This course uses the following methods of instruction:
 * **Class Project:** Students will complete one project during this course which will require them to apply the network analysis techniques from class to a problem set of their choosing. This will provide students with the opportunity to expand and apply their knowledge and skills in network analysis and research design focused on data.
 * **Asynchronous Materials:** In addition to classroom instruction, materials and exercises will be posted to the course website, including examples, additional readings, and other for each module that will provide further guidance and instruction on various aspects of the material for that module, as well as practice prompts. Most of these materials will be optional and are posted to enable you to explore areas of interest or bolster weak spots in your skills.
 
-### Reference Material:
+## Reference Material:
 
 The following books are available via the JMU library and offer additional insights into the usage of network analysis. They vary in their complexity, but all offer useful information and tutorials on different ways to leverage network analysis in your work.
 
@@ -49,6 +47,142 @@ The following books are available via the JMU library and offer additional insig
 * McClain, B. P. (2022). Python for Geospatial Data Analysis : theory, tools, and practice for location intelligence. O’Reilly Media, Inc. https://search.lib.jmu.edu/permalink/01JMU_INST/ivktej/alma991016502135706271
 
 While I will probably not be assigning readings directly from these books, they are excellent resources for you to explore and learn more about network analysis or if might provide assistance if you are looking for additional information on a topic or concept. I encourage you to explore these resources and use them to supplement your learning in this course.
+
+# Part II: Find your Group
+
+As this course is an elective, I will be asking you to form groups of 3-4 students for the duration of the course. These groups will be used for in-class activities and the final project (exercises are submitted individually, but you will be able to discuss and work through the exercises with your group).
+
+As you form your groups, I encourage you to consider the following:
+
+* **Diversity of Skills:** Consider forming groups with a mix of skills and backgrounds. This can enhance the learning experience and provide different perspectives on the exercises and project.
+* **Communication and Collaboration:** Choose group members with whom you can communicate effectively and collaborate well. Good communication is key to successful group work.
+* **Commitment and Availability:** Ensure that all group members are committed to the course and have similar availability for meetings and collaboration.
+
+Given this, everyone should take a few minutes to complete the following. Imagine you are a character in a video game and you are creating your character. You will need to rate yourself in certain areas. This will help you to identify your strengths and weaknesses, and to find group members who complement your skills.
+
+```{=html}
+<div class="char-form">
+  <div class="cf-head">
+    <h3 class="cf-title">Character Creation &middot; Analyst Class Selection</h3>
+    <p class="cf-sub">Rate yourself <strong>1&ndash;5</strong> in each area (1 = still leveling up, 5 = this is my main). There are no wrong answers &mdash; the goal is to see where you are strong and who would round out your party. Nothing here is submitted; it is for you and your future teammates.</p>
+  </div>
+
+  <div class="cf-attrs" id="cf-attrs"><!-- rows injected by script --></div>
+
+  <div class="cf-actions">
+    <button id="cf-reveal" type="button" class="cf-btn">Reveal your class</button>
+    <span id="cf-points" class="cf-points" aria-live="polite"></span>
+  </div>
+
+  <div id="cf-result" class="cf-result" hidden></div>
+
+  <p class="cf-foot"><strong>Building your party:</strong> your two highest areas are what you bring to a group; your two lowest are what you should recruit for. A strong team covers the whole sheet &mdash; not four copies of the same class.</p>
+</div>
+
+<style>
+.char-form{--pp:#450084;--gold:#CBB677;--dgold:#AD9C65;--slate:#333;--lp:#DACCE6;--lg:#F4EFE1;
+  border:1px solid var(--dgold);border-radius:8px;background:#fff;padding:1.1rem 1.25rem;margin:1rem 0;
+  font-family:inherit;color:var(--slate);max-width:100%;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.char-form .cf-title{color:var(--pp);margin:0 0 .35rem;font-size:1.15rem}
+.char-form .cf-sub{margin:.2rem 0 .9rem;font-size:.92rem;line-height:1.45}
+.char-form .cf-row{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;
+  padding:.6rem 0;border-top:1px solid #eee}
+.char-form .cf-row:first-child{border-top:none}
+.char-form .cf-label{flex:1 1 auto;min-width:0}
+.char-form .cf-label .cf-attr{font-weight:700;color:var(--pp);font-size:.98rem}
+.char-form .cf-label .cf-desc{font-size:.82rem;color:#595959;line-height:1.35;margin-top:.15rem}
+.char-form .cf-pips{flex:0 0 auto;display:flex;gap:.28rem;padding-top:.15rem}
+.char-form .cf-pip{width:26px;height:26px;border-radius:50%;border:2px solid var(--dgold);
+  background:#fff;cursor:pointer;padding:0;font-size:.72rem;font-weight:700;color:var(--dgold);
+  line-height:1;transition:transform .06s ease,background .1s ease}
+.char-form .cf-pip:hover{transform:scale(1.12)}
+.char-form .cf-pip.on{background:var(--pp);border-color:var(--pp);color:#fff}
+.char-form .cf-actions{margin-top:1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.char-form .cf-btn{background:var(--pp);color:#fff;border:none;border-radius:6px;
+  padding:.6rem 1.1rem;font-size:.95rem;font-weight:700;cursor:pointer}
+.char-form .cf-btn:hover{background:#5a1a99}
+.char-form .cf-points{font-size:.85rem;color:#595959}
+.char-form .cf-result{margin-top:1rem;border-left:5px solid var(--gold);background:var(--lg);
+  border-radius:0 6px 6px 0;padding:.85rem 1rem}
+.char-form .cf-result .cf-class{color:var(--pp);font-size:1.15rem;font-weight:800;margin:0 0 .25rem}
+.char-form .cf-result .cf-tag{font-style:italic;color:var(--slate);margin:0 0 .5rem;font-size:.95rem}
+.char-form .cf-result .cf-advice{font-size:.9rem;line-height:1.5;margin:0}
+.char-form .cf-result .cf-advice strong{color:var(--pp)}
+.char-form .cf-foot{margin:1rem 0 0;font-size:.85rem;color:#595959;line-height:1.45;
+  border-top:1px dashed var(--dgold);padding-top:.7rem}
+@media (max-width:520px){.char-form .cf-row{flex-direction:column;gap:.4rem}.char-form .cf-pips{padding-top:0}}
+</style>
+
+<script>
+(function(){
+  var attrs=[
+    {key:"tools",name:"Computer Tools",cls:"The Toolsmith",
+     desc:"Picking up new software fast — Python, Gephi, whatever the task needs.",
+     tag:"You learn any tool the mission throws at you."},
+    {key:"data",name:"Data & Statistics",cls:"The Analyst",
+     desc:"Cleaning messy data, spotting patterns, knowing when to trust the numbers.",
+     tag:"You turn a pile of rows into an actual finding."},
+    {key:"viz",name:"Visualization & Design",cls:"The Cartographer",
+     desc:"Turning a tangle of nodes and edges into a picture people understand.",
+     tag:"You make the network legible at a glance."},
+    {key:"writing",name:"Analytical Production",cls:"The Author",
+     desc:"Producing clear, well-structured written analysis and finished products.",
+     tag:"You turn the analysis into a finished written product."},
+    {key:"speaking",name:"Public Speaking",cls:"The Orator",
+     desc:"Presenting and briefing out loud with confidence and clarity.",
+     tag:"You command the room when it's time to brief."},
+    {key:"coord",name:"Coordination & Planning",cls:"The Commander",
+     desc:"Keeping the team on schedule, splitting the work, herding the cats.",
+     tag:"You keep the mission on track when it's due at 0800."}
+  ];
+  var state={};
+  var wrap=document.getElementById("cf-attrs");
+  attrs.forEach(function(a){
+    state[a.key]=0;
+    var row=document.createElement("div");row.className="cf-row";
+    var lab=document.createElement("div");lab.className="cf-label";
+    lab.innerHTML='<div class="cf-attr">'+a.name+'</div><div class="cf-desc">'+a.desc+'</div>';
+    var pips=document.createElement("div");pips.className="cf-pips";
+    for(var i=1;i<=5;i++){(function(val){
+      var b=document.createElement("button");b.type="button";b.className="cf-pip";
+      b.textContent=val;b.setAttribute("aria-label",a.name+": "+val+" of 5");
+      b.onclick=function(){
+        state[a.key]=val;
+        var kids=pips.children;
+        for(var k=0;k<kids.length;k++){kids[k].classList.toggle("on",(k+1)<=val);}
+        updatePoints();
+      };
+      pips.appendChild(b);
+    })(i);}
+    row.appendChild(lab);row.appendChild(pips);wrap.appendChild(row);
+  });
+  function total(){var t=0;for(var k in state){t+=state[k];}return t;}
+  function updatePoints(){document.getElementById("cf-points").textContent="Points allocated: "+total()+" / 30";}
+  updatePoints();
+  document.getElementById("cf-reveal").onclick=function(){
+    var max=0;for(var k in state){if(state[k]>max)max=state[k];}
+    var res=document.getElementById("cf-result");
+    if(max===0){res.hidden=false;
+      res.innerHTML='<p class="cf-class">No class yet</p><p class="cf-advice">Rate at least one area above to reveal your class.</p>';
+      return;}
+    var tops=attrs.filter(function(a){return state[a.key]===max;});
+    var lowMin=99;for(var j in state){if(state[j]<lowMin)lowMin=state[j];}
+    var lows=attrs.filter(function(a){return state[a.key]===lowMin;}).map(function(a){return a.cls+" ("+a.name+")";});
+    var headline=tops.map(function(a){return a.cls;}).join(" / ");
+    var tagline=tops.length===1?tops[0].tag:"A hybrid build — you bring more than one strength to the table.";
+    res.hidden=false;
+    res.innerHTML=
+      '<p class="cf-class">'+headline+'</p>'+
+      '<p class="cf-tag">'+tagline+'</p>'+
+      '<p class="cf-advice">Your standout strength is <strong>'+
+        tops.map(function(a){return a.name;}).join(" & ")+'</strong>. '+
+      'To round out your party, look for teammates whose main is '+
+        lows.join(" or ")+'. Compare your role with people near you and see if you can build a group that covers the whole board.</p>';
+    res.scrollIntoView({behavior:"smooth",block:"nearest"});
+  };
+})();
+</script>
+```
 
 # Part II: Network Analysis Activity 
 

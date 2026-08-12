@@ -6,8 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Intelligence Analysis Program, James Madison University">
-<meta name="dcterms.date" content="2026-01-01">
 
 <title>Graph Theory Basics – IA 480: Applied Network Analysis: Systems, Connections, and Influence</title>
 <style>
@@ -263,6 +261,10 @@ window.Quarto = {
   <li><a href="#part-ii-structural-properties" id="toc-part-ii-structural-properties" class="nav-link" data-scroll-target="#part-ii-structural-properties">Part II: Structural Properties</a>
   <ul class="collapse">
   <li><a href="#connectivity-and-components" id="toc-connectivity-and-components" class="nav-link" data-scroll-target="#connectivity-and-components">Connectivity and Components</a></li>
+  <li><a href="#network-density-and-sparsity" id="toc-network-density-and-sparsity" class="nav-link" data-scroll-target="#network-density-and-sparsity">Network Density and Sparsity</a>
+  <ul class="collapse">
+  <li><a href="#intelligence-implications-of-density" id="toc-intelligence-implications-of-density" class="nav-link" data-scroll-target="#intelligence-implications-of-density">Intelligence Implications of Density</a></li>
+  </ul></li>
   <li><a href="#geodesic-distance-diameter-and-average-path-length" id="toc-geodesic-distance-diameter-and-average-path-length" class="nav-link" data-scroll-target="#geodesic-distance-diameter-and-average-path-length">Geodesic Distance, Diameter, and Average Path Length</a></li>
   <li><a href="#clustering-coefficient" id="toc-clustering-coefficient" class="nav-link" data-scroll-target="#clustering-coefficient">Clustering Coefficient</a></li>
   <li><a href="#trees-cliques-and-k-cores" id="toc-trees-cliques-and-k-cores" class="nav-link" data-scroll-target="#trees-cliques-and-k-cores">Trees, Cliques, and <em>k</em>-Cores</a></li>
@@ -301,19 +303,7 @@ window.Quarto = {
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Intelligence Analysis Program, James Madison University </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -839,6 +829,48 @@ window.Quarto = {
 </div>
 </div>
 </section>
+<section id="network-density-and-sparsity" class="level2">
+<h2 class="anchored" data-anchor-id="network-density-and-sparsity">Network Density and Sparsity</h2>
+<p><strong>Density</strong> <span class="math inline">\(\Delta\)</span> measures how many edges actually exist relative to the maximum number possible:</p>
+<p><span class="math display">\[\Delta = \frac{|E|}{|V|(|V|-1)/2} \quad \text{(undirected)}\]</span></p>
+<p><span class="math display">\[\Delta = \frac{|E|}{|V|(|V|-1)} \quad \text{(directed)}\]</span></p>
+<p>A <span class="math inline">\(\Delta\)</span> of 1.0 is a complete graph (every node connected to every other); <span class="math inline">\(\Delta = 0.0\)</span> is an empty graph. Most real-world networks — especially illicit ones — are <strong>sparse</strong>, with <span class="math inline">\(\Delta \ll 0.1\)</span>.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Worked Example">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Worked Example
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A network with <span class="math inline">\(|V| = 10\)</span> nodes and <span class="math inline">\(|E| = 12\)</span> edges (undirected):</p>
+<p><span class="math display">\[\Delta = \frac{12}{10 \cdot 9 / 2} = \frac{12}{45} \approx 0.267\]</span></p>
+<p>About 27% of all possible connections exist — moderately sparse. For comparison, the 9/11 hijacker network had density <span class="math inline">\(\approx 0.16\)</span>.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+</div>
+</div>
+<section id="intelligence-implications-of-density" class="level3">
+<h3 class="anchored" data-anchor-id="intelligence-implications-of-density">Intelligence Implications of Density</h3>
+<ul>
+<li><strong>Dense networks</strong> have high redundancy, strong group cohesion, and are harder to disrupt — removing any single node changes the network structure relatively little.</li>
+<li><strong>Sparse networks</strong> rely on key connectors (nodes with high betweenness centrality); removal of those nodes can fragment the network. Compartmentalized illicit networks are deliberately sparse for operational security.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></li>
+</ul>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Key Point">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Key Point
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Density alone does not identify <em>which</em> connections matter — centrality measures do that. Density is a global network property; analyst targeting requires node-level structural metrics.</p>
+</div>
+</div>
+</section>
+</section>
 <section id="geodesic-distance-diameter-and-average-path-length" class="level2">
 <h2 class="anchored" data-anchor-id="geodesic-distance-diameter-and-average-path-length">Geodesic Distance, Diameter, and Average Path Length</h2>
 <div class="columns">
@@ -861,7 +893,7 @@ window.Quarto = {
 <li><strong>Diameter</strong> <span class="math inline">\(\text{diam}(G)\)</span>: <span class="math inline">\(\max_{u,v} d(u,v)\)</span> — the longest shortest path. Nodes achieving the diameter are the <em>periphery</em>.</li>
 <li><strong>Average path length:</strong> <span class="math inline">\(\bar{l} = \frac{1}{n(n-1)} \sum_{u \neq v} d(u,v)\)</span></li>
 </ul>
-<p>The <strong>small-world property</strong>: most real networks have <span class="math inline">\(\bar{l} \approx \log n\)</span> even when <span class="math inline">\(n\)</span> is large — the empirical basis of “six degrees of separation.”<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<p>The <strong>small-world property</strong>: most real networks have <span class="math inline">\(\bar{l} \approx \log n\)</span> even when <span class="math inline">\(n\)</span> is large — the empirical basis of “six degrees of separation.”<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
 </section>
 </div><div class="column" style="width:45%;">
 <p><strong>Distance matrix (6-node running example):</strong></p>
@@ -1027,7 +1059,7 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <p><strong>High <span class="math inline">\(C_i\)</span>:</strong> node’s neighbors know each other — a locally cohesive, redundant cluster. Removing this node has limited effect; the neighbors remain connected to each other.</p>
-<p><strong>Low <span class="math inline">\(C_i\)</span> with high degree:</strong> node bridges groups that are not connected to each other — a <strong>structural broker</strong> or cutout. This is Ronald Burt’s concept of the <em>structural hole</em>: the broker derives power and information advantages from spanning an otherwise disconnected gap.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> Structural brokers are highly efficient disruption targets.</p>
+<p><strong>Low <span class="math inline">\(C_i\)</span> with high degree:</strong> node bridges groups that are not connected to each other — a <strong>structural broker</strong> or cutout. This is Ronald Burt’s concept of the <em>structural hole</em>: the broker derives power and information advantages from spanning an otherwise disconnected gap.<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> Structural brokers are highly efficient disruption targets.</p>
 <p>Node 5 (<span class="math inline">\(C_5 = 0\)</span>) is an example: its two neighbors (2 and 6) are not connected to each other, making Node 5 the only bridge between them within that local neighborhood.</p>
 </div>
 </div>
@@ -1077,7 +1109,7 @@ window.Quarto = {
 <li>It reveals an <strong>inner circle</strong> — a cohesive operational nucleus unlikely to be visible from simple degree ranking alone.</li>
 <li>It separates this inner circle from <strong>outer-shell actors</strong> (coreness 1 or 2) who may be peripheral supporters, facilitators, or recruitment targets.</li>
 </ol>
-<p>Low-coreness nodes are not necessarily low-value: they may represent <strong>handlers</strong> deliberately maintaining low connectivity for security, or they may indicate collection artifacts. Context remains essential.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+<p>Low-coreness nodes are not necessarily low-value: they may represent <strong>handlers</strong> deliberately maintaining low connectivity for security, or they may indicate collection artifacts. Context remains essential.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
 </div>
 </div>
 <p><strong>Relationship to cliques:</strong> every clique <span class="math inline">\(K_k\)</span> is contained in the <span class="math inline">\((k-1)\)</span>-core, but the <span class="math inline">\(k\)</span>-core is generally much easier to compute (<span class="math inline">\(O(n + m)\)</span> vs.&nbsp;NP-hard for maximum clique).</p>
@@ -1105,7 +1137,7 @@ window.Quarto = {
 <ul>
 <li>Degree follows a <strong>power law</strong>: <span class="math inline">\(P(k) \sim k^{-\gamma}\)</span>, typically <span class="math inline">\(2 &lt; \gamma &lt; 3\)</span>.</li>
 <li><strong>Heavy tail:</strong> a small number of <strong>hubs</strong> with very high degree coexist with a large majority of low-degree nodes.</li>
-<li><strong>Robust to random failure</strong> (most randomly chosen nodes are low-degree); <strong>highly vulnerable to targeted hub removal.</strong> When hubs are removed in order of degree, the network fragments rapidly.<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></li>
+<li><strong>Robust to random failure</strong> (most randomly chosen nodes are low-degree); <strong>highly vulnerable to targeted hub removal.</strong> When hubs are removed in order of degree, the network fragments rapidly.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></li>
 </ul>
 <p>The exponent <span class="math inline">\(\gamma\)</span> carries information: lower <span class="math inline">\(\gamma\)</span> (closer to 2) means a heavier tail and more extreme hubs; higher <span class="math inline">\(\gamma\)</span> (approaching 3) means hubs are less extreme and the distribution approaches a more uniform shape.</p>
 </section>
@@ -1139,7 +1171,7 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Many internet and large social media networks exhibit strong power-law degree distributions. <strong>Clandestine networks often deviate.</strong> Deliberate compartmentalization limits hub formation — the actor who <em>would</em> become a hub in an unconstrained network is split into multiple lower-degree nodes connected through dead drops or cutouts. This deviation from scale-free structure is itself analytically informative: it suggests the network is actively managed for security.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> Truncated power laws and exponential cutoffs in the degree distribution are observed in several analyzed terrorist networks.</p>
+<p>Many internet and large social media networks exhibit strong power-law degree distributions. <strong>Clandestine networks often deviate.</strong> Deliberate compartmentalization limits hub formation — the actor who <em>would</em> become a hub in an unconstrained network is split into multiple lower-degree nodes connected through dead drops or cutouts. This deviation from scale-free structure is itself analytically informative: it suggests the network is actively managed for security.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> Truncated power laws and exponential cutoffs in the degree distribution are observed in several analyzed terrorist networks.</p>
 </div>
 </div>
 </div>
@@ -1234,7 +1266,7 @@ window.Quarto = {
 <li><strong>Persons projection</strong> <span class="math inline">\(A^{(U)} = B B^\top\)</span>: two persons are connected if they share at least one event; edge weight = number of co-attended events.</li>
 <li><strong>Events projection</strong> <span class="math inline">\(A^{(W)} = B^\top B\)</span>: two events are connected if they share at least one person; edge weight = number of shared attendees.</li>
 </ul>
-<p>Projection collapses the bipartite structure to a form compatible with standard SNA tools, but at a cost: information about <em>which</em> shared event created a tie is lost. Whenever possible, analyze the bipartite structure directly.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></p>
+<p>Projection collapses the bipartite structure to a form compatible with standard SNA tools, but at a cost: information about <em>which</em> shared event created a tie is lost. Whenever possible, analyze the bipartite structure directly.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="callout callout-style-default callout-tip no-icon callout-titled" title="Intelligence Example: Meeting Networks">
@@ -1437,48 +1469,8 @@ window.Quarto = {
 <p><strong>Centrality and Influence</strong> — degree, betweenness, closeness, eigenvector, and PageRank centrality: what each measure captures structurally, how to compute it efficiently, and how to translate centrality scores into intelligence targeting and collection prioritization decisions.</p>
 </div>
 </div>
-<div class="course-sequence" style="margin-top:2rem">
-<ul class="course-sequence">
-<li class="seq-done">
-<span class="seq-icon">✓</span> Course Introduction
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> What is Network Analysis?
-</li>
-<li class="seq-active">
-<span class="seq-icon">▶</span> <strong>Graph Theory Basics</strong> (this lecture)
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Centrality and Influence
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> SNA in Intelligence
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Community Detection
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Geospatial / Multi-Layer Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Temporal / Dynamic Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Global Security Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Financial Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Information / Influence Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Infrastructure Networks
-</li>
-</ul>
-</div>
 <div class="page-footer-custom">
-<p>Intelligence Analysis Program &nbsp;|&nbsp; School of Intelligence Analysis &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026</p>
+<p>Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026</p>
 </div>
 
 
@@ -1492,12 +1484,14 @@ window.Quarto = {
 <li id="fn1"><p>Frank Harary, <em>Graph Theory</em> (Reading, MA: Addison-Wesley, 1969), 7–12.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Albert-László Barabási and Réka Albert, “Emergence of Scaling in Random Networks,” <em>Science</em> 286, no. 5439 (1999): 510.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>Sean F. Everton, <em>Disrupting Dark Networks</em> (Cambridge: Cambridge University Press, 2012), 87–95.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>Duncan J. Watts and Steven H. Strogatz, “Collective Dynamics of ‘Small-World’ Networks,” <em>Nature</em> 393, no. 6684 (1998): 440–441.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5"><p>Ronald S. Burt, <em>Structural Holes: The Social Structure of Competition</em> (Cambridge, MA: Harvard University Press, 1992), 18–30.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn6"><p>Everton, <em>Disrupting Dark Networks</em>, 133–137.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn7"><p>Réka Albert, Hawoong Jeong, and Albert-László Barabási, “Error and Attack Tolerance of Complex Networks,” <em>Nature</em> 406 (2000): 378–382.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn8"><p>Jorg Raab and H. Brinton Milward, “Dark Networks as Problems,” <em>Journal of Public Administration Research and Theory</em> 13, no. 4 (2003): 420–422.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn9"><p>Stanley Wasserman and Katherine Faust, <em>Social Network Analysis: Methods and Applications</em> (Cambridge: Cambridge University Press, 1994), 299–310.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Krebs, “Mapping Networks of Terrorist Cells,” 45.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Jorg Raab and H. Brinton Milward, “Dark Networks as Problems,” <em>Journal of Public Administration Research and Theory</em> 13, no. 4 (2003): 413–439.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Duncan J. Watts and Steven H. Strogatz, “Collective Dynamics of ‘Small-World’ Networks,” <em>Nature</em> 393, no. 6684 (1998): 440–441.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Ronald S. Burt, <em>Structural Holes: The Social Structure of Competition</em> (Cambridge, MA: Harvard University Press, 1992), 18–30.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>Everton, <em>Disrupting Dark Networks</em>, 133–137.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>Réka Albert, Hawoong Jeong, and Albert-László Barabási, “Error and Attack Tolerance of Complex Networks,” <em>Nature</em> 406 (2000): 378–382.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>Jorg Raab and H. Brinton Milward, “Dark Networks as Problems,” <em>Journal of Public Administration Research and Theory</em> 13, no. 4 (2003): 420–422.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>Stanley Wasserman and Katherine Faust, <em>Social Network Analysis: Methods and Applications</em> (Cambridge: Cambridge University Press, 1994), 299–310.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

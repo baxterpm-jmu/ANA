@@ -1,7 +1,6 @@
 ---
 title: "What is Network Analysis?"
 subtitle: "IA 480: Applied Network Analysis — Systems, Connections, and Influence"
-author: "Dr. Philip Baxter, Intelligence Analysis Program, James Madison University"
 ---
 
 ::: {.course-meta}
@@ -189,33 +188,6 @@ Attribute quality drives analytical quality. A network with poorly coded edge ty
 - **Unipartite (one-mode):** All nodes are the same type (e.g., all persons). The most common network type in SNA.
 - **Bipartite (two-mode):** Two distinct node types; edges only run *between* types, never within (e.g., persons and the events they attended).^[Stanley Wasserman and Katherine Faust, *Social Network Analysis: Methods and Applications* (Cambridge: Cambridge University Press, 1994), 29–35.] Bipartite networks can be projected into unipartite networks at the cost of information loss.
 - **Multipartite / Multilayer:** Multiple node types or multiple relationship layers — increasingly common in complex intelligence problems.
-
-## Network Density and Sparsity
-
-**Density** $\Delta$ measures how many edges actually exist relative to the maximum number possible:
-
-$$\Delta = \frac{|E|}{|V|(|V|-1)/2} \quad \text{(undirected)}$$
-
-$$\Delta = \frac{|E|}{|V|(|V|-1)} \quad \text{(directed)}$$
-
-A $\Delta$ of 1.0 is a complete graph (every node connected to every other); $\Delta = 0.0$ is an empty graph. Most real-world networks — especially illicit ones — are **sparse**, with $\Delta \ll 0.1$.
-
-::: {.callout-tip title="Worked Example" icon=false}
-A network with $|V| = 10$ nodes and $|E| = 12$ edges (undirected):
-
-$$\Delta = \frac{12}{10 \cdot 9 / 2} = \frac{12}{45} \approx 0.267$$
-
-About 27% of all possible connections exist — moderately sparse. For comparison, the 9/11 hijacker network had density $\approx 0.16$.^[Krebs, "Mapping Networks of Terrorist Cells," 45.]
-:::
-
-### Intelligence Implications of Density
-
-- **Dense networks** have high redundancy, strong group cohesion, and are harder to disrupt — removing any single node changes the network structure relatively little.
-- **Sparse networks** rely on key connectors (nodes with high betweenness centrality); removal of those nodes can fragment the network. Compartmentalized illicit networks are deliberately sparse for operational security.^[Jorg Raab and H. Brinton Milward, "Dark Networks as Problems," *Journal of Public Administration Research and Theory* 13, no. 4 (2003): 413–439.]
-
-::: {.callout-warning title="Key Point" icon=false}
-Density alone does not identify *which* connections matter — centrality measures do that. Density is a global network property; analyst targeting requires node-level structural metrics.
-:::
 
 # Part II: Networks in the Real World
 
