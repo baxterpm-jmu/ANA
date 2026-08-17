@@ -1,8 +1,6 @@
 ---
 title: "Geospatial and Multi-Layer Networks"
 subtitle: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
-author: "Intelligence Analysis Program, James Madison University"
-date: "Fall 2026"
 ---
 
 ::: {.course-meta}
@@ -881,33 +879,6 @@ In practice: run network analysis first to generate a priority target list ranke
 
 # Lecture Summary
 
-## Key Formulas
-
-::: {.key-terms}
-
-**Euler's formula (planar graphs)**
-: $V - E + F = 2$; implies $E \leq 3V - 6$ and $\langle k \rangle < 6$ for any planar network
-
-**Waxman edge probability**
-: $P(\{u,v\}) = \beta\exp(-d(u,v)/\alpha L)$; low $\alpha$ = localized; high $\alpha$ = long-range
-
-**Circuity (detour factor)**
-: $\eta(u,v) = d_G(u,v)/d_E(u,v)$; $\eta = 1$ is optimal; $> 1.5$ indicates significant geographic detour
-
-**Network efficiency**
-: $E = \dfrac{1}{n(n-1)}\sum_{u \neq v}\dfrac{1}{d_G(u,v)}$; convention $1/\infty = 0$; attack effect = $\Delta E$
-
-**Multilayer network**
-: $\mathcal{M} = (G, C, \mathbf{X}_A, \mathbf{X}_L, \mathbf{X}_V, \mathbf{X}_E)$ (Kivelä et al. 2014)
-
-**Supra-adjacency matrix**
-: Block $nL \times nL$ matrix; diagonal blocks $A^{(\alpha)}$ (intra-layer); off-diagonals $I\omega_{\alpha\beta}$ (coupling)
-
-**Edge overlap**
-: $o_{ij} = (\sum_\alpha A_{ij}^\alpha - 1)/(L-1) \in [0,1]$; $o_{ij}=1$ = fully multi-strand tie
-
-:::
-
 ## Key Analytical Takeaways
 
 1. Geographic chokepoints in spatial networks are identified by betweenness centrality but are *physically constrained* — they cannot be bypassed without significant circuity cost. This is analytically distinct from social network chokepoints, which can be circumvented through organizational adaptation.
@@ -920,27 +891,11 @@ In practice: run network analysis first to generate a priority target list ranke
 
 5. Coupling weight $\omega$ between multilayer layers is always a modeling choice; sensitivity analysis over a range of $\omega$ values is required before multilayer findings appear in finished intelligence products.
 
-::: {.callout-note title="Next Lecture" icon=false}
-**Temporal and Dynamic Networks** — how networks change over time; dynamic centrality measures; tracking organizational adaptation after disruption; event-driven network change; temporal betweenness and temporal shortest paths; NetworkX temporal analysis; applications to monitoring network evolution in intelligence targets.
-:::
+## Next Lecture
 
-```{=html}
-<div style="margin-top:2rem">
-  <ul class="course-sequence">
-    <li class="seq-done"><span class="seq-icon">&#10003;</span> Course Introduction</li>
-    <li class="seq-done"><span class="seq-icon">&#10003;</span> What is Network Analysis?</li>
-    <li class="seq-done"><span class="seq-icon">&#10003;</span> Graph Theory Basics</li>
-    <li class="seq-done"><span class="seq-icon">&#10003;</span> Centrality and Influence</li>
-    <li class="seq-done"><span class="seq-icon">&#10003;</span> Social Network Analysis in Intelligence</li>
-    <li class="seq-done"><span class="seq-icon">&#10003;</span> Community Detection and Clustering</li>
-    <li class="seq-active"><span class="seq-icon">&#9658;</span> <strong>Geospatial and Multi-Layer Networks</strong> (this lecture)</li>
-    <li class="seq-todo"><span class="seq-icon">&#9675;</span> Temporal / Dynamic Networks</li>
-    <li class="seq-todo"><span class="seq-icon">&#9675;</span> Global Security Networks</li>
-    <li class="seq-todo"><span class="seq-icon">&#9675;</span> Financial Networks</li>
-    <li class="seq-todo"><span class="seq-icon">&#9675;</span> Information / Influence Networks</li>
-    <li class="seq-todo"><span class="seq-icon">&#9675;</span> Infrastructure Networks</li>
-  </ul>
-</div>
+**Temporal and Dynamic Networks** — how networks change over time; dynamic centrality measures; tracking organizational adaptation after disruption; event-driven network change; temporal betweenness and temporal shortest paths; NetworkX temporal analysis; applications to monitoring network evolution in intelligence targets.
+
+
 <div class="page-footer-custom">
 Intelligence Analysis Program &nbsp;|&nbsp; School of Intergrated Science &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
 </div>

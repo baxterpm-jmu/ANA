@@ -1,8 +1,6 @@
 ---
 title: "Infrastructure and Physical Networks"
 subtitle: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
-author: "Intelligence Analysis Program, James Madison University"
-date: "Fall 2026"
 ---
 
 ::: {.course-meta}
@@ -1000,44 +998,6 @@ Publication or dissemination of specific vulnerability findings — even in uncl
 :::
 ::::
 
-# Lecture Summary
-
-## Key Formulas and Results
-
-::: {.key-terms}
-
-**Random failure robustness (scale-free)**
-: Giant component survives until $f_c^{\text{random}} \approx 0.65+$ — extraordinary robustness to accidents due to low-degree node abundance
-
-**Targeted attack fragility (scale-free)**
-: $p_c^{\text{targeted}} \approx 1/(\kappa - 1)$; for scale-free networks $\kappa \gg 1$, so $p_c^{\text{targeted}} \ll 1$ — collapses after 5–10% hub removal
-
-**Percolation threshold (random graph)**
-: $p_c = 1/\langle k \rangle$; below this, only small disconnected clusters; above, a giant component exists
-
-**Power grid average degree**
-: $\langle k \rangle \approx 2.7$ for U.S. Western grid; near-planar; small-world ($C = 0.080$, $L = 18.7$)
-
-**Motter-Lai capacity**
-: $C_i = (1+\alpha)L_i^0$; $\alpha$ = tolerance parameter; small $\alpha$ → cascade sensitivity; betweenness-weighted capacity upgrade is optimal mitigation
-
-**Network efficiency loss**
-: $\Delta E(v) = [E(G) - E(G \setminus v)] / E(G)$; captures fragmentation and path-lengthening simultaneously
-
-**Redundancy index**
-: $R = |E| / (|V|-1)$; $R = 1$ = tree (zero fault tolerance); $R > 2$ = meaningful redundancy
-
-**WAN average path length**
-: 4.4 hops; most airports within 2 connections of any other via a major hub
-
-**Undersea cable share**
-: ~95–99% of international internet traffic; satellite carries $< 5\%$ at higher latency
-
-**BGP AS count**
-: ~80,000 active globally; scale-free degree distribution; Tier 1 carriers form a full-mesh core
-
-:::
-
 ## Key Analytical Takeaways
 
 1. Scale-free infrastructure networks are simultaneously robust to random failure and catastrophically fragile to targeted hub removal. The same structural property — high-degree hubs — produces both. Security investment must be radically unequal, concentrated at hubs, to address the targeted attack vulnerability.
@@ -1052,29 +1012,9 @@ Publication or dissemination of specific vulnerability findings — even in uncl
 
 6. Critical node identification requires multiple complementary methods. Combine betweenness, articulation points, targeted attack simulation, and efficiency loss into a combined ranking. Articulation points are always included regardless of other metric rankings — their removal guarantees disconnection.
 
-::: {.callout-note title="Next and Final Session" icon=false}
-The final two class sessions are **project workshop hours and final project presentations**. Bring your network data, your vulnerability assessment framework, and your intelligence product. The structured vulnerability assessment workflow from this lecture is the template for the final project deliverable.
-:::
+### Next and Final Session
 
-```{=html}
-<div style="margin-top:2rem">
-  <ul class="course-sequence">
-    <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> What is Network Analysis?</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Graph Theory Basics</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Centrality and Influence</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Social Network Analysis in Intelligence</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Community Detection and Clustering</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Geospatial and Multi-Layer Networks</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> [Week 8]</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Temporal and Dynamic Networks</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Global Security and Network Analysis</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Financial and Transaction Networks</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Information and Influence Networks</li>
-    <li class="seq-active"><span class="seq-icon">▶</span> <strong>Infrastructure and Physical Networks</strong> (this lecture)</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Final Project Presentations</li>
-  </ul>
-</div>
+The final two class sessions are **project workshop hours and final project presentations**. Bring your network data, your vulnerability assessment framework, and your intelligence product. The structured vulnerability assessment workflow from this lecture is the template for the final project deliverable.
 
 <div class="page-footer-custom">
 Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026

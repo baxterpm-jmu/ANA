@@ -966,12 +966,12 @@ The two communities were structurally distinct by design — organizational sepa
 **Analytical implication:** boundary actors between the political and military communities are the highest-value targets for intelligence collection — they are the only nodes with visibility into both organizational logics.
 :::
 
+:::
+::::
+
 ::: {.callout-note title="Modularity as a Fragmentation Warning" icon=false}
 Monitoring $Q(t)$ as a **time series** provides early warning of organizational fragmentation. Rising modularity over successive network snapshots signals that an organization is splitting into increasingly distinct subcommunities — a potential opportunity for influence operations, defector recruitment, or exploitation of internal conflict. Decreasing modularity signals consolidation under a single coordination structure.
 :::
-
-:::
-::::
 
 ## Cell Structure Recovery in Covert Networks
 
@@ -1024,9 +1024,6 @@ This structure produced detectably low modularity in observed communication netw
 
 ## Implementation: Gephi and NetworkX
 
-:::: {.columns}
-::: {.column width="50%"}
-
 ### Gephi Workflow
 
 1. Import edge list → **Statistics → Modularity** (Louvain implementation)
@@ -1042,9 +1039,6 @@ This structure produced detectably low modularity in observed communication netw
 - $Q$ score displayed after run: $>0.3$ = real structure; $>0.6$ = strong
 - Color-coded layout reveals visual cluster separation
 - Isolated small communities in the layout may reflect collection artifacts; validate before reporting
-
-:::
-::: {.column width="50%"}
 
 ### NetworkX / Python
 
@@ -1097,13 +1091,6 @@ S /= R  # normalize to [0,1]
 # Nodes with S[i,j] ~ 0.5 are boundary actors
 ```
 
-::: {.callout-note title="Lab Note" icon=false}
-All three primary methods (Leiden, CPM, Infomap) will be applied to the same dataset in the lab session. Students will compare outputs, build the co-assignment matrix, and identify boundary-actor discrepancies.
-:::
-
-:::
-::::
-
 ## Caveating Community Findings in Intelligence Products
 
 Community detection is a **hypothesis-generating** tool, not a conclusion-generating one. Every product that includes community detection findings must address what the algorithm cannot tell you.
@@ -1155,45 +1142,6 @@ For covert networks, **there is rarely definitive ground truth** for community s
 
 # Lecture Summary
 
-## Key Formulas
-
-::: {.key-terms}
-
-**Modularity $Q$**
-: $Q = \dfrac{1}{2m}\sum_{i,j}\!\Bigl[A_{ij} - \dfrac{k_i k_j}{2m}\Bigr]\delta(c_i,c_j)$; range $(-1,1)$; $>0.3$ = real structure
-
-**Resolution-adjusted modularity**
-: $Q_\gamma$: replaces $\dfrac{k_ik_j}{2m}$ with $\gamma\dfrac{k_ik_j}{2m}$; $\gamma>1$ finds smaller communities
-
-**Resolution limit threshold**
-: Communities with $<\!\sqrt{2m}$ internal edges may be merged; grows with network size
-
-**Graph Laplacian**
-: $L = D - A$; positive semi-definite; Fiedler vector (eigenvector of $\lambda_2$) gives optimal bisection
-
-**Louvain modularity gain**
-: $\Delta Q$ per node reassignment to neighbor's community; node moves to community with $\max \Delta Q > 0$
-
-**Map equation (Infomap)**
-: $L(\mathcal{M}) = q_{\curvearrowright}H(\mathcal{Q}) + \sum_i p_i^{\circlearrowleft}H(\mathcal{P}^i)$; minimize to find flow-based communities
-
-**Girvan-Newman edge betweenness**
-: $C_B(e) = \sum_{s\neq t}\sigma_{st}(e)/\sigma_{st}$; iteratively remove max-betweenness edge
-
-:::
-
-## Algorithm Quick Reference
-
-| Analytical Need | Recommended Algorithm |
-|:----------------|:----------------------|
-| Default general-purpose analysis, large network | **Leiden** |
-| Small network ($n < 1000$), dendrogram needed | Girvan-Newman |
-| Known number of communities from prior intelligence | Spectral clustering |
-| Overlapping memberships, dual-role actors | CPM ($k$-clique, $k=3$ or $4$) |
-| Communication / information flow communities | Infomap |
-| Fast first-pass exploration | Label Propagation |
-| Non-deterministic algorithm, need stability | Consensus (run Louvain ×100, co-assignment matrix) |
-
 ## Key Takeaways
 
 1. Modularity $Q$ is the standard quality measure; $Q > 0.3$ indicates real structure; always bootstrap against null model for small networks.
@@ -1203,27 +1151,10 @@ For covert networks, **there is rarely definitive ground truth** for community s
 5. Run multiple algorithms and multiple trials; stable community assignments have high confidence; boundary nodes and algorithm-divergent assignments are the most analytically interesting outputs.
 6. Community detection generates hypotheses; validation against domain knowledge (HUMINT, court records, known structure) is mandatory before inclusion in a finished intelligence product.
 
-::: {.callout-note title="Next Lecture" icon=false}
-**Geospatial and Multi-Layer Networks** — embedding networks in geographic space, spatial network analysis, multilayer and multiplex network frameworks, ArcGIS Network Analyst for intelligence applications, and GEOINT integration with relational network data.
-:::
+### Next Lecture
 
-```{=html}
-<div style="margin-top:2rem">
-  <ul class="course-sequence">
-    <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> What is Network Analysis?</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Graph Theory Basics</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Centrality and Influence</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Social Network Analysis in Intelligence</li>
-    <li class="seq-active"><span class="seq-icon">▶</span> <strong>Community Detection and Clustering</strong> (this lecture)</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Geospatial / Multi-Layer Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Temporal / Dynamic Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Global Security Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Financial Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Information / Influence Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Infrastructure Networks</li>
-  </ul>
-</div>
+**Geospatial and Multi-Layer Networks** — embedding networks in geographic space, spatial network analysis, multilayer and multiplex network frameworks, ArcGIS Network Analyst for intelligence applications, and GEOINT integration with relational network data.
+
 
 <div class="page-footer-custom">
 Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026

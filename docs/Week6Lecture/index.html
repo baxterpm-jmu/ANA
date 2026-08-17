@@ -312,14 +312,19 @@ window.Quarto = {
   </ul></li>
   <li><a href="#faction-identification-in-political-and-insurgent-networks" id="toc-faction-identification-in-political-and-insurgent-networks" class="nav-link" data-scroll-target="#faction-identification-in-political-and-insurgent-networks">Faction Identification in Political and Insurgent Networks</a></li>
   <li><a href="#cell-structure-recovery-in-covert-networks" id="toc-cell-structure-recovery-in-covert-networks" class="nav-link" data-scroll-target="#cell-structure-recovery-in-covert-networks">Cell Structure Recovery in Covert Networks</a></li>
-  <li><a href="#implementation-gephi-and-networkx" id="toc-implementation-gephi-and-networkx" class="nav-link" data-scroll-target="#implementation-gephi-and-networkx">Implementation: Gephi and NetworkX</a></li>
+  <li><a href="#implementation-gephi-and-networkx" id="toc-implementation-gephi-and-networkx" class="nav-link" data-scroll-target="#implementation-gephi-and-networkx">Implementation: Gephi and NetworkX</a>
+  <ul class="collapse">
+  <li><a href="#gephi-workflow" id="toc-gephi-workflow" class="nav-link" data-scroll-target="#gephi-workflow">Gephi Workflow</a></li>
+  <li><a href="#networkx-python" id="toc-networkx-python" class="nav-link" data-scroll-target="#networkx-python">NetworkX / Python</a></li>
+  </ul></li>
   <li><a href="#caveating-community-findings-in-intelligence-products" id="toc-caveating-community-findings-in-intelligence-products" class="nav-link" data-scroll-target="#caveating-community-findings-in-intelligence-products">Caveating Community Findings in Intelligence Products</a></li>
   </ul></li>
   <li><a href="#lecture-summary" id="toc-lecture-summary" class="nav-link" data-scroll-target="#lecture-summary">Lecture Summary</a>
   <ul class="collapse">
-  <li><a href="#key-formulas" id="toc-key-formulas" class="nav-link" data-scroll-target="#key-formulas">Key Formulas</a></li>
-  <li><a href="#algorithm-quick-reference" id="toc-algorithm-quick-reference" class="nav-link" data-scroll-target="#algorithm-quick-reference">Algorithm Quick Reference</a></li>
-  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a>
+  <ul class="collapse">
+  <li><a href="#next-lecture" id="toc-next-lecture" class="nav-link" data-scroll-target="#next-lecture">Next Lecture</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -1464,6 +1469,8 @@ window.Quarto = {
 <p><strong>Analytical implication:</strong> boundary actors between the political and military communities are the highest-value targets for intelligence collection — they are the only nodes with visibility into both organizational logics.</p>
 </div>
 </div>
+</div>
+</div>
 <div class="callout callout-style-default callout-note no-icon callout-titled" title="Modularity as a Fragmentation Warning">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1475,8 +1482,6 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <p>Monitoring <span class="math inline">\(Q(t)\)</span> as a <strong>time series</strong> provides early warning of organizational fragmentation. Rising modularity over successive network snapshots signals that an organization is splitting into increasingly distinct subcommunities — a potential opportunity for influence operations, defector recruitment, or exploitation of internal conflict. Decreasing modularity signals consolidation under a single coordination structure.</p>
-</div>
-</div>
 </div>
 </div>
 </section>
@@ -1544,8 +1549,6 @@ window.Quarto = {
 </section>
 <section id="implementation-gephi-and-networkx" class="level2">
 <h2 class="anchored" data-anchor-id="implementation-gephi-and-networkx">Implementation: Gephi and NetworkX</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
 <section id="gephi-workflow" class="level3">
 <h3 class="anchored" data-anchor-id="gephi-workflow">Gephi Workflow</h3>
 <ol type="1">
@@ -1564,7 +1567,6 @@ window.Quarto = {
 <li>Isolated small communities in the layout may reflect collection artifacts; validate before reporting</li>
 </ul>
 </section>
-</div><div class="column" style="width:50%;">
 <section id="networkx-python" class="level3">
 <h3 class="anchored" data-anchor-id="networkx-python">NetworkX / Python</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
@@ -1613,22 +1615,7 @@ window.Quarto = {
 <span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>S <span class="op">/=</span> R  <span class="co"># normalize to [0,1]</span></span>
 <span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Nodes with S[i,j] ~ 0.5 are boundary actors</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-note no-icon callout-titled" title="Lab Note">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Lab Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>All three primary methods (Leiden, CPM, Infomap) will be applied to the same dataset in the lab session. Students will compare outputs, build the co-assignment matrix, and identify boundary-actor discrepancies.</p>
-</div>
-</div>
 </section>
-</div>
-</div>
 </section>
 <section id="caveating-community-findings-in-intelligence-products" class="level2">
 <h2 class="anchored" data-anchor-id="caveating-community-findings-in-intelligence-products">Caveating Community Findings in Intelligence Products</h2>
@@ -1692,86 +1679,6 @@ window.Quarto = {
 </section>
 <section id="lecture-summary" class="level1">
 <h1>Lecture Summary</h1>
-<section id="key-formulas" class="level2">
-<h2 class="anchored" data-anchor-id="key-formulas">Key Formulas</h2>
-<div class="key-terms">
-<dl>
-<dt><strong>Modularity <span class="math inline">\(Q\)</span></strong></dt>
-<dd>
-<span class="math inline">\(Q = \dfrac{1}{2m}\sum_{i,j}\!\Bigl[A_{ij} - \dfrac{k_i k_j}{2m}\Bigr]\delta(c_i,c_j)\)</span>; range <span class="math inline">\((-1,1)\)</span>; <span class="math inline">\(&gt;0.3\)</span> = real structure
-</dd>
-<dt><strong>Resolution-adjusted modularity</strong></dt>
-<dd>
-<span class="math inline">\(Q_\gamma\)</span>: replaces <span class="math inline">\(\dfrac{k_ik_j}{2m}\)</span> with <span class="math inline">\(\gamma\dfrac{k_ik_j}{2m}\)</span>; <span class="math inline">\(\gamma&gt;1\)</span> finds smaller communities
-</dd>
-<dt><strong>Resolution limit threshold</strong></dt>
-<dd>
-Communities with <span class="math inline">\(&lt;\!\sqrt{2m}\)</span> internal edges may be merged; grows with network size
-</dd>
-<dt><strong>Graph Laplacian</strong></dt>
-<dd>
-<span class="math inline">\(L = D - A\)</span>; positive semi-definite; Fiedler vector (eigenvector of <span class="math inline">\(\lambda_2\)</span>) gives optimal bisection
-</dd>
-<dt><strong>Louvain modularity gain</strong></dt>
-<dd>
-<span class="math inline">\(\Delta Q\)</span> per node reassignment to neighbor’s community; node moves to community with <span class="math inline">\(\max \Delta Q &gt; 0\)</span>
-</dd>
-<dt><strong>Map equation (Infomap)</strong></dt>
-<dd>
-<span class="math inline">\(L(\mathcal{M}) = q_{\curvearrowright}H(\mathcal{Q}) + \sum_i p_i^{\circlearrowleft}H(\mathcal{P}^i)\)</span>; minimize to find flow-based communities
-</dd>
-<dt><strong>Girvan-Newman edge betweenness</strong></dt>
-<dd>
-<span class="math inline">\(C_B(e) = \sum_{s\neq t}\sigma_{st}(e)/\sigma_{st}\)</span>; iteratively remove max-betweenness edge
-</dd>
-</dl>
-</div>
-</section>
-<section id="algorithm-quick-reference" class="level2">
-<h2 class="anchored" data-anchor-id="algorithm-quick-reference">Algorithm Quick Reference</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 42%">
-<col style="width: 57%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Analytical Need</th>
-<th style="text-align: left;">Recommended Algorithm</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Default general-purpose analysis, large network</td>
-<td style="text-align: left;"><strong>Leiden</strong></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Small network (<span class="math inline">\(n &lt; 1000\)</span>), dendrogram needed</td>
-<td style="text-align: left;">Girvan-Newman</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Known number of communities from prior intelligence</td>
-<td style="text-align: left;">Spectral clustering</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Overlapping memberships, dual-role actors</td>
-<td style="text-align: left;">CPM (<span class="math inline">\(k\)</span>-clique, <span class="math inline">\(k=3\)</span> or <span class="math inline">\(4\)</span>)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Communication / information flow communities</td>
-<td style="text-align: left;">Infomap</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Fast first-pass exploration</td>
-<td style="text-align: left;">Label Propagation</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Non-deterministic algorithm, need stability</td>
-<td style="text-align: left;">Consensus (run Louvain ×100, co-assignment matrix)</td>
-</tr>
-</tbody>
-</table>
-</section>
 <section id="key-takeaways" class="level2">
 <h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h2>
 <ol type="1">
@@ -1782,64 +1689,15 @@ Communities with <span class="math inline">\(&lt;\!\sqrt{2m}\)</span> internal e
 <li>Run multiple algorithms and multiple trials; stable community assignments have high confidence; boundary nodes and algorithm-divergent assignments are the most analytically interesting outputs.</li>
 <li>Community detection generates hypotheses; validation against domain knowledge (HUMINT, court records, known structure) is mandatory before inclusion in a finished intelligence product.</li>
 </ol>
-<div class="callout callout-style-default callout-note no-icon callout-titled" title="Next Lecture">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Next Lecture
-</div>
-</div>
-<div class="callout-body-container callout-body">
+<section id="next-lecture" class="level3">
+<h3 class="anchored" data-anchor-id="next-lecture">Next Lecture</h3>
 <p><strong>Geospatial and Multi-Layer Networks</strong> — embedding networks in geographic space, spatial network analysis, multilayer and multiplex network frameworks, ArcGIS Network Analyst for intelligence applications, and GEOINT integration with relational network data.</p>
-</div>
-</div>
-<div style="margin-top:2rem">
-<ul class="course-sequence">
-<li class="seq-done">
-<span class="seq-icon">✓</span> Course Introduction
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> What is Network Analysis?
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Graph Theory Basics
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Centrality and Influence
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Social Network Analysis in Intelligence
-</li>
-<li class="seq-active">
-<span class="seq-icon">▶</span> <strong>Community Detection and Clustering</strong> (this lecture)
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Geospatial / Multi-Layer Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Temporal / Dynamic Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Global Security Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Financial Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Information / Influence Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Infrastructure Networks
-</li>
-</ul>
-</div>
 <div class="page-footer-custom">
 <p>Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026</p>
 </div>
 
 
+</section>
 </section>
 </section>
 

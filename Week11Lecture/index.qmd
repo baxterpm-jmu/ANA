@@ -1,8 +1,6 @@
 ---
 title: "Financial and Transaction Networks"
 subtitle: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
-author: "Intelligence Analysis Program, James Madison University"
-date: "Fall 2026"
 ---
 
 ::: {.course-meta}
@@ -1063,35 +1061,6 @@ Financial network analysis serves **two distinct functions**: an *intelligence f
 :::
 ::::
 
-# Lecture Summary
-
-## Key Formulas and Structures
-
-::: {.key-terms}
-
-**Bipartite person-account network**
-: $G = (P, A, E)$; project to $P$ for co-controller analysis; project to $A$ for account cluster analysis
-
-**Flow betweenness centrality**
-: $C_F(v) = \sum_{s\neq v\neq t} f_{st}(v)/f_{st}$; correct for financial networks where money splits across multiple paths
-
-**Cycle detection**
-: Closed cycles in the directed transaction graph = strong layering indicator; `nx.find_cycle(G)` in NetworkX
-
-**Shell company chain length**
-: $UBO \to C_1 \to \cdots \to C_n \to \text{Asset}$; path length $n$ correlates with investigative difficulty and opacity
-
-**Co-input clustering heuristic**
-: Addresses co-spending in a Bitcoin transaction are controlled by the same entity; transitive closure produces entity clusters
-
-**Structuring anomaly detection**
-: Node with many transaction edges in $[9{,}000, 9{,}999]$ weight range in a short window; anomalous relative to account baseline
-
-**Minimum cut for financial isolation**
-: Minimum vertex cut between sanctioned entity and financial system = optimal simultaneous designation set
-
-:::
-
 ## Key Analytical Takeaways
 
 1. Financial networks are directed, weighted, and temporal — all three properties are analytically essential. Ignoring direction loses flow attribution; ignoring weights loses magnitude; ignoring timestamps loses causal sequence.
@@ -1106,27 +1075,10 @@ Financial network analysis serves **two distinct functions**: an *intelligence f
 
 6. Financial intelligence is most powerful as all-source intelligence: FININT + SIGINT temporal correlation + HUMINT structural validation + GEOINT geographic mapping + travel record co-location produces attribution confidence levels unavailable to any single stream alone.
 
-::: {.callout-note title="Next Lecture" icon=false}
-**Information and Influence Networks** — social media network analysis, disinformation attribution, coordinated inauthentic behavior detection, narrative mapping, the HITS framework applied to influence operations, and the NLP-network analysis integration for content-aware network modeling.
-:::
+## Next Lecture
 
-```{=html}
-<div style="margin-top:2rem">
-  <ul class="course-sequence">
-    <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> What is Network Analysis?</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Graph Theory Basics</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Centrality and Influence</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Social Network Analysis in Intelligence</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Community Detection and Clustering</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Geospatial and Multi-Layer Networks</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> [Week 8]</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Temporal and Dynamic Networks</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Global Security and Network Analysis</li>
-    <li class="seq-active"><span class="seq-icon">▶</span> <strong>Financial and Transaction Networks</strong> (this lecture)</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Information / Influence Networks</li>
-  </ul>
-</div>
+**Information and Influence Networks** — social media network analysis, disinformation attribution, coordinated inauthentic behavior detection, narrative mapping, the HITS framework applied to influence operations, and the NLP-network analysis integration for content-aware network modeling.
+
 
 <div class="page-footer-custom">
 Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026

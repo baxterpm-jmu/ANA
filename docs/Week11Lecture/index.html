@@ -6,8 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Intelligence Analysis Program, James Madison University">
-<meta name="dcterms.date" content="2026-01-01">
 
 <title>Financial and Transaction Networks – IA 480: Applied Network Analysis: Systems, Connections, and Influence</title>
 <style>
@@ -309,11 +307,8 @@ window.Quarto = {
   <li><a href="#fincen-data-sars-ctrs-and-network-construction" id="toc-fincen-data-sars-ctrs-and-network-construction" class="nav-link" data-scroll-target="#fincen-data-sars-ctrs-and-network-construction">FinCEN Data: SARs, CTRs, and Network Construction</a></li>
   <li><a href="#fatf-terrorist-financing-typologies-as-network-patterns" id="toc-fatf-terrorist-financing-typologies-as-network-patterns" class="nav-link" data-scroll-target="#fatf-terrorist-financing-typologies-as-network-patterns">FATF Terrorist Financing Typologies as Network Patterns</a></li>
   <li><a href="#financial-intelligence-integration" id="toc-financial-intelligence-integration" class="nav-link" data-scroll-target="#financial-intelligence-integration">Financial Intelligence Integration</a></li>
-  </ul></li>
-  <li><a href="#lecture-summary" id="toc-lecture-summary" class="nav-link" data-scroll-target="#lecture-summary">Lecture Summary</a>
-  <ul class="collapse">
-  <li><a href="#key-formulas-and-structures" id="toc-key-formulas-and-structures" class="nav-link" data-scroll-target="#key-formulas-and-structures">Key Formulas and Structures</a></li>
   <li><a href="#key-analytical-takeaways" id="toc-key-analytical-takeaways" class="nav-link" data-scroll-target="#key-analytical-takeaways">Key Analytical Takeaways</a></li>
+  <li><a href="#next-lecture" id="toc-next-lecture" class="nav-link" data-scroll-target="#next-lecture">Next Lecture</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -331,19 +326,7 @@ window.Quarto = {
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Intelligence Analysis Program, James Madison University </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -1447,44 +1430,6 @@ window.Quarto = {
 </div>
 </div>
 </section>
-</section>
-<section id="lecture-summary" class="level1">
-<h1>Lecture Summary</h1>
-<section id="key-formulas-and-structures" class="level2">
-<h2 class="anchored" data-anchor-id="key-formulas-and-structures">Key Formulas and Structures</h2>
-<div class="key-terms">
-<dl>
-<dt><strong>Bipartite person-account network</strong></dt>
-<dd>
-<span class="math inline">\(G = (P, A, E)\)</span>; project to <span class="math inline">\(P\)</span> for co-controller analysis; project to <span class="math inline">\(A\)</span> for account cluster analysis
-</dd>
-<dt><strong>Flow betweenness centrality</strong></dt>
-<dd>
-<span class="math inline">\(C_F(v) = \sum_{s\neq v\neq t} f_{st}(v)/f_{st}\)</span>; correct for financial networks where money splits across multiple paths
-</dd>
-<dt><strong>Cycle detection</strong></dt>
-<dd>
-Closed cycles in the directed transaction graph = strong layering indicator; <code>nx.find_cycle(G)</code> in NetworkX
-</dd>
-<dt><strong>Shell company chain length</strong></dt>
-<dd>
-<span class="math inline">\(UBO \to C_1 \to \cdots \to C_n \to \text{Asset}\)</span>; path length <span class="math inline">\(n\)</span> correlates with investigative difficulty and opacity
-</dd>
-<dt><strong>Co-input clustering heuristic</strong></dt>
-<dd>
-Addresses co-spending in a Bitcoin transaction are controlled by the same entity; transitive closure produces entity clusters
-</dd>
-<dt><strong>Structuring anomaly detection</strong></dt>
-<dd>
-Node with many transaction edges in <span class="math inline">\([9{,}000, 9{,}999]\)</span> weight range in a short window; anomalous relative to account baseline
-</dd>
-<dt><strong>Minimum cut for financial isolation</strong></dt>
-<dd>
-Minimum vertex cut between sanctioned entity and financial system = optimal simultaneous designation set
-</dd>
-</dl>
-</div>
-</section>
 <section id="key-analytical-takeaways" class="level2">
 <h2 class="anchored" data-anchor-id="key-analytical-takeaways">Key Analytical Takeaways</h2>
 <ol type="1">
@@ -1495,59 +1440,10 @@ Minimum vertex cut between sanctioned entity and financial system = optimal simu
 <li><p>FinCEN data (SARs, CTRs) provides structured edge data for financial network construction. Structuring is detectable as an anomalous edge-weight distribution below the CTR threshold. Access requires legal authorization; FinCEN Files provide a partial open-source substitute.</p></li>
 <li><p>Financial intelligence is most powerful as all-source intelligence: FININT + SIGINT temporal correlation + HUMINT structural validation + GEOINT geographic mapping + travel record co-location produces attribution confidence levels unavailable to any single stream alone.</p></li>
 </ol>
-<div class="callout callout-style-default callout-note no-icon callout-titled" title="Next Lecture">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Next Lecture
-</div>
-</div>
-<div class="callout-body-container callout-body">
+</section>
+<section id="next-lecture" class="level2">
+<h2 class="anchored" data-anchor-id="next-lecture">Next Lecture</h2>
 <p><strong>Information and Influence Networks</strong> — social media network analysis, disinformation attribution, coordinated inauthentic behavior detection, narrative mapping, the HITS framework applied to influence operations, and the NLP-network analysis integration for content-aware network modeling.</p>
-</div>
-</div>
-<div style="margin-top:2rem">
-<ul class="course-sequence">
-<li class="seq-done">
-<span class="seq-icon">✓</span> Course Introduction
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> What is Network Analysis?
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Graph Theory Basics
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Centrality and Influence
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Social Network Analysis in Intelligence
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Community Detection and Clustering
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Geospatial and Multi-Layer Networks
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> [Week 8]
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Temporal and Dynamic Networks
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Global Security and Network Analysis
-</li>
-<li class="seq-active">
-<span class="seq-icon">▶</span> <strong>Financial and Transaction Networks</strong> (this lecture)
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Information / Influence Networks
-</li>
-</ul>
-</div>
 <div class="page-footer-custom">
 <p>Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026</p>
 </div>

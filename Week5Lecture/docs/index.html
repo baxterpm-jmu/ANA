@@ -1,0 +1,2142 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Social Network Analysis in Intelligence</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-d6fbb5bfb24a4f1906c428146fc3bdde.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-95bac7fd7a732011317707af234ee2ae.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul>
+  <li><a href="#lecture-roadmap" id="toc-lecture-roadmap" class="nav-link active" data-scroll-target="#lecture-roadmap">Lecture Roadmap</a></li>
+  <li><a href="#part-i-sna-foundations-for-intelligence" id="toc-part-i-sna-foundations-for-intelligence" class="nav-link" data-scroll-target="#part-i-sna-foundations-for-intelligence">Part I: SNA Foundations for Intelligence</a>
+  <ul class="collapse">
+  <li><a href="#the-relational-turn-from-attributes-to-structure" id="toc-the-relational-turn-from-attributes-to-structure" class="nav-link" data-scroll-target="#the-relational-turn-from-attributes-to-structure">The Relational Turn: From Attributes to Structure</a></li>
+  <li><a href="#tie-strength-granovetters-framework" id="toc-tie-strength-granovetters-framework" class="nav-link" data-scroll-target="#tie-strength-granovetters-framework">Tie Strength: Granovetter’s Framework</a></li>
+  <li><a href="#structural-holes-and-brokerage" id="toc-structural-holes-and-brokerage" class="nav-link" data-scroll-target="#structural-holes-and-brokerage">Structural Holes and Brokerage</a></li>
+  <li><a href="#structural-roles-in-networks" id="toc-structural-roles-in-networks" class="nav-link" data-scroll-target="#structural-roles-in-networks">Structural Roles in Networks</a></li>
+  </ul></li>
+  <li><a href="#part-ii-dark-networks-in-depth" id="toc-part-ii-dark-networks-in-depth" class="nav-link" data-scroll-target="#part-ii-dark-networks-in-depth">Part II: Dark Networks in Depth</a>
+  <ul class="collapse">
+  <li><a href="#the-krebs-and-everton-research-traditions" id="toc-the-krebs-and-everton-research-traditions" class="nav-link" data-scroll-target="#the-krebs-and-everton-research-traditions">The Krebs and Everton Research Traditions</a></li>
+  <li><a href="#covert-network-organizational-forms" id="toc-covert-network-organizational-forms" class="nav-link" data-scroll-target="#covert-network-organizational-forms">Covert Network Organizational Forms</a></li>
+  <li><a href="#network-resilience-and-adaptation-after-disruption" id="toc-network-resilience-and-adaptation-after-disruption" class="nav-link" data-scroll-target="#network-resilience-and-adaptation-after-disruption">Network Resilience and Adaptation After Disruption</a>
+  <ul class="collapse">
+  <li><a href="#mechanisms-of-network-adaptation" id="toc-mechanisms-of-network-adaptation" class="nav-link" data-scroll-target="#mechanisms-of-network-adaptation">Mechanisms of Network Adaptation</a></li>
+  </ul></li>
+  <li><a href="#the-redus-framework-for-network-assessment" id="toc-the-redus-framework-for-network-assessment" class="nav-link" data-scroll-target="#the-redus-framework-for-network-assessment">The REDUS Framework for Network Assessment</a></li>
+  </ul></li>
+  <li><a href="#part-iii-domain-applications" id="toc-part-iii-domain-applications" class="nav-link" data-scroll-target="#part-iii-domain-applications">Part III: Domain Applications</a>
+  <ul class="collapse">
+  <li><a href="#counterterrorism-and-insurgency" id="toc-counterterrorism-and-insurgency" class="nav-link" data-scroll-target="#counterterrorism-and-insurgency">Counterterrorism and Insurgency</a>
+  <ul class="collapse">
+  <li><a href="#key-analytical-tasks" id="toc-key-analytical-tasks" class="nav-link" data-scroll-target="#key-analytical-tasks">Key Analytical Tasks</a></li>
+  <li><a href="#the-jinoordin-top-case" id="toc-the-jinoordin-top-case" class="nav-link" data-scroll-target="#the-jinoordin-top-case">The JI/Noordin Top Case</a></li>
+  </ul></li>
+  <li><a href="#organized-crime-and-trafficking-networks" id="toc-organized-crime-and-trafficking-networks" class="nav-link" data-scroll-target="#organized-crime-and-trafficking-networks">Organized Crime and Trafficking Networks</a></li>
+  <li><a href="#insider-threat-and-organizational-networks" id="toc-insider-threat-and-organizational-networks" class="nav-link" data-scroll-target="#insider-threat-and-organizational-networks">Insider Threat and Organizational Networks</a>
+  <ul class="collapse">
+  <li><a href="#the-structural-signature-of-insider-threat" id="toc-the-structural-signature-of-insider-threat" class="nav-link" data-scroll-target="#the-structural-signature-of-insider-threat">The Structural Signature of Insider Threat</a></li>
+  </ul></li>
+  <li><a href="#influence-operations-and-social-media" id="toc-influence-operations-and-social-media" class="nav-link" data-scroll-target="#influence-operations-and-social-media">Influence Operations and Social Media</a></li>
+  </ul></li>
+  <li><a href="#part-iv-tradecraft-and-tools" id="toc-part-iv-tradecraft-and-tools" class="nav-link" data-scroll-target="#part-iv-tradecraft-and-tools">Part IV: Tradecraft and Tools</a>
+  <ul class="collapse">
+  <li><a href="#i2-analyst-notebook-intelligence-grade-sna" id="toc-i2-analyst-notebook-intelligence-grade-sna" class="nav-link" data-scroll-target="#i2-analyst-notebook-intelligence-grade-sna">i2 Analyst Notebook: Intelligence-Grade SNA</a></li>
+  <li><a href="#legal-and-ethical-constraints-on-sna-collection" id="toc-legal-and-ethical-constraints-on-sna-collection" class="nav-link" data-scroll-target="#legal-and-ethical-constraints-on-sna-collection">Legal and Ethical Constraints on SNA Collection</a></li>
+  </ul></li>
+  <li><a href="#lecture-summary" id="toc-lecture-summary" class="nav-link" data-scroll-target="#lecture-summary">Lecture Summary</a>
+  <ul class="collapse">
+  <li><a href="#core-concepts" id="toc-core-concepts" class="nav-link" data-scroll-target="#core-concepts">Core Concepts</a></li>
+  <li><a href="#key-applied-takeaways" id="toc-key-applied-takeaways" class="nav-link" data-scroll-target="#key-applied-takeaways">Key Applied Takeaways</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Social Network Analysis in Intelligence</h1>
+<p class="subtitle lead">IA 480: Applied Network Analysis: Systems, Connections, and Influence</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="course-meta">
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Course</td>
+<td style="text-align: left;">IA 480: Applied Network Analysis</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Week</td>
+<td style="text-align: left;">5 of 16</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Instructor</td>
+<td style="text-align: left;">Prof.&nbsp;Philip Baxter, Intelligence Analysis Program</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Term</td>
+<td style="text-align: left;">Fall 2026</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Learning Objectives">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of this lecture, students should be able to:</p>
+<ol type="1">
+<li>Articulate the distinction between attribute-based and relational intelligence analysis, and explain when each is appropriate.</li>
+<li>Apply Granovetter’s tie strength framework and Burt’s structural hole theory to intelligence network problems.</li>
+<li>Characterize the four major covert network organizational forms by structure, vulnerability profile, and disruption strategy.</li>
+<li>Apply REDUS as a structured framework for network assessment in an intelligence product.</li>
+<li>Identify domain-specific SNA applications in counterterrorism, organized crime, insider threat, and influence operations.</li>
+<li>Describe the legal and ethical constraints on social network data collection and apply appropriate caveat language to SNA findings.</li>
+</ol>
+</div>
+</div>
+<section id="lecture-roadmap" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-roadmap">Lecture Roadmap</h2>
+<div class="roadmap-grid" style="grid-template-columns: repeat(2,1fr)">
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part I — SNA Foundations for Intelligence</div>
+    <ul>
+      <li>The relational turn: from attributes to structure</li>
+      <li>Tie strength: strong, weak, and absent ties</li>
+      <li>Structural holes and brokerage</li>
+      <li>Roles in networks: brokers, gatekeepers, isolates</li>
+      <li>Structural equivalence and role substitution</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part II — Dark Networks in Depth</div>
+    <ul>
+      <li>The Krebs and Everton research traditions</li>
+      <li>Four covert network organizational forms</li>
+      <li>Network resilience and adaptation after disruption</li>
+      <li>The REDUS framework for network assessment</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part III — Domain Applications</div>
+    <ul>
+      <li>Counterterrorism and insurgency</li>
+      <li>Organized crime and trafficking</li>
+      <li>Insider threat and organizational networks</li>
+      <li>Influence operations and social media</li>
+    </ul>
+  </div>
+  <div class="roadmap-part">
+    <div class="roadmap-part-header">Part IV — Tradecraft and Tools</div>
+    <ul>
+      <li>From raw data to network intelligence product</li>
+      <li>i2 Analyst Notebook: entity-relationship analysis</li>
+      <li>Legal and ethical constraints on SNA collection</li>
+      <li>Caveating SNA findings in finished products</li>
+    </ul>
+  </div>
+</div>
+</section>
+<section id="part-i-sna-foundations-for-intelligence" class="level1">
+<h1>Part I: SNA Foundations for Intelligence</h1>
+<section id="the-relational-turn-from-attributes-to-structure" class="level2">
+<h2 class="anchored" data-anchor-id="the-relational-turn-from-attributes-to-structure">The Relational Turn: From Attributes to Structure</h2>
+<p>Intelligence analysis has historically been organized around <strong>entities</strong>: named subjects with dossiers of biographical, ideological, and operational attributes. This attribute-centric model works well for assessing individual actors but fails to capture the relational structure through which power, information, and vulnerability are actually distributed.</p>
+<div class="columns">
+<div class="column" style="width:53%;">
+<section id="the-attribute-centric-model-and-its-limits" class="level3">
+<h3 class="anchored" data-anchor-id="the-attribute-centric-model-and-its-limits">The Attribute-Centric Model and Its Limits</h3>
+<p>Traditional intelligence tradecraft focuses on:</p>
+<ul>
+<li>Biographical profiles: nationality, training, ideology, criminal history</li>
+<li>Capability assessments: skills, access, resources</li>
+<li>Behavioral indicators: travel patterns, communications, associations</li>
+<li>Organizational charts: formal reporting structures</li>
+</ul>
+<p>The dominant visual artifact is the hierarchical org chart, which encodes <em>intended</em> authority relationships but systematically misses:</p>
+<ul>
+<li><strong>Informal influence networks</strong> that operate outside formal channels</li>
+<li><strong>Lateral communication</strong> between actors at the same level</li>
+<li><strong>Cross-organizational ties</strong> that don’t appear in any single org chart</li>
+<li><strong>Emergent coordination</strong> arising from relationship structure, not formal assignment</li>
+</ul>
+</section>
+<section id="the-relational-alternative" class="level3">
+<h3 class="anchored" data-anchor-id="the-relational-alternative">The Relational Alternative</h3>
+<p>In the relational model, an actor’s significance is determined not by what they are, but by <strong>where they sit in a network of relationships</strong>:<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<ul>
+<li>Influence, information access, and vulnerability are <em>emergent properties</em> of network position</li>
+<li>Two actors with identical attributes can have radically different structural power</li>
+<li>Formal org charts represent <em>intended</em> structure; SNA reveals <em>actual</em> structure</li>
+<li>Network position determines what information reaches a node, which resources it can access, and how it can be disrupted without its own knowledge</li>
+</ul>
+<p>The foundational reference for this course’s methodology is Wasserman and Faust’s <em>Social Network Analysis</em> (1994), which remains the methodological standard for the field.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+</section>
+</div><div class="column" style="width:2%;">
+
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="The Structural Power Problem">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>The Structural Power Problem
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Consider two mid-level operatives <strong>A</strong> and <strong>B</strong> with similar attribute profiles: same nationality, same training, same role designation in an organizational directory.</p>
+<p><strong>Actor A</strong> is connected only within a single cell. Its betweenness centrality is near zero. Removing A changes nothing beyond its immediate cell.</p>
+<p><strong>Actor B</strong> bridges two otherwise disconnected cells. It has high betweenness centrality and is the sole coordination link between two operational clusters. Its removal severs all inter-cluster communication.</p>
+<p><strong>Attribute analysis rates A and B equally. SNA reveals B is the higher-value target and the higher-priority collection focus</strong> — a conclusion entirely invisible to attribute-only analysis.</p>
+<p>This scenario is not hypothetical: it describes the analytical gap that produced the Krebs finding on Atta (high betweenness but not the most socially prominent hijacker) and the Everton finding on Noordin Top’s network.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Paradigm Comparison">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Paradigm Comparison
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Attribute Model</th>
+<th style="text-align: left;">Relational Model</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Unit of analysis</td>
+<td style="text-align: left;">Individual actor</td>
+<td style="text-align: left;">Actor + relationships</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Key question</td>
+<td style="text-align: left;">Who is this actor?</td>
+<td style="text-align: left;">Where does this actor sit?</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Primary artifact</td>
+<td style="text-align: left;">Entity file / dossier</td>
+<td style="text-align: left;">Network map</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Blind spot</td>
+<td style="text-align: left;">Emergent coordination</td>
+<td style="text-align: left;">Individual psychology</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Best for</td>
+<td style="text-align: left;">Identity, capability</td>
+<td style="text-align: left;">Targeting, disruption</td>
+</tr>
+</tbody>
+</table>
+<p>The two approaches are <strong>complementary</strong>, not competing. SNA without attribute context produces structurally informed but operationally hollow findings; attribute analysis without SNA misses structural chokepoints.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="tie-strength-granovetters-framework" class="level2">
+<h2 class="anchored" data-anchor-id="tie-strength-granovetters-framework">Tie Strength: Granovetter’s Framework</h2>
+<p>Mark Granovetter’s 1973 paper on the strength of weak ties is among the most-cited works in social science and has direct application to intelligence network analysis.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> The core insight: the <em>structural</em> importance of a tie and its <em>relational</em> intimacy are inversely correlated at the network level.</p>
+<div class="columns">
+<div class="column" style="width:53%;">
+<section id="strong-ties" class="level3">
+<h3 class="anchored" data-anchor-id="strong-ties">Strong Ties</h3>
+<p>Tie strength is a composite of: time invested, emotional intensity, intimacy, and reciprocal services exchanged. <strong>Strong ties</strong> score high on all four:</p>
+<ul>
+<li>Frequent interaction, high trust, deep mutual investment</li>
+<li>Associated with <strong>dense local clusters</strong> — in a strong-tie network, friends of friends tend to become friends (high transitivity)</li>
+<li><strong>Redundant information</strong>: strong-tie clusters circulate the same information repeatedly; no new signals enter from outside</li>
+<li>High coordination reliability for operations <em>within</em> the cluster</li>
+<li><strong>High operational security risk</strong>: one arrest exposes all strong-tie partners; the cluster is the exposure unit</li>
+</ul>
+<p><em>Intelligence examples:</em> kinship ties within a terrorist cell, long-term criminal partnerships, ideological co-founders, military comrades from the same unit</p>
+</section>
+<section id="weak-ties" class="level3">
+<h3 class="anchored" data-anchor-id="weak-ties">Weak Ties</h3>
+<p><strong>Weak ties</strong> score low on all four dimensions — occasional contact, instrumental rather than affective, low intimacy:</p>
+<ul>
+<li>Bridge otherwise disconnected clusters</li>
+<li>Carry <strong>non-redundant information</strong> — the signal that weak ties transmit is novel to each cluster it connects</li>
+<li><strong>Granovetter’s paradox:</strong> weak ties are structurally <em>more</em> powerful than strong ties at the network level, because they are the only conduit for inter-cluster coordination and information transfer</li>
+<li><strong>Lower operational security risk to each cluster</strong>: neither side fully knows the other; but the weak tie node itself is the most exposed structural element</li>
+</ul>
+<p><em>Intelligence examples:</em> occasional arms dealers serving multiple organizations, hawala brokers connecting geographically separate networks, money launderers who interface between criminal enterprises and the formal financial sector, couriers moving between cells without belonging to either</p>
+</section>
+</div><div class="column" style="width:3%;">
+
+</div><div class="column" style="width:43%;">
+<div class="net-diagram-container">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.5rem">
+    Tie Strength: Two Clusters, One Bridge
+  </p>
+  <svg viewbox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:370px;display:block;font-family:'IBM Plex Sans',sans-serif">
+
+    <!-- Cluster labels -->
+    <text x="90" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#450084" letter-spacing="0.05em">CELL A</text>
+    <text x="305" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#AD9C65" letter-spacing="0.05em">CELL B</text>
+
+    <!-- Left cluster: A,B,C strong ties (purple solid) -->
+    <line x1="60" y1="65" x2="145" y2="105" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="60" y1="65" x2="60" y2="155" stroke="#450084" stroke-width="2.5"></line>
+    <line x1="145" y1="105" x2="60" y2="155" stroke="#450084" stroke-width="2.5"></line>
+
+    <!-- Right cluster: D,E,F strong ties (gold solid) -->
+    <line x1="255" y1="105" x2="340" y2="65" stroke="#AD9C65" stroke-width="2.5"></line>
+    <line x1="255" y1="105" x2="340" y2="155" stroke="#AD9C65" stroke-width="2.5"></line>
+    <line x1="340" y1="65" x2="340" y2="155" stroke="#AD9C65" stroke-width="2.5"></line>
+
+    <!-- Weak tie: B(145,105) ---> D(255,105) dashed gold --&gt;
+    <line x1="145" y1="105" x2="255" y2="105" stroke="#CBB677" stroke-width="2.5" stroke-dasharray="8,5"></line>
+
+    <!-- Structural hole label -->
+    <text x="200" y="82" text-anchor="middle" font-size="9" fill="#595959" font-style="italic">structural hole</text>
+    <text x="200" y="122" text-anchor="middle" font-size="9" fill="#CBB677" font-weight="600">weak tie</text>
+
+    <!-- Left cluster nodes -->
+    <circle cx="60" cy="65" r="20" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="60" y="70" text-anchor="middle" font-size="13" font-weight="bold" fill="#450084">A</text>
+    <circle cx="145" cy="105" r="20" fill="#450084" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="145" y="110" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">B</text>
+    <circle cx="60" cy="155" r="20" fill="#DACCE6" stroke="#450084" stroke-width="2.2"></circle>
+    <text x="60" y="160" text-anchor="middle" font-size="13" font-weight="bold" fill="#450084">C</text>
+
+    <!-- Right cluster nodes -->
+    <circle cx="255" cy="105" r="20" fill="#CBB677" stroke="#AD9C65" stroke-width="2.2"></circle>
+    <text x="255" y="110" text-anchor="middle" font-size="13" font-weight="bold" fill="#333">D</text>
+    <circle cx="340" cy="65" r="20" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2.2"></circle>
+    <text x="340" y="70" text-anchor="middle" font-size="13" font-weight="bold" fill="#AD9C65">E</text>
+    <circle cx="340" cy="155" r="20" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2.2"></circle>
+    <text x="340" y="160" text-anchor="middle" font-size="13" font-weight="bold" fill="#AD9C65">F</text>
+
+    <!-- Legend -->
+    <line x1="30" y1="198" x2="70" y2="198" stroke="#450084" stroke-width="2.5"></line>
+    <text x="78" y="202" font-size="9.5" fill="#333">Strong tie (high trust, frequent)</text>
+    <line x1="200" y1="198" x2="240" y2="198" stroke="#CBB677" stroke-width="2.5" stroke-dasharray="8,5"></line>
+    <text x="248" y="202" font-size="9.5" fill="#333">Weak tie (instrumental, sparse)</text>
+  </svg>
+  <figcaption>
+    Node B is the sole bridge between the two clusters.<br>
+    Severing the B–D weak tie fragments the network completely.
+  </figcaption>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Targeting Implication">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Targeting Implication
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Weak ties are often the most structurally critical ties in dark networks.</strong></p>
+<p>Severing a <em>single</em> weak tie between clusters can fragment the network entirely, severing all inter-cluster coordination. By contrast, arresting a <em>strong-tie</em> cluster member (A or C) damages that cluster’s internal cohesion but leaves inter-cluster communication fully intact through B.</p>
+<p>The weak-tie bridge is therefore the highest-priority <em>edge</em> target; the node holding that bridge (B or D) is the highest-priority <em>broker</em> target.</p>
+<p>Analysts who focus collection on strong-tie relationships (kinship, co-location, frequent contact) systematically miss the structurally critical weak ties that connect otherwise isolated operational clusters.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="structural-holes-and-brokerage" class="level2">
+<h2 class="anchored" data-anchor-id="structural-holes-and-brokerage">Structural Holes and Brokerage</h2>
+<p>Ronald Burt’s theory of structural holes formalizes the strategic advantage held by actors who bridge disconnected parts of a network.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<div class="columns">
+<div class="column" style="width:53%;">
+<section id="what-is-a-structural-hole" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-a-structural-hole">What Is a Structural Hole?</h3>
+<p>A <strong>structural hole</strong> is a gap in the network — two actors who are neither directly connected nor share a common connection. The hole represents an absence of relationship where a relationship could potentially exist.</p>
+<p>A <strong>broker</strong> spans a structural hole: connected to actors on both sides of the gap who are not connected to each other. The broker is the <em>only</em> conduit for information and resources flowing between the two disconnected parties.</p>
+</section>
+<section id="broker-advantages" class="level3">
+<h3 class="anchored" data-anchor-id="broker-advantages">Broker Advantages</h3>
+<p>Burt identifies three compounding advantages:</p>
+<ul>
+<li><strong>Information benefits:</strong> the broker has access to non-redundant information from both sides of the hole simultaneously — earlier and broader awareness than actors embedded in a single cluster</li>
+<li><strong>Control benefits:</strong> the broker can <em>manage</em> the timing, quantity, and content of information passed between disconnected parties. It can filter, delay, distort, or amplify signals — the <strong>gatekeeping</strong> function</li>
+<li><strong>Tertius gaudens</strong> (“the third who benefits”): the broker profits from others’ disconnection; maintaining the hole is strategically rational even when connection would benefit the other parties</li>
+</ul>
+</section>
+<section id="measuring-structural-holes" class="level3">
+<h3 class="anchored" data-anchor-id="measuring-structural-holes">Measuring Structural Holes</h3>
+<ul>
+<li><strong>Effective size:</strong> <span class="math inline">\(= \deg(v) - \sum_j p_{ij} m_{ij}\)</span> — the number of non-redundant contacts (subtracts the degree to which neighbors are already connected to each other)</li>
+<li><strong>Constraint</strong> <span class="math inline">\(C_i\)</span>: how much is node <span class="math inline">\(i\)</span> constrained by its network? High constraint means few structural holes and limited brokerage opportunity. <span class="math inline">\(C_i = \sum_j \bigl(p_{ij} + \sum_q p_{iq} p_{qj}\bigr)^2\)</span></li>
+<li><strong>Efficiency:</strong> effective size ÷ actual degree — how efficiently a node’s connections provide non-redundant access</li>
+</ul>
+<p>High betweenness centrality (Week 4) and low constraint correlate strongly; both identify brokers spanning structural holes.</p>
+</section>
+</div><div class="column" style="width:4%;">
+
+</div><div class="column" style="width:43%;">
+<section id="gould-fernandez-brokerage-roles" class="level3">
+<h3 class="anchored" data-anchor-id="gould-fernandez-brokerage-roles">Gould-Fernandez Brokerage Roles</h3>
+<p>Gould and Fernandez formalized five distinct brokerage roles based on the group membership of the source, broker, and target in a directed triad.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6;padding:0.8rem">
+  <svg viewbox="0 0 400 270" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:380px;display:block;font-family:'IBM Plex Sans',sans-serif">
+    <defs>
+      <marker id="a5" markerwidth="7" markerheight="7" refx="5" refy="3" orient="auto">
+        <path d="M0,0 L0,6 L7,3 z" fill="#595959"></path>
+      </marker>
+    </defs>
+
+    <!-- Panel positions: 5 panels, 2 rows (3+2) -->
+    <!-- Row 1: x=10..120, 140..250, 270..380 -->
+    <!-- Row 2 (centered): x=75..185, 215..325 -->
+
+    <!-- --- COORDINATOR (all Group A, purple) --- -->
+    <text x="65" y="16" text-anchor="middle" font-size="9" font-weight="700" fill="#450084">COORDINATOR</text>
+    <text x="65" y="26" text-anchor="middle" font-size="8" fill="#595959">A → A → A</text>
+    <circle cx="20" cy="70" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="20" y="75" text-anchor="middle" font-size="10" fill="#450084" font-weight="bold">S</text>
+    <circle cx="65" cy="48" r="14" fill="#450084" stroke="#450084" stroke-width="2"></circle>
+    <text x="65" y="53" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">B</text>
+    <circle cx="110" cy="70" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="110" y="75" text-anchor="middle" font-size="10" fill="#450084" font-weight="bold">T</text>
+    <line x1="33" y1="63" x2="50" y2="55" stroke="#595959" stroke-width="1.5" marker-end="url(#a5)"></line>
+    <line x1="78" y1="55" x2="97" y2="63" stroke="#595959" stroke-width="1.5" marker-end="url(#a5)"></line>
+    <!-- Group box -->
+    <rect x="8" y="38" width="118" height="54" rx="4" fill="none" stroke="#B599CE" stroke-width="1.2" stroke-dasharray="4,3"></rect>
+    <text x="12" y="50" font-size="7.5" fill="#B599CE">Group A</text>
+
+    <!-- --- GATEKEEPER (B→A→A) --- -->
+    <text x="200" y="16" text-anchor="middle" font-size="9" font-weight="700" fill="#450084">GATEKEEPER</text>
+    <text x="200" y="26" text-anchor="middle" font-size="8" fill="#595959">B → A → A</text>
+    <circle cx="155" cy="70" r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="155" y="75" text-anchor="middle" font-size="10" fill="#AD9C65" font-weight="bold">S</text>
+    <circle cx="200" cy="48" r="14" fill="#450084" stroke="#450084" stroke-width="2"></circle>
+    <text x="200" y="53" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">B</text>
+    <circle cx="245" cy="70" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="245" y="75" text-anchor="middle" font-size="10" fill="#450084" font-weight="bold">T</text>
+    <line x1="168" y1="63" x2="185" y2="55" stroke="#595959" stroke-width="1.5" marker-end="url(#a5)"></line>
+    <line x1="213" y1="55" x2="232" y2="63" stroke="#595959" stroke-width="1.5" marker-end="url(#a5)"></line>
+    <rect x="185" y="38" width="72" height="54" rx="4" fill="none" stroke="#B599CE" stroke-width="1.2" stroke-dasharray="4,3"></rect>
+    <text x="189" y="50" font-size="7.5" fill="#B599CE">Group A</text>
+    <rect x="142" y="56" width="32" height="28" rx="3" fill="none" stroke="#CBB677" stroke-width="1.2" stroke-dasharray="4,3"></rect>
+    <text x="143" y="52" font-size="7.5" fill="#CBB677">Grp B</text>
+
+    <!-- --- REPRESENTATIVE (A→A→B) --- -->
+    <text x="340" y="16" text-anchor="middle" font-size="9" font-weight="700" fill="#450084">REPRESENTATIVE</text>
+    <text x="340" y="26" text-anchor="middle" font-size="8" fill="#595959">A → A → B</text>
+    <circle cx="295" cy="70" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="295" y="75" text-anchor="middle" font-size="10" fill="#450084" font-weight="bold">S</text>
+    <circle cx="340" cy="48" r="14" fill="#450084" stroke="#450084" stroke-width="2"></circle>
+    <text x="340" y="53" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">B</text>
+    <circle cx="385" cy="70" r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="385" y="75" text-anchor="middle" font-size="10" fill="#AD9C65" font-weight="bold">T</text>
+    <line x1="308" y1="63" x2="325" y2="55" stroke="#595959" stroke-width="1.5" marker-end="url(#a5)"></line>
+    <line x1="353" y1="55" x2="372" y2="63" stroke="#595959" stroke-width="1.5" marker-end="url(#a5)"></line>
+    <rect x="281" y="38" width="72" height="54" rx="4" fill="none" stroke="#B599CE" stroke-width="1.2" stroke-dasharray="4,3"></rect>
+    <text x="285" y="50" font-size="7.5" fill="#B599CE">Group A</text>
+    <rect x="371" y="56" width="32" height="28" rx="3" fill="none" stroke="#CBB677" stroke-width="1.2" stroke-dasharray="4,3"></rect>
+    <text x="372" y="52" font-size="7.5" fill="#CBB677">Grp B</text>
+
+    <!-- Horizontal separator -->
+    <line x1="10" y1="115" x2="390" y2="115" stroke="#D6D6D6" stroke-width="1"></line>
+
+    <!-- --- ITINERANT BROKER (A→B→A, broker is outsider) --- -->
+    <text x="120" y="135" text-anchor="middle" font-size="9" font-weight="700" fill="#450084">ITINERANT BROKER</text>
+    <text x="120" y="145" text-anchor="middle" font-size="8" fill="#595959">A → B → A (broker outsider)</text>
+    <circle cx="75" cy="192" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="75" y="197" text-anchor="middle" font-size="10" fill="#450084" font-weight="bold">S</text>
+    <circle cx="120" cy="168" r="14" fill="#CBB677" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="120" y="173" text-anchor="middle" font-size="10" fill="#333" font-weight="bold">B</text>
+    <circle cx="165" cy="192" r="14" fill="#DACCE6" stroke="#450084" stroke-width="2"></circle>
+    <text x="165" y="197" text-anchor="middle" font-size="10" fill="#450084" font-weight="bold">T</text>
+    <line x1="88" y1="185" x2="105" y2="175" stroke="#595959" stroke-width="1.5" marker-end="url(#a5)"></line>
+    <line x1="133" y1="175" x2="152" y2="185" stroke="#595959" stroke-width="1.5" marker-end="url(#a5)"></line>
+    <rect x="58" y="178" width="125" height="28" rx="4" fill="none" stroke="#B599CE" stroke-width="1.2" stroke-dasharray="4,3"></rect>
+    <text x="62" y="191" font-size="7.5" fill="#B599CE">Group A</text>
+    <rect x="105" y="156" width="30" height="24" rx="3" fill="none" stroke="#CBB677" stroke-width="1" stroke-dasharray="4,3"></rect>
+    <text x="106" y="152" font-size="7.5" fill="#CBB677">Grp B</text>
+
+    <!-- --- LIAISON (B→A→C, all different) --- -->
+    <text x="300" y="135" text-anchor="middle" font-size="9" font-weight="700" fill="#450084">LIAISON</text>
+    <text x="300" y="145" text-anchor="middle" font-size="8" fill="#595959">B → A → C (all groups differ)</text>
+    <circle cx="255" cy="192" r="14" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"></circle>
+    <text x="255" y="197" text-anchor="middle" font-size="10" fill="#AD9C65" font-weight="bold">S</text>
+    <circle cx="300" cy="168" r="14" fill="#450084" stroke="#450084" stroke-width="2"></circle>
+    <text x="300" y="173" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">B</text>
+    <circle cx="345" cy="192" r="14" fill="#B2B2B2" stroke="#595959" stroke-width="2"></circle>
+    <text x="345" y="197" text-anchor="middle" font-size="10" fill="#595959" font-weight="bold">T</text>
+    <line x1="268" y1="185" x2="285" y2="175" stroke="#595959" stroke-width="1.5" marker-end="url(#a5)"></line>
+    <line x1="313" y1="175" x2="332" y2="185" stroke="#595959" stroke-width="1.5" marker-end="url(#a5)"></line>
+    <rect x="240" y="178" width="30" height="28" rx="3" fill="none" stroke="#CBB677" stroke-width="1" stroke-dasharray="4,3"></rect>
+    <text x="241" y="174" font-size="7.5" fill="#CBB677">B</text>
+    <rect x="331" y="178" width="30" height="28" rx="3" fill="none" stroke="#595959" stroke-width="1" stroke-dasharray="4,3"></rect>
+    <text x="332" y="174" font-size="7.5" fill="#595959">C</text>
+
+    <!-- Intelligence note row -->
+    <line x1="10" y1="222" x2="390" y2="222" stroke="#D6D6D6" stroke-width="1"></line>
+    <text x="200" y="238" text-anchor="middle" font-size="8.5" fill="#450084" font-weight="600">Gatekeepers and Liaisons are highest-priority disruption targets in dark networks.</text>
+    <text x="200" y="252" text-anchor="middle" font-size="8" fill="#595959">They control information and resource flows between otherwise disconnected cells.</text>
+  </svg>
+</div>
+</section>
+</div>
+</div>
+</section>
+<section id="structural-roles-in-networks" class="level2">
+<h2 class="anchored" data-anchor-id="structural-roles-in-networks">Structural Roles in Networks</h2>
+<p>Beyond brokerage, network position theory identifies a set of recurring <strong>structural roles</strong> that describe how actors function within a network regardless of their individual attributes.</p>
+<div class="columns">
+<div class="column" style="width:48%;">
+<section id="role-typology" class="level3">
+<h3 class="anchored" data-anchor-id="role-typology">Role Typology</h3>
+<ul>
+<li><strong>Hub:</strong> High degree, many direct connections; communication center; often the most visible actor and therefore highest exposure risk. Common in social facilitation, logistics, and propaganda distribution.</li>
+<li><strong>Broker / Cutout:</strong> High betweenness, low-to-moderate degree; spans structural holes; controls inter-cluster flow. Harder to identify from casual observation; harder to replace because the structural position requires dual-cluster trust.</li>
+<li><strong>Gatekeeper:</strong> Positioned at the boundary between the internal network and the external environment; controls recruitment, supply, communications inflow. Often the first point of contact for new actors.</li>
+<li><strong>Isolate:</strong> Degree zero or near-zero; may indicate a newly recruited actor not yet integrated, a latent member awaiting activation, or — critically — a <strong>collection gap</strong> (a known actor whose connections have not been mapped).</li>
+<li><strong>Peripheral node:</strong> Connected to the network through only one or two ties; low clustering coefficient; low operational centrality. Often couriers, lookouts, or low-level facilitators.</li>
+<li><strong>Clique member / core actor:</strong> Embedded in a dense subgroup; high clustering coefficient; high trust and coordination capacity within the cluster, but high mutual exposure risk.</li>
+</ul>
+</section>
+</div><div class="column" style="width:4%;">
+
+</div><div class="column" style="width:48%;">
+<section id="structural-equivalence-and-role-substitution" class="level3">
+<h3 class="anchored" data-anchor-id="structural-equivalence-and-role-substitution">Structural Equivalence and Role Substitution</h3>
+<p>Two nodes are <strong>structurally equivalent</strong> if they have identical patterns of ties to all other nodes in the network — they occupy the same <em>position</em> regardless of whether they are directly connected to each other.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+<p>Structural equivalence has direct implications for network resilience:</p>
+<ul>
+<li>Structurally equivalent actors are <strong>substitutable</strong>: removing one does not change the network’s structural logic if the other remains. The organization’s function is preserved.</li>
+<li>Network resilience comes from maintaining structurally equivalent actors in critical positions — a trained deputy who can occupy the same position as the removed leader.</li>
+<li><strong>Regular equivalence</strong> (less strict): nodes that have the same <em>types</em> of relationships to <em>equivalent</em> others, even if not identical ties. This captures role categories: “cell leader” as a functional class, regardless of which specific individuals occupy the role.</li>
+</ul>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Leadership Succession and Structural Equivalence">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Leadership Succession and Structural Equivalence
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Sophisticated covert organizations deliberately engineer structural equivalence for leadership succession. In Hezbollah, the <em>shura</em> council structure maintains multiple actors trained to occupy the Secretary-General position; the network’s command function is preserved regardless of which individual occupies the role.</p>
+<p>Analytical implication: after leadership targeting, analysts should immediately identify structurally equivalent actors who may step into the vacated position rather than assuming the network is degraded.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+</section>
+<section id="part-ii-dark-networks-in-depth" class="level1">
+<h1>Part II: Dark Networks in Depth</h1>
+<section id="the-krebs-and-everton-research-traditions" class="level2">
+<h2 class="anchored" data-anchor-id="the-krebs-and-everton-research-traditions">The Krebs and Everton Research Traditions</h2>
+<p>The application of formal SNA to terrorism and dark networks developed largely through two research traditions that are worth understanding both for their findings and their methodological differences.</p>
+<div class="columns">
+<div class="column" style="width:47%;">
+<section id="valdis-krebs-2002-the-911-hijacker-network" class="level3">
+<h3 class="anchored" data-anchor-id="valdis-krebs-2002-the-911-hijacker-network">Valdis Krebs (2002): The 9/11 Hijacker Network</h3>
+<p>Working from open-source newspaper reports after September 11, Krebs reconstructed the network of 19 hijackers and their known associates.<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> Key findings:</p>
+<ul>
+<li><strong>Mohamed Atta</strong> ranked highest on betweenness centrality — the operational coordinator routing communication between the Hamburg cell, the Florida cell, and Al-Qaeda leadership in Afghanistan</li>
+<li><strong>Marwan al-Shehhi</strong> ranked highest on degree — the most socially active member</li>
+<li>The network was sparse (<span class="math inline">\(\Delta \approx 0.16\)</span>) with a clear hub-and-spoke topology concentrated around Atta</li>
+<li>The network’s structural logic was recoverable from open sources <em>after the fact</em> — demonstrating the feasibility of SNA on dark networks from OSINT</li>
+</ul>
+<p><strong>Limitations acknowledged by Krebs:</strong> network reconstructed post-hoc from media reports; selection bias toward publicly named individuals; directionality uncertain; boundary specification (who to include) was subjective.</p>
+</section>
+<section id="the-sageman-counterargument" class="level3">
+<h3 class="anchored" data-anchor-id="the-sageman-counterargument">The Sageman Counterargument</h3>
+<p>Marc Sageman’s 2004 study of global salafi jihadist networks argued that the 9/11 network was <em>more decentralized</em> than Krebs suggested — multiple semi-independent clusters (Hamburg, Kandahar, Southeast Asian), with Atta as coordinator of the Hamburg cluster but not the sole broker for all networks.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
+<p>The methodological debate highlights: - Boundary specification choices dramatically alter the network structure and centrality results - Data source selection (media reports vs.&nbsp;court records vs.&nbsp;intelligence reporting) produces different networks - Directionality assumptions matter for betweenness computation</p>
+</section>
+</div><div class="column" style="width:6%;">
+
+</div><div class="column" style="width:47%;">
+<section id="sean-everton-systematic-dark-network-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="sean-everton-systematic-dark-network-analysis">Sean Everton: Systematic Dark Network Analysis</h3>
+<p>Everton’s <em>Disrupting Dark Networks</em> (2012) is the most comprehensive applied SNA text for intelligence practitioners.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> His multi-year analysis of Noordin Top’s Jemaah Islamiyah network established the standard analytical workflow:</p>
+<p><strong>Everton’s workflow:</strong> 1. Reconstruct network from multi-source data 2. Compute metrics across multiple centrality measures 3. Simulate disruption effects under alternative targeting strategies 4. Compare strategies by disruption effect size 5. Recommend strategy based on structural findings</p>
+<p><strong>Key conceptual contribution — Network Strain:</strong> Networks under sustained pressure do not simply degrade linearly. They undergo <em>strain</em> — redistribution of ties and roles that sometimes produces a more resilient successor structure than the original. Disruption can accelerate organizational learning toward resilience if it does not achieve rapid elimination of core actors.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Everton's JI Findings (Summary)">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Everton’s JI Findings (Summary)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Noordin Top’s network showed <strong>high betweenness centralization</strong> — hub-and-spoke around a small number of senior brokers</li>
+<li>After Noordin’s death in 2009, betweenness centralization <strong>declined</strong> but the network did not collapse; it decentralized</li>
+<li><strong>Kinship and religious ties</strong> (strong ties) formed the resilient backbone; <strong>operational ties</strong> (weak ties) were disruption-sensitive</li>
+<li>Removing the <strong>top 3 betweenness nodes</strong> reduced the giant component by ~50%; removing <strong>top 3 degree nodes</strong> reduced it by only ~22%</li>
+<li><strong>Betweenness-based targeting was consistently more effective</strong> than degree-based targeting across all simulation runs</li>
+</ul>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+<section id="covert-network-organizational-forms" class="level2">
+<h2 class="anchored" data-anchor-id="covert-network-organizational-forms">Covert Network Organizational Forms</h2>
+<p>Covert organizations adopt one of four structural archetypes, each with distinctive vulnerability profiles and appropriate disruption strategies.</p>
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.6rem">
+    Four Covert Network Organizational Forms
+  </p>
+  <svg viewbox="0 0 580 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:840px;display:block;font-family:'IBM Plex Sans',sans-serif">
+
+    <!-- Dividers -->
+    <line x1="290" y1="10" x2="290" y2="390" stroke="#D6D6D6" stroke-width="1.5"></line>
+    <line x1="10" y1="200" x2="580" y2="200" stroke="#D6D6D6" stroke-width="1.5"></line>
+
+    <!-- ========== TOP-LEFT: HIERARCHICAL ========== -->
+    <text x="145" y="28" text-anchor="middle" font-size="11" font-weight="700" fill="#450084" letter-spacing="0.04em">HIERARCHICAL</text>
+    <text x="145" y="42" text-anchor="middle" font-size="9" fill="#595959">High centralization · decapitation target</text>
+
+    <!-- Tree structure: L1=top, L2=mid, L3=bottom -->
+    <!-- L1: (145,68) -->
+    <!-- L2: (95,118), (195,118) -->
+    <!-- L3: (60,168),(130,168),(160,168),(230,168) -->
+    <line x1="145" y1="82" x2="95" y2="108" stroke="#450084" stroke-width="2"></line>
+    <line x1="145" y1="82" x2="195" y2="108" stroke="#450084" stroke-width="2"></line>
+    <line x1="95" y1="132" x2="60" y2="158" stroke="#450084" stroke-width="2"></line>
+    <line x1="95" y1="132" x2="130" y2="158" stroke="#450084" stroke-width="2"></line>
+    <line x1="195" y1="132" x2="160" y2="158" stroke="#450084" stroke-width="2"></line>
+    <line x1="195" y1="132" x2="230" y2="158" stroke="#450084" stroke-width="2"></line>
+
+    <circle cx="145" cy="68" r="18" fill="#450084" stroke="#450084" stroke-width="2"></circle>
+    <text x="145" y="73" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">L</text>
+    <circle cx="95" cy="118" r="14" fill="#B599CE" stroke="#450084" stroke-width="2"></circle>
+    <text x="95" y="123" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">M</text>
+    <circle cx="195" cy="118" r="14" fill="#B599CE" stroke="#450084" stroke-width="2"></circle>
+    <text x="195" y="123" text-anchor="middle" font-size="10" fill="#fff" font-weight="bold">M</text>
+    <circle cx="60" cy="168" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="130" cy="168" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="160" cy="168" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="230" cy="168" r="11" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+
+    <text x="145" y="192" text-anchor="middle" font-size="8" fill="#595959">All paths route through L</text>
+
+    <!-- ========== TOP-RIGHT: CELL STRUCTURE ========== -->
+    <text x="435" y="28" text-anchor="middle" font-size="11" font-weight="700" fill="#450084" letter-spacing="0.04em">CELL STRUCTURE</text>
+    <text x="435" y="42" text-anchor="middle" font-size="9" fill="#595959">Compartmentalized · arrest-resistant</text>
+
+    <!-- Cell 1 triangle: 350,70 / 400,70 / 375,110 -->
+    <line x1="350" y1="70" x2="400" y2="70" stroke="#450084" stroke-width="2"></line>
+    <line x1="350" y1="70" x2="375" y2="108" stroke="#450084" stroke-width="2"></line>
+    <line x1="400" y1="70" x2="375" y2="108" stroke="#450084" stroke-width="2"></line>
+    <!-- Cell 2 triangle: 450,70 / 500,70 / 475,110 -->
+    <line x1="450" y1="70" x2="500" y2="70" stroke="#450084" stroke-width="2"></line>
+    <line x1="450" y1="70" x2="475" y2="108" stroke="#450084" stroke-width="2"></line>
+    <line x1="500" y1="70" x2="475" y2="108" stroke="#450084" stroke-width="2"></line>
+    <!-- Cell 3 triangle: 350,145 / 400,145 / 375,185 -->
+    <line x1="350" y1="145" x2="400" y2="145" stroke="#450084" stroke-width="2"></line>
+    <line x1="350" y1="145" x2="375" y2="183" stroke="#450084" stroke-width="2"></line>
+    <line x1="400" y1="145" x2="375" y2="183" stroke="#450084" stroke-width="2"></line>
+    <!-- Cell 4 triangle: 450,145 / 500,145 / 475,185 -->
+    <line x1="450" y1="145" x2="500" y2="145" stroke="#450084" stroke-width="2"></line>
+    <line x1="450" y1="145" x2="475" y2="183" stroke="#450084" stroke-width="2"></line>
+    <line x1="500" y1="145" x2="475" y2="183" stroke="#450084" stroke-width="2"></line>
+
+    <!-- Cutout connections (dashed) between cells -->
+    <line x1="375" y1="108" x2="475" y2="108" stroke="#CBB677" stroke-width="1.8" stroke-dasharray="6,4"></line>
+    <line x1="375" y1="108" x2="375" y2="145" stroke="#CBB677" stroke-width="1.8" stroke-dasharray="6,4"></line>
+    <line x1="475" y1="108" x2="475" y2="145" stroke="#CBB677" stroke-width="1.8" stroke-dasharray="6,4"></line>
+
+    <!-- Cell nodes -->
+    <circle cx="350" cy="70" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="400" cy="70" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="375" cy="108" r="12" fill="#450084" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="450" cy="70" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="500" cy="70" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="475" cy="108" r="12" fill="#450084" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="350" cy="145" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="400" cy="145" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="375" cy="183" r="12" fill="#450084" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="450" cy="145" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="500" cy="145" r="10" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="475" cy="183" r="12" fill="#450084" stroke="#450084" stroke-width="1.5"></circle>
+
+    <text x="435" y="197" text-anchor="middle" font-size="8" fill="#595959">Dashed = cutout-only inter-cell links</text>
+
+    <!-- ========== BOTTOM-LEFT: HUB-AND-SPOKE ========== -->
+    <text x="145" y="218" text-anchor="middle" font-size="11" font-weight="700" fill="#450084" letter-spacing="0.04em">HUB-AND-SPOKE</text>
+    <text x="145" y="232" text-anchor="middle" font-size="9" fill="#595959">Hub removal = collapse · efficient but fragile</text>
+
+    <!-- Hub at 145,310 -->
+    <!-- 4 spoke nodes at N/E/S/W with mini-clusters -->
+    <line x1="145" y1="295" x2="145" y2="255" stroke="#CBB677" stroke-width="2.5"></line>
+    <line x1="145" y1="295" x2="185" y2="310" stroke="#CBB677" stroke-width="2.5"></line>
+    <line x1="145" y1="295" x2="145" y2="360" stroke="#CBB677" stroke-width="2.5"></line>
+    <line x1="145" y1="295" x2="105" y2="310" stroke="#CBB677" stroke-width="2.5"></line>
+
+    <!-- Mini-cluster edges at each spoke endpoint -->
+    <line x1="145" y1="255" x2="125" y2="240" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="145" y1="255" x2="165" y2="240" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="185" y1="310" x2="205" y2="295" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="185" y1="310" x2="205" y2="325" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="145" y1="360" x2="125" y2="375" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="145" y1="360" x2="165" y2="375" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="105" y1="310" x2="85" y2="295" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="105" y1="310" x2="85" y2="325" stroke="#450084" stroke-width="1.8"></line>
+
+    <!-- Hub node (gold, prominent) -->
+    <circle cx="145" cy="295" r="20" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"></circle>
+    <text x="145" y="300" text-anchor="middle" font-size="11" fill="#333" font-weight="bold">HUB</text>
+
+    <!-- Spoke connector nodes -->
+    <circle cx="145" cy="255" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="185" cy="310" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="145" cy="360" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="105" cy="310" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+
+    <!-- Peripheral nodes -->
+    <circle cx="125" cy="240" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="165" cy="240" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="205" cy="295" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="205" cy="325" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="125" cy="375" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="165" cy="375" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="85" cy="295" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="85" cy="325" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+
+    <!-- ========== BOTTOM-RIGHT: ALL-CHANNEL ========== -->
+    <text x="435" y="218" text-anchor="middle" font-size="11" font-weight="700" fill="#450084" letter-spacing="0.04em">ALL-CHANNEL</text>
+    <text x="435" y="232" text-anchor="middle" font-size="9" fill="#595959">Maximum redundancy · fragmentation-resistant</text>
+
+    <!-- 6 nodes in hexagon at center 435,310 r=65 -->
+    <!-- Angles: 90,30,-30,-90,-150,150 deg -->
+    <!-- (435,245),(491,278),(491,342),(435,375),(379,342),(379,278) -->
+    <!-- All 15 edges -->
+    <line x1="435" y1="250" x2="488" y2="281" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="435" y1="250" x2="488" y2="339" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="435" y1="250" x2="435" y2="372" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="435" y1="250" x2="382" y2="339" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="435" y1="250" x2="382" y2="281" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="488" y1="281" x2="488" y2="339" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="488" y1="281" x2="435" y2="372" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="488" y1="281" x2="382" y2="339" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="488" y1="281" x2="382" y2="281" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="488" y1="339" x2="435" y2="372" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="488" y1="339" x2="382" y2="339" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="488" y1="339" x2="382" y2="281" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="435" y1="372" x2="382" y2="339" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="435" y1="372" x2="382" y2="281" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="382" y1="339" x2="382" y2="281" stroke="#450084" stroke-width="1.8"></line>
+
+    <circle cx="435" cy="250" r="14" fill="#450084" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="488" cy="281" r="14" fill="#450084" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="488" cy="339" r="14" fill="#450084" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="435" cy="372" r="14" fill="#450084" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="382" cy="339" r="14" fill="#450084" stroke="#450084" stroke-width="2"></circle>
+    <circle cx="382" cy="281" r="14" fill="#450084" stroke="#450084" stroke-width="2"></circle>
+  </svg>
+  <figcaption>
+    Gold hub and dashed cutout lines highlight each form's structural chokepoints.<br>
+    Hierarchical and Hub-and-Spoke are decapitation targets; Cell and All-Channel require alternative strategies.
+  </figcaption>
+</div>
+<p><strong>Structural Comparison of the Four Forms:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 9%">
+<col style="width: 16%">
+<col style="width: 23%">
+<col style="width: 21%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Form</th>
+<th style="text-align: center;">Density</th>
+<th style="text-align: center;">Centralization</th>
+<th style="text-align: center;">Primary Vulnerability</th>
+<th style="text-align: center;">Disruption Strategy</th>
+<th style="text-align: left;">Real-World Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Hierarchical</td>
+<td style="text-align: center;">Low</td>
+<td style="text-align: center;">High</td>
+<td style="text-align: center;">Top nodes; all paths route upward</td>
+<td style="text-align: center;">Decapitation of leadership</td>
+<td style="text-align: left;">Early Hezbollah; traditional mafia families</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cell</td>
+<td style="text-align: center;">Very low</td>
+<td style="text-align: center;">Low</td>
+<td style="text-align: center;">Inter-cell cutout links</td>
+<td style="text-align: center;">Cutout targeting; cell infiltration</td>
+<td style="text-align: left;">IRA active service units; Cold War spy rings</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hub-and-Spoke</td>
+<td style="text-align: center;">Low</td>
+<td style="text-align: center;">Very high</td>
+<td style="text-align: center;">The hub itself</td>
+<td style="text-align: center;">Hub removal</td>
+<td style="text-align: left;">Al-Qaeda pre-2001; major drug wholesalers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">All-Channel</td>
+<td style="text-align: center;">High</td>
+<td style="text-align: center;">Very low</td>
+<td style="text-align: center;">None effective</td>
+<td style="text-align: center;">Financial disruption; information operations</td>
+<td style="text-align: left;">Anarchist affinity groups; Baader-Meinhof leadership</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Structural Form ≠ Fixed Identity">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Structural Form ≠ Fixed Identity
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Real covert organizations are not pure types. Al-Qaeda operated as hierarchical (Afghan headquarters), hub-and-spoke (core leadership to regional affiliates), and all-channel (within the Afghan leadership <em>shura</em>) simultaneously, depending on which layer of the network was being analyzed. REDUS assessment should specify which subgraph is being characterized.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a></p>
+</div>
+</div>
+</section>
+<section id="network-resilience-and-adaptation-after-disruption" class="level2">
+<h2 class="anchored" data-anchor-id="network-resilience-and-adaptation-after-disruption">Network Resilience and Adaptation After Disruption</h2>
+<p>Covert networks are not static structures. After arrest, killing, or exile of key members, surviving actors adapt — often producing a successor network that differs substantially from the original and may be more resilient to the strategy that disrupted it.</p>
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.5rem">
+    Network Resilience Lifecycle — Three Phases
+  </p>
+  <svg viewbox="0 0 620 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;display:block;font-family:'IBM Plex Sans',sans-serif">
+
+    <!-- Phase labels -->
+    <text x="100" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#450084" letter-spacing="0.06em">PHASE 1: INTACT</text>
+    <text x="310" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#595959" letter-spacing="0.06em">PHASE 2: POST-DISRUPTION</text>
+    <text x="520" y="16" text-anchor="middle" font-size="10" font-weight="700" fill="#AD9C65" letter-spacing="0.06em">PHASE 3: ADAPTED</text>
+
+    <!-- Dividers -->
+    <line x1="205" y1="10" x2="205" y2="200" stroke="#D6D6D6" stroke-width="1.5"></line>
+    <line x1="415" y1="10" x2="415" y2="200" stroke="#D6D6D6" stroke-width="1.5"></line>
+
+    <!-- PHASE 1: Intact network with hub -->
+    <!-- Hub (40,110), clusters NE,SE,W -->
+    <!-- NE cluster: 95,65 / 130,75 / 115,100 -->
+    <!-- SE cluster: 95,155 / 130,145 / 115,125 -->
+    <!-- W cluster: 35,65 / 20,95 / 35,125 (actually let me simplify) -->
+
+    <!-- Hub at (100,110) connected to 3 clusters -->
+    <line x1="100" y1="110" x2="60" y2="70" stroke="#CBB677" stroke-width="2.5"></line>
+    <line x1="100" y1="110" x2="155" y2="80" stroke="#CBB677" stroke-width="2.5"></line>
+    <line x1="100" y1="110" x2="155" y2="145" stroke="#CBB677" stroke-width="2.5"></line>
+    <line x1="100" y1="110" x2="60" y2="155" stroke="#CBB677" stroke-width="2.5"></line>
+
+    <!-- Cluster internal edges -->
+    <line x1="60" y1="70" x2="35" y2="75" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="60" y1="70" x2="45" y2="50" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="155" y1="80" x2="175" y2="65" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="155" y1="80" x2="178" y2="90" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="155" y1="145" x2="175" y2="155" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="155" y1="145" x2="178" y2="132" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="60" y1="155" x2="35" y2="150" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="60" y1="155" x2="45" y2="175" stroke="#450084" stroke-width="1.8"></line>
+
+    <!-- Hub node -->
+    <circle cx="100" cy="110" r="18" fill="#CBB677" stroke="#AD9C65" stroke-width="2.5"></circle>
+    <text x="100" y="115" text-anchor="middle" font-size="10" fill="#333" font-weight="bold">HUB</text>
+
+    <!-- Cluster nodes -->
+    <circle cx="60" cy="70" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="155" cy="80" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="155" cy="145" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="60" cy="155" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="35" cy="75" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="45" cy="50" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="175" cy="65" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="178" cy="90" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="175" cy="155" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="178" cy="132" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="35" cy="150" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="45" cy="175" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+
+    <text x="100" y="197" text-anchor="middle" font-size="8" fill="#595959">1 component · high C_B centralization</text>
+
+    <!-- PHASE 2: Hub removed, clusters disconnected -->
+    <!-- Copy clusters, no hub, no spoke edges -->
+    <line x1="258" y1="70" x2="233" y2="75" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="258" y1="70" x2="243" y2="50" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="353" y1="80" x2="373" y2="65" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="353" y1="80" x2="376" y2="90" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="353" y1="145" x2="373" y2="155" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="353" y1="145" x2="376" y2="132" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="258" y1="155" x2="233" y2="150" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="258" y1="155" x2="243" y2="175" stroke="#450084" stroke-width="1.8"></line>
+
+    <!-- Removed hub: X mark at 300,110 -->
+    <line x1="285" y1="97" x2="315" y2="123" stroke="#B2B2B2" stroke-width="3"></line>
+    <line x1="315" y1="97" x2="285" y2="123" stroke="#B2B2B2" stroke-width="3"></line>
+    <circle cx="300" cy="110" r="18" fill="#fff" stroke="#B2B2B2" stroke-width="2" stroke-dasharray="4,3"></circle>
+    <text x="300" y="115" text-anchor="middle" font-size="12" fill="#B2B2B2">✕</text>
+
+    <circle cx="258" cy="70" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="353" cy="80" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="353" cy="145" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="258" cy="155" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="233" cy="75" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="243" cy="50" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="373" cy="65" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="376" cy="90" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="373" cy="155" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="376" cy="132" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="233" cy="150" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="243" cy="175" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+
+    <text x="310" y="197" text-anchor="middle" font-size="8" fill="#595959">4 components · coordination severed</text>
+
+    <!-- PHASE 3: Adapted — new connections, distributed structure -->
+    <!-- Same 4 clusters, now with new inter-cluster edges (not through a hub) -->
+    <line x1="462" y1="70" x2="437" y2="75" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="462" y1="70" x2="447" y2="50" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="557" y1="80" x2="577" y2="65" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="557" y1="80" x2="580" y2="90" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="557" y1="145" x2="577" y2="155" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="557" y1="145" x2="580" y2="132" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="462" y1="155" x2="437" y2="150" stroke="#450084" stroke-width="1.8"></line>
+    <line x1="462" y1="155" x2="447" y2="175" stroke="#450084" stroke-width="1.8"></line>
+
+    <!-- New inter-cluster connections (gold dashed) — direct cluster-to-cluster -->
+    <line x1="462" y1="70" x2="557" y2="80" stroke="#CBB677" stroke-width="2" stroke-dasharray="5,3"></line>
+    <line x1="462" y1="155" x2="557" y2="145" stroke="#CBB677" stroke-width="2" stroke-dasharray="5,3"></line>
+    <line x1="462" y1="70" x2="462" y2="155" stroke="#CBB677" stroke-width="2" stroke-dasharray="5,3"></line>
+    <line x1="557" y1="80" x2="557" y2="145" stroke="#CBB677" stroke-width="2" stroke-dasharray="5,3"></line>
+
+    <circle cx="462" cy="70" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="557" cy="80" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="557" cy="145" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="462" cy="155" r="12" fill="#DACCE6" stroke="#450084" stroke-width="1.8"></circle>
+    <circle cx="437" cy="75" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="447" cy="50" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="577" cy="65" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="580" cy="90" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="577" cy="155" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="580" cy="132" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="437" cy="150" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+    <circle cx="447" cy="175" r="9" fill="#DACCE6" stroke="#450084" stroke-width="1.5"></circle>
+
+    <text x="520" y="197" text-anchor="middle" font-size="8" fill="#AD9C65">1 component · lower C_B · more resilient</text>
+  </svg>
+  <figcaption>
+    Phase 3 shows the network having rewired around the removed hub.<br>
+    New direct inter-cluster ties (gold dashed) produce a flatter, more distributed — and harder to decapitate — structure.
+  </figcaption>
+</div>
+<section id="mechanisms-of-network-adaptation" class="level3">
+<h3 class="anchored" data-anchor-id="mechanisms-of-network-adaptation">Mechanisms of Network Adaptation</h3>
+<p>Covert networks adapt after disruption through five documented mechanisms:<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
+<ol type="1">
+<li><strong>Role substitution</strong> — structurally equivalent members step into vacated positions. The network’s function is preserved; only the identity of the role occupant changes.</li>
+<li><strong>Rewiring</strong> — surviving actors forge new ties that bypass removed nodes. Path lengths temporarily increase, then decline as new connections stabilize.</li>
+<li><strong>Fragmentation and reformation</strong> — the network splits into components that independently reform under new local leadership. May produce <em>multiple</em> successor organizations, each smaller but potentially more specialized.</li>
+<li><strong>Decentralization</strong> — hierarchical networks deliberately flatten after repeated leadership targeting; organizational learning reduces dependence on any single node. This is the most strategically significant adaptation mode: the disruption campaign itself teaches the organization to become more resilient.</li>
+<li><strong>External recruitment</strong> — new actors join from peripheral or latent positions, introducing nodes that were never in the original network map and whose relationships are unknown to collection.</li>
+</ol>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="The Hydra Problem">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>The Hydra Problem
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Decapitation of hierarchical networks can produce <strong>multiple successor organizations</strong>, each smaller but structurally more resilient than the original. The Al-Qaeda case is instructive: sustained U.S. operations against the Afghan headquarters (2001–2005) produced a franchised structure of regional affiliates (AQI, AQAP, AQIM, later ISIS) each with lower betweenness centralization than the original AQ core and substantially greater structural redundancy.</p>
+<p>Analysts must model not just the disruption effect on the <em>existing</em> network but the likely <em>successor network structure</em> — including whether fragmentation produces a more tractable or less tractable adversary.<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a></p>
+</div>
+</div>
+</section>
+</section>
+<section id="the-redus-framework-for-network-assessment" class="level2">
+<h2 class="anchored" data-anchor-id="the-redus-framework-for-network-assessment">The REDUS Framework for Network Assessment</h2>
+<p>Everton proposes assessing dark networks along five structural dimensions that collectively characterize a network’s operational capacity and vulnerability profile. REDUS provides a structured vocabulary for network assessment in intelligence products.<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a></p>
+<div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6;padding:1rem 1.2rem">
+  <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.7rem">
+    REDUS Dimensions: Metrics and Disruption Implications
+  </p>
+  <svg viewbox="0 0 590 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:570px;display:block;font-family:'IBM Plex Sans',sans-serif">
+
+    <!-- 5 colored segments -->
+    <rect x="5" y="10" width="108" height="50" rx="3" fill="#450084"></rect>
+    <rect x="119" y="10" width="108" height="50" rx="3" fill="#595959"></rect>
+    <rect x="233" y="10" width="108" height="50" rx="3" fill="#333333"></rect>
+    <rect x="347" y="10" width="108" height="50" rx="3" fill="#B599CE"></rect>
+    <rect x="461" y="10" width="124" height="50" rx="3" fill="#CBB677"></rect>
+
+    <!-- Labels -->
+    <text x="59" y="31" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">R</text>
+    <text x="59" y="46" text-anchor="middle" font-size="9" fill="#DACCE6">REACH</text>
+    <text x="173" y="31" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">E</text>
+    <text x="173" y="46" text-anchor="middle" font-size="9" fill="#D6D6D6">EFFICIENCY</text>
+    <text x="287" y="31" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">D</text>
+    <text x="287" y="46" text-anchor="middle" font-size="9" fill="#B2B2B2">DEPENDENCY</text>
+    <text x="401" y="31" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">U</text>
+    <text x="401" y="46" text-anchor="middle" font-size="9" fill="#fff">UNITY</text>
+    <text x="523" y="31" text-anchor="middle" font-size="12" font-weight="700" fill="#333">S</text>
+    <text x="523" y="46" text-anchor="middle" font-size="9" fill="#333">STRENGTH</text>
+
+    <!-- Metric rows below -->
+    <text x="59" y="78" text-anchor="middle" font-size="8" fill="#450084" font-weight="600">avg path length</text>
+    <text x="59" y="90" text-anchor="middle" font-size="8" fill="#595959">giant component</text>
+    <text x="59" y="102" text-anchor="middle" font-size="8" fill="#595959">closeness distr.</text>
+
+    <text x="173" y="78" text-anchor="middle" font-size="8" fill="#595959" font-weight="600">density</text>
+    <text x="173" y="90" text-anchor="middle" font-size="8" fill="#595959">avg degree</text>
+    <text x="173" y="102" text-anchor="middle" font-size="8" fill="#595959">redundant paths</text>
+
+    <text x="287" y="78" text-anchor="middle" font-size="8" fill="#333333" font-weight="600">betweenness C.</text>
+    <text x="287" y="90" text-anchor="middle" font-size="8" fill="#595959">articulation pts</text>
+    <text x="287" y="102" text-anchor="middle" font-size="8" fill="#595959">bridge count</text>
+
+    <text x="401" y="78" text-anchor="middle" font-size="8" fill="#B599CE" font-weight="600">modularity</text>
+    <text x="401" y="90" text-anchor="middle" font-size="8" fill="#595959">clustering coeff.</text>
+    <text x="401" y="102" text-anchor="middle" font-size="8" fill="#595959">component count</text>
+
+    <text x="523" y="78" text-anchor="middle" font-size="8" fill="#AD9C65" font-weight="600">k-connectivity</text>
+    <text x="523" y="90" text-anchor="middle" font-size="8" fill="#595959">bridge count</text>
+    <text x="523" y="102" text-anchor="middle" font-size="8" fill="#595959">removal simulation</text>
+
+    <!-- Disruption row -->
+    <text x="59" y="122" text-anchor="middle" font-size="7.5" fill="#450084" font-style="italic">Low = isolated cells</text>
+    <text x="173" y="122" text-anchor="middle" font-size="7.5" fill="#595959" font-style="italic">High = fast adapt.</text>
+    <text x="287" y="122" text-anchor="middle" font-size="7.5" fill="#333" font-style="italic">High = decapitate</text>
+    <text x="401" y="122" text-anchor="middle" font-size="7.5" fill="#B599CE" font-style="italic">High = fragment</text>
+    <text x="523" y="122" text-anchor="middle" font-size="7.5" fill="#AD9C65" font-style="italic">Low = bridges key</text>
+  </svg>
+</div>
+<p><strong>REDUS Metric Mapping:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 27%">
+<col style="width: 25%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Dimension</th>
+<th style="text-align: left;">High Value Signals</th>
+<th style="text-align: left;">Low Value Signals</th>
+<th style="text-align: left;">Disruption Implication</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Reach</strong></td>
+<td style="text-align: left;">Short <span class="math inline">\(\bar{l}\)</span>; large giant component</td>
+<td style="text-align: left;">Long <span class="math inline">\(\bar{l}\)</span>; many components</td>
+<td style="text-align: left;">Low reach → network already fragmented; disrupt bridges to complete isolation</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Efficiency</strong></td>
+<td style="text-align: left;">High density; many redundant paths</td>
+<td style="text-align: left;">Low density; sparse</td>
+<td style="text-align: left;">High efficiency → network adapts quickly after disruption; target core repeatedly</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Dependency</strong></td>
+<td style="text-align: left;">High betweenness centralization</td>
+<td style="text-align: left;">Distributed betweenness</td>
+<td style="text-align: left;">High dependency → decapitation viable; low → peripheral or edge targeting</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Unity</strong></td>
+<td style="text-align: left;">Low modularity; high clustering</td>
+<td style="text-align: left;">High modularity; distinct communities</td>
+<td style="text-align: left;">High unity → hard to split; high modularity → community boundaries are disruption seams</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Strength</strong></td>
+<td style="text-align: left;">High <span class="math inline">\(k\)</span>-connectivity; few bridges</td>
+<td style="text-align: left;">Many bridges; articulation points</td>
+<td style="text-align: left;">Low strength → bridge/articulation point removal is highly effective</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="part-iii-domain-applications" class="level1">
+<h1>Part III: Domain Applications</h1>
+<section id="counterterrorism-and-insurgency" class="level2">
+<h2 class="anchored" data-anchor-id="counterterrorism-and-insurgency">Counterterrorism and Insurgency</h2>
+<section id="key-analytical-tasks" class="level3">
+<h3 class="anchored" data-anchor-id="key-analytical-tasks">Key Analytical Tasks</h3>
+<p>SNA in counterterrorism moves from asking <em>who is this actor?</em> to <em>what structural function does this actor serve?</em> The principal analytical tasks are:</p>
+<ul>
+<li><strong>Map organizational structure</strong> from multi-source intelligence (SIGINT metadata, HUMINT associate reports, court records, financial transaction records, social media)</li>
+<li><strong>Identify leadership, operational coordinators, financiers, recruiters, and propagandists by network position</strong>, not just attribute profile — the financier may have a low-profile cover identity but high betweenness between the operational and financial layers</li>
+<li><strong>Assess network resilience:</strong> how many members must be removed before coordination collapses below an operationally meaningful threshold?</li>
+<li><strong>Track network evolution:</strong> longitudinal SNA compares network states at defined intervals to determine whether the organization is growing, fragmenting, consolidating, or adapting</li>
+<li><strong>Model successor structure:</strong> if disruption of the current network produces known fragmentation patterns, what does the likely successor network look like and how should collection priorities shift?</li>
+<li><strong>Identify collection gaps:</strong> high-betweenness positions in the network that are poorly understood represent the highest-priority collection gaps</li>
+</ul>
+</section>
+<section id="the-jinoordin-top-case" class="level3">
+<h3 class="anchored" data-anchor-id="the-jinoordin-top-case">The JI/Noordin Top Case</h3>
+<p>Everton’s longitudinal analysis of Noordin Top’s Jemaah Islamiyah network (2000–2009) is the most rigorously documented case study in the dark network literature.<a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a> Key findings with analytical implications:</p>
+<ul>
+<li><strong>Hub-and-spoke topology</strong> concentrated betweenness in Noordin Top, who served as the coordination nexus between JI’s religious recruiting network, its bombing operational cells, and its Southeast Asian logistics network — three structurally distinct subgraphs</li>
+<li><strong>Kinship and pesantren (religious school) ties</strong> constituted the resilient backbone: high-density strong-tie clusters that survived operational disruptions because they were not operationally activated until needed</li>
+<li><strong>Operational ties</strong> (transport, bomb-making, safe-house access) were weak ties connecting across clusters — structurally critical, but exactly the connections most disrupted by the Indonesian police campaign</li>
+<li>After Noordin’s death in September 2009: betweenness centralization declined from 0.43 to 0.28; the network did not collapse but reorganized around regional deputy networks with lower mutual visibility</li>
+<li><strong>Data limitation:</strong> all analysis used open-source court records, indictments, and media reporting; classified collection would alter centrality rankings, potentially substantially</li>
+</ul>
+</section>
+</section>
+<section id="organized-crime-and-trafficking-networks" class="level2">
+<h2 class="anchored" data-anchor-id="organized-crime-and-trafficking-networks">Organized Crime and Trafficking Networks</h2>
+<p>Criminal networks differ structurally from terrorist networks in several important ways. The <strong>profit motive</strong> drives structure: criminal networks are, at their core, market networks with violence as an enforcement mechanism. This produces characteristic structural features:<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a></p>
+<ul>
+<li><strong>High personnel turnover</strong> from arrests, violent enforcement, and defections creates rapid network churn — temporal analysis is essential; static snapshots are rapidly outdated</li>
+<li><strong>Functional specialization</strong> produces natural multipartite structure: suppliers, transporters, financiers, enforcers, and distributors occupy structurally distinct positions and form different sub-networks</li>
+<li><strong>Corruption ties</strong> to law enforcement and political actors create boundary-spanning edges that are often the most sensitive collection targets — and the edges that make the criminal network most resilient to law enforcement disruption</li>
+<li><strong>Geographic concentration</strong> creates spatial network structure: trafficking routes are constrained by border crossing infrastructure, territorial control, and law enforcement presence</li>
+</ul>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="network-position-and-criminal-role" class="level3">
+<h3 class="anchored" data-anchor-id="network-position-and-criminal-role">Network Position and Criminal Role</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 30%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Position Profile</th>
+<th style="text-align: left;">Criminal Role</th>
+<th style="text-align: left;">Disruption Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">High degree + High betweenness</td>
+<td style="text-align: left;">Regional wholesaler or coordinator; connects supply to distribution</td>
+<td style="text-align: left;">Very high; arrest cascade affects multiple layers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">High betweenness + Low degree</td>
+<td style="text-align: left;">Money launderer or corrupt official; bridges criminal and licit networks</td>
+<td style="text-align: left;">Highest legal exposure if identified; removal denies financial services</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">High degree + Low betweenness</td>
+<td style="text-align: left;">Street-level distributor; dense local ties, no inter-cluster influence</td>
+<td style="text-align: left;">Low; structurally expendable, rapidly replaced</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Low degree + Peripheral</td>
+<td style="text-align: left;">Mule, lookout, courier</td>
+<td style="text-align: left;">High arrest rate; low intelligence value; minimal structural effect on removal</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="bipartite-structures-in-criminal-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="bipartite-structures-in-criminal-analysis">Bipartite Structures in Criminal Analysis</h3>
+<p>Criminal networks generate natural bipartite data that is often more actionable than pure unipartite analysis:</p>
+<ul>
+<li><strong>Persons × Events</strong> (meetings, transactions, co-arrests): the co-arrest bipartite network has been extensively used to map gang affiliations and cartel co-membership without relying on self-reported group membership</li>
+<li><strong>Persons × Organizations</strong>: gang membership, cartel affiliation, shell company directorship</li>
+<li><strong>Transactions × Accounts</strong>: money flows in the financial layer</li>
+</ul>
+<p>One-mode projection of the persons × co-arrest network reveals which actors are structurally co-embedded across multiple criminal activities — the most operationally integrated members of a criminal enterprise, regardless of their individual arrest history.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Financial Network Integration">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Financial Network Integration
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Criminal networks and financial networks must be analyzed <strong>jointly</strong>. The operational structure (who moves drugs) and the financial structure (who moves money) frequently involve different actors in different structural positions.</p>
+<p>A mid-level operational figure may be a high-betweenness financial node — the single connection between the cartel’s operational accounts and its money laundering infrastructure. This actor may have no publicly visible operational role and would never appear in a traditional law enforcement target list based on operational activity.</p>
+<p>The converse is also common: the most operationally active actor (high degree in the operational network) may have no direct visibility into the financial structure, which is deliberately separated for operational security.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="The Ndrangheta Case">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>The Ndrangheta Case
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Analysis of the Ndrangheta (Calabrian mafia) networks in northern Italy using court-record data demonstrated that family ties (kinship bipartite network) and criminal co-participation (event bipartite network) produced structurally distinct networks with different centrality rankings. The kinship network identified the <em>’ndrine</em> (family clans) with greatest long-term influence; the co-participation network identified the most operationally active current actors. Neither network alone captured the full organizational structure.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="insider-threat-and-organizational-networks" class="level2">
+<h2 class="anchored" data-anchor-id="insider-threat-and-organizational-networks">Insider Threat and Organizational Networks</h2>
+<p>Insider threat — the risk posed by individuals with authorized access who misuse that access — represents a domain where SNA on organizational communication and access networks provides unique analytical leverage not available from behavioral profiling alone.</p>
+<section id="the-structural-signature-of-insider-threat" class="level3">
+<h3 class="anchored" data-anchor-id="the-structural-signature-of-insider-threat">The Structural Signature of Insider Threat</h3>
+<p>Insider threat actors develop characteristic network patterns that often precede the harmful act and are detectable through analysis of communication metadata, system access logs, and badge/physical access records:</p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<p><strong>Pre-incident expansion patterns:</strong></p>
+<ul>
+<li><strong>Access network expansion:</strong> the insider begins accessing systems, files, or colleagues outside their normal work cluster. In network terms: new edges appear between the insider and previously unreached nodes, often in high-value data repositories.</li>
+<li><strong>Bridging behavior increase:</strong> the insider creates new connections between previously separate organizational clusters (e.g., accessing both the engineering source-code repository and the export-compliance database). Their betweenness centrality in the access network rises anomalously.</li>
+<li><strong>Exfiltration-consistent out-degree spike:</strong> sustained increase in outbound connections to external destinations (cloud storage, personal email, external USB) in the weeks preceding the incident.</li>
+</ul>
+<p><strong>Concurrent social pattern shifts:</strong></p>
+<ul>
+<li>Some insider threat actors show <strong>social withdrawal</strong> in the organizational communication network before the incident — declining in-degree from colleagues, reducing participation in shared channels. This pattern is more common in disgruntled rather than espionage-motivated insiders.</li>
+<li>Others show <strong>social facade maintenance</strong>: deliberately normal communication patterns while anomalous access behavior accelerates — separating the communication and access network layers, which are often monitored independently.</li>
+</ul>
+</div><div class="column" style="width:45%;">
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Case Studies: Structural Profiles">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Case Studies: Structural Profiles
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Edward Snowden (NSA, 2013):</strong> Access network explosion — as a system administrator, Snowden accessed an order of magnitude more documents than his role profile predicted. In graph terms: he formed new edges to thousands of document nodes simultaneously, creating an anomalous out-degree spike in the access network. The access graph pattern was visible in retrospect; real-time detection systems would have flagged the anomaly.<a href="#fn16" class="footnote-ref" id="fnref16" role="doc-noteref"><sup>16</sup></a></p>
+<p><strong>Robert Hanssen (FBI, 1980–2001):</strong> Structural isolation — Hanssen maintained unusually <em>few</em> lateral ties within the FBI over 22 years, inconsistent with his seniority. His communication network was anomalously sparse for an agent of his position. All sensitive contact with Soviet/Russian handlers was routed through dead drops (no direct human network ties). His low betweenness in the organizational network masked his high betweenness in the covert network.</p>
+<p><strong>Chelsea Manning (U.S. Army, 2010):</strong> Access volume — downloaded approximately 700,000 files in weeks, creating a volume-based anomaly in the access network. Organizational isolation in the forward operating base social network may have been a contributing behavioral indicator.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Formal vs. Informal Structure in Organizations">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Formal vs.&nbsp;Informal Structure in Organizations
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Every organization has two simultaneous network structures that rarely coincide perfectly:</p>
+<ul>
+<li><strong>Formal structure:</strong> the org chart — authority, reporting, and tasking relationships as officially designated</li>
+<li><strong>Informal structure:</strong> the actual communication and collaboration network that emerges from daily work</li>
+</ul>
+<p>Insider threat detection and counterintelligence investigations often discover that the insider’s <em>informal</em> network deviated significantly from their formal role — connecting to colleagues in sensitive positions, cultivating relationships with actors who had access to materials outside the insider’s assigned scope.</p>
+<p>SNA on communication metadata (email headers, chat participation, physical co-location from badge data) can map the informal structure continuously without content access, operating legally under metadata collection authorities. The resulting network provides a behavioral baseline against which anomalies are detectable.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="influence-operations-and-social-media" class="level2">
+<h2 class="anchored" data-anchor-id="influence-operations-and-social-media">Influence Operations and Social Media</h2>
+<p>Social media platform interaction data provides some of the largest and most structured network datasets available for intelligence analysis. The primary analytical challenge is distinguishing <strong>coordinated inauthentic behavior (CIB)</strong> — synchronized, non-organic amplification — from genuine organic activity.</p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="social-media-as-network-data" class="level3">
+<h3 class="anchored" data-anchor-id="social-media-as-network-data">Social Media as Network Data</h3>
+<p>Platform interaction graphs (follower, retweet, reply, quote-tweet, mention) are directed weighted networks with millions of nodes and billions of edges. Key characteristics that make them amenable to SNA:</p>
+<ul>
+<li><strong>Bot account signatures:</strong> high out-degree (many retweets/mentions), low in-degree (few genuine followers), low clustering coefficient (bots do not interact with each other’s followers), high posting frequency with anomalous timing distributions (regular intervals suggesting automation)</li>
+<li><strong>Coordinated clusters:</strong> in a retweet network, authentically coordinated accounts form dense clusters with synchronous posting patterns — detectable through temporal edge analysis alongside community detection</li>
+<li><strong>Two-layer structure:</strong> CIB campaigns typically separate <strong>content producers</strong> (authority nodes, few accounts, original material) from <strong>amplification networks</strong> (hub nodes, many accounts, minimal original content) — the HITS decomposition from Week 4 applies directly</li>
+</ul>
+</section>
+<section id="the-ira-twitter-case-20162018" class="level3">
+<h3 class="anchored" data-anchor-id="the-ira-twitter-case-20162018">The IRA Twitter Case (2016–2018)</h3>
+<p>Twitter’s release of Internet Research Agency (IRA) account data in 2018 provided an unprecedented opportunity for retrospective SNA. Key structural findings:<a href="#fn17" class="footnote-ref" id="fnref17" role="doc-noteref"><sup>17</sup></a></p>
+<ul>
+<li><strong>Bimodal HITS structure:</strong> IRA accounts decomposed cleanly into authority accounts (high-quality content production, few in number) and hub accounts (high-volume amplification, many in number). The two sets were structurally distinct — a HITS decomposition could have separated them before the accounts’ identities were publicly known.</li>
+<li><strong>Community detection revealed targeting:</strong> the modularity structure of the IRA retweet network reflected distinct narrative communities corresponding to discrete target audiences (African-American political content, conservative political content, anti-immigration content). Communities were operated by different account clusters with minimal cross-cluster activity.</li>
+<li><strong>Temporal synchrony:</strong> hub accounts showed posting time distributions inconsistent with human sleep/activity patterns and with timezone-appropriate human behavior — a temporal network analysis signal.</li>
+<li><strong>Scale:</strong> approximately 3,500 IRA accounts produced approximately 10.4 million tweets over the campaign period; the amplification network around these accounts reached an estimated 126 million Facebook users via shared content.</li>
+</ul>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="attribution-workflow-for-influence-operations" class="level3">
+<h3 class="anchored" data-anchor-id="attribution-workflow-for-influence-operations">Attribution Workflow for Influence Operations</h3>
+<div style="background:#F4EFE1;border-left:4px solid #450084;padding:0.8rem 1rem;border-radius:2px;font-size:0.88rem">
+  <ol style="margin:0;padding-left:1.3em;color:#333333;line-height:1.8">
+    <li>Collect interaction graph for a target hashtag or topic over a defined time window</li>
+    <li>Identify anomalous accounts by: activity timing distribution; language switching; profile creation date clustering; follower-to-following ratio</li>
+    <li>Run community detection on the retweet/amplification network; identify structurally coherent coordinated clusters distinct from organic discussion</li>
+    <li>Compute betweenness and HITS scores; rank accounts by structural role (coordinator, hub, authority)</li>
+    <li>Analyze temporal posting patterns for synchrony: Poisson process modeling of post intervals; outlier detection for automation signatures</li>
+    <li>Cross-reference with known state-linked infrastructure: IP ranges, platform metadata (where available), coordinated account creation dates, shared device fingerprints</li>
+    <li>Validate structural findings against independent open-source evidence before attribution</li>
+  </ol>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Narrative Network Analysis">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Narrative Network Analysis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Beyond account networks, narrative co-occurrence networks reveal coordinated information operations:</p>
+<ul>
+<li>Map <strong>hashtag co-occurrence</strong> as a bipartite network: accounts × hashtags used</li>
+<li>Project to hashtag-hashtag network: which topics are consistently co-amplified by the same account cluster?</li>
+<li>Identify <strong>narrative clusters</strong> corresponding to coordinated campaigns — topics that appear organically unrelated but are systematically co-amplified by the same structural community</li>
+</ul>
+<p>This approach detected coordinated amplification of seemingly unrelated domestic narratives (police brutality + immigration restriction + energy policy) by the same IRA account cluster, revealing deliberate multi-topic polarization strategy that single-topic analysis would have missed.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+</section>
+<section id="part-iv-tradecraft-and-tools" class="level1">
+<h1>Part IV: Tradecraft and Tools</h1>
+<section id="i2-analyst-notebook-intelligence-grade-sna" class="level2">
+<h2 class="anchored" data-anchor-id="i2-analyst-notebook-intelligence-grade-sna">i2 Analyst Notebook: Intelligence-Grade SNA</h2>
+<p>IBM i2 Analyst Notebook is the standard link analysis tool in classified intelligence environments across the U.S. intelligence community (CIA, NSA, DEA, FBI) and allied foreign partners, as well as law enforcement fusion centers.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<section id="overview-and-capabilities" class="level3">
+<h3 class="anchored" data-anchor-id="overview-and-capabilities">Overview and Capabilities</h3>
+<ul>
+<li><strong>Entity-relationship model:</strong> nodes are typed entities (persons, organizations, locations, events, accounts, documents); edges are analyst-defined relationships with type labels</li>
+<li><strong>Timeline integration:</strong> all entities and relationships carry timestamps; temporal analysis — seeing network changes over defined periods — is native to the tool</li>
+<li><strong>Chart-based interface:</strong> the “chart” is simultaneously the analytical workspace and the finished intelligence product; visual representation decisions are part of the analytical process</li>
+<li><strong>SNA module:</strong> computes degree, betweenness, and closeness centrality; produces ranked node output tables for targeting prioritization</li>
+<li><strong>Source tracking:</strong> relationships can be annotated with source type, confidence, and classification level — essential for mixed-source products</li>
+</ul>
+</section>
+<section id="standard-analytical-workflow" class="level3">
+<h3 class="anchored" data-anchor-id="standard-analytical-workflow">Standard Analytical Workflow</h3>
+<ol type="1">
+<li>Build entity set from raw intelligence reporting — create node records for all named actors</li>
+<li>Define relationship types by domain (communication, financial, familial, operational, geographic)</li>
+<li>Apply SNA metrics; identify high-centrality nodes by measure</li>
+<li>Annotate with confidence, source metadata, and date ranges</li>
+<li>Export chart as a finished intelligence product or briefing graphic; the visual chart constitutes the primary analytical output</li>
+</ol>
+</section>
+</div><div class="column" style="width:50%;">
+<section id="tool-comparison" class="level3">
+<h3 class="anchored" data-anchor-id="tool-comparison">Tool Comparison</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Feature</th>
+<th style="text-align: center;">i2 ANB</th>
+<th style="text-align: center;">Gephi</th>
+<th style="text-align: center;">NetworkX</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Classification handling</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✗</td>
+<td style="text-align: center;">✗</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Native timeline</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">Plugin</td>
+<td style="text-align: center;">Manual</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Entity typing</td>
+<td style="text-align: center;">Native</td>
+<td style="text-align: center;">Attribute</td>
+<td style="text-align: center;">Attribute</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Network scale</td>
+<td style="text-align: center;">Medium</td>
+<td style="text-align: center;">Large</td>
+<td style="text-align: center;">Very large</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SNA metric coverage</td>
+<td style="text-align: center;">Core</td>
+<td style="text-align: center;">Full</td>
+<td style="text-align: center;">Full</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Reproducibility</td>
+<td style="text-align: center;">Low</td>
+<td style="text-align: center;">Moderate</td>
+<td style="text-align: center;">High</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Scripting / automation</td>
+<td style="text-align: center;">Limited</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">Full</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cost</td>
+<td style="text-align: center;">Commercial</td>
+<td style="text-align: center;">Free (OSS)</td>
+<td style="text-align: center;">Free (OSS)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Finished product quality</td>
+<td style="text-align: center;">High</td>
+<td style="text-align: center;">Moderate</td>
+<td style="text-align: center;">Low (raw)</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Practical Workflow Integration">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Practical Workflow Integration
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In practice, analysts working in classified environments often use a <strong>hybrid workflow:</strong></p>
+<ol type="1">
+<li><strong>NetworkX</strong> for exploratory analysis and metric computation on large datasets — full algorithmic control, reproducibility, documentation</li>
+<li><strong>Gephi</strong> for intermediate visualization and community detection on moderate-scale networks</li>
+<li><strong>i2 Analyst Notebook</strong> for chart production, finished intelligence products, and classified integration — particularly for anything that will be included in a formal intelligence product or briefing</li>
+</ol>
+<p>Results computed in NetworkX are manually re-entered or linked into i2 charts. This creates a reproducibility gap; maintaining a NetworkX computation log alongside the i2 chart is recommended tradecraft.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="JMU Lab Access">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>JMU Lab Access
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>i2 Analyst Notebook requires a commercial license. JMU holds an academic license for this course; lab sessions will use the university installation. Familiarize yourself with the interface in lab before attempting to use it in an operational context.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</section>
+<section id="legal-and-ethical-constraints-on-sna-collection" class="level2">
+<h2 class="anchored" data-anchor-id="legal-and-ethical-constraints-on-sna-collection">Legal and Ethical Constraints on SNA Collection</h2>
+<p>SNA in the intelligence context operates within a legal and ethical framework that shapes both what data can be collected and what conclusions can be drawn. Every SNA intelligence product should explicitly address these constraints.</p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<section id="u.s.-domestic-legal-framework" class="level3">
+<h3 class="anchored" data-anchor-id="u.s.-domestic-legal-framework">U.S. Domestic Legal Framework</h3>
+<p><strong>First Amendment:</strong> Government collection of <em>association data</em> — who you know, who you communicate with, which organizations you belong to — implicates the First Amendment freedom of association. Bulk collection of social network data on U.S. persons requires specific legal authorization and cannot be justified solely by analytical convenience.</p>
+<p><strong>Fourth Amendment and the Third-Party Doctrine:</strong> <em>Smith v. Maryland</em> (1979) held that information voluntarily shared with a third party (phone company call records) carries no reasonable expectation of privacy. This doctrine enabled bulk metadata collection that produced large-scale social graph data. <em>Carpenter v. United States</em> (2018) significantly narrowed this doctrine for cell site location data, holding that long-term location tracking requires a warrant. The trajectory suggests continued judicial narrowing of third-party doctrine for network-revealing metadata.</p>
+<p><strong>FISA (50 U.S.C. § 1801 et seq.):</strong> Governs electronic surveillance of foreign powers and their agents. Section 215 of the PATRIOT Act authorized bulk metadata collection from telephone companies, producing what the NSA called “the social graph” of U.S. telephone communications — disclosed by Snowden in 2013. Section 215 expired in 2020 and was not renewed with equivalent authority.</p>
+<p><strong>Executive Order 12333:</strong> Governs NSA collection outside the United States. Nominally restricted to non-U.S. persons, but upstream collection necessarily captures U.S. person communications in transit. The primary legal authority for most foreign intelligence SNA collection.</p>
+<p><strong>Privacy Act of 1974:</strong> Restricts federal agencies’ maintenance of records on U.S. persons; imposes access, amendment, and minimization requirements on databases that include network data.</p>
+</section>
+</div><div class="column" style="width:45%;">
+<section id="analytical-ethics" class="level3">
+<h3 class="anchored" data-anchor-id="analytical-ethics">Analytical Ethics</h3>
+<p><strong>Selection bias in network construction:</strong> SNA findings are only as valid as the data collection decisions that created the network. Systematic under-collection of certain groups (collecting heavily on one demographic, missing another) produces a biased network map that may systematically misidentify centrality rankings across groups.</p>
+<p><strong>False positives from structural position:</strong> A high betweenness node may be a journalist cultivating sources across political factions, a lawyer representing clients across organizational lines, or a community organizer bridging neighborhoods. Structural position is not identity inference; brokerage is not guilt. Positional findings must be combined with attribute context before appearing in targeting products.</p>
+<p><strong>Chilling effects:</strong> Awareness of network surveillance changes behavior — reduces communication, changes tie formation, pushes activity to encrypted or offline channels. This affects both licit and illicit actors and reduces the validity of collected network data over time.</p>
+<p><strong>Minimization requirements:</strong> U.S. signals intelligence collected data involving persons not the target of investigation must be minimized — their identifying information removed or restricted. Network data is particularly difficult to minimize because the <em>relationship structure</em> is the analytical object; anonymization of node identities partially undermines the analytical purpose.</p>
+</section>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Required Product Caveat Language">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Required Product Caveat Language
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Every SNA product should explicitly state:</p>
+<ol type="1">
+<li><strong>Data sources used</strong> and legal authority for collection</li>
+<li><strong>Time period</strong> of data and currency assessment</li>
+<li><strong>Completeness assessment</strong>: what portion of the actual network is believed to be represented</li>
+<li><strong>Inferential limitations</strong>: structural position identifies opportunity and capacity, not intent; positional inference is not identity inference</li>
+<li><strong>Sensitivity of findings to data gaps</strong>: which centrality rankings are robust vs.&nbsp;data-dependent</li>
+</ol>
+<p>Failure to include these caveats violates analytical standards and may produce a legally actionable product if structural findings are used as the sole basis for an action affecting a U.S. person.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="lecture-summary" class="level1">
+<h1>Lecture Summary</h1>
+<section id="core-concepts" class="level2">
+<h2 class="anchored" data-anchor-id="core-concepts">Core Concepts</h2>
+<div class="key-terms">
+<dl>
+<dt><strong>Tie strength (Granovetter)</strong></dt>
+<dd>
+Composite of time, emotional intensity, intimacy, and reciprocal services; strong ties cluster, weak ties bridge; weak ties are structurally more powerful at the network level despite their lower relational intensity
+</dd>
+<dt><strong>Structural hole (Burt)</strong></dt>
+<dd>
+A gap between two actors who are not connected and share no common connection; the broker spanning a structural hole has information and control advantages over both disconnected parties
+</dd>
+<dt><strong>Effective size</strong></dt>
+<dd>
+Number of non-redundant contacts; measures the structural hole advantage; <span class="math inline">\(= \deg(v) - \sum_j p_{ij} m_{ij}\)</span>
+</dd>
+<dt><strong>Constraint <span class="math inline">\(C_i\)</span></strong></dt>
+<dd>
+Measure of how constrained a node is by its network; high constraint = embedded in a cohesive cluster with few structural holes; low constraint = spanning many structural holes
+</dd>
+<dt><strong>Gould-Fernandez brokerage types</strong></dt>
+<dd>
+Coordinator (A→A→A); Gatekeeper (B→A→A); Representative (A→A→B); Itinerant broker (A→B→A); Liaison (B→A→C) — gatekeepers and liaisons are highest-priority disruption targets
+</dd>
+<dt><strong>Structural equivalence</strong></dt>
+<dd>
+Two nodes with identical tie patterns to all others; structurally equivalent actors are substitutable; network resilience comes from maintaining equivalents in critical positions
+</dd>
+<dt><strong>REDUS</strong></dt>
+<dd>
+Everton’s five assessment dimensions — <strong>R</strong>each, <strong>E</strong>fficiency, <strong>D</strong>ependency, <strong>U</strong>nity, <strong>S</strong>trength — each mapped to specific network metrics and disruption strategies
+</dd>
+<dt><strong>Network strain</strong></dt>
+<dd>
+Networks under sustained disruption pressure redistribute ties and roles, sometimes producing a more resilient successor structure; disruption accelerates organizational learning
+</dd>
+<dt><strong>Coordinated inauthentic behavior (CIB)</strong></dt>
+<dd>
+Synchronized, non-organic amplification by networks of accounts; detectable through temporal synchrony, structural clustering, and HITS decomposition of authority vs.&nbsp;hub roles
+</dd>
+</dl>
+</div>
+</section>
+<section id="key-applied-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-applied-takeaways">Key Applied Takeaways</h2>
+<ol type="1">
+<li>Attribute-only analysis systematically misses structural power; relational analysis is a necessary complement to biographical and capability assessment in all domains.</li>
+<li>Betweenness-based targeting outperforms degree-based targeting in compartmentalized dark networks (Everton); degree-based targeting systematically misidentifies the support layer as leadership.</li>
+<li>Covert networks learn and adapt after disruption; decapitation of a hierarchical network may produce multiple more-resilient successor organizations. Model the likely successor structure, not just the disruption effect.</li>
+<li>Insider threat actors leave detectable structural signatures in communication and access network metadata — access network expansion, anomalous betweenness increase, and out-degree spikes to external nodes — that precede the harmful act.</li>
+<li>SNA findings require legal authorization review and analytical caveats (data completeness, inferential limitations, positional ≠ identity inference) before appearing in any finished intelligence product.</li>
+<li>Tool selection should match analytical environment: NetworkX for exploration and reproducibility, Gephi for intermediate visualization, i2 for classified products and finished deliverables.</li>
+</ol>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Next Lecture">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Next Lecture
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Community Detection and Clustering</strong> — modularity, the Louvain algorithm, Girvan-Newman edge betweenness method, clique percolation, overlapping communities, and intelligence applications in faction identification, cell structure analysis, and coordinated behavior detection.</p>
+</div>
+</div>
+<div class="page-footer-custom">
+<p>Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026</p>
+</div>
+
+
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Malcolm K. Sparrow, “The Application of Network Analysis to Criminal Intelligence: An Assessment of the Prospects,” <em>Social Networks</em> 13, no. 3 (1991): 251–274.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Stanley Wasserman and Katherine Faust, <em>Social Network Analysis: Methods and Applications</em> (Cambridge: Cambridge University Press, 1994).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Mark S. Granovetter, “The Strength of Weak Ties,” <em>American Journal of Sociology</em> 78, no. 6 (1973): 1360–1380.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Ronald S. Burt, <em>Structural Holes: The Social Structure of Competition</em> (Cambridge, MA: Harvard University Press, 1992), 16–45.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Roger V. Gould and Roberto M. Fernandez, “Structures of Mediation: A Formal Approach to Brokerage in Transaction Networks,” <em>Sociological Methodology</em> 19 (1989): 89–126.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Wasserman and Faust, <em>Social Network Analysis</em>, 356–368.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Valdis E. Krebs, “Mapping Networks of Terrorist Cells,” <em>Connections</em> 24, no. 3 (2002): 43–52.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>Marc Sageman, <em>Understanding Terror Networks</em> (Philadelphia: University of Pennsylvania Press, 2004), 137–173.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>Sean F. Everton, <em>Disrupting Dark Networks</em> (Cambridge: Cambridge University Press, 2012).<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>Daniel Cunningham, Sean Everton, and Philip Murphy, <em>Understanding Dark Networks</em> (Lanham: Rowman &amp; Littlefield, 2016), 42–60.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>Cunningham, Everton, and Murphy, <em>Understanding Dark Networks</em>, 183–210.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p>Marc Sageman, <em>Understanding Terror Networks</em> (Philadelphia: University of Pennsylvania Press, 2004), 137–140.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p>Everton, <em>Disrupting Dark Networks</em>, 45–72.<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn14"><p>Everton, <em>Disrupting Dark Networks</em>, 195–205.<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn15"><p>Jennifer J. Xu and Hsinchun Chen, “Criminal Network Analysis and Visualization,” <em>Communications of the ACM</em> 48, no. 6 (2005): 100–107.<a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn16"><p>The Inspector General’s report (NSA/IG 2014, partially declassified) confirmed the access pattern diverged from peer SysAdmins by a factor of &gt;10.<a href="#fnref16" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn17"><p>Philip N. Howard et al., “The IRA, Social Media and Political Polarization in the United States, 2012–2018,” Oxford Internet Institute, Computational Propaganda Project (2018).<a href="#fnref17" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

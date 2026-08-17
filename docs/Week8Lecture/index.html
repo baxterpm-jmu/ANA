@@ -6,8 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Intelligence Analysis Program, James Madison University">
-<meta name="dcterms.date" content="2026-01-01">
 
 <title>Geospatial and Multi-Layer Networks – IA 480: Applied Network Analysis: Systems, Connections, and Influence</title>
 <style>
@@ -320,8 +318,8 @@ window.Quarto = {
   </ul></li>
   <li><a href="#lecture-summary" id="toc-lecture-summary" class="nav-link" data-scroll-target="#lecture-summary">Lecture Summary</a>
   <ul class="collapse">
-  <li><a href="#key-formulas" id="toc-key-formulas" class="nav-link" data-scroll-target="#key-formulas">Key Formulas</a></li>
   <li><a href="#key-analytical-takeaways" id="toc-key-analytical-takeaways" class="nav-link" data-scroll-target="#key-analytical-takeaways">Key Analytical Takeaways</a></li>
+  <li><a href="#next-lecture" id="toc-next-lecture" class="nav-link" data-scroll-target="#next-lecture">Next Lecture</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -339,19 +337,7 @@ window.Quarto = {
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Intelligence Analysis Program, James Madison University </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -1385,41 +1371,6 @@ window.Quarto = {
 </section>
 <section id="lecture-summary" class="level1">
 <h1>Lecture Summary</h1>
-<section id="key-formulas" class="level2">
-<h2 class="anchored" data-anchor-id="key-formulas">Key Formulas</h2>
-<div class="key-terms">
-<dl>
-<dt><strong>Euler’s formula (planar graphs)</strong></dt>
-<dd>
-<span class="math inline">\(V - E + F = 2\)</span>; implies <span class="math inline">\(E \leq 3V - 6\)</span> and <span class="math inline">\(\langle k \rangle &lt; 6\)</span> for any planar network
-</dd>
-<dt><strong>Waxman edge probability</strong></dt>
-<dd>
-<span class="math inline">\(P(\{u,v\}) = \beta\exp(-d(u,v)/\alpha L)\)</span>; low <span class="math inline">\(\alpha\)</span> = localized; high <span class="math inline">\(\alpha\)</span> = long-range
-</dd>
-<dt><strong>Circuity (detour factor)</strong></dt>
-<dd>
-<span class="math inline">\(\eta(u,v) = d_G(u,v)/d_E(u,v)\)</span>; <span class="math inline">\(\eta = 1\)</span> is optimal; <span class="math inline">\(&gt; 1.5\)</span> indicates significant geographic detour
-</dd>
-<dt><strong>Network efficiency</strong></dt>
-<dd>
-<span class="math inline">\(E = \dfrac{1}{n(n-1)}\sum_{u \neq v}\dfrac{1}{d_G(u,v)}\)</span>; convention <span class="math inline">\(1/\infty = 0\)</span>; attack effect = <span class="math inline">\(\Delta E\)</span>
-</dd>
-<dt><strong>Multilayer network</strong></dt>
-<dd>
-<span class="math inline">\(\mathcal{M} = (G, C, \mathbf{X}_A, \mathbf{X}_L, \mathbf{X}_V, \mathbf{X}_E)\)</span> (Kivelä et al.&nbsp;2014)
-</dd>
-<dt><strong>Supra-adjacency matrix</strong></dt>
-<dd>
-Block <span class="math inline">\(nL \times nL\)</span> matrix; diagonal blocks <span class="math inline">\(A^{(\alpha)}\)</span> (intra-layer); off-diagonals <span class="math inline">\(I\omega_{\alpha\beta}\)</span> (coupling)
-</dd>
-<dt><strong>Edge overlap</strong></dt>
-<dd>
-<span class="math inline">\(o_{ij} = (\sum_\alpha A_{ij}^\alpha - 1)/(L-1) \in [0,1]\)</span>; <span class="math inline">\(o_{ij}=1\)</span> = fully multi-strand tie
-</dd>
-</dl>
-</div>
-</section>
 <section id="key-analytical-takeaways" class="level2">
 <h2 class="anchored" data-anchor-id="key-analytical-takeaways">Key Analytical Takeaways</h2>
 <ol type="1">
@@ -1429,59 +1380,10 @@ Block <span class="math inline">\(nL \times nL\)</span> matrix; diagonal blocks 
 <li><p>GEOINT and SNA are mutually reinforcing: SNA directs imagery collection toward structurally important nodes; imagery grounds the network model and reveals physical activity at predicted chokepoints.</p></li>
 <li><p>Coupling weight <span class="math inline">\(\omega\)</span> between multilayer layers is always a modeling choice; sensitivity analysis over a range of <span class="math inline">\(\omega\)</span> values is required before multilayer findings appear in finished intelligence products.</p></li>
 </ol>
-<div class="callout callout-style-default callout-note no-icon callout-titled" title="Next Lecture">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Next Lecture
-</div>
-</div>
-<div class="callout-body-container callout-body">
+</section>
+<section id="next-lecture" class="level2">
+<h2 class="anchored" data-anchor-id="next-lecture">Next Lecture</h2>
 <p><strong>Temporal and Dynamic Networks</strong> — how networks change over time; dynamic centrality measures; tracking organizational adaptation after disruption; event-driven network change; temporal betweenness and temporal shortest paths; NetworkX temporal analysis; applications to monitoring network evolution in intelligence targets.</p>
-</div>
-</div>
-<div style="margin-top:2rem">
-<ul class="course-sequence">
-<li class="seq-done">
-<span class="seq-icon">✓</span> Course Introduction
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> What is Network Analysis?
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Graph Theory Basics
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Centrality and Influence
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Social Network Analysis in Intelligence
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Community Detection and Clustering
-</li>
-<li class="seq-active">
-<span class="seq-icon">►</span> <strong>Geospatial and Multi-Layer Networks</strong> (this lecture)
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Temporal / Dynamic Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Global Security Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Financial Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Information / Influence Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Infrastructure Networks
-</li>
-</ul>
-</div>
 <div class="page-footer-custom">
 <p>Intelligence Analysis Program &nbsp;|&nbsp; School of Intergrated Science &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026</p>
 </div>

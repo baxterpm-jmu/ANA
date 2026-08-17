@@ -6,8 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Intelligence Analysis Program, James Madison University">
-<meta name="dcterms.date" content="2026-01-01">
 
 <title>Centrality and Influence – IA 480: Applied Network Analysis: Systems, Connections, and Influence</title>
 <style>
@@ -294,13 +292,14 @@ window.Quarto = {
   <li><a href="#part-ii-local-centrality" id="toc-part-ii-local-centrality" class="nav-link" data-scroll-target="#part-ii-local-centrality">Part II: Local Centrality</a>
   <ul class="collapse">
   <li><a href="#degree-centrality" id="toc-degree-centrality" class="nav-link" data-scroll-target="#degree-centrality">Degree Centrality</a></li>
-  <li><a href="#h-index-and-coreness-as-degree-alternatives" id="toc-h-index-and-coreness-as-degree-alternatives" class="nav-link" data-scroll-target="#h-index-and-coreness-as-degree-alternatives">H-Index and Coreness as Degree Alternatives</a></li>
   </ul></li>
   <li><a href="#part-iii-path-based-centrality" id="toc-part-iii-path-based-centrality" class="nav-link" data-scroll-target="#part-iii-path-based-centrality">Part III: Path-Based Centrality</a>
   <ul class="collapse">
   <li><a href="#closeness-centrality" id="toc-closeness-centrality" class="nav-link" data-scroll-target="#closeness-centrality">Closeness Centrality</a></li>
-  <li><a href="#betweenness-centrality" id="toc-betweenness-centrality" class="nav-link" data-scroll-target="#betweenness-centrality">Betweenness Centrality</a></li>
+  <li><a href="#betweenness-centrality" id="toc-betweenness-centrality" class="nav-link" data-scroll-target="#betweenness-centrality">Betweenness Centrality</a>
+  <ul class="collapse">
   <li><a href="#betweenness-full-worked-example" id="toc-betweenness-full-worked-example" class="nav-link" data-scroll-target="#betweenness-full-worked-example">Betweenness: Full Worked Example</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#part-iv-spectral-and-prestige-based-centrality" id="toc-part-iv-spectral-and-prestige-based-centrality" class="nav-link" data-scroll-target="#part-iv-spectral-and-prestige-based-centrality">Part IV: Spectral and Prestige-Based Centrality</a>
   <ul class="collapse">
@@ -315,17 +314,25 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#when-measures-disagree" id="toc-when-measures-disagree" class="nav-link" data-scroll-target="#when-measures-disagree">When Measures Disagree</a></li>
   </ul></li>
-  <li><a href="#centrality-under-incomplete-data" id="toc-centrality-under-incomplete-data" class="nav-link" data-scroll-target="#centrality-under-incomplete-data">Centrality Under Incomplete Data</a></li>
+  <li><a href="#centrality-under-incomplete-data" id="toc-centrality-under-incomplete-data" class="nav-link" data-scroll-target="#centrality-under-incomplete-data">Centrality Under Incomplete Data</a>
+  <ul class="collapse">
+  <li><a href="#sensitivity-patterns-by-measure" id="toc-sensitivity-patterns-by-measure" class="nav-link" data-scroll-target="#sensitivity-patterns-by-measure">Sensitivity Patterns by Measure</a></li>
+  <li><a href="#mitigation-strategies" id="toc-mitigation-strategies" class="nav-link" data-scroll-target="#mitigation-strategies">Mitigation Strategies</a></li>
+  </ul></li>
   <li><a href="#targeting-and-disruption-logic" id="toc-targeting-and-disruption-logic" class="nav-link" data-scroll-target="#targeting-and-disruption-logic">Targeting and Disruption Logic</a>
   <ul class="collapse">
   <li><a href="#five-network-disruption-strategies" id="toc-five-network-disruption-strategies" class="nav-link" data-scroll-target="#five-network-disruption-strategies">Five Network Disruption Strategies</a></li>
   </ul></li>
-  <li><a href="#centrality-in-practice-gephi-and-networkx" id="toc-centrality-in-practice-gephi-and-networkx" class="nav-link" data-scroll-target="#centrality-in-practice-gephi-and-networkx">Centrality in Practice: Gephi and NetworkX</a></li>
+  <li><a href="#centrality-in-practice-gephi-and-networkx" id="toc-centrality-in-practice-gephi-and-networkx" class="nav-link" data-scroll-target="#centrality-in-practice-gephi-and-networkx">Centrality in Practice: Gephi and NetworkX</a>
+  <ul class="collapse">
+  <li><a href="#gephi" id="toc-gephi" class="nav-link" data-scroll-target="#gephi">Gephi</a></li>
+  <li><a href="#i2-analyst-notebook" id="toc-i2-analyst-notebook" class="nav-link" data-scroll-target="#i2-analyst-notebook">i2 Analyst Notebook</a></li>
+  <li><a href="#networkx-python" id="toc-networkx-python" class="nav-link" data-scroll-target="#networkx-python">NetworkX (Python)</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#lecture-summary" id="toc-lecture-summary" class="nav-link" data-scroll-target="#lecture-summary">Lecture Summary</a>
   <ul class="collapse">
-  <li><a href="#key-formulas" id="toc-key-formulas" class="nav-link" data-scroll-target="#key-formulas">Key Formulas</a></li>
-  <li><a href="#key-analytical-principles" id="toc-key-analytical-principles" class="nav-link" data-scroll-target="#key-analytical-principles">Key Analytical Principles</a></li>
+  <li><a href="#next-lecture" id="toc-next-lecture" class="nav-link" data-scroll-target="#next-lecture">Next Lecture</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -343,19 +350,7 @@ window.Quarto = {
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Intelligence Analysis Program, James Madison University </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -615,6 +610,7 @@ window.Quarto = {
     Purple node B has the most connections within its cluster but near-zero betweenness.
   </figcaption>
 </div>
+<p><strong>BLUF:</strong> Different indicators will tell you different things about the role nodes play in a network.</p>
 </section>
 <section id="centralization-vs.-centrality" class="level2">
 <h2 class="anchored" data-anchor-id="centralization-vs.-centrality">Centralization vs.&nbsp;Centrality</h2>
@@ -796,13 +792,6 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="h-index-and-coreness-as-degree-alternatives" class="level2">
-<h2 class="anchored" data-anchor-id="h-index-and-coreness-as-degree-alternatives">H-Index and Coreness as Degree Alternatives</h2>
-<p>Two alternatives to raw degree provide more nuanced pictures of local embedding:</p>
-<p><strong>H-index (adapted from citation analysis):</strong> Node <span class="math inline">\(v\)</span> has h-index <span class="math inline">\(h\)</span> if it has at least <span class="math inline">\(h\)</span> neighbors each of which has degree <span class="math inline">\(\geq h\)</span>, and no larger <span class="math inline">\(h\)</span> satisfies this condition. H-index rewards having <em>well-connected</em> neighbors, not just many neighbors — a node with 5 neighbors each of degree <span class="math inline">\(\geq 5\)</span> has h-index 5, while a node with 10 neighbors each of degree 1 has h-index 1.</p>
-<p><strong>Coreness</strong> (from <span class="math inline">\(k\)</span>-core decomposition, covered in Week 3): the coreness of a node equals the largest <span class="math inline">\(k\)</span>-core it belongs to. Unlike degree, coreness captures the density of the node’s <em>neighborhood</em> recursively — a node with high coreness is embedded in a mutually dense subgraph, not merely attached to many peripheral actors.</p>
-<p>Both measures are computable in <span class="math inline">\(O(m)\)</span> and available in NetworkX (<code>nx.core_number(G)</code>) and Gephi. They are particularly useful as supplements to degree when screening for inner-circle membership in dark networks.</p>
-</section>
 </section>
 <section id="part-iii-path-based-centrality" class="level1">
 <h1>Part III: Path-Based Centrality</h1>
@@ -815,16 +804,6 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="definition">Definition</h3>
 <p><span class="math display">\[C_C(v) = \frac{n-1}{\sum_{u \neq v} d(v, u)}\]</span></p>
 <p>The numerator normalizes the measure so that a star center (the single node optimally placed to reach all others in one step) receives a score of 1.0. Low closeness means the node is peripheral — far from the network’s informational core.</p>
-</section>
-<section id="connected-graph-variants" class="level3">
-<h3 class="anchored" data-anchor-id="connected-graph-variants">Connected Graph Variants</h3>
-<p>The standard formula is undefined when the graph is disconnected (the denominator includes <span class="math inline">\(d(v,u) = \infty\)</span> for unreachable nodes). Two approaches:</p>
-<ul>
-<li><strong>Wasserman-Faust variant:</strong> compute closeness only over <em>reachable</em> nodes, then normalize by the proportion of nodes reachable: <span class="math inline">\(C_C^{WF}(v) = \frac{n_r - 1}{n - 1} \cdot \frac{n_r - 1}{\sum_{u \in R(v)} d(v,u)}\)</span>, where <span class="math inline">\(n_r = |R(v)|\)</span>.</li>
-<li><strong>Harmonic centrality:</strong> sum the reciprocals of all distances, setting <span class="math inline">\(1/\infty = 0\)</span> by convention:<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></li>
-</ul>
-<p><span class="math display">\[C_H(v) = \sum_{u \neq v} \frac{1}{d(v, u)}\]</span></p>
-<p>Harmonic centrality is the preferred choice for intelligence network data, which almost always produces disconnected graphs due to collection incompleteness.</p>
 </section>
 <section id="intelligence-applications" class="level3">
 <h3 class="anchored" data-anchor-id="intelligence-applications">Intelligence Applications</h3>
@@ -886,20 +865,6 @@ window.Quarto = {
 </tbody>
 </table>
 <p><strong>Node 2</strong> reaches all other nodes with the smallest average distance (<span class="math inline">\(\bar{d} = 6/5 = 1.2\)</span> steps). Nodes 1 and 6 are most peripheral (average distance <span class="math inline">\(9/5 = 1.8\)</span> steps).</p>
-<div class="callout callout-style-default callout-note no-icon callout-titled" title="Verification: Node 2">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Verification: Node 2
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><span class="math inline">\(d(2,1) = 1,\; d(2,3) = 1,\; d(2,4) = 1,\; d(2,5) = 1,\; d(2,6) = 2\)</span></p>
-<p><span class="math inline">\(\sum = 6 \quad\Rightarrow\quad C_C(2) = \frac{5}{6} \approx 0.833\)</span></p>
-</div>
-</div>
 <div class="callout callout-style-default callout-tip no-icon callout-titled" title="Comparison Note">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -938,7 +903,7 @@ window.Quarto = {
 <ul>
 <li><strong>Brokerage:</strong> control over information flowing between otherwise disconnected parts of the network</li>
 <li><strong>Gatekeeping:</strong> ability to filter, delay, modify, or distort messages passing through</li>
-<li><strong>Structural hole occupancy:</strong> nodes bridging gaps between clusters (Burt’s structural holes, Week 3)<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></li>
+<li><strong>Structural hole occupancy:</strong> nodes bridging gaps between clusters (Burt’s structural holes, Week 3)<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></li>
 <li><strong>Targeted disruption value:</strong> removing a high-betweenness node fragments the network far more efficiently than removing a high-degree node in compartmentalized networks</li>
 </ul>
 </section>
@@ -946,10 +911,6 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="edge-betweenness">Edge Betweenness</h3>
 <p><span class="math display">\[C_B(e) = \sum_{s \neq t} \frac{\sigma_{st}(e)}{\sigma_{st}}\]</span></p>
 <p>Edges with high betweenness carry disproportionate network traffic. Severing a high-betweenness edge can fragment the network into disconnected components without requiring the removal of any actor — potentially less detectable operationally.</p>
-</section>
-<section id="computational-complexity" class="level3">
-<h3 class="anchored" data-anchor-id="computational-complexity">Computational Complexity</h3>
-<p>Computed via the Brandes algorithm: <span class="math inline">\(O(nm)\)</span> for unweighted graphs; <span class="math inline">\(O(nm + n^2 \log n)\)</span> for weighted. For very large networks (<span class="math inline">\(n &gt; 10^5\)</span>), approximation algorithms are available. Gephi and NetworkX implement Brandes exactly for intelligence-scale networks (typically <span class="math inline">\(n &lt; 10^4\)</span>).</p>
 </section>
 </div><div class="column" style="width:45%;">
 <div class="callout callout-style-default callout-warning no-icon callout-titled" title="The Betweenness-Targeting Rule">
@@ -967,19 +928,6 @@ window.Quarto = {
 <p>In flat, redundant networks where many alternative geodesics exist, betweenness becomes less useful as a targeting signal. In those cases, community-level analysis and edge removal may be more effective.</p>
 </div>
 </div>
-<div class="callout callout-style-default callout-note no-icon callout-titled" title="Computational Note">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Computational Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Betweenness is the <strong>most computationally expensive</strong> of the standard centrality measures at <span class="math inline">\(O(nm)\)</span>, compared to <span class="math inline">\(O(n + m)\)</span> for degree. For a network with <span class="math inline">\(n=1{,}000\)</span> nodes and <span class="math inline">\(m=5{,}000\)</span> edges, Brandes runs in milliseconds on modern hardware. For <span class="math inline">\(n=100{,}000\)</span>, approximate algorithms are recommended. NetworkX defaults to the exact Brandes implementation.</p>
-</div>
-</div>
 <div class="callout callout-style-default callout-tip no-icon callout-titled" title="Key Insight: Low Degree ≠ Low Betweenness">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -995,9 +943,8 @@ window.Quarto = {
 </div>
 </div>
 </div>
-</section>
-<section id="betweenness-full-worked-example" class="level2">
-<h2 class="anchored" data-anchor-id="betweenness-full-worked-example">Betweenness: Full Worked Example</h2>
+<section id="betweenness-full-worked-example" class="level3">
+<h3 class="anchored" data-anchor-id="betweenness-full-worked-example">Betweenness: Full Worked Example</h3>
 <div style="margin:1.2rem 0">
 <div class="net-diagram-container" style="background:#fff;border:1px solid #D6D6D6">
   <p style="font-size:0.78rem;font-weight:700;color:#595959;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 0.5rem">
@@ -1010,6 +957,9 @@ window.Quarto = {
     <line x1="210" y1="100" x2="145" y2="195" stroke="#D6D6D6" stroke-width="2"></line>
     <line x1="210" y1="100" x2="210" y2="215" stroke="#D6D6D6" stroke-width="2"></line>
     <line x1="210" y1="215" x2="350" y2="215" stroke="#D6D6D6" stroke-width="2"></line>
+    <!-- remaining base edges to complete the graph: {3,4} and {5,6} -->
+    <line x1="145" y1="195" x2="210" y2="215" stroke="#D6D6D6" stroke-width="2"></line>
+    <line x1="350" y1="100" x2="350" y2="215" stroke="#D6D6D6" stroke-width="2"></line>
 
     <!-- Highlighted path: 1 → 2 → 5 (gold) -->
     <line x1="90" y1="100" x2="210" y2="100" stroke="#CBB677" stroke-width="3.5"></line>
@@ -1230,6 +1180,7 @@ window.Quarto = {
 <p>Key finding: <strong>Node 1 has zero betweenness despite having degree 2</strong> — it lies on no shortest paths between other nodes (its neighbors 2 and 3 are directly connected). <strong>Node 4 ranks second on betweenness</strong> despite tying with Node 3 on degree — it controls routes to Node 6 via the {2,6}, {3,6}, and {1,6} paths.</p>
 </section>
 </section>
+</section>
 <section id="part-iv-spectral-and-prestige-based-centrality" class="level1">
 <h1>Part IV: Spectral and Prestige-Based Centrality</h1>
 <section id="eigenvector-centrality" class="level2">
@@ -1241,7 +1192,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="definition-2">Definition</h3>
 <p><span class="math display">\[C_E(v) = \frac{1}{\lambda} \sum_{u \in N(v)} C_E(u)\]</span></p>
 <p>In matrix form: <span class="math inline">\(A \mathbf{C}_E = \lambda \mathbf{C}_E\)</span></p>
-<p>The centrality vector <span class="math inline">\(\mathbf{C}_E\)</span> is an <strong>eigenvector</strong> of the adjacency matrix <span class="math inline">\(A\)</span>, and <span class="math inline">\(\lambda\)</span> is the corresponding eigenvalue. The Perron-Frobenius theorem guarantees that for connected graphs, the eigenvector corresponding to the <strong>largest eigenvalue</strong> <span class="math inline">\(\lambda_1\)</span> has all positive entries — this is the eigenvector centrality vector.<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></p>
+<p>The centrality vector <span class="math inline">\(\mathbf{C}_E\)</span> is an <strong>eigenvector</strong> of the adjacency matrix <span class="math inline">\(A\)</span>, and <span class="math inline">\(\lambda\)</span> is the corresponding eigenvalue. The Perron-Frobenius theorem guarantees that for connected graphs, the eigenvector corresponding to the <strong>largest eigenvalue</strong> <span class="math inline">\(\lambda_1\)</span> has all positive entries — this is the eigenvector centrality vector.<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
 </section>
 <section id="power-iteration-convergence" class="level3">
 <h3 class="anchored" data-anchor-id="power-iteration-convergence">Power Iteration (Convergence)</h3>
@@ -1342,7 +1293,7 @@ window.Quarto = {
 <li><strong><span class="math inline">\(\alpha\)</span></strong> (attenuation factor): <span class="math inline">\(0 &lt; \alpha &lt; 1/\lambda_1\)</span>. Longer paths contribute exponentially less — indirect influence decays with path length. Setting <span class="math inline">\(\alpha \to 0\)</span> collapses Katz to a constant; setting <span class="math inline">\(\alpha \to 1/\lambda_1\)</span> approximates eigenvector centrality.</li>
 <li><strong><span class="math inline">\(\beta\)</span></strong>: the baseline score ensuring no node receives zero centrality due to structural isolation. Typically set to 1.</li>
 </ul>
-<p>Katz centrality is interpretable as a weighted count of all walks from all other nodes to <span class="math inline">\(v\)</span>, with walks of length <span class="math inline">\(k\)</span> penalized by <span class="math inline">\(\alpha^k\)</span>. This makes it a measure of <em>how reachable</em> a node is along paths of all lengths, with shorter paths weighted more heavily.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
+<p>Katz centrality is interpretable as a weighted count of all walks from all other nodes to <span class="math inline">\(v\)</span>, with walks of length <span class="math inline">\(k\)</span> penalized by <span class="math inline">\(\alpha^k\)</span>. This makes it a measure of <em>how reachable</em> a node is along paths of all lengths, with shorter paths weighted more heavily.<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></p>
 </section>
 <section id="pagerank" class="level2">
 <h2 class="anchored" data-anchor-id="pagerank">PageRank</h2>
@@ -1367,13 +1318,13 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <p>In a <strong>retweet network</strong>, nodes are accounts and directed edges represent retweet relationships (A retweets B → B’s content reaches A’s followers). PageRank on this network identifies accounts whose content propagates most widely — not just accounts with many followers (degree), but accounts whose content is amplified by <em>other high-PageRank accounts</em>.</p>
 <p>A coordinated influence operation may use a collection of low-follower sock puppet accounts (hub layer) to drive amplification of a small number of high-credibility accounts (authority layer). PageRank of the high-credibility accounts rises because they receive links from many accounts that themselves receive links from others.</p>
-<p>In practice: Graphika, DFRLab, and Stanford Internet Observatory have all used eigenvector-family centrality measures (including PageRank variants) as signals in influence operation attribution work.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></p>
+<p>In practice: Graphika, DFRLab, and Stanford Internet Observatory have all used eigenvector-family centrality measures (including PageRank variants) as signals in influence operation attribution work.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
 </div>
 </div>
 </section>
 <section id="hits-hubs-and-authorities" class="level2">
 <h2 class="anchored" data-anchor-id="hits-hubs-and-authorities">HITS: Hubs and Authorities</h2>
-<p>HITS (Hyperlink-Induced Topic Search), developed by Kleinberg, decomposes centrality into <strong>two mutually reinforcing scores</strong> — a more nuanced decomposition than PageRank’s single score.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a></p>
+<p>HITS (Hyperlink-Induced Topic Search), developed by Kleinberg, decomposes centrality into <strong>two mutually reinforcing scores</strong> — a more nuanced decomposition than PageRank’s single score.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></p>
 <div class="columns">
 <div class="column" style="width:55%;">
 <section id="algorithm" class="level3">
@@ -1383,7 +1334,6 @@ window.Quarto = {
 <p><strong>Hub score</strong> <span class="math inline">\(y(v)\)</span>: a node is a good hub if it points to many good authorities.</p>
 <p><span class="math display">\[y(v) = \sum_{u \,:\, (v,u) \in E} x(u)\]</span></p>
 <p>The two equations are mutually recursive: authorities gain score from hubs pointing to them; hubs gain score from the authorities they point to. Computed iteratively until convergence.</p>
-<p><strong>Matrix form:</strong> Authority vector <span class="math inline">\(\mathbf{x}\)</span> is the principal eigenvector of <span class="math inline">\(A^\top A\)</span>; hub vector <span class="math inline">\(\mathbf{y}\)</span> is the principal eigenvector of <span class="math inline">\(A A^\top\)</span>.</p>
 </section>
 <section id="hits-vs.-pagerank" class="level3">
 <h3 class="anchored" data-anchor-id="hits-vs.-pagerank">HITS vs.&nbsp;PageRank</h3>
@@ -1545,7 +1495,7 @@ window.Quarto = {
 <li><strong>High eigenvector + low betweenness</strong> — well-embedded in a high-status elite cluster but not a structural bridge; removal degrades prestige without fragmenting the network</li>
 <li><strong>High closeness + low betweenness</strong> — centrally located but not a unique pathway; removal does not fragment but increases average path length</li>
 </ul>
-<p><strong>Best practice:</strong> compute and present all major centrality measures as a ranked table alongside node attributes. Agreement across measures increases confidence in structural importance; disagreement signals a node worth deeper examination.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
+<p><strong>Best practice:</strong> compute and present all major centrality measures as a ranked table alongside node attributes. Agreement across measures increases confidence in structural importance; disagreement signals a node worth deeper examination.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a></p>
 <p><strong>Full centrality comparison — 6-node running example:</strong></p>
 <table class="caption-top table">
 <thead>
@@ -1607,9 +1557,7 @@ window.Quarto = {
 </section>
 <section id="centrality-under-incomplete-data" class="level2">
 <h2 class="anchored" data-anchor-id="centrality-under-incomplete-data">Centrality Under Incomplete Data</h2>
-<p>All intelligence network data is incomplete. Missing nodes and edges systematically distort centrality scores, and the distortion is <strong>not uniform</strong> across measures.<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a></p>
-<div class="columns">
-<div class="column" style="width:55%;">
+<p>All intelligence network data is incomplete. Missing nodes and edges systematically distort centrality scores, and the distortion is <strong>not uniform</strong> across measures.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
 <section id="sensitivity-patterns-by-measure" class="level3">
 <h3 class="anchored" data-anchor-id="sensitivity-patterns-by-measure">Sensitivity Patterns by Measure</h3>
 <p><strong>Degree centrality</strong> — relatively robust to missing <em>edges</em>. If missing data are roughly random and representative, degree rank order is approximately preserved. Fails when collection is systematically biased toward certain node types (e.g., focusing collection on known associates of a small set of seed nodes, inflating their degree artificially).</p>
@@ -1617,7 +1565,6 @@ window.Quarto = {
 <p><strong>Closeness centrality</strong> — fails or gives misleading results under high incompleteness. Especially problematic in disconnected graphs (collection artifacts produce apparent disconnection that inflates peripheral scores). Use harmonic closeness and report with explicit data completeness flags.</p>
 <p><strong>Eigenvector / PageRank</strong> — moderately sensitive. Robust if missing data are random; fragile if missing data are systematic. If collection under-samples high-degree nodes (e.g., encrypted messaging platforms reduce visibility of high-volume communicators), eigenvector centrality systematically underestimates scores of adjacent nodes.</p>
 </section>
-</div><div class="column" style="width:45%;">
 <section id="mitigation-strategies" class="level3">
 <h3 class="anchored" data-anchor-id="mitigation-strategies">Mitigation Strategies</h3>
 <ul>
@@ -1626,23 +1573,7 @@ window.Quarto = {
 <li><strong>Confidence-weighted networks:</strong> assign lower edge weights to lower-confidence source reports; compute weighted centrality. This degrades the influence of poorly-sourced ties without removing them entirely.</li>
 <li><strong>Qualitative validation:</strong> triangulate centrality findings against HUMINT or SIGINT characterizations of node roles. If betweenness analysis identifies Node X as a coordinator and independent source reporting describes X as a logistics driver, the discrepancy warrants deeper examination of both the data and the analysis.</li>
 </ul>
-<div class="callout callout-style-default callout-warning no-icon callout-titled" title="Required Caveat Language">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Required Caveat Language
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Centrality findings in intelligence products <strong>must</strong> be accompanied by a data completeness assessment. Model language:</p>
-<p><em>“Node X ranks highest on normalized betweenness centrality (<span class="math inline">\(C_B^* = 0.42\)</span>) in the reconstructed network. This ranking is based on [N] confirmed relationships from [source types]. Betweenness centrality is highly sensitive to missing bridge nodes; collection gaps in [specific domain or time period] may significantly alter this ranking. Sensitivity analysis across 100 random 15% edge deletions shows rank-1 stability in 73% of trials.”</em></p>
-</div>
-</div>
 </section>
-</div>
-</div>
 </section>
 <section id="targeting-and-disruption-logic" class="level2">
 <h2 class="anchored" data-anchor-id="targeting-and-disruption-logic">Targeting and Disruption Logic</h2>
@@ -1767,15 +1698,13 @@ window.Quarto = {
 <li>Removing the <strong>top 10% of nodes by degree centrality</strong> reduced the giant component size by only <strong>19%</strong></li>
 </ul>
 <p>Betweenness-based targeting was <strong>more than twice as effective</strong> at fragmenting the network as degree-based targeting, using the same number of “actions.”</p>
-<p>The finding generalizes: in compartmentalized dark networks that deliberately minimize hub formation (violating the scale-free assumption), betweenness-based targeting consistently outperforms degree-based targeting. In scale-free networks (more common in social media and open organizational networks), degree-based hub removal can be comparably or more effective.<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a></p>
+<p>The finding generalizes: in compartmentalized dark networks that deliberately minimize hub formation (violating the scale-free assumption), betweenness-based targeting consistently outperforms degree-based targeting. In scale-free networks (more common in social media and open organizational networks), degree-based hub removal can be comparably or more effective.<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a></p>
 </div>
 </div>
 </section>
 </section>
 <section id="centrality-in-practice-gephi-and-networkx" class="level2">
 <h2 class="anchored" data-anchor-id="centrality-in-practice-gephi-and-networkx">Centrality in Practice: Gephi and NetworkX</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
 <section id="gephi" class="level3">
 <h3 class="anchored" data-anchor-id="gephi">Gephi</h3>
 <ul>
@@ -1796,7 +1725,6 @@ window.Quarto = {
 <li>Does not natively support eigenvector, PageRank, or HITS — use NetworkX for those measures and import results</li>
 </ul>
 </section>
-</div><div class="column" style="width:50%;">
 <section id="networkx-python" class="level3">
 <h3 class="anchored" data-anchor-id="networkx-python">NetworkX (Python)</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
@@ -1832,73 +1760,10 @@ window.Quarto = {
 <span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'centrality_results.csv'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Full programmatic control; reproducible; scales to networks with millions of nodes using approximate algorithms (<code>nx.betweenness_centrality(G, k=100)</code> for <span class="math inline">\(k\)</span>-sample approximation).</p>
 </section>
-</div>
-</div>
 </section>
 </section>
 <section id="lecture-summary" class="level1">
 <h1>Lecture Summary</h1>
-<section id="key-formulas" class="level2">
-<h2 class="anchored" data-anchor-id="key-formulas">Key Formulas</h2>
-<div class="key-terms">
-<dl>
-<dt><strong>Degree centrality (normalized)</strong></dt>
-<dd>
-<span class="math inline">\(C_D^*(v) = \dfrac{\deg(v)}{n - 1}\)</span>
-</dd>
-<dt><strong>In/Out-degree centrality</strong></dt>
-<dd>
-<span class="math inline">\(C_D^-(v) = \dfrac{\deg^-(v)}{n-1}\)</span>; <span class="math inline">\(\;\;C_D^+(v) = \dfrac{\deg^+(v)}{n-1}\)</span>
-</dd>
-<dt><strong>Strength centrality</strong></dt>
-<dd>
-<span class="math inline">\(C_S(v) = \sum_{u \in N(v)} w(v, u)\)</span>
-</dd>
-<dt><strong>Closeness centrality</strong></dt>
-<dd>
-<span class="math inline">\(C_C(v) = \dfrac{n-1}{\sum_{u \neq v} d(v,u)}\)</span>
-</dd>
-<dt><strong>Harmonic centrality</strong></dt>
-<dd>
-<span class="math inline">\(C_H(v) = \sum_{u \neq v} \dfrac{1}{d(v,u)}\)</span>, with <span class="math inline">\(1/\infty = 0\)</span>
-</dd>
-<dt><strong>Betweenness centrality</strong></dt>
-<dd>
-<span class="math inline">\(C_B(v) = \sum_{s &lt; t,\; s,t \neq v} \dfrac{\sigma_{st}(v)}{\sigma_{st}}\)</span>
-</dd>
-<dt><strong>Edge betweenness</strong></dt>
-<dd>
-<span class="math inline">\(C_B(e) = \sum_{s \neq t} \dfrac{\sigma_{st}(e)}{\sigma_{st}}\)</span>
-</dd>
-<dt><strong>Freeman centralization index</strong></dt>
-<dd>
-<span class="math inline">\(C_X(G) = \dfrac{\sum_v [C_X(v^*) - C_X(v)]}{\max_{G'} \sum_v [C_X(v^*) - C_X(v)]}\)</span>
-</dd>
-<dt><strong>Eigenvector centrality</strong></dt>
-<dd>
-<span class="math inline">\(A\,\mathbf{C}_E = \lambda_1\,\mathbf{C}_E\)</span> (principal eigenvector of <span class="math inline">\(A\)</span>)
-</dd>
-<dt><strong>Katz centrality</strong></dt>
-<dd>
-<span class="math inline">\(\mathbf{C}_K = \beta(I - \alpha A^\top)^{-1}\mathbf{1}\)</span>, with <span class="math inline">\(\alpha &lt; 1/\lambda_1\)</span>
-</dd>
-<dt><strong>PageRank</strong></dt>
-<dd>
-<span class="math inline">\(PR(v) = \dfrac{1-d}{n} + d\!\!\sum_{u \in \text{in}(v)}\!\!\dfrac{PR(u)}{\deg^+(u)}\)</span>, <span class="math inline">\(d \approx 0.85\)</span>
-</dd>
-<dt><strong>HITS authority</strong></dt>
-<dd>
-<span class="math inline">\(x(v) = \sum_{u:(u,v)\in E} y(u)\)</span>; converges to eigenvector of <span class="math inline">\(A^\top A\)</span>
-</dd>
-<dt><strong>HITS hub</strong></dt>
-<dd>
-<span class="math inline">\(y(v) = \sum_{u:(v,u)\in E} x(u)\)</span>; converges to eigenvector of <span class="math inline">\(A\,A^\top\)</span>
-</dd>
-</dl>
-</div>
-</section>
-<section id="key-analytical-principles" class="level2">
-<h2 class="anchored" data-anchor-id="key-analytical-principles">Key Analytical Principles</h2>
 <ol type="1">
 <li>No single centrality measure is universally correct — the choice must be driven by the analytical question (communication speed → closeness; structural chokepoints → betweenness; prestige → eigenvector).</li>
 <li>In compartmentalized dark networks, betweenness is the most valuable measure for disruption targeting; degree systematically underperforms and may misidentify support-layer actors as leadership.</li>
@@ -1907,59 +1772,9 @@ window.Quarto = {
 <li>Simulate disruption effects before recommending targeting: compute component count, giant component size, and average path length pre- and post-removal; rank alternative targets by disruption effect size.</li>
 <li>Network-level centralization informs strategy selection: high centralization → decapitation is viable; low centralization → edge removal, financial disruption, or peripheral attrition may be more effective.</li>
 </ol>
-<div class="callout callout-style-default callout-note no-icon callout-titled" title="Next Lecture">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Next Lecture
-</div>
-</div>
-<div class="callout-body-container callout-body">
+<section id="next-lecture" class="level2">
+<h2 class="anchored" data-anchor-id="next-lecture">Next Lecture</h2>
 <p><strong>Social Network Analysis in Intelligence</strong> — how SNA methods apply to counterterrorism, organized crime, insider threat, and influence operations; the Krebs and Everton research traditions; the transition from theory to operational analysis; and i2 Analyst Notebook in a classified workflow.</p>
-</div>
-</div>
-<div style="margin-top:2rem">
-<ul class="course-sequence">
-<li class="seq-done">
-<span class="seq-icon">✓</span> Course Introduction
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> What is Network Analysis?
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Graph Theory Basics
-</li>
-<li class="seq-active">
-<span class="seq-icon">▶</span> <strong>Centrality and Influence</strong> (this lecture)
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> SNA in Intelligence
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Community Detection
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Geospatial / Multi-Layer Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Temporal / Dynamic Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Global Security Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Financial Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Information / Influence Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Infrastructure Networks
-</li>
-</ul>
-</div>
 <div class="page-footer-custom">
 <p>Intelligence Analysis Program &nbsp;|&nbsp; School of Integrated Sciences &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026</p>
 </div>
@@ -1976,15 +1791,14 @@ window.Quarto = {
 <li id="fn2"><p>Valdis Krebs, “Mapping Networks of Terrorist Cells,” <em>Connections</em> 24, no. 3 (2002): 46–48.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>Sean F. Everton, <em>Disrupting Dark Networks</em> (Cambridge: Cambridge University Press, 2012), 101–108.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p>Everton, <em>Disrupting Dark Networks</em>, 78–82.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5"><p>Massimo Marchiori and Vito Latora, “Harmony in the Small-World,” <em>Physica A</em> 285, no. 3–4 (2000): 539–546.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn6"><p>Ronald S. Burt, <em>Structural Holes: The Social Structure of Competition</em> (Cambridge, MA: Harvard University Press, 1992), 34–49.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn7"><p>Phillip Bonacich, “Power and Centrality: A Family of Measures,” <em>American Journal of Sociology</em> 92, no. 5 (1987): 1170–1182.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn8"><p>Leo Katz, “A New Status Index Derived from Sociometric Analysis,” <em>Psychometrika</em> 18, no. 1 (1953): 39–43.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn9"><p>Lawrence Page et al., “The PageRank Citation Ranking: Bringing Order to the Web,” Stanford InfoLab Technical Report 1999-66 (1999).<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn10"><p>Jon M. Kleinberg, “Authoritative Sources in a Hyperlinked Environment,” <em>Journal of the ACM</em> 46, no. 5 (1999): 604–632.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn11"><p>Everton, <em>Disrupting Dark Networks</em>, 91–95.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn12"><p>Kathleen M. Carley, Ju-Sung Lee, and David Krackhardt, “Destabilizing Networks,” <em>Connections</em> 24, no. 3 (2002): 79–92.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn13"><p>Everton, <em>Disrupting Dark Networks</em>, 197–202.<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Ronald S. Burt, <em>Structural Holes: The Social Structure of Competition</em> (Cambridge, MA: Harvard University Press, 1992), 34–49.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Phillip Bonacich, “Power and Centrality: A Family of Measures,” <em>American Journal of Sociology</em> 92, no. 5 (1987): 1170–1182.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Leo Katz, “A New Status Index Derived from Sociometric Analysis,” <em>Psychometrika</em> 18, no. 1 (1953): 39–43.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>Lawrence Page et al., “The PageRank Citation Ranking: Bringing Order to the Web,” Stanford InfoLab Technical Report 1999-66 (1999).<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>Jon M. Kleinberg, “Authoritative Sources in a Hyperlinked Environment,” <em>Journal of the ACM</em> 46, no. 5 (1999): 604–632.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>Everton, <em>Disrupting Dark Networks</em>, 91–95.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>Kathleen M. Carley, Ju-Sung Lee, and David Krackhardt, “Destabilizing Networks,” <em>Connections</em> 24, no. 3 (2002): 79–92.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p>Everton, <em>Disrupting Dark Networks</em>, 197–202.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

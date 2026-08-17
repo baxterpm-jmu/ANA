@@ -6,8 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Intelligence Analysis Program, James Madison University">
-<meta name="dcterms.date" content="2026-01-01">
 
 <title>Infrastructure and Physical Networks – IA 480: Applied Network Analysis: Systems, Connections, and Influence</title>
 <style>
@@ -312,11 +310,10 @@ window.Quarto = {
   <li><a href="#resilience-metrics-and-recovery-analysis" id="toc-resilience-metrics-and-recovery-analysis" class="nav-link" data-scroll-target="#resilience-metrics-and-recovery-analysis">Resilience Metrics and Recovery Analysis</a></li>
   <li><a href="#attack-simulation-in-networkx" id="toc-attack-simulation-in-networkx" class="nav-link" data-scroll-target="#attack-simulation-in-networkx">Attack Simulation in NetworkX</a></li>
   <li><a href="#intelligence-applications-infrastructure-vulnerability-assessment" id="toc-intelligence-applications-infrastructure-vulnerability-assessment" class="nav-link" data-scroll-target="#intelligence-applications-infrastructure-vulnerability-assessment">Intelligence Applications: Infrastructure Vulnerability Assessment</a></li>
-  </ul></li>
-  <li><a href="#lecture-summary" id="toc-lecture-summary" class="nav-link" data-scroll-target="#lecture-summary">Lecture Summary</a>
+  <li><a href="#key-analytical-takeaways" id="toc-key-analytical-takeaways" class="nav-link" data-scroll-target="#key-analytical-takeaways">Key Analytical Takeaways</a>
   <ul class="collapse">
-  <li><a href="#key-formulas-and-results" id="toc-key-formulas-and-results" class="nav-link" data-scroll-target="#key-formulas-and-results">Key Formulas and Results</a></li>
-  <li><a href="#key-analytical-takeaways" id="toc-key-analytical-takeaways" class="nav-link" data-scroll-target="#key-analytical-takeaways">Key Analytical Takeaways</a></li>
+  <li><a href="#next-and-final-session" id="toc-next-and-final-session" class="nav-link" data-scroll-target="#next-and-final-session">Next and Final Session</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -334,19 +331,7 @@ window.Quarto = {
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Intelligence Analysis Program, James Madison University </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -1495,56 +1480,6 @@ window.Quarto = {
 </div>
 </div>
 </section>
-</section>
-<section id="lecture-summary" class="level1">
-<h1>Lecture Summary</h1>
-<section id="key-formulas-and-results" class="level2">
-<h2 class="anchored" data-anchor-id="key-formulas-and-results">Key Formulas and Results</h2>
-<div class="key-terms">
-<dl>
-<dt><strong>Random failure robustness (scale-free)</strong></dt>
-<dd>
-Giant component survives until <span class="math inline">\(f_c^{\text{random}} \approx 0.65+\)</span> — extraordinary robustness to accidents due to low-degree node abundance
-</dd>
-<dt><strong>Targeted attack fragility (scale-free)</strong></dt>
-<dd>
-<span class="math inline">\(p_c^{\text{targeted}} \approx 1/(\kappa - 1)\)</span>; for scale-free networks <span class="math inline">\(\kappa \gg 1\)</span>, so <span class="math inline">\(p_c^{\text{targeted}} \ll 1\)</span> — collapses after 5–10% hub removal
-</dd>
-<dt><strong>Percolation threshold (random graph)</strong></dt>
-<dd>
-<span class="math inline">\(p_c = 1/\langle k \rangle\)</span>; below this, only small disconnected clusters; above, a giant component exists
-</dd>
-<dt><strong>Power grid average degree</strong></dt>
-<dd>
-<span class="math inline">\(\langle k \rangle \approx 2.7\)</span> for U.S. Western grid; near-planar; small-world (<span class="math inline">\(C = 0.080\)</span>, <span class="math inline">\(L = 18.7\)</span>)
-</dd>
-<dt><strong>Motter-Lai capacity</strong></dt>
-<dd>
-<span class="math inline">\(C_i = (1+\alpha)L_i^0\)</span>; <span class="math inline">\(\alpha\)</span> = tolerance parameter; small <span class="math inline">\(\alpha\)</span> → cascade sensitivity; betweenness-weighted capacity upgrade is optimal mitigation
-</dd>
-<dt><strong>Network efficiency loss</strong></dt>
-<dd>
-<span class="math inline">\(\Delta E(v) = [E(G) - E(G \setminus v)] / E(G)\)</span>; captures fragmentation and path-lengthening simultaneously
-</dd>
-<dt><strong>Redundancy index</strong></dt>
-<dd>
-<span class="math inline">\(R = |E| / (|V|-1)\)</span>; <span class="math inline">\(R = 1\)</span> = tree (zero fault tolerance); <span class="math inline">\(R &gt; 2\)</span> = meaningful redundancy
-</dd>
-<dt><strong>WAN average path length</strong></dt>
-<dd>
-4.4 hops; most airports within 2 connections of any other via a major hub
-</dd>
-<dt><strong>Undersea cable share</strong></dt>
-<dd>
-~95–99% of international internet traffic; satellite carries <span class="math inline">\(&lt; 5\%\)</span> at higher latency
-</dd>
-<dt><strong>BGP AS count</strong></dt>
-<dd>
-~80,000 active globally; scale-free degree distribution; Tier 1 carriers form a full-mesh core
-</dd>
-</dl>
-</div>
-</section>
 <section id="key-analytical-takeaways" class="level2">
 <h2 class="anchored" data-anchor-id="key-analytical-takeaways">Key Analytical Takeaways</h2>
 <ol type="1">
@@ -1555,70 +1490,15 @@ Giant component survives until <span class="math inline">\(f_c^{\text{random}} \
 <li><p>BGP route hijacking is a graph-level attack: a node falsely claims edges it does not own. RPKI provides structural mitigation but requires sufficient network-level adoption to constitute a connected validation path — a percolation problem in itself.</p></li>
 <li><p>Critical node identification requires multiple complementary methods. Combine betweenness, articulation points, targeted attack simulation, and efficiency loss into a combined ranking. Articulation points are always included regardless of other metric rankings — their removal guarantees disconnection.</p></li>
 </ol>
-<div class="callout callout-style-default callout-note no-icon callout-titled" title="Next and Final Session">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Next and Final Session
-</div>
-</div>
-<div class="callout-body-container callout-body">
+<section id="next-and-final-session" class="level3">
+<h3 class="anchored" data-anchor-id="next-and-final-session">Next and Final Session</h3>
 <p>The final two class sessions are <strong>project workshop hours and final project presentations</strong>. Bring your network data, your vulnerability assessment framework, and your intelligence product. The structured vulnerability assessment workflow from this lecture is the template for the final project deliverable.</p>
-</div>
-</div>
-<div style="margin-top:2rem">
-<ul class="course-sequence">
-<li class="seq-done">
-<span class="seq-icon">✓</span> Course Introduction
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> What is Network Analysis?
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Graph Theory Basics
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Centrality and Influence
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Social Network Analysis in Intelligence
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Community Detection and Clustering
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Geospatial and Multi-Layer Networks
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> [Week 8]
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Temporal and Dynamic Networks
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Global Security and Network Analysis
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Financial and Transaction Networks
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Information and Influence Networks
-</li>
-<li class="seq-active">
-<span class="seq-icon">▶</span> <strong>Infrastructure and Physical Networks</strong> (this lecture)
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Final Project Presentations
-</li>
-</ul>
-</div>
 <div class="page-footer-custom">
 <p>Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026</p>
 </div>
 
 
+</section>
 </section>
 </section>
 

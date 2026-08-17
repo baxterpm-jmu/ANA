@@ -718,9 +718,9 @@ In the above, you will notice that there are different network configurations an
 
 6. Alliance network density and intelligence cooperation network density diverge significantly — formal allies are not necessarily intelligence-sharing partners, and the intelligence cooperation structure is the more operationally relevant layer.
 
-::: {.callout-note title="Next Lecture" icon=false}
+### Next Lecture
+
 **Financial and Transaction Networks** --- money laundering network structure, hawala informal transfer systems, cryptocurrency transaction graphs, shell company financial networks, FinCEN Suspicious Activity Report data, and the full methodological toolkit for financial intelligence network analysis.
-:::
 
 <div class="page-footer-custom">
 Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026

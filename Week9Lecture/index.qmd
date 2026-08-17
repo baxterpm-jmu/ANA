@@ -1,8 +1,6 @@
 ---
 title: "Temporal and Dynamic Networks"
 subtitle: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
-author: "Intelligence Analysis Program, James Madison University"
-date: "Fall 2026"
 ---
 
 ::: {.course-meta}
@@ -1086,41 +1084,7 @@ spec_dists = [
 ]
 ```
 
-
 # Lecture Summary
-
-## Key Formulas and Definitions
-
-::: {.key-terms}
-
-**Temporal path (time-respecting path)**
-: Sequence of contacts $(v_0,v_1,t_1), (v_1,v_2,t_2), \ldots$ with $t_1 \leq t_2 \leq \cdots$; causal ordering is mandatory
-
-**Temporal reachability set**
-: $R(u,t)$: all nodes reachable from $u$ via temporal paths starting $\geq t$; shrinks monotonically as $t$ advances
-
-**Latency**
-: $t_k - t_1$ for a temporal path; minimized by the fastest path (distinct from the shortest-hop path)
-
-**Temporal closeness centrality**
-: $C_C^T(v,t) = (|R(v,t)|-1) / \sum_{u \in R(v,t)} d_T(v,u,t)$
-
-**Burstiness coefficient**
-: $B = (\sigma_\tau - \mu_\tau)/(\sigma_\tau + \mu_\tau) \in [-1,1]$; $B>0$ = bursty; $B<0$ = regular
-
-**Centrality velocity**
-: $\Delta C_X(v) = C_X(v,k) - C_X(v,k-1)$; rapid increase signals growing structural importance
-
-**Edge turnover (Jaccard dissimilarity)**
-: $\lambda = |E^{(k)} \triangle E^{(k+1)}| / |E^{(k)} \cup E^{(k+1)}|$; baseline for structural break detection
-
-**Temporal supra-adjacency matrix**
-: Block-diagonal $A^{(k)}$ with identity $I$ inter-layer couplings between consecutive snapshots $k$ and $k+1$
-
-**Activity-driven model**
-: Each node has activity rate $a_i \sim$ power law; active nodes initiate $m$ contacts per time step
-
-:::
 
 ## Key Analytical Takeaways
 
@@ -1131,27 +1095,9 @@ spec_dists = [
 5. Radicalization leaves temporal network signatures: rapid degree growth, neighborhood shift toward operational actors. These are collection hypotheses requiring corroboration, not evidentiary conclusions.
 6. Collection gaps must be explicitly accounted for in any temporal product. Treat the network between windows as partially unknown; apply link prediction to bound uncertainty and generate collection priorities.
 
-::: {.callout-note title="Next Lecture" icon=false}
-**Global Security and Network Analysis** — applying network methods to macro-level global security problems: terrorist organization structures across case studies, arms trafficking and proliferation supply chain networks, interstate security cooperation networks, and insurgency organizational analysis.
-:::
+### Next Lecture
 
-```{=html}
-<div style="margin-top:2rem">
-  <ul class="course-sequence">
-    <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> What is Network Analysis?</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Graph Theory Basics</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Centrality and Influence</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Social Network Analysis in Intelligence</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Community Detection and Clustering</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Geospatial and Multi-Layer Networks</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> [Week 8]</li>
-    <li class="seq-active"><span class="seq-icon">▶</span> <strong>Temporal and Dynamic Networks</strong> (this lecture)</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Global Security Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Financial Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Information / Influence Networks</li>
-  </ul>
-</div>
+**Global Security and Network Analysis** — applying network methods to macro-level global security problems: terrorist organization structures across case studies, arms trafficking and proliferation supply chain networks, interstate security cooperation networks, and insurgency organizational analysis.
 
 <div class="page-footer-custom">
 Intelligence Analysis Program &nbsp;|&nbsp; School of Integrated Sciences &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026

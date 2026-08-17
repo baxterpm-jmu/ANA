@@ -62,12 +62,23 @@ By the end of this lecture, students should be able to:
 
 # Part I: Graph Fundamentals
 
+These next sections will appear scary due to all the mathematical symbols. Don't worry! The goal is to help build a conceptual understanding before we move to application of these tools. 
+
 ## Formal Graph Definitions
 
 A **graph** $G = (V, E)$ consists of a finite, non-empty set $V$ of *vertices* and a set $E$ of *edges*, where each edge is an unordered pair $\{u, v\}$ with $u, v \in V$. The **order** of $G$ is $|V| = n$ (number of nodes); the **size** of $G$ is $|E| = m$ (number of edges).
 
-:::: {.columns}
-::: {.column width="90%"}
+::: {.callout-tip title="Notation Conventions Used in This Course" icon=true}
+Throughout the course: 
+
+* $G$ for undirected graphs
+* $D$ for directed graphs
+* $n = |V|$ and $m = |E|$ for order and size
+* lowercase $v, u, w$ for individual nodes; 
+* $d(u,v)$ for the geodesic distance between nodes $u$ and $v$
+* $\deg(v)$ for degree in undirected graphs, $\deg^+(v)$ and $\deg^-(v)$ for out- and in-degree in directed graphs.
+
+:::
 
 ### Core Definitions
 
@@ -77,37 +88,18 @@ A **graph** $G = (V, E)$ consists of a finite, non-empty set $V$ of *vertices* a
 - A **subgraph** $H = (V', E')$ satisfies $V' \subseteq V$ and $E' \subseteq E$. An **induced subgraph** on $V' \subseteq V$ retains *all* edges from $G$ whose both endpoints lie in $V'$.
 - The **complement** $\bar{G}$ of a graph $G$ has the same vertex set but includes an edge $\{u,v\}$ if and only if $\{u,v\} \notin E$. Edges present in $G$ are absent in $\bar{G}$ and vice versa.
 
-:::
-::: {.column width="90%"}
-
-### Special Graph Types
-
-- **Null graph:** $E = \emptyset$; no edges. Every node is isolated.
-- **Complete graph** $K_n$: every pair of distinct nodes is connected. Edge count: $\binom{n}{2} = \frac{n(n-1)}{2}$.
-- **Bipartite graph** $G = (U, W, E)$: the vertex set is partitioned into two disjoint sets ($U \cap W = \emptyset$), with all edges running *between* $U$ and $W$ and none within either set.^[Frank Harary, *Graph Theory* (Reading, MA: Addison-Wesley, 1969), 7–12.] A graph is bipartite if and only if it contains no odd-length cycles.
-- **Regular graph:** every node has the same degree. A $k$-regular graph has $\deg(v) = k$ for all $v \in V$.
-- **Planar graph:** can be drawn in a plane with no edge crossings. Relevant for infrastructure and geospatial network visualization.
-
-:::
-::::
-
-::: {.callout-tip title="Notation Conventions Used in This Course" icon=false}
-Throughout the course: $G$ for undirected graphs, $D$ for directed graphs; $n = |V|$ and $m = |E|$ for order and size; lowercase $v, u, w$ for individual nodes; $d(u,v)$ for the geodesic distance between nodes $u$ and $v$; $\deg(v)$ for degree in undirected graphs, $\deg^+(v)$ and $\deg^-(v)$ for out- and in-degree in directed graphs.
-:::
 
 ## Degree: The Fundamental Node Metric
 
-**Degree** is the most basic measure of a node's connectivity. In undirected graphs, $\deg(v)$ is simply the count of edges incident to $v$. Despite its simplicity, degree is the foundation on which all centrality measures build.
+**Degree** is the most basic measure of a node's connectivity. In undirected graphs, $\deg(v)$ is simply the count of edges connected to $v$. Despite its simplicity, degree is the foundation on which all centrality measures build.
 
 :::: {.columns}
 ::: {.column width="55%"}
 
 ### Undirected Graphs
 
-- **Degree** of node $v$: $\deg(v) =$ number of edges incident to $v$.
-- **Degree sequence:** the ordered list of all node degrees in the graph (typically descending). A graph invariant: two isomorphic graphs have the same degree sequence, though the converse is not always true.
-- **Handshaking Lemma:** $\sum_{v \in V} \deg(v) = 2|E|$. Every edge contributes exactly 2 to the total degree sum — one for each endpoint. This provides an immediate consistency check on any degree computation.
-- **Average degree:** $\langle k \rangle = \frac{2m}{n}$.
+- **Degree** of node $v$: $\deg(v) =$ number of edges connected to $v$.
+- **Average degree:** $\langle k \rangle = \frac{2m}{n}$. Average degree is simply the average number of edges per node in the graph. 
 - **Maximum degree** $\Delta(G)$; **Minimum degree** $\delta(G)$.
 - An **isolated node** has $\deg(v) = 0$; a **leaf** has $\deg(v) = 1$.
 
@@ -190,11 +182,12 @@ The six-node graph below serves as the running example for this lecture. It is i
 
 **Summary Statistics**
 
-- $|V| = 6$, $|E| = 8$
-- Degree sequence: $[4, 3, 3, 2, 2, 2]$
-- $\sum \deg = 16 = 2 \times 8$ ✓ *(Handshaking Lemma)*
-- $\langle k \rangle = 16/6 \approx 2.67$
-- $\Delta(G) = 4$ (Node 2); $\delta(G) = 2$ (Nodes 1, 5, 6)
+- $|V| = 6$ -- number of nodes
+- $|E| = 8$ -- number of edges
+- Degree sequence: $[4, 3, 3, 2, 2, 2]$ -- sorted in descending order
+- $\langle k \rangle = 16/6 \approx 2.67$ -- average degree
+- $\Delta(G) = 4$ (Node 2) -- maximum degree
+- $\delta(G) = 2$ (Nodes 1, 5, 6) -- minimum degree
 - No isolated nodes; no leaves.
 
 Node 2 is the preliminary highest-degree actor. Whether it is also the most *structurally* important node depends on centrality measures computed in Week 4.
@@ -208,8 +201,7 @@ The **adjacency matrix** $A$ is an $n \times n$ matrix that encodes the complete
 
 $$A_{ij} = \begin{cases} 1 & \text{if } \{i,j\} \in E \\ 0 & \text{otherwise} \end{cases}$$
 
-:::: {.columns}
-::: {.column width="55%"}
+Think about these as the rows and columns of a spreadsheet: each row corresponds to a source node, each column to a target node. Connections between nodes go into the cell with a particular value, with the values telling us something about the relationship (e.g., number of times the nodes interacted, amount of money one node sent to another, etc.). 
 
 ### Properties (Undirected Graph)
 
@@ -222,11 +214,6 @@ $$A_{ij} = \begin{cases} 1 & \text{if } \{i,j\} \in E \\ 0 & \text{otherwise} \e
 - **Weighted adjacency matrix:** substitute $A_{ij} = w_{ij}$ (the edge weight) for unweighted $\{0,1\}$ entries.
 - **Directed graph:** $A_{ij} = 1$ if arc $(i \to j) \in A$; the matrix need not be symmetric.
 
-**Spectral note:** the eigenvalues of $A$ encode global structural information — the largest eigenvalue approximates average degree; eigenvectors of $A$ are the basis of eigenvector centrality and spectral clustering, topics returned to in Weeks 4 and 6.
-
-:::
-::: {.column width="45%"}
-
 **Example (6-node running graph):**
 
 $$A = \begin{pmatrix}
@@ -238,14 +225,21 @@ $$A = \begin{pmatrix}
 0 & 0 & 0 & 1 & 1 & 0 \\
 \end{pmatrix}$$
 
-Row 2 sums to 4 — Node 2's degree. $A^2_{13} = 2$: Nodes 1 and 3 share two common neighbors (Node 2 and the path through Node 2... confirming there are two walks of length 2 from 1 to 3: $1\to2\to3$ and $1\to3\to2$... wait: actually $A^2_{13}$ counts walks, so $1\to2\to3$ and $1\to3\to?$. $A^2_{13} = \sum_k A_{1k}A_{k3}$: $k=1$: 0×0=0; $k=2$: 1×1=1; $k=3$: 1×0=0; $k=4$: 0×1=0; $k=5$: 0×0=0; $k=6$: 0×0=0. So $A^2_{13} = 1$, meaning 1 walk of length 2 from Node 1 to Node 3: $1 \to 2 \to 3$.
+**Reading the matrix.** Each row — and the matching column — stands for one node, so this is a 6 × 6 grid. A **1** means those two nodes are connected; a **0** means they are not. Because the graph is undirected, the matrix is *symmetric* across the diagonal: if Node 2 links to Node 4, then both $A_{24}$ and $A_{42}$ are 1. The diagonal is all zeros because no node connects to itself.
+
+Two useful facts can be read straight off the matrix:
+
+- **A node's degree is its row sum.** Row 2 contains four 1's, so Node 2 has degree 4 — matching the degree table above.
+- **Squaring the matrix counts two-step connections.** The entry $A^2_{ij}$ tells you how many length-2 walks run from node $i$ to node $j$ — equivalently, how many neighbors they have in common.
+
+For example, take $A^2_{13}$ (Nodes 1 and 3). Node 1 connects to $\{2, 3\}$ and Node 3 connects to $\{1, 2, 4\}$, so their only shared neighbor is Node 2. That gives $A^2_{13} = 1$, corresponding to the single two-step walk $1 \to 2 \to 3$.
+
+The formula produces the same answer: $A^2_{13} = \sum_k A_{1k}A_{k3}$, and the product $A_{1k}A_{k3}$ equals 1 only when node $k$ is connected to **both** Node 1 and Node 3. Here that happens only at $k = 2$, so the sum is 1.
 
 ::: {.callout-warning title="Limitations" icon=false}
 For large, sparse networks, adjacency matrices are memory-inefficient. A network with $n = 10{,}000$ nodes requires $10^8$ matrix entries, the vast majority of which are zero. Edge lists and sparse matrix formats (CSR, COO) are strongly preferred for computational analysis.
 :::
 
-:::
-::::
 
 ## Network Representations: Edge Lists and Adjacency Lists
 
@@ -421,28 +415,30 @@ Density alone does not identify *which* connections matter — centrality measur
 :::: {.columns}
 ::: {.column width="55%"}
 
-### Geodesic Distance $d(u,v)$
+### Geodesic Distance (Shortest Path)
 
-The **shortest path length** between nodes $u$ and $v$. If no path exists (disconnected components), $d(u,v) = \infty$ by convention. Computed via:
+The **geodesic distance** $d(u,v)$ is the fewest steps needed to travel from node $u$ to node $v$ along the network's connections. If two actors are directly linked, their distance is 1; if the message has to pass through one go-between, the distance is 2; and so on. You find it by counting outward from $u$: everything one link away is distance 1, everything one link beyond that is distance 2, and you continue until you reach $v$.
 
-- **BFS** (Breadth-First Search) in unweighted graphs: $O(n + m)$
-- **Dijkstra's algorithm** in weighted graphs with non-negative weights: $O((n + m) \log n)$
-- **Bellman-Ford** when negative weights are possible: $O(nm)$
-- **Floyd-Warshall** for all-pairs shortest paths: $O(n^3)$; practical for networks up to a few thousand nodes
+If two nodes sit in separate, unconnected pieces of the network, there is no path between them and the distance is taken to be infinite ($\infty$).
 
-### Derived Metrics
+### Diameter
 
-- **Eccentricity** $\epsilon(v)$: $\max_{u \in V} d(v,u)$ — the farthest any node is from $v$.
-- **Radius** $r(G)$: $\min_{v} \epsilon(v)$ — the minimum eccentricity; identifies the *center* of the graph.
-- **Diameter** $\text{diam}(G)$: $\max_{u,v} d(u,v)$ — the longest shortest path. Nodes achieving the diameter are the *periphery*.
-- **Average path length:** $\bar{l} = \frac{1}{n(n-1)} \sum_{u \neq v} d(u,v)$
+The **diameter** is the largest geodesic distance anywhere in the network — the shortest path between the two most widely separated nodes. It answers a worst-case question: *at most*, how many steps does it take to get from one actor to any other? A small diameter means a tightly knit network; a large one means the network is stretched out.
 
-The **small-world property**: most real networks have $\bar{l} \approx \log n$ even when $n$ is large — the empirical basis of "six degrees of separation."^[Duncan J. Watts and Steven H. Strogatz, "Collective Dynamics of 'Small-World' Networks," *Nature* 393, no. 6684 (1998): 440–441.]
+### Average Path Length
+
+The **average path length** $\bar{l}$ is the mean geodesic distance taken over every pair of nodes — on average, how many steps separate any two actors. A low value means information, influence, or contagion can move across the network quickly.
+
+$$\bar{l} = \frac{1}{n(n-1)} \sum_{u \neq v} d(u,v)$$
+
+Most real-world networks turn out to be **small worlds**: even with millions of nodes, the average path length stays surprisingly small (it grows only about as fast as $\log n$). This is the idea behind "six degrees of separation."^[Duncan J. Watts and Steven H. Strogatz, "Collective Dynamics of 'Small-World' Networks," *Nature* 393, no. 6684 (1998): 440–441.]
 
 :::
 ::: {.column width="45%"}
 
 **Distance matrix (6-node running example):**
+
+Each cell is the shortest number of steps between the two nodes.
 
 |   | **1** | **2** | **3** | **4** | **5** | **6** |
 |:-:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
@@ -453,14 +449,10 @@ The **small-world property**: most real networks have $\bar{l} \approx \log n$ e
 | **5** | 2 | 1 | 2 | 2 | — | 1 |
 | **6** | 3 | 2 | 2 | 1 | 1 | — |
 
-**Derived statistics:**
+**Reading the results:**
 
-- Diameter: $\text{diam}(G) = 3$ (Nodes 1 and 6)
-- Eccentricities: $\epsilon(1) = \epsilon(6) = 3$; $\epsilon(2) = \epsilon(3) = \epsilon(4) = \epsilon(5) = 2$
-- Radius: $r(G) = 2$ (Nodes 2–5 are central)
-- Average path length: $\bar{l} = \frac{46}{30} \approx 1.53$
-
-*Verification:* sum of upper triangle = $1+1+2+2+3+1+1+1+2+1+2+2+2+1+1 = 23$; total for all ordered pairs = $2 \times 23 = 46$; divided by $n(n-1) = 30$.
+- **Diameter = 3.** Nodes 1 and 6 are the farthest apart: reaching one from the other takes at least three steps (for example, $1 \to 2 \to 4 \to 6$).
+- **Average path length $\approx 1.53$.** The 15 distinct pairs of nodes have distances summing to 23; counting each pair in both directions gives 46, and $46 \div 30 \approx 1.53$. Most actors are only one or two steps apart.
 
 :::
 ::::
@@ -517,18 +509,10 @@ Node 5 ($C_5 = 0$) is an example: its two neighbors (2 and 6) are not connected 
 :::
 ::::
 
-## Trees, Cliques, and *k*-Cores
+## Cliques and *k*-Cores
 
 :::: {.columns}
 ::: {.column width="50%"}
-
-### Trees
-
-A **tree** is a connected graph with no cycles. Equivalently, $|E| = |V| - 1$, and there is a unique path between every pair of nodes. Every edge in a tree is a bridge — removing any single edge disconnects the graph.
-
-- **Spanning tree** of $G$: a tree subgraph that includes all $n$ nodes; a minimal connected spanning subgraph.
-- **Rooted tree:** a designated root node defines a parent–child hierarchy and natural direction of flow.
-- **Intelligence relevance:** command-and-control hierarchies, supply chains with no redundancy, decision trees. A tree topology is maximally fragile — it has $n - 1$ bridges and $n - 2$ articulation points (all internal nodes). Real dark networks rarely maintain pure tree structure for this reason; they add redundant ties to create resilience.
 
 ### Cliques
 
@@ -638,150 +622,6 @@ Many internet and large social media networks exhibit strong power-law degree di
 This course uses **CSV edge lists** as the primary input format, then converts to tool-native formats (GraphML for Gephi, JSON for NetworkX, shapefiles for ArcGIS) as needed. All lab datasets are provided as CSVs with columns: `source`, `target`, `weight`, `type`, `date`. Attribute encoding conventions will be specified per lab.
 :::
 
-## Bipartite Graphs and Projection
-
-### Structure and Properties
-
-A bipartite graph $G = (U, W, E)$ partitions $V = U \cup W$ with $U \cap W = \emptyset$; all edges run between $U$ and $W$, none within $U$ or within $W$. **Affiliation networks** — a central data structure in intelligence analysis — are bipartite: persons $\in U$, events or organizations $\in W$, with an edge representing attendance or membership.
-
-A graph is bipartite if and only if it contains no odd-length cycles.
-
-The bipartite structure is encoded in a **biadjacency matrix** $B$ of size $|U| \times |W|$:
-
-$$B_{ij} = \begin{cases} 1 & \text{if person } i \text{ attended event } j \\ 0 & \text{otherwise} \end{cases}$$
-
-### Projection to One-Mode
-
-The bipartite graph can be projected onto either node set to create a unipartite network:
-
-- **Persons projection** $A^{(U)} = B B^\top$: two persons are connected if they share at least one event; edge weight = number of co-attended events.
-- **Events projection** $A^{(W)} = B^\top B$: two events are connected if they share at least one person; edge weight = number of shared attendees.
-
-Projection collapses the bipartite structure to a form compatible with standard SNA tools, but at a cost: information about *which* shared event created a tie is lost. Whenever possible, analyze the bipartite structure directly.^[Stanley Wasserman and Katherine Faust, *Social Network Analysis: Methods and Applications* (Cambridge: Cambridge University Press, 1994), 299–310.]
-
-:::: {.columns}
-::: {.column width="50%"}
-
-::: {.callout-tip title="Intelligence Example: Meeting Networks" icon=false}
-Intelligence reporting identifies five individuals ($A$–$E$) attending three meetings:
-
-- $M_1$: $A, B, C$
-- $M_2$: $B, D$
-- $M_3$: $C, D, E$
-
-**Bipartite graph:** 5 person nodes + 3 meeting nodes + 8 edges.
-
-**Biadjacency matrix** $B$ (persons × meetings):
-
-|   | $M_1$ | $M_2$ | $M_3$ |
-|:-:|:-----:|:-----:|:-----:|
-| $A$ | 1 | 0 | 0 |
-| $B$ | 1 | 1 | 0 |
-| $C$ | 1 | 0 | 1 |
-| $D$ | 0 | 1 | 1 |
-| $E$ | 0 | 0 | 1 |
-
-**Persons projection:** $A$–$B$, $A$–$C$, $B$–$C$ (co-attend $M_1$, weight 1 each); $B$–$D$ (co-attend $M_2$); $C$–$D$, $C$–$E$, $D$–$E$ (co-attend $M_3$).
-
-**Key finding:** $B$ and $C$ emerge as bridges connecting the $M_1$ cluster to the $M_3$ cluster via $D$. This structural importance is invisible from attribute profiles alone.
-:::
-
-:::
-::: {.column width="50%"}
-
-```{=html}
-<div class="net-diagram-container">
-  <svg viewBox="0 0 320 360" xmlns="http://www.w3.org/2000/svg"
-       style="width:100%;max-width:280px;display:block">
-    <!-- Person nodes (left) -->
-    <!-- A: (60,50), B:(60,120), C:(60,190), D:(60,260), E:(60,330) -->
-    <!-- Meeting nodes (right) -->
-    <!-- M1:(240,100), M2:(240,195), M3:(240,290) -->
-    <!-- Labels -->
-    <text x="40" y="22" text-anchor="middle" font-size="10" fill="#595959" font-family="IBM Plex Sans, sans-serif" font-weight="600">PERSONS</text>
-    <text x="250" y="22" text-anchor="middle" font-size="10" fill="#595959" font-family="IBM Plex Sans, sans-serif" font-weight="600">MEETINGS</text>
-    <!-- Edges: A-M1, B-M1, C-M1, B-M2, D-M2, C-M3, D-M3, E-M3 -->
-    <line x1="80" y1="55"  x2="220" y2="100" stroke="#CBB677" stroke-width="1.8"/>
-    <line x1="80" y1="120" x2="220" y2="100" stroke="#CBB677" stroke-width="1.8"/>
-    <line x1="80" y1="185" x2="220" y2="100" stroke="#CBB677" stroke-width="1.8"/>
-    <line x1="80" y1="120" x2="220" y2="195" stroke="#CBB677" stroke-width="1.8"/>
-    <line x1="80" y1="250" x2="220" y2="195" stroke="#CBB677" stroke-width="1.8"/>
-    <line x1="80" y1="185" x2="220" y2="290" stroke="#CBB677" stroke-width="1.8"/>
-    <line x1="80" y1="250" x2="220" y2="290" stroke="#CBB677" stroke-width="1.8"/>
-    <line x1="80" y1="318" x2="220" y2="290" stroke="#CBB677" stroke-width="1.8"/>
-    <!-- Person circles -->
-    <circle cx="80" cy="55"  r="20" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
-    <text   x="80" y="60"   text-anchor="middle" font-size="13" font-weight="bold" fill="#450084" font-family="IBM Plex Serif, serif">A</text>
-    <circle cx="80" cy="120" r="20" fill="#450084" stroke="#450084" stroke-width="2"/>
-    <text   x="80" y="125"  text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff" font-family="IBM Plex Serif, serif">B</text>
-    <circle cx="80" cy="185" r="20" fill="#450084" stroke="#450084" stroke-width="2"/>
-    <text   x="80" y="190"  text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff" font-family="IBM Plex Serif, serif">C</text>
-    <circle cx="80" cy="250" r="20" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
-    <text   x="80" y="255"  text-anchor="middle" font-size="13" font-weight="bold" fill="#450084" font-family="IBM Plex Serif, serif">D</text>
-    <circle cx="80" cy="318" r="20" fill="#DACCE6" stroke="#450084" stroke-width="2"/>
-    <text   x="80" y="323"  text-anchor="middle" font-size="13" font-weight="bold" fill="#450084" font-family="IBM Plex Serif, serif">E</text>
-    <!-- Meeting rectangles -->
-    <rect x="212" y="80"  width="56" height="38" rx="4" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
-    <text x="240" y="103" text-anchor="middle" font-size="12" font-weight="bold" fill="#333333" font-family="IBM Plex Serif, serif">M₁</text>
-    <rect x="212" y="175" width="56" height="38" rx="4" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
-    <text x="240" y="199" text-anchor="middle" font-size="12" font-weight="bold" fill="#333333" font-family="IBM Plex Serif, serif">M₂</text>
-    <rect x="212" y="270" width="56" height="38" rx="4" fill="#F4EFE1" stroke="#AD9C65" stroke-width="2"/>
-    <text x="240" y="294" text-anchor="middle" font-size="12" font-weight="bold" fill="#333333" font-family="IBM Plex Serif, serif">M₃</text>
-  </svg>
-  <figcaption>
-    Filled nodes (B, C) are bridges across meetings.<br>
-    Rectangles = meeting events; circles = persons.
-  </figcaption>
-</div>
-```
-
-:::
-::::
-
-# Lecture Summary
-
-## Key Formulas
-
-::: {.key-terms}
-**Order / Size**
-: $|V| = n$ nodes; $|E| = m$ edges
-
-**Maximum edges (undirected)**
-: $\binom{n}{2} = \dfrac{n(n-1)}{2}$
-
-**Density (undirected)**
-: $\Delta = \dfrac{2m}{n(n-1)}$
-
-**Handshaking Lemma**
-: $\sum_{v} \deg(v) = 2m$
-
-**Average degree**
-: $\langle k \rangle = \dfrac{2m}{n}$
-
-**Local clustering coefficient**
-: $C_i = \dfrac{2e_i}{k_i(k_i - 1)}$
-
-**Average clustering coefficient**
-: $\bar{C} = \dfrac{1}{n}\sum_{i:\,k_i \geq 2} C_i$
-
-**Transitivity**
-: $T = \dfrac{3 \times \triangle}{\text{connected triples}}$
-
-**Diameter**
-: $\text{diam}(G) = \max_{u,v} d(u,v)$
-
-**Average path length**
-: $\bar{l} = \dfrac{1}{n(n-1)}\sum_{u \neq v} d(u,v)$
-
-**Walks of length $k$**
-: $A^k_{ij}$ counts all walks of length $k$ from $i$ to $j$
-
-**Bipartite projection**
-: $A^{(U)} = BB^\top$ (persons); $A^{(W)} = B^\top B$ (events)
-
-**Power-law degree distribution**
-: $P(k) \sim k^{-\gamma}$, typically $\gamma \in (2, 3)$
-:::
 
 ## Key Concepts
 
@@ -794,12 +634,9 @@ Intelligence reporting identifies five individuals ($A$–$E$) attending three m
 - **$k$-core:** mutual minimum-degree subgraph; identifies network inner circles in $O(n+m)$.
 - **Structural hole:** gap spanned by a broker with low clustering coefficient; Burt's concept; efficient disruption target.
 - **Power-law degree distribution:** scale-free networks with hubs; robust to random failure, fragile to targeted hub removal.
-- **Bipartite projection:** affiliation network to one-mode; information loss is inherent; use bipartite structure when possible.
 
-::: {.callout-note title="Next Lecture" icon=false}
+## Next Lecture
 **Centrality and Influence** — degree, betweenness, closeness, eigenvector, and PageRank centrality: what each measure captures structurally, how to compute it efficiently, and how to translate centrality scores into intelligence targeting and collection prioritization decisions.
-:::
-
 
 <div class="page-footer-custom">
 Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026

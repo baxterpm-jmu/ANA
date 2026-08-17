@@ -6,8 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Intelligence Analysis Program, James Madison University">
-<meta name="dcterms.date" content="2026-01-01">
 
 <title>Information and Influence Networks – IA 480: Applied Network Analysis: Systems, Connections, and Influence</title>
 <style>
@@ -274,12 +272,10 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#counter-influence-operations-a-network-perspective" id="toc-counter-influence-operations-a-network-perspective" class="nav-link" data-scroll-target="#counter-influence-operations-a-network-perspective">Counter-Influence Operations: A Network Perspective</a></li>
   <li><a href="#analytical-and-legal-limits" id="toc-analytical-and-legal-limits" class="nav-link" data-scroll-target="#analytical-and-legal-limits">Analytical and Legal Limits</a></li>
-  </ul></li>
-  <li><a href="#lecture-summary-and-course-conclusion" id="toc-lecture-summary-and-course-conclusion" class="nav-link" data-scroll-target="#lecture-summary-and-course-conclusion">Lecture Summary and Course Conclusion</a>
+  <li><a href="#key-analytical-takeaways" id="toc-key-analytical-takeaways" class="nav-link" data-scroll-target="#key-analytical-takeaways">Key Analytical Takeaways</a>
   <ul class="collapse">
-  <li><a href="#key-formulas-and-definitions" id="toc-key-formulas-and-definitions" class="nav-link" data-scroll-target="#key-formulas-and-definitions">Key Formulas and Definitions</a></li>
-  <li><a href="#course-level-synthesis" id="toc-course-level-synthesis" class="nav-link" data-scroll-target="#course-level-synthesis">Course-Level Synthesis</a></li>
-  <li><a href="#key-analytical-takeaways" id="toc-key-analytical-takeaways" class="nav-link" data-scroll-target="#key-analytical-takeaways">Key Analytical Takeaways</a></li>
+  <li><a href="#next-lecture" id="toc-next-lecture" class="nav-link" data-scroll-target="#next-lecture">Next Lecture</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -297,19 +293,7 @@ window.Quarto = {
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Intelligence Analysis Program, James Madison University </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -1410,60 +1394,6 @@ window.Quarto = {
 </div>
 </div>
 </section>
-</section>
-<section id="lecture-summary-and-course-conclusion" class="level1">
-<h1>Lecture Summary and Course Conclusion</h1>
-<section id="key-formulas-and-definitions" class="level2">
-<h2 class="anchored" data-anchor-id="key-formulas-and-definitions">Key Formulas and Definitions</h2>
-<div class="key-terms">
-<dl>
-<dt><strong>Structural virality</strong></dt>
-<dd>
-<span class="math inline">\(\bar{d} = \frac{1}{n(n-1)}\sum_{i\neq j}d(i,j)\)</span> for cascade tree; distinguishes broadcast (star, low <span class="math inline">\(\bar{d}\)</span>) from viral (chain/tree, high <span class="math inline">\(\bar{d}\)</span>) diffusion
-</dd>
-<dt><strong>Cascade depth</strong></dt>
-<dd>
-Longest path from root to leaf in the cascade tree; measures propagation step count
-</dd>
-<dt><strong>HITS authority</strong></dt>
-<dd>
-<span class="math inline">\(x(v) = \sum_{u:(u,v)\in E} y(u)\)</span>; on retweet graph = content producer score
-</dd>
-<dt><strong>HITS hub</strong></dt>
-<dd>
-<span class="math inline">\(y(v) = \sum_{u:(v,u)\in E} x(u)\)</span>; on retweet graph = amplifier score
-</dd>
-<dt><strong>Echo chamber modularity</strong></dt>
-<dd>
-<span class="math inline">\(Q &gt; 0.5\)</span> on follower/retweet community structure indicates strong ideological echo chamber
-</dd>
-<dt><strong>Cross-community edge ratio</strong></dt>
-<dd>
-<span class="math inline">\(\rho = E_{\text{cross}}/E_{\text{total}}\)</span>; low <span class="math inline">\(\rho\)</span> = siloed communities; US political Twitter retweet network <span class="math inline">\(\rho &lt; 0.05\)</span>
-</dd>
-<dt><strong>CIB detection threshold</strong></dt>
-<dd>
-Convergence of <span class="math inline">\(\geq 2\)</span> independent signal categories (temporal synchrony, content similarity, network coordination, infrastructure overlap)
-</dd>
-<dt><strong>Burstiness bot indicator</strong></dt>
-<dd>
-<span class="math inline">\(B \approx -1\)</span> (highly regular posting) = bot-like behavior; <span class="math inline">\(B &gt; 0\)</span> (bursty) = organic human-like behavior
-</dd>
-</dl>
-</div>
-</section>
-<section id="course-level-synthesis" class="level2">
-<h2 class="anchored" data-anchor-id="course-level-synthesis">Course-Level Synthesis</h2>
-<p>This lecture brings the course full circle. Across twelve weeks, we have built a complete toolkit for analyzing networks in intelligence contexts:</p>
-<ul>
-<li><strong>Weeks 2–4</strong> established the mathematical foundations: graph theory, centrality measures, and the structural metrics that underlie all subsequent domain-specific applications</li>
-<li><strong>Weeks 5–6</strong> introduced relational thinking in social contexts and community detection — the methods for finding structure in large, unstructured network data</li>
-<li><strong>Weeks 7–8</strong> extended the framework to geographic space and multiple relationship layers simultaneously, handling the physical and institutional complexity of real-world intelligence problems</li>
-<li><strong>Weeks 9–10</strong> introduced time as an analytical dimension and applied the full toolkit to global security domains — terrorism, proliferation, alliance systems</li>
-<li><strong>Weeks 11–12</strong> addressed two highly specialized domains where network analysis produces intelligence value not obtainable by other methods: financial intelligence and influence operations</li>
-</ul>
-<p><strong>The unifying insight across all twelve weeks:</strong> structural position in a network — whether measured by betweenness, eigenvector centrality, modularity, edge overlap, or HITS scores — encodes information about an actor’s <em>functional role</em> that is not visible from any individual attribute or behavior alone. Network analysis translates relational data into actionable structural intelligence.</p>
-</section>
 <section id="key-analytical-takeaways" class="level2">
 <h2 class="anchored" data-anchor-id="key-analytical-takeaways">Key Analytical Takeaways</h2>
 <ol type="1">
@@ -1474,59 +1404,15 @@ Convergence of <span class="math inline">\(\geq 2\)</span> independent signal ca
 <li><p>Attribution requires corroborating intelligence beyond network structure. Network evidence is necessary but not sufficient for attributing an IO campaign to a specific state actor.</p></li>
 <li><p>U.S. domestic influence network analysis faces significant legal constraints. Caveating is mandatory. The First Amendment and IC collection authorities constrain what analysis is permissible, not just what disruption is permissible.</p></li>
 </ol>
-<div style="margin-top:2.5rem">
-<ul class="course-sequence">
-<li class="seq-done">
-<span class="seq-icon">✓</span> Course Introduction
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> What is Network Analysis?
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Graph Theory Basics
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Centrality and Influence
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Social Network Analysis in Intelligence
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Community Detection and Clustering
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Geospatial and Multi-Layer Networks
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> [Week 8]
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Temporal and Dynamic Networks
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Global Security and Network Analysis
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Financial and Transaction Networks
-</li>
-<li class="seq-active">
-<span class="seq-icon">▶</span> <strong>Information and Influence Networks</strong> (this lecture)
-</li>
-</ul>
-</div>
-<div style="margin-top:1.5rem;padding:1.2rem;background:rgba(69,0,132,0.06);border:1px solid #450084;border-radius:4px">
-<p style="font-size:1rem;font-weight:700;color:#450084;margin:0 0 0.4rem">
-IA 480 Complete
-</p>
-<p style="font-size:0.88rem;color:#333;margin:0">
-The analytical toolkit built across this course — graph representation, centrality, community detection, multilayer and temporal analysis, and domain-specific applications in global security, finance, and information — constitutes a foundational capability set for network-informed intelligence analysis. The structural patterns documented here recur across domains because network analysis captures something fundamental about how power, information, and resources move through human systems.
-</p>
-</div>
+<section id="next-lecture" class="level3">
+<h3 class="anchored" data-anchor-id="next-lecture">Next Lecture</h3>
+<p><strong>Infrastructure and Physical Networks</strong> - Examine the network properties of at least three critical infrastructure types (power grid, aviation, maritime, internet) and identify the structural basis of their vulnerability.</p>
 <div class="page-footer-custom">
 <p>Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026</p>
 </div>
 
 
+</section>
 </section>
 </section>
 

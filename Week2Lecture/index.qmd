@@ -435,25 +435,6 @@ This course builds competency across three integrated dimensions:
 
 The final project integrates all three dimensions: a network intelligence product on an analyst-selected topic, delivered as a written assessment and an oral briefing.
 
-::: {.callout-note title="Lecture Sequence" icon=false}
-```{=html}
-<ul class="course-sequence">
-  <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
-  <li class="seq-active"><span class="seq-icon">▶</span> <strong>What is Network Analysis?</strong> (this lecture)</li>
-  <li class="seq-todo"><span class="seq-icon">○</span> Graph Theory Basics</li>
-  <li class="seq-todo"><span class="seq-icon">○</span> Centrality and Influence</li>
-  <li class="seq-todo"><span class="seq-icon">○</span> SNA in Intelligence</li>
-  <li class="seq-todo"><span class="seq-icon">○</span> Community Detection</li>
-  <li class="seq-todo"><span class="seq-icon">○</span> Geospatial / Multi-Layer Networks</li>
-  <li class="seq-todo"><span class="seq-icon">○</span> Temporal / Dynamic Networks</li>
-  <li class="seq-todo"><span class="seq-icon">○</span> Global Security Networks</li>
-  <li class="seq-todo"><span class="seq-icon">○</span> Financial Networks</li>
-  <li class="seq-todo"><span class="seq-icon">○</span> Information / Influence Networks</li>
-  <li class="seq-todo"><span class="seq-icon">○</span> Infrastructure Networks</li>
-</ul>
-```
-:::
-
 # Lecture Summary
 
 ## Key Terms
@@ -492,13 +473,12 @@ The final project integrates all three dimensions: a network intelligence produc
 4. Dark networks are deliberately sparse; bridge nodes with high betweenness centrality are the highest-value targets for disruption.
 5. Network analysis has real, hard limits: incomplete data and structural findings always require interpretive judgment by a trained analyst.
 
-::: {.callout-note title="Next Lecture" icon=false}
+## Next Lecture
 **Graph Theory Basics** — formalizing the mathematics of networks: paths, cycles, components, degree sequences, and the centrality metrics that underpin all subsequent analysis in this course.
-:::
+
 
 ```{=html}
 <div class="page-footer-custom">
 Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
 </div>
-
 ```

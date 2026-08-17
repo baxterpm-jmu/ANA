@@ -1,8 +1,6 @@
 ---
 title: "Centrality and Influence"
 subtitle: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
-author: "Intelligence Analysis Program, James Madison University"
-date: "Fall 2026"
 ---
 
 ::: {.course-meta}
@@ -195,6 +193,7 @@ The two roles belonged to different actors. Degree-only analysis would have depr
   </figcaption>
 </div>
 ```
+**BLUF:** Different indicators will tell you different things about the role nodes play in a network. 
 
 ## Centralization vs. Centrality
 
@@ -347,16 +346,6 @@ Node 2 dominates on degree. Whether it also dominates on betweenness is a separa
 :::
 ::::
 
-## H-Index and Coreness as Degree Alternatives
-
-Two alternatives to raw degree provide more nuanced pictures of local embedding:
-
-**H-index (adapted from citation analysis):** Node $v$ has h-index $h$ if it has at least $h$ neighbors each of which has degree $\geq h$, and no larger $h$ satisfies this condition. H-index rewards having *well-connected* neighbors, not just many neighbors — a node with 5 neighbors each of degree $\geq 5$ has h-index 5, while a node with 10 neighbors each of degree 1 has h-index 1.
-
-**Coreness** (from $k$-core decomposition, covered in Week 3): the coreness of a node equals the largest $k$-core it belongs to. Unlike degree, coreness captures the density of the node's *neighborhood* recursively — a node with high coreness is embedded in a mutually dense subgraph, not merely attached to many peripheral actors.
-
-Both measures are computable in $O(m)$ and available in NetworkX (`nx.core_number(G)`) and Gephi. They are particularly useful as supplements to degree when screening for inner-circle membership in dark networks.
-
 # Part III: Path-Based Centrality
 
 ## Closeness Centrality
@@ -371,17 +360,6 @@ Closeness centrality measures how efficiently a node can reach all others — a 
 $$C_C(v) = \frac{n-1}{\sum_{u \neq v} d(v, u)}$$
 
 The numerator normalizes the measure so that a star center (the single node optimally placed to reach all others in one step) receives a score of 1.0. Low closeness means the node is peripheral — far from the network's informational core.
-
-### Connected Graph Variants
-
-The standard formula is undefined when the graph is disconnected (the denominator includes $d(v,u) = \infty$ for unreachable nodes). Two approaches:
-
-- **Wasserman-Faust variant:** compute closeness only over *reachable* nodes, then normalize by the proportion of nodes reachable: $C_C^{WF}(v) = \frac{n_r - 1}{n - 1} \cdot \frac{n_r - 1}{\sum_{u \in R(v)} d(v,u)}$, where $n_r = |R(v)|$.
-- **Harmonic centrality:** sum the reciprocals of all distances, setting $1/\infty = 0$ by convention:^[Massimo Marchiori and Vito Latora, "Harmony in the Small-World," *Physica A* 285, no. 3–4 (2000): 539–546.]
-
-$$C_H(v) = \sum_{u \neq v} \frac{1}{d(v, u)}$$
-
-Harmonic centrality is the preferred choice for intelligence network data, which almost always produces disconnected graphs due to collection incompleteness.
 
 ### Intelligence Applications
 
@@ -406,12 +384,6 @@ Using the distance matrix from Week 3:
 | 6 | 9 | 0.556 | 5 |
 
 **Node 2** reaches all other nodes with the smallest average distance ($\bar{d} = 6/5 = 1.2$ steps). Nodes 1 and 6 are most peripheral (average distance $9/5 = 1.8$ steps).
-
-::: {.callout-note title="Verification: Node 2" icon=false}
-$d(2,1) = 1,\; d(2,3) = 1,\; d(2,4) = 1,\; d(2,5) = 1,\; d(2,6) = 2$
-
-$\sum = 6 \quad\Rightarrow\quad C_C(2) = \frac{5}{6} \approx 0.833$
-:::
 
 ::: {.callout-tip title="Comparison Note" icon=false}
 Closeness and degree rankings agree for Node 2 (top on both) but diverge on the periphery. Node 1 and Node 6 share the same closeness score despite Node 1 having degree 2 and Node 6 having degree 2 — both are peripheral, but by different structural paths.
@@ -453,10 +425,6 @@ $$C_B(e) = \sum_{s \neq t} \frac{\sigma_{st}(e)}{\sigma_{st}}$$
 
 Edges with high betweenness carry disproportionate network traffic. Severing a high-betweenness edge can fragment the network into disconnected components without requiring the removal of any actor — potentially less detectable operationally.
 
-### Computational Complexity
-
-Computed via the Brandes algorithm: $O(nm)$ for unweighted graphs; $O(nm + n^2 \log n)$ for weighted. For very large networks ($n > 10^5$), approximation algorithms are available. Gephi and NetworkX implement Brandes exactly for intelligence-scale networks (typically $n < 10^4$).
-
 :::
 ::: {.column width="45%"}
 
@@ -468,10 +436,6 @@ Betweenness identifies the coordinators and cutouts who route communication acro
 In flat, redundant networks where many alternative geodesics exist, betweenness becomes less useful as a targeting signal. In those cases, community-level analysis and edge removal may be more effective.
 :::
 
-::: {.callout-note title="Computational Note" icon=false}
-Betweenness is the **most computationally expensive** of the standard centrality measures at $O(nm)$, compared to $O(n + m)$ for degree. For a network with $n=1{,}000$ nodes and $m=5{,}000$ edges, Brandes runs in milliseconds on modern hardware. For $n=100{,}000$, approximate algorithms are recommended. NetworkX defaults to the exact Brandes implementation.
-:::
-
 ::: {.callout-tip title="Key Insight: Low Degree ≠ Low Betweenness" icon=false}
 In the conceptual example above, Node D has **degree 2** (the minimum for a non-isolated, non-leaf node on any meaningful path) but **maximum betweenness** (every path between the two clusters passes through D). This is the archetypal dark network broker profile: minimally connected, maximally controlling.
 :::
@@ -479,7 +443,7 @@ In the conceptual example above, Node D has **degree 2** (the minimum for a non-
 :::
 ::::
 
-## Betweenness: Full Worked Example
+### Betweenness: Full Worked Example
 
 ```{=html}
 <div style="margin:1.2rem 0">
@@ -495,6 +459,9 @@ In the conceptual example above, Node D has **degree 2** (the minimum for a non-
     <line x1="210" y1="100" x2="145" y2="195" stroke="#D6D6D6" stroke-width="2"/>
     <line x1="210" y1="100" x2="210" y2="215" stroke="#D6D6D6" stroke-width="2"/>
     <line x1="210" y1="215" x2="350" y2="215" stroke="#D6D6D6" stroke-width="2"/>
+    <!-- remaining base edges to complete the graph: {3,4} and {5,6} -->
+    <line x1="145" y1="195" x2="210" y2="215" stroke="#D6D6D6" stroke-width="2"/>
+    <line x1="350" y1="100" x2="350" y2="215" stroke="#D6D6D6" stroke-width="2"/>
 
     <!-- Highlighted path: 1 → 2 → 5 (gold) -->
     <line x1="90"  y1="100" x2="210" y2="100" stroke="#CBB677" stroke-width="3.5"/>
@@ -691,8 +658,6 @@ $$y(v) = \sum_{u \,:\, (v,u) \in E} x(u)$$
 
 The two equations are mutually recursive: authorities gain score from hubs pointing to them; hubs gain score from the authorities they point to. Computed iteratively until convergence.
 
-**Matrix form:** Authority vector $\mathbf{x}$ is the principal eigenvector of $A^\top A$; hub vector $\mathbf{y}$ is the principal eigenvector of $A A^\top$.
-
 ### HITS vs. PageRank
 
 - **PageRank:** single score per node; more incoming links from high-scoring nodes = higher rank
@@ -814,9 +779,6 @@ All four measures agree that Node 2 is most central. Interesting divergence: Nod
 
 All intelligence network data is incomplete. Missing nodes and edges systematically distort centrality scores, and the distortion is **not uniform** across measures.^[Kathleen M. Carley, Ju-Sung Lee, and David Krackhardt, "Destabilizing Networks," *Connections* 24, no. 3 (2002): 79–92.]
 
-:::: {.columns}
-::: {.column width="55%"}
-
 ### Sensitivity Patterns by Measure
 
 **Degree centrality** — relatively robust to missing *edges*. If missing data are roughly random and representative, degree rank order is approximately preserved. Fails when collection is systematically biased toward certain node types (e.g., focusing collection on known associates of a small set of seed nodes, inflating their degree artificially).
@@ -827,24 +789,12 @@ All intelligence network data is incomplete. Missing nodes and edges systematica
 
 **Eigenvector / PageRank** — moderately sensitive. Robust if missing data are random; fragile if missing data are systematic. If collection under-samples high-degree nodes (e.g., encrypted messaging platforms reduce visibility of high-volume communicators), eigenvector centrality systematically underestimates scores of adjacent nodes.
 
-:::
-::: {.column width="45%"}
-
 ### Mitigation Strategies
 
 - **Sensitivity analysis:** compute centrality after randomly adding or removing 10–20% of edges; observe rank stability. If the top-3 ranking is invariant, findings are moderately robust.
 - **Multiple imputation:** estimate likely missing edges from attribute similarity, shared affiliations, or network structural models (exponential random graph models); compute centrality on multiple imputed networks; report the distribution of rank scores.
 - **Confidence-weighted networks:** assign lower edge weights to lower-confidence source reports; compute weighted centrality. This degrades the influence of poorly-sourced ties without removing them entirely.
 - **Qualitative validation:** triangulate centrality findings against HUMINT or SIGINT characterizations of node roles. If betweenness analysis identifies Node X as a coordinator and independent source reporting describes X as a logistics driver, the discrepancy warrants deeper examination of both the data and the analysis.
-
-::: {.callout-warning title="Required Caveat Language" icon=false}
-Centrality findings in intelligence products **must** be accompanied by a data completeness assessment. Model language:
-
-*"Node X ranks highest on normalized betweenness centrality ($C_B^* = 0.42$) in the reconstructed network. This ranking is based on [N] confirmed relationships from [source types]. Betweenness centrality is highly sensitive to missing bridge nodes; collection gaps in [specific domain or time period] may significantly alter this ranking. Sensitivity analysis across 100 random 15% edge deletions shows rank-1 stability in 73% of trials."*
-:::
-
-:::
-::::
 
 ## Targeting and Disruption Logic
 
@@ -975,9 +925,6 @@ The finding generalizes: in compartmentalized dark networks that deliberately mi
 
 ## Centrality in Practice: Gephi and NetworkX
 
-:::: {.columns}
-::: {.column width="50%"}
-
 ### Gephi
 
 - **Statistics panel:** one-click computation of degree, betweenness, closeness, eigenvector, PageRank, and modularity (community detection)
@@ -993,9 +940,6 @@ The finding generalizes: in compartmentalized dark networks that deliberately mi
 - Output: ranked node list visualized directly on the chart
 - Standard tool in classified network analysis environments; compatible with US Government classification workflows
 - Does not natively support eigenvector, PageRank, or HITS — use NetworkX for those measures and import results
-
-:::
-::: {.column width="50%"}
 
 ### NetworkX (Python)
 
@@ -1035,57 +979,7 @@ df.to_csv('centrality_results.csv')
 
 Full programmatic control; reproducible; scales to networks with millions of nodes using approximate algorithms (`nx.betweenness_centrality(G, k=100)` for $k$-sample approximation).
 
-:::
-::::
-
 # Lecture Summary
-
-## Key Formulas
-
-::: {.key-terms}
-
-**Degree centrality (normalized)**
-: $C_D^*(v) = \dfrac{\deg(v)}{n - 1}$
-
-**In/Out-degree centrality**
-: $C_D^-(v) = \dfrac{\deg^-(v)}{n-1}$; $\;\;C_D^+(v) = \dfrac{\deg^+(v)}{n-1}$
-
-**Strength centrality**
-: $C_S(v) = \sum_{u \in N(v)} w(v, u)$
-
-**Closeness centrality**
-: $C_C(v) = \dfrac{n-1}{\sum_{u \neq v} d(v,u)}$
-
-**Harmonic centrality**
-: $C_H(v) = \sum_{u \neq v} \dfrac{1}{d(v,u)}$, with $1/\infty = 0$
-
-**Betweenness centrality**
-: $C_B(v) = \sum_{s < t,\; s,t \neq v} \dfrac{\sigma_{st}(v)}{\sigma_{st}}$
-
-**Edge betweenness**
-: $C_B(e) = \sum_{s \neq t} \dfrac{\sigma_{st}(e)}{\sigma_{st}}$
-
-**Freeman centralization index**
-: $C_X(G) = \dfrac{\sum_v [C_X(v^*) - C_X(v)]}{\max_{G'} \sum_v [C_X(v^*) - C_X(v)]}$
-
-**Eigenvector centrality**
-: $A\,\mathbf{C}_E = \lambda_1\,\mathbf{C}_E$ (principal eigenvector of $A$)
-
-**Katz centrality**
-: $\mathbf{C}_K = \beta(I - \alpha A^\top)^{-1}\mathbf{1}$, with $\alpha < 1/\lambda_1$
-
-**PageRank**
-: $PR(v) = \dfrac{1-d}{n} + d\!\!\sum_{u \in \text{in}(v)}\!\!\dfrac{PR(u)}{\deg^+(u)}$, $d \approx 0.85$
-
-**HITS authority**
-: $x(v) = \sum_{u:(u,v)\in E} y(u)$; converges to eigenvector of $A^\top A$
-
-**HITS hub**
-: $y(v) = \sum_{u:(v,u)\in E} x(u)$; converges to eigenvector of $A\,A^\top$
-
-:::
-
-## Key Analytical Principles
 
 1. No single centrality measure is universally correct — the choice must be driven by the analytical question (communication speed → closeness; structural chokepoints → betweenness; prestige → eigenvector).
 2. In compartmentalized dark networks, betweenness is the most valuable measure for disruption targeting; degree systematically underperforms and may misidentify support-layer actors as leadership.
@@ -1094,27 +988,9 @@ Full programmatic control; reproducible; scales to networks with millions of nod
 5. Simulate disruption effects before recommending targeting: compute component count, giant component size, and average path length pre- and post-removal; rank alternative targets by disruption effect size.
 6. Network-level centralization informs strategy selection: high centralization → decapitation is viable; low centralization → edge removal, financial disruption, or peripheral attrition may be more effective.
 
-::: {.callout-note title="Next Lecture" icon=false}
+## Next Lecture
 **Social Network Analysis in Intelligence** — how SNA methods apply to counterterrorism, organized crime, insider threat, and influence operations; the Krebs and Everton research traditions; the transition from theory to operational analysis; and i2 Analyst Notebook in a classified workflow.
-:::
 
-```{=html}
-<div style="margin-top:2rem">
-  <ul class="course-sequence">
-    <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> What is Network Analysis?</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Graph Theory Basics</li>
-    <li class="seq-active"><span class="seq-icon">▶</span> <strong>Centrality and Influence</strong> (this lecture)</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> SNA in Intelligence</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Community Detection</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Geospatial / Multi-Layer Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Temporal / Dynamic Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Global Security Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Financial Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Information / Influence Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Infrastructure Networks</li>
-  </ul>
-</div>
 
 <div class="page-footer-custom">
 Intelligence Analysis Program &nbsp;|&nbsp; School of Integrated Sciences &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026

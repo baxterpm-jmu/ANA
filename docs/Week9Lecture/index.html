@@ -6,8 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Intelligence Analysis Program, James Madison University">
-<meta name="dcterms.date" content="2026-01-01">
 
 <title>Temporal and Dynamic Networks – IA 480: Applied Network Analysis: Systems, Connections, and Influence</title>
 <style>
@@ -322,8 +320,10 @@ window.Quarto = {
   </ul></li>
   <li><a href="#lecture-summary" id="toc-lecture-summary" class="nav-link" data-scroll-target="#lecture-summary">Lecture Summary</a>
   <ul class="collapse">
-  <li><a href="#key-formulas-and-definitions" id="toc-key-formulas-and-definitions" class="nav-link" data-scroll-target="#key-formulas-and-definitions">Key Formulas and Definitions</a></li>
-  <li><a href="#key-analytical-takeaways" id="toc-key-analytical-takeaways" class="nav-link" data-scroll-target="#key-analytical-takeaways">Key Analytical Takeaways</a></li>
+  <li><a href="#key-analytical-takeaways" id="toc-key-analytical-takeaways" class="nav-link" data-scroll-target="#key-analytical-takeaways">Key Analytical Takeaways</a>
+  <ul class="collapse">
+  <li><a href="#next-lecture" id="toc-next-lecture" class="nav-link" data-scroll-target="#next-lecture">Next Lecture</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -341,19 +341,7 @@ window.Quarto = {
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Intelligence Analysis Program, James Madison University </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">January 1, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -1527,49 +1515,6 @@ window.Quarto = {
 </section>
 <section id="lecture-summary" class="level1">
 <h1>Lecture Summary</h1>
-<section id="key-formulas-and-definitions" class="level2">
-<h2 class="anchored" data-anchor-id="key-formulas-and-definitions">Key Formulas and Definitions</h2>
-<div class="key-terms">
-<dl>
-<dt><strong>Temporal path (time-respecting path)</strong></dt>
-<dd>
-Sequence of contacts <span class="math inline">\((v_0,v_1,t_1), (v_1,v_2,t_2), \ldots\)</span> with <span class="math inline">\(t_1 \leq t_2 \leq \cdots\)</span>; causal ordering is mandatory
-</dd>
-<dt><strong>Temporal reachability set</strong></dt>
-<dd>
-<span class="math inline">\(R(u,t)\)</span>: all nodes reachable from <span class="math inline">\(u\)</span> via temporal paths starting <span class="math inline">\(\geq t\)</span>; shrinks monotonically as <span class="math inline">\(t\)</span> advances
-</dd>
-<dt><strong>Latency</strong></dt>
-<dd>
-<span class="math inline">\(t_k - t_1\)</span> for a temporal path; minimized by the fastest path (distinct from the shortest-hop path)
-</dd>
-<dt><strong>Temporal closeness centrality</strong></dt>
-<dd>
-<span class="math inline">\(C_C^T(v,t) = (|R(v,t)|-1) / \sum_{u \in R(v,t)} d_T(v,u,t)\)</span>
-</dd>
-<dt><strong>Burstiness coefficient</strong></dt>
-<dd>
-<span class="math inline">\(B = (\sigma_\tau - \mu_\tau)/(\sigma_\tau + \mu_\tau) \in [-1,1]\)</span>; <span class="math inline">\(B&gt;0\)</span> = bursty; <span class="math inline">\(B&lt;0\)</span> = regular
-</dd>
-<dt><strong>Centrality velocity</strong></dt>
-<dd>
-<span class="math inline">\(\Delta C_X(v) = C_X(v,k) - C_X(v,k-1)\)</span>; rapid increase signals growing structural importance
-</dd>
-<dt><strong>Edge turnover (Jaccard dissimilarity)</strong></dt>
-<dd>
-<span class="math inline">\(\lambda = |E^{(k)} \triangle E^{(k+1)}| / |E^{(k)} \cup E^{(k+1)}|\)</span>; baseline for structural break detection
-</dd>
-<dt><strong>Temporal supra-adjacency matrix</strong></dt>
-<dd>
-Block-diagonal <span class="math inline">\(A^{(k)}\)</span> with identity <span class="math inline">\(I\)</span> inter-layer couplings between consecutive snapshots <span class="math inline">\(k\)</span> and <span class="math inline">\(k+1\)</span>
-</dd>
-<dt><strong>Activity-driven model</strong></dt>
-<dd>
-Each node has activity rate <span class="math inline">\(a_i \sim\)</span> power law; active nodes initiate <span class="math inline">\(m\)</span> contacts per time step
-</dd>
-</dl>
-</div>
-</section>
 <section id="key-analytical-takeaways" class="level2">
 <h2 class="anchored" data-anchor-id="key-analytical-takeaways">Key Analytical Takeaways</h2>
 <ol type="1">
@@ -1580,64 +1525,15 @@ Each node has activity rate <span class="math inline">\(a_i \sim\)</span> power 
 <li>Radicalization leaves temporal network signatures: rapid degree growth, neighborhood shift toward operational actors. These are collection hypotheses requiring corroboration, not evidentiary conclusions.</li>
 <li>Collection gaps must be explicitly accounted for in any temporal product. Treat the network between windows as partially unknown; apply link prediction to bound uncertainty and generate collection priorities.</li>
 </ol>
-<div class="callout callout-style-default callout-note no-icon callout-titled" title="Next Lecture">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Next Lecture
-</div>
-</div>
-<div class="callout-body-container callout-body">
+<section id="next-lecture" class="level3">
+<h3 class="anchored" data-anchor-id="next-lecture">Next Lecture</h3>
 <p><strong>Global Security and Network Analysis</strong> — applying network methods to macro-level global security problems: terrorist organization structures across case studies, arms trafficking and proliferation supply chain networks, interstate security cooperation networks, and insurgency organizational analysis.</p>
-</div>
-</div>
-<div style="margin-top:2rem">
-<ul class="course-sequence">
-<li class="seq-done">
-<span class="seq-icon">✓</span> Course Introduction
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> What is Network Analysis?
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Graph Theory Basics
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Centrality and Influence
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Social Network Analysis in Intelligence
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Community Detection and Clustering
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> Geospatial and Multi-Layer Networks
-</li>
-<li class="seq-done">
-<span class="seq-icon">✓</span> [Week 8]
-</li>
-<li class="seq-active">
-<span class="seq-icon">▶</span> <strong>Temporal and Dynamic Networks</strong> (this lecture)
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Global Security Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Financial Networks
-</li>
-<li class="seq-todo">
-<span class="seq-icon">○</span> Information / Influence Networks
-</li>
-</ul>
-</div>
 <div class="page-footer-custom">
 <p>Intelligence Analysis Program &nbsp;|&nbsp; School of Integrated Sciences &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026</p>
 </div>
 
 
+</section>
 </section>
 </section>
 

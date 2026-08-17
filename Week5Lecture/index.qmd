@@ -1,8 +1,6 @@
 ---
 title: "Social Network Analysis in Intelligence"
 subtitle: "IA 480: Applied Network Analysis: Systems, Connections, and Influence"
-author: "Intelligence Analysis Program, James Madison University"
-date: "Fall 2026"
 ---
 
 ::: {.course-meta}
@@ -76,7 +74,7 @@ By the end of this lecture, students should be able to:
 Intelligence analysis has historically been organized around **entities**: named subjects with dossiers of biographical, ideological, and operational attributes. This attribute-centric model works well for assessing individual actors but fails to capture the relational structure through which power, information, and vulnerability are actually distributed.
 
 :::: {.columns}
-::: {.column width="55%"}
+::: {.column width="53%"}
 
 ### The Attribute-Centric Model and Its Limits
 
@@ -104,7 +102,8 @@ In the relational model, an actor's significance is determined not by what they 
 - Network position determines what information reaches a node, which resources it can access, and how it can be disrupted without its own knowledge
 
 The foundational reference for this course's methodology is Wasserman and Faust's *Social Network Analysis* (1994), which remains the methodological standard for the field.^[Stanley Wasserman and Katherine Faust, *Social Network Analysis: Methods and Applications* (Cambridge: Cambridge University Press, 1994).]
-
+:::
+::: {.column width="2%"}
 :::
 ::: {.column width="45%"}
 
@@ -140,7 +139,7 @@ The two approaches are **complementary**, not competing. SNA without attribute c
 Mark Granovetter's 1973 paper on the strength of weak ties is among the most-cited works in social science and has direct application to intelligence network analysis.^[Mark S. Granovetter, "The Strength of Weak Ties," *American Journal of Sociology* 78, no. 6 (1973): 1360–1380.] The core insight: the *structural* importance of a tie and its *relational* intimacy are inversely correlated at the network level.
 
 :::: {.columns}
-::: {.column width="55%"}
+::: {.column width="53%"}
 
 ### Strong Ties
 
@@ -164,9 +163,10 @@ Tie strength is a composite of: time invested, emotional intensity, intimacy, an
 - **Lower operational security risk to each cluster**: neither side fully knows the other; but the weak tie node itself is the most exposed structural element
 
 *Intelligence examples:* occasional arms dealers serving multiple organizations, hawala brokers connecting geographically separate networks, money launderers who interface between criminal enterprises and the formal financial sector, couriers moving between cells without belonging to either
-
 :::
-::: {.column width="45%"}
+::: {.column width="3%"}
+:::
+::: {.column width="43%"}
 
 ```{=html}
 <div class="net-diagram-container">
@@ -245,7 +245,7 @@ Analysts who focus collection on strong-tie relationships (kinship, co-location,
 Ronald Burt's theory of structural holes formalizes the strategic advantage held by actors who bridge disconnected parts of a network.^[Ronald S. Burt, *Structural Holes: The Social Structure of Competition* (Cambridge, MA: Harvard University Press, 1992), 16–45.]
 
 :::: {.columns}
-::: {.column width="55%"}
+::: {.column width="53%"}
 
 ### What Is a Structural Hole?
 
@@ -270,7 +270,9 @@ Burt identifies three compounding advantages:
 High betweenness centrality (Week 4) and low constraint correlate strongly; both identify brokers spanning structural holes.
 
 :::
-::: {.column width="45%"}
+::: {.column width="4%"}
+:::
+::: {.column width="43%"}
 
 ### Gould-Fernandez Brokerage Roles
 
@@ -388,7 +390,7 @@ Gould and Fernandez formalized five distinct brokerage roles based on the group 
 Beyond brokerage, network position theory identifies a set of recurring **structural roles** that describe how actors function within a network regardless of their individual attributes.
 
 :::: {.columns}
-::: {.column width="50%"}
+::: {.column width="48%"}
 
 ### Role Typology
 
@@ -400,7 +402,9 @@ Beyond brokerage, network position theory identifies a set of recurring **struct
 - **Clique member / core actor:** Embedded in a dense subgroup; high clustering coefficient; high trust and coordination capacity within the cluster, but high mutual exposure risk.
 
 :::
-::: {.column width="50%"}
+::: {.column width="4%"}
+:::
+::: {.column width="48%"}
 
 ### Structural Equivalence and Role Substitution
 
@@ -428,7 +432,7 @@ Analytical implication: after leadership targeting, analysts should immediately 
 The application of formal SNA to terrorism and dark networks developed largely through two research traditions that are worth understanding both for their findings and their methodological differences.
 
 :::: {.columns}
-::: {.column width="50%"}
+::: {.column width="47%"}
 
 ### Valdis Krebs (2002): The 9/11 Hijacker Network
 
@@ -451,7 +455,9 @@ The methodological debate highlights:
 - Directionality assumptions matter for betweenness computation
 
 :::
-::: {.column width="50%"}
+::: {.column width="6%"}
+:::
+::: {.column width="47%"}
 
 ### Sean Everton: Systematic Dark Network Analysis
 
@@ -487,7 +493,7 @@ Covert organizations adopt one of four structural archetypes, each with distinct
     Four Covert Network Organizational Forms
   </p>
   <svg viewBox="0 0 580 400" xmlns="http://www.w3.org/2000/svg"
-       style="width:100%;max-width:560px;display:block;font-family:'IBM Plex Sans',sans-serif">
+       style="width:100%;max-width:840px;display:block;font-family:'IBM Plex Sans',sans-serif">
 
     <!-- Dividers -->
     <line x1="290" y1="10" x2="290" y2="390" stroke="#D6D6D6" stroke-width="1.5"/>
@@ -1144,6 +1150,8 @@ SNA in the intelligence context operates within a legal and ethical framework th
 **Chilling effects:** Awareness of network surveillance changes behavior — reduces communication, changes tie formation, pushes activity to encrypted or offline channels. This affects both licit and illicit actors and reduces the validity of collected network data over time.
 
 **Minimization requirements:** U.S. signals intelligence collected data involving persons not the target of investigation must be minimized — their identifying information removed or restricted. Network data is particularly difficult to minimize because the *relationship structure* is the analytical object; anonymization of node identities partially undermines the analytical purpose.
+:::
+::::
 
 ::: {.callout-warning title="Required Product Caveat Language" icon=false}
 Every SNA product should explicitly state:
@@ -1157,8 +1165,7 @@ Every SNA product should explicitly state:
 Failure to include these caveats violates analytical standards and may produce a legally actionable product if structural findings are used as the sole basis for an action affecting a U.S. person.
 :::
 
-:::
-::::
+
 
 # Lecture Summary
 
@@ -1172,15 +1179,6 @@ Failure to include these caveats violates analytical standards and may produce a
 **Structural hole (Burt)**
 : A gap between two actors who are not connected and share no common connection; the broker spanning a structural hole has information and control advantages over both disconnected parties
 
-**Effective size**
-: Number of non-redundant contacts; measures the structural hole advantage; $= \deg(v) - \sum_j p_{ij} m_{ij}$
-
-**Constraint $C_i$**
-: Measure of how constrained a node is by its network; high constraint = embedded in a cohesive cluster with few structural holes; low constraint = spanning many structural holes
-
-**Gould-Fernandez brokerage types**
-: Coordinator (A→A→A); Gatekeeper (B→A→A); Representative (A→A→B); Itinerant broker (A→B→A); Liaison (B→A→C) — gatekeepers and liaisons are highest-priority disruption targets
-
 **Structural equivalence**
 : Two nodes with identical tie patterns to all others; structurally equivalent actors are substitutable; network resilience comes from maintaining equivalents in critical positions
 
@@ -1189,9 +1187,6 @@ Failure to include these caveats violates analytical standards and may produce a
 
 **Network strain**
 : Networks under sustained disruption pressure redistribute ties and roles, sometimes producing a more resilient successor structure; disruption accelerates organizational learning
-
-**Coordinated inauthentic behavior (CIB)**
-: Synchronized, non-organic amplification by networks of accounts; detectable through temporal synchrony, structural clustering, and HITS decomposition of authority vs. hub roles
 
 :::
 
@@ -1204,27 +1199,9 @@ Failure to include these caveats violates analytical standards and may produce a
 5. SNA findings require legal authorization review and analytical caveats (data completeness, inferential limitations, positional ≠ identity inference) before appearing in any finished intelligence product.
 6. Tool selection should match analytical environment: NetworkX for exploration and reproducibility, Gephi for intermediate visualization, i2 for classified products and finished deliverables.
 
-::: {.callout-note title="Next Lecture" icon=false}
-**Community Detection and Clustering** — modularity, the Louvain algorithm, Girvan-Newman edge betweenness method, clique percolation, overlapping communities, and intelligence applications in faction identification, cell structure analysis, and coordinated behavior detection.
-:::
+### Next Lecture
 
-```{=html}
-<div style="margin-top:2rem">
-  <ul class="course-sequence">
-    <li class="seq-done"><span class="seq-icon">✓</span> Course Introduction</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> What is Network Analysis?</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Graph Theory Basics</li>
-    <li class="seq-done"><span class="seq-icon">✓</span> Centrality and Influence</li>
-    <li class="seq-active"><span class="seq-icon">▶</span> <strong>Social Network Analysis in Intelligence</strong> (this lecture)</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Community Detection and Clustering</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Geospatial / Multi-Layer Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Temporal / Dynamic Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Global Security Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Financial Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Information / Influence Networks</li>
-    <li class="seq-todo"><span class="seq-icon">○</span> Infrastructure Networks</li>
-  </ul>
-</div>
+**Community Detection and Clustering** — modularity, the Louvain algorithm, Girvan-Newman edge betweenness method, clique percolation, overlapping communities, and intelligence applications in faction identification, cell structure analysis, and coordinated behavior detection.
 
 <div class="page-footer-custom">
 Intelligence Analysis Program &nbsp;|&nbsp; James Madison University &nbsp;|&nbsp; IA 480: Applied Network Analysis &nbsp;|&nbsp; Fall 2026
